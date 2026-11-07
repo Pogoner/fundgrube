@@ -1,0 +1,697 @@
+{
+  "$defs": {
+    "candidatePage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/item"
+              },
+              "maxItems": 100,
+              "type": "array"
+            },
+            "kind": {
+              "const": "candidate-page"
+            },
+            "next_path": {
+              "pattern": "^api/candidates/page-[0-9]{3,}\\.json$",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "page_count": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "page_index": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "total": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "page_index",
+            "page_count",
+            "total",
+            "items",
+            "next_path"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "dashboard": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "properties": {
+            "deals": {
+              "items": {
+                "$ref": "#/$defs/item"
+              },
+              "type": "array"
+            },
+            "kind": {
+              "const": "feed"
+            }
+          },
+          "required": [
+            "deals"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "header": {
+      "properties": {
+        "ai_enabled": {
+          "type": "boolean"
+        },
+        "ai_metadata": {
+          "type": "object"
+        },
+        "blockers": {
+          "items": {
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "coverage": {
+          "type": "object"
+        },
+        "criteria": {
+          "type": "object"
+        },
+        "freshness": {
+          "properties": {
+            "evaluated_at": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "maximum_source_age_hours": {
+              "exclusiveMinimum": 0,
+              "maximum": 6,
+              "type": "number"
+            },
+            "observation_is_not_condition_verification": {
+              "const": true
+            },
+            "recheck_at_read_time": {
+              "const": true
+            }
+          },
+          "required": [
+            "maximum_source_age_hours",
+            "evaluated_at",
+            "recheck_at_read_time"
+          ],
+          "type": "object"
+        },
+        "generated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "feed",
+            "manifest",
+            "candidate-page",
+            "item"
+          ]
+        },
+        "last_successful_scan_at": {
+          "$ref": "#/$defs/nullableTime"
+        },
+        "location": {
+          "type": "object"
+        },
+        "schema_version": {
+          "const": 2
+        },
+        "snapshot_id": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "source_status": {
+          "enum": [
+            "unconfigured",
+            "live",
+            "partial",
+            "error",
+            "disabled",
+            "demo"
+          ]
+        },
+        "stats": {
+          "type": "object"
+        },
+        "status_message": {
+          "type": "string"
+        },
+        "untrusted_listing_text": {
+          "const": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "kind",
+        "snapshot_id",
+        "generated_at",
+        "source_status",
+        "untrusted_listing_text"
+      ],
+      "type": "object"
+    },
+    "item": {
+      "additionalProperties": false,
+      "properties": {
+        "assessment_at": {
+          "$ref": "#/$defs/nullableTime"
+        },
+        "assessment_basis": {
+          "enum": [
+            "heuristic",
+            "llm"
+          ]
+        },
+        "assessment_confidence": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "bid_count": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "buying_options": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "carried": {
+          "type": "boolean"
+        },
+        "category_id": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "category_name": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "city": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "classification": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "completeness": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "condition": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "condition_claim": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "content_updated_at": {
+          "$ref": "#/$defs/nullableTime"
+        },
+        "country": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "currency": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "description": {
+          "maxLength": 20000,
+          "type": "string"
+        },
+        "description_status": {
+          "enum": [
+            "fresh",
+            "stale",
+            "unknown",
+            "missing"
+          ]
+        },
+        "description_truncated": {
+          "type": "boolean"
+        },
+        "detail_fetched": {
+          "type": "boolean"
+        },
+        "detail_path": {
+          "pattern": "^api/items/[0-9a-f]{64}\\.json$",
+          "type": "string"
+        },
+        "details_fetched": {
+          "type": "boolean"
+        },
+        "distance_km": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "eligibility": {
+          "enum": [
+            "eligible",
+            "review",
+            "excluded"
+          ]
+        },
+        "eligibility_reasons": {
+          "items": {
+            "maxLength": 600,
+            "type": "string"
+          },
+          "maxItems": 20,
+          "type": "array"
+        },
+        "ends_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 512,
+          "minLength": 1,
+          "type": "string"
+        },
+        "image": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "interest_score": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "is_auction": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "last_seen_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "local_pickup_confirmed": {
+          "type": "boolean"
+        },
+        "minimum_bid_eur": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "model": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "next_checks": {
+          "items": {
+            "maxLength": 600,
+            "type": "string"
+          },
+          "maxItems": 20,
+          "type": "array"
+        },
+        "pickup_radius_km": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "postcode": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "price_basis": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "price_eur": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "price_kind": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "product_kind": {
+          "enum": [
+            "apparatus",
+            "tool",
+            "accessory",
+            "media",
+            "consumable",
+            "unknown"
+          ]
+        },
+        "reasons": {
+          "items": {
+            "maxLength": 600,
+            "type": "string"
+          },
+          "maxItems": 20,
+          "type": "array"
+        },
+        "reserve_price_met": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "reserve_status": {
+          "enum": [
+            "none",
+            "not_met",
+            "met",
+            "unknown"
+          ]
+        },
+        "risks": {
+          "items": {
+            "maxLength": 600,
+            "type": "string"
+          },
+          "maxItems": 20,
+          "type": "array"
+        },
+        "score": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "semantic_assessed": {
+          "type": "boolean"
+        },
+        "semantic_assessed_at": {
+          "$ref": "#/$defs/nullableTime"
+        },
+        "semantic_interest": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "shipping_confirmed": {
+          "type": "boolean"
+        },
+        "shipping_eur": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "source": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "stale": {
+          "type": "boolean"
+        },
+        "title": {
+          "maxLength": 500,
+          "minLength": 1,
+          "type": "string"
+        },
+        "total_eur": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "total_known_eur": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "url": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "valid_until": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "value_band": {
+          "enum": [
+            "around_5",
+            "around_50",
+            "around_500",
+            "unknown"
+          ]
+        },
+        "value_reason": {
+          "$ref": "#/$defs/nullableText"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "description_truncated",
+        "description_status",
+        "price_eur",
+        "shipping_eur",
+        "bid_count",
+        "distance_km",
+        "ends_at",
+        "last_seen_at",
+        "content_updated_at",
+        "valid_until",
+        "detail_path",
+        "eligibility",
+        "reserve_status",
+        "score",
+        "interest_score",
+        "value_band",
+        "assessment_confidence",
+        "assessment_basis",
+        "semantic_assessed",
+        "reasons",
+        "risks"
+      ],
+      "type": "object"
+    },
+    "itemDocument": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "properties": {
+            "item": {
+              "$ref": "#/$defs/item"
+            },
+            "kind": {
+              "const": "item"
+            }
+          },
+          "required": [
+            "item"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "manifest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/header"
+        },
+        {
+          "properties": {
+            "assessment": {
+              "properties": {
+                "condition_verified": {
+                  "const": false
+                },
+                "is_appraisal": {
+                  "const": false
+                },
+                "must_recheck_original_before_bidding": {
+                  "const": true
+                },
+                "purpose": {
+                  "const": "personal_attention_priority"
+                }
+              },
+              "required": [
+                "purpose",
+                "is_appraisal",
+                "condition_verified",
+                "must_recheck_original_before_bidding"
+              ],
+              "type": "object"
+            },
+            "counts": {
+              "properties": {
+                "page_size": {
+                  "maximum": 100,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "pages": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "total": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "total",
+                "pages",
+                "page_size"
+              ],
+              "type": "object"
+            },
+            "interface": {
+              "properties": {
+                "branch": {
+                  "type": "string"
+                },
+                "consistency": {
+                  "type": "string"
+                },
+                "mcp_server": {
+                  "const": false
+                },
+                "protocol": {
+                  "const": "static-json"
+                },
+                "read_only": {
+                  "const": true
+                },
+                "repository": {
+                  "type": "string"
+                },
+                "site_url": {
+                  "format": "uri",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "protocol",
+                "read_only",
+                "mcp_server",
+                "repository",
+                "branch",
+                "site_url",
+                "consistency"
+              ],
+              "type": "object"
+            },
+            "kind": {
+              "const": "manifest"
+            },
+            "pages": {
+              "items": {
+                "properties": {
+                  "count": {
+                    "maximum": 100,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "index": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "path": {
+                    "pattern": "^api/candidates/page-[0-9]{3,}\\.json$",
+                    "type": "string"
+                  },
+                  "sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "index",
+                  "path",
+                  "count",
+                  "sha256"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "paths": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "required": [
+                "dashboard",
+                "openapi",
+                "schema",
+                "guide"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "interface",
+            "counts",
+            "pages",
+            "paths",
+            "assessment"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "nullableNumber": {
+      "minimum": 0,
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "nullableText": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "nullableTime": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$id": "https://pogoner.github.io/fundgrube/api/feed.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Read-only observations and uncertain personal-interest classifications, not a live feed, appraisal or transaction API.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/dashboard"
+    },
+    {
+      "$ref": "#/$defs/manifest"
+    },
+    {
+      "$ref": "#/$defs/candidatePage"
+    },
+    {
+      "$ref": "#/$defs/itemDocument"
+    }
+  ],
+  "title": "Fundgrube static snapshot documents"
+}

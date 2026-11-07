@@ -1,0 +1,139 @@
+{
+  "ai_enabled": false,
+  "ai_metadata": {
+    "ai_enabled": false,
+    "assessed": 0,
+    "budget_exhausted": false,
+    "cache_hits": 0,
+    "calls_used": 0,
+    "errors": [],
+    "llm_status": "disabled"
+  },
+  "assessment": {
+    "coarse_value_classes": [
+      "around_5",
+      "around_50",
+      "around_500",
+      "unknown"
+    ],
+    "condition_verified": false,
+    "is_appraisal": false,
+    "must_recheck_original_before_bidding": true,
+    "purpose": "personal_attention_priority"
+  },
+  "blockers": [
+    {
+      "action": "Datenrechte und öffentliche Git-Historie prüfen; anschließend HUNTER_PUBLISH_LIVE_DATA=true setzen.",
+      "code": "publication_not_enabled",
+      "message": "Die Veröffentlichung echter Angebotsdaten ist noch nicht freigegeben."
+    },
+    {
+      "action": "EBAY_CLIENT_ID und EBAY_CLIENT_SECRET als GitHub Actions Secrets hinterlegen.",
+      "code": "ebay_credentials_missing",
+      "message": "Die eBay-Produktionsschlüssel fehlen."
+    }
+  ],
+  "counts": {
+    "page_size": 50,
+    "pages": 1,
+    "total": 0
+  },
+  "coverage": {
+    "browse_calls_this_run": 0,
+    "browse_calls_today": 0,
+    "categories_completed": 0,
+    "categories_planned": 0,
+    "categories_scanned": 0,
+    "categories_total": 0,
+    "complete": false,
+    "cursor": {
+      "category_id": null,
+      "mode": "delivery",
+      "offset": 0
+    },
+    "cycle_estimate_hours": null,
+    "cycle_estimate_is_lower_bound": true,
+    "daily_budget": 4500,
+    "manual_leaf_override": false,
+    "pagination_caveat": "Ergebnisse verändern sich während des Abrufs; Seiten werden nur innerhalb eines Laufs fortgesetzt. Dichte Kategorien können unvollständig bleiben.",
+    "price_filter_applied": false,
+    "schedule_interval_minutes": 30
+  },
+  "criteria": {
+    "lookahead_hours": 24,
+    "max_bids": 0,
+    "max_freshness_hours": 6,
+    "max_price_eur": 10,
+    "max_shipping_eur": 15,
+    "refresh_after_minutes": 90
+  },
+  "freshness": {
+    "evaluated_at": "2026-11-07T21:43:34Z",
+    "maximum_source_age_hours": 6,
+    "observation_is_not_condition_verification": true,
+    "recheck_at_read_time": true
+  },
+  "generated_at": "2026-11-07T21:43:34Z",
+  "interface": {
+    "branch": "data",
+    "consistency": "Resolve the data branch once; read every file with that same immutable commit ref. On Pages, verify every snapshot_id.",
+    "mcp_server": false,
+    "protocol": "static-json",
+    "read_only": true,
+    "repository": "Pogoner/fundgrube",
+    "site_url": "https://pogoner.github.io/fundgrube/"
+  },
+  "kind": "manifest",
+  "last_successful_scan_at": null,
+  "location": {
+    "city": "Heidelberg",
+    "country": "DE",
+    "pickup_radius_km": 50,
+    "postcode": "69121"
+  },
+  "pages": [
+    {
+      "count": 0,
+      "index": 1,
+      "path": "api/candidates/page-001.json",
+      "sha256": "cc7f0187249f43c78c7ca9087d0bddce12546d1b2bc573874865452e066c1aa0"
+    }
+  ],
+  "paths": {
+    "dashboard": "data/deals.json",
+    "guide": "api/guide.md",
+    "openapi": "api/openapi.json",
+    "schema": "api/feed.schema.json"
+  },
+  "provider": "ebay",
+  "schema_version": 2,
+  "snapshot_id": "sha256:56ef677df20829da3828f61838290426ab2573af32c823b4cb6f50aedabafed8",
+  "source": "ebay",
+  "source_status": "unconfigured",
+  "stats": {
+    "active": 0,
+    "budget_limited": false,
+    "carried": 0,
+    "categories_completed": 0,
+    "categories_planned": 0,
+    "categories_scanned": 0,
+    "categories_total": 0,
+    "detail_failures": 0,
+    "details_fetched": 0,
+    "eligible": 0,
+    "excluded": 0,
+    "omitted_by_export_freshness": 0,
+    "omitted_by_source_status": 0,
+    "omitted_records": 0,
+    "pages_omitted": 0,
+    "received": 0,
+    "refreshed": 0,
+    "review": 0,
+    "searches_failed": 0,
+    "searches_succeeded": 0,
+    "shortlisted": 0,
+    "stale": 0
+  },
+  "status_message": "Noch keine freigegebene Live-Datenquelle eingerichtet.",
+  "untrusted_listing_text": true
+}
