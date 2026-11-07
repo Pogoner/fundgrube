@@ -8,7 +8,8 @@ from hunter.ranking import apply_semantic, assess_item
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 SETTINGS = {"max_price_eur": 10, "max_shipping_eur": 15, "max_bids": 0,
-            "pickup_radius_km": 50, "lookahead_hours": 24, "max_freshness_hours": 6}
+            "postcode": "69121", "pickup_radius_km": 50,
+            "lookahead_hours": 24, "max_freshness_hours": 6}
 
 
 def raw(**overrides):
@@ -149,6 +150,141 @@ class RankingTests(unittest.TestCase):
     def test_invalid_llm_fields_rejected(self):
         with self.assertRaises(ValueError):
             apply_semantic(self.rank(), {"semantic_interest": 101})
+
+
+class AggregatorPickupRankingTests(unittest.TestCase):
+    def candidate(self, **updates):
+        # Deliberately normalized facts: this suite tests ranking, not an API or
+        # the adapter. A source radius claim must not create an actual location.
+        item = normalize_item(raw(shippingOptions=[]), NOW)
+        item.update({
+            "verification_level": "aggregator",
+            "source_provider": "auktionen-ohne-gebot",
+            "pickup_search_confirmed": True,
+            "pickup_search_postcode": "69121",
+            "pickup_search_radius_km": 50,
+            "pickup_available": True,
+            "local_pickup_confirmed": False,
+            "city": "", "postcode": "", "distance_km": None,
+            "reserve_status": "unknown", "price_kind": "auction_price",
+        })
+        item.update(updates)
+        return item
+
+    def rank(self, candidate=None, settings=None):
+        return assess_item(self.candidate() if candidate is None else candidate,
+                           SETTINGS if settings is None else settings, NOW)
+
+    def test_radius_query_is_eight_provisional_points_and_review(self):
+        candidate = self.candidate()
+        before = copy.deepcopy(candidate)
+        matched = self.rank(candidate)
+        no_claim = self.rank(self.candidate(pickup_search_confirmed=False))
+        self.assertEqual(candidate, before)
+        self.assertEqual(matched["fact_score"] - no_claim["fact_score"], 8)
+        self.assertEqual(matched["eligibility"], "review")
+        self.assertFalse(matched["local_pickup_confirmed"])
+        self.assertEqual(matched["city"], "")
+        self.assertEqual(matched["postcode"], "")
+        self.assertIsNone(matched["distance_km"])
+        self.assertIsNone(matched["shipping_eur"])
+        warning = "Standort und Abholbedingungen im Original prüfen; Nähe laut Umkreissuche der Quelle"
+        self.assertIn(warning, matched["eligibility_reasons"])
+        self.assertIn(warning, matched["fact_risks"])
+        self.assertIn("Nähe laut Umkreissuche der Quelle", matched["fact_reasons"])
+        self.assertNotIn("Abholung im bestätigten Suchradius möglich", matched["reasons"])
+        self.assertTrue(any("zwischengespeicherter Fremdübersicht" in risk for risk in matched["risks"]))
+
+    def test_synthetic_autoclave_remains_more_interesting_than_bmw_magazine(self):
+        apparatus = self.rank(self.candidate(title="Tisch-Autoklav voll funktionsfähig"))
+        magazine = self.rank(self.candidate(title="Altes BMW Heft 1998"))
+        self.assertGreater(apparatus["interest_score"], 75)
+        self.assertLess(magazine["interest_score"], 30)
+        self.assertGreater(apparatus["interest_score"], magazine["interest_score"])
+        self.assertEqual(apparatus["value_band"], "around_500")
+        self.assertEqual(magazine["value_band"], "around_5")
+        for result in (apparatus, magazine):
+            self.assertEqual(result["assessment_basis"], "heuristic")
+            self.assertEqual(result["eligibility"], "review")
+            self.assertFalse(result["local_pickup_confirmed"])
+
+    def test_unconfirmed_reserve_and_general_price_remain_review_points(self):
+        result = self.rank()
+        self.assertEqual(result["reserve_status"], "unknown")
+        self.assertEqual(result["price_kind"], "auction_price")
+        self.assertTrue(any("Mindestpreisstatus unbekannt" in risk for risk in result["eligibility_reasons"]))
+        self.assertTrue(any("allgemeinem Preisfeld" in risk for risk in result["eligibility_reasons"]))
+
+    def test_provisional_pickup_can_keep_expensive_shipping_in_review(self):
+        result = self.rank(self.candidate(shipping_eur=100))
+        no_claim = self.rank(self.candidate(shipping_eur=100, pickup_search_confirmed=False))
+        self.assertEqual(result["eligibility"], "review")
+        self.assertEqual(no_claim["eligibility"], "excluded")
+        self.assertFalse(result["local_pickup_confirmed"])
+        self.assertEqual(result["shipping_eur"], 100)
+
+    def test_provisional_pickup_never_rescues_other_failed_constraints(self):
+        cases = [{"price_eur": 11}, {"bid_count": 1}, {"reserve_status": "not_met"},
+                 {"ends_at": iso_time(NOW - timedelta(seconds=1))}, {"is_auction": False}]
+        for change in cases:
+            with self.subTest(change=change):
+                result = self.rank(self.candidate(**change))
+                self.assertEqual(result["eligibility"], "excluded")
+                self.assertFalse(result["local_pickup_confirmed"])
+
+    def test_pickup_availability_alone_is_not_a_radius_match(self):
+        candidate = self.candidate()
+        for key in ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km"):
+            del candidate[key]
+        result = self.rank(candidate)
+        self.assertEqual(result["fact_score"], 17)
+        self.assertEqual(result["eligibility"], "review")
+        self.assertNotIn("Nähe laut Umkreissuche der Quelle", result["fact_reasons"])
+        self.assertFalse(result["local_pickup_confirmed"])
+
+    def test_invalid_source_or_radius_claims_are_ignored(self):
+        cases = [
+            {"verification_level": "direct"}, {"verification_level": None},
+            {"source_provider": "other"}, {"source_provider": None},
+            {"pickup_search_confirmed": False}, {"pickup_search_confirmed": "true"},
+            {"pickup_search_confirmed": 1}, {"pickup_search_postcode": "68159"},
+            {"pickup_search_postcode": 69121}, {"pickup_search_postcode": None},
+            {"pickup_search_radius_km": 51}, {"pickup_search_radius_km": 0},
+            {"pickup_search_radius_km": -1}, {"pickup_search_radius_km": None},
+            {"pickup_search_radius_km": True}, {"pickup_search_radius_km": "invalid"},
+            {"pickup_search_radius_km": float("inf")}, {"pickup_search_radius_km": float("nan")},
+        ]
+        for change in cases:
+            with self.subTest(change=change):
+                result = self.rank(self.candidate(**change))
+                self.assertEqual(result["fact_score"], 17)
+                self.assertFalse(result["local_pickup_confirmed"])
+                self.assertNotIn("Nähe laut Umkreissuche der Quelle", result["fact_reasons"])
+
+    def test_missing_or_changed_user_postcode_cannot_validate_old_search(self):
+        for postcode in (None, "", "6912", "691210", "68159", 69121):
+            with self.subTest(postcode=postcode):
+                result = self.rank(settings={**SETTINGS, "postcode": postcode})
+                self.assertEqual(result["fact_score"], 17)
+                self.assertNotIn("Nähe laut Umkreissuche der Quelle", result["fact_reasons"])
+
+    def test_smaller_radius_honored_but_wider_or_nonfinite_user_limit_not(self):
+        self.assertEqual(self.rank(self.candidate(pickup_search_radius_km=25))["fact_score"], 25)
+        for radius in (25, 0, -1, float("inf"), float("nan"), True):
+            with self.subTest(radius=radius):
+                result = self.rank(settings={**SETTINGS, "pickup_radius_km": radius})
+                self.assertEqual(result["fact_score"], 17)
+
+    def test_cheap_shipping_and_confirmed_pickup_take_precedence(self):
+        delivered = self.rank(self.candidate(shipping_eur=5, reserve_status="none", price_kind="current_bid"))
+        collected = self.rank(self.candidate(local_pickup_confirmed=True, reserve_status="none", price_kind="current_bid"))
+        self.assertEqual(delivered["fact_score"], 28)
+        self.assertEqual(collected["fact_score"], 30)
+        self.assertEqual(delivered["eligibility"], "eligible")
+        self.assertEqual(collected["eligibility"], "eligible")
+        self.assertFalse(delivered["local_pickup_confirmed"])
+        for result in (delivered, collected):
+            self.assertNotIn("Nähe laut Umkreissuche der Quelle", result["fact_reasons"])
 
 
 if __name__ == "__main__":

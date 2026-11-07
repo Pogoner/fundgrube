@@ -129,7 +129,9 @@ def normalize_item(raw: dict[str, Any], at: datetime, *, local_pickup_confirmed:
         price, price_kind = minimum, "minimum_bid"
     elif "price_eur" in raw:
         price = euro(raw["price_eur"], explicit_eur=True)
-        price_kind = "current_bid" if price is not None else "unknown"
+        # A public summary price is not automatically a verified current bid.
+        price_kind = (raw.get("price_kind") if raw.get("price_kind") in
+                      {"current_bid", "minimum_bid", "auction_price"} else "current_bid") if price is not None else "unknown"
     elif is_auction and "FIXED_PRICE" not in options:
         price = euro(raw.get("price"))
         price_kind = "auction_price" if price is not None else "unknown"
@@ -158,7 +160,7 @@ def normalize_item(raw: dict[str, Any], at: datetime, *, local_pickup_confirmed:
     image = image.get("imageUrl", "") if isinstance(image, dict) else image
     ending = parse_time(raw.get("itemEndDate", raw.get("ends_at")))
     description = raw.get("description") or raw.get("shortDescription") or ""
-    return {
+    result = {
         "id": item_id.strip(),
         "title": plain_text(raw.get("title"), 300) or "Ohne Titel",
         "description": plain_text(description),
@@ -183,3 +185,34 @@ def normalize_item(raw: dict[str, Any], at: datetime, *, local_pickup_confirmed:
         "pickup_radius_km": pickup_radius_km,
         "details_fetched": raw.get("_details_fetched") is True,
     }
+    if raw.get("source_provider") == "auktionen-ohne-gebot":
+        observed = parse_time(raw.get("source_observed_at"))
+        if (raw.get("source_url") != "https://auktionen-ohne-gebot.de/business-industrie/"
+                or raw.get("verification_level") != "aggregator"
+                or observed is None or observed > at):
+            return None
+        search_postcode = raw.get("pickup_search_postcode")
+        search_radius = finite_number(raw.get("pickup_search_radius_km"))
+        pickup_search = (raw.get("pickup_search_confirmed") is True
+                         and raw.get("pickup_available") is True
+                         and isinstance(search_postcode, str)
+                         and re.fullmatch(r"[0-9]{5}", search_postcode) is not None
+                         and search_radius is not None and 0 < search_radius <= 200)
+        result.update({
+            "source_provider": "auktionen-ohne-gebot",
+            "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+            "source_observed_at": iso_time(observed),
+            "verification_level": "aggregator",
+            "pickup_available": raw.get("pickup_available") if type(raw.get("pickup_available")) is bool else None,
+            "last_seen_at": iso_time(observed),
+            "content_updated_at": iso_time(observed),
+            # The aggregator does not supply full descriptions, locations or
+            # reserve status. Never carry these over from another source.
+            "description": "", "city": "", "postcode": "", "country": "",
+            "distance_km": None, "reserve_status": "unknown", "details_fetched": False,
+            "local_pickup_confirmed": False,
+            "pickup_search_confirmed": pickup_search,
+        })
+        if pickup_search:
+            result.update(pickup_search_postcode=search_postcode, pickup_search_radius_km=search_radius)
+    return result

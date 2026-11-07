@@ -65,6 +65,28 @@ def _score(semantic_interest: int, fact_points: int, eligibility: str, kind: str
     return score
 
 
+def _provisional_pickup_match(item: dict[str, Any], settings: dict[str, Any]) -> bool:
+    """Accept a matching aggregator radius query only as a reviewable lead.
+
+    A query match is not a verified article location or pickup agreement. It may
+    keep a candidate in review, but can never set local_pickup_confirmed.
+    """
+    postcode = settings.get("postcode")
+    search_radius = finite_number(item.get("pickup_search_radius_km"))
+    requested_radius = finite_number(settings.get("pickup_radius_km", 50))
+    return (
+        item.get("verification_level") == "aggregator"
+        and item.get("source_provider") == "auktionen-ohne-gebot"
+        and item.get("pickup_search_confirmed") is True
+        and isinstance(postcode, str)
+        and re.fullmatch(r"[0-9]{5}", postcode) is not None
+        and item.get("pickup_search_postcode") == postcode
+        and search_radius is not None and search_radius > 0
+        and requested_radius is not None and requested_radius > 0
+        and search_radius <= requested_radius
+    )
+
+
 def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) -> dict[str, Any]:
     result = dict(item)
     reasons: list[str] = []
@@ -102,6 +124,10 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
     elif delivery:
         points += 8
         reasons.append("Ausgewiesene Versandkosten im Suchlimit")
+    elif _provisional_pickup_match(item, settings):
+        points += 8
+        reasons.append("Nähe laut Umkreissuche der Quelle")
+        unknown.append("Standort und Abholbedingungen im Original prüfen; Nähe laut Umkreissuche der Quelle")
     elif shipping is None:
         unknown.append("Weder Versandkosten noch passende Abholung bestätigt")
     else:
@@ -135,6 +161,8 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
         unknown.append("Mindestpreis erreicht, aber nicht als reservefrei bestätigt")
     if item.get("price_kind") == "auction_price":
         unknown.append("Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen")
+    if item.get("verification_level") == "aggregator":
+        risks.append("Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen")
     eligibility = "excluded" if failed else ("review" if unknown else "eligible")
     assessment = heuristic_assessment(item)
     fact_points = max(0, points - (3 if unknown else 0))

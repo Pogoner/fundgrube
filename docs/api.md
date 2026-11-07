@@ -86,11 +86,83 @@ Wichtige Begriffe:
   erforderliches Mindestgebot; ein Sofortkaufpreis darf nicht damit verwechselt werden.
 - `description_truncated`: Ob der Text in dieser Datei abgeschnitten wurde.
   Kurzdatensätze enthalten höchstens 600 Zeichen, Details höchstens 20.000.
+- Optionale Herkunftsfelder: `source_provider`, `source_url`, `source_observed_at`
+  und `verification_level`. Diese bleiben in GUI, Kandidatenseiten und Details
+  erhalten. Ältere Schema-2-Datensätze ohne diese Felder bleiben lesbar.
 
 Unbekannte Angaben bleiben `null`. Das bedeutet insbesondere **nicht** „0 Gebote“,
 „kostenloser Versand“ oder „kein Mindestpreis“. `reserve_status: met` bedeutet nur,
 dass ein Mindestpreis erreicht wurde. Ein bestätigter Abhol-Suchradius ist keine
 gemessene Entfernung und keine Fahrzeit.
+
+## Quelle „Auktionen ohne Gebot“
+
+Der Provider `auktionen-ohne-gebot` liest einen Drittanbieter-Ausschnitt aus der
+festen Kategoriequelle
+<https://auktionen-ohne-gebot.de/business-industrie/>. Damit sind die Daten **nicht
+direkt bei eBay geprüft**, auch wenn sie auf eBay-Angebote verlinken oder der
+Quellenabruf erfolgreich war. Jeder so erzeugte Datensatz trägt:
+
+```json
+{
+  "source_provider": "auktionen-ohne-gebot",
+  "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+  "verification_level": "aggregator"
+}
+```
+
+`source_observed_at` nennt zusätzlich den tatsächlichen, zeitzonenbehafteten
+Quellenabruf. Für diese Quelle akzeptiert der Export nur die feste HTTPS-URL und
+die Kennzeichnung `aggregator`; eine Kennzeichnung als direkt verifizierte
+eBay-Daten wird zurückgewiesen. Fehlende, veraltete oder zukünftige
+Quellen-Zeitstempel werden nicht zu frischen Beobachtungen umgedeutet.
+
+Der Anbieter nennt einen Cache von bis zu **15 Minuten**. Das bleibt eine
+**Anbieterangabe**, keine eigene Echtzeitverifikation. `last_seen_at` wird vom
+Collector konservativ unter Berücksichtigung dieses Alters gesetzt;
+`source_observed_at` und erst recht `generated_at` dürfen es nicht ersetzen.
+Zusätzliche Zeit zwischen Abruf und Lesen kann die Angaben weiter veralten lassen.
+
+Die verwendete Quelle liefert Titel, Bild, Preis, Versand, Gebotszahl, Ende,
+Zustandsangabe und eBay-Link, aber hier **keine vollständigen Beschreibungen, keine
+bestätigten Standorte und keinen Mindestpreisstatus**. Keine Nähe zu Heidelberg,
+Vollständigkeit, Funktionsfähigkeit oder Mindestpreisfreiheit hinzuerfinden.
+`pickup_available: true` bedeutet höchstens „Abholung laut Quelle möglich“ und
+ist nicht `local_pickup_confirmed: true`; `null` bleibt unbekannt.
+
+Eine zusätzliche Abhol-Umkreissuche der Quelle kann **vorläufige** Kandidaten
+liefern. Dafür sind drei optionale Felder vorgesehen:
+
+- `pickup_search_confirmed`: Der Aggregator hat das Angebot in dieser Suche
+  zurückgegeben; kein unabhängig bestätigter Standort.
+- `pickup_search_postcode`: Die fünfstellige Such-Postleitzahl, etwa `69121`,
+  **nicht** die Postleitzahl des Verkäufers.
+- `pickup_search_radius_km`: Der angefragte Radius, **keine** gemessene Entfernung.
+
+Der Zeitstempel `source_observed_at` gilt auch für diese Quellenbeobachtung.
+`local_pickup_confirmed` bleibt bei diesem Provider `false`; Stadt und Entfernung
+werden nicht erfunden. Als offenen Prüffall nennen:
+**„Abholung laut Umkreissuche; Standort im Original prüfen.“** Bei ungültiger
+Postleitzahl, fehlendem/ungültigem Radius oder fehlender belastbarer
+Quellenherkunft entfällt die Suchbestätigung. Der Score darf aus solchen
+ungültigen Angaben keinen Nähe-Bonus erhalten.
+
+`coverage` beschreibt den tatsächlich gelesenen Ausschnitt:
+
+| Feld | Bedeutung |
+|---|---|
+| `requests_this_run` / `pages_fetched` | Ausgeführte Anfragen und gelesene Quellseiten |
+| `page_size` / `next_offset` | Größe und Fortsetzung der Quell-Paginierung, nicht der JSON-API-Seiten |
+| `source_total_reported` | Trefferzahl laut Aggregator, keine selbst verifizierte eBay-Gesamtzahl |
+| `source_cache_max_age_minutes` | Vom Anbieter genannte maximale Cache-Zeit |
+| `source_claims_only` | Für diese Quelle immer `true` |
+| `capped` / `complete` | Begrenzter Ausschnitt; `complete` bleibt für diesen Provider `false` |
+
+`source_status: partial` bedeutet hier: Die Quelle funktioniert, aber nur ein
+Ausschnitt wurde gelesen. Auch das Lesen sämtlicher gelieferten JSON-Seiten
+beweist keine vollständige Abdeckung von eBay oder der Kategorie. Die API bewahrt
+auch zusätzliche Coverage-Felder, damit künftige Quellenlimits nicht verloren
+gehen.
 
 ## Aktualität, Sicherheit und Grenzen
 

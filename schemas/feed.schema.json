@@ -13,6 +13,9 @@
     "nullableNumber": {"type": ["number", "null"], "minimum": 0},
     "nullableText": {"type": ["string", "null"]},
     "nullableTime": {"type": ["string", "null"], "format": "date-time"},
+    "sourceProvider": {"type": ["string", "null"], "minLength": 1, "maxLength": 80},
+    "sourceUrl": {"enum": ["https://auktionen-ohne-gebot.de/business-industrie/", null]},
+    "verificationLevel": {"enum": ["aggregator", "direct_api", "user_supplied", "unknown", null]},
     "header": {
       "type": "object",
       "required": ["schema_version", "kind", "snapshot_id", "generated_at", "source_status", "untrusted_listing_text"],
@@ -22,6 +25,12 @@
         "snapshot_id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
         "generated_at": {"type": "string", "format": "date-time"},
         "source_status": {"enum": ["unconfigured", "live", "partial", "error", "disabled", "demo"]},
+        "source": {"$ref": "#/$defs/nullableText"},
+        "provider": {"$ref": "#/$defs/nullableText"},
+        "source_provider": {"$ref": "#/$defs/sourceProvider"},
+        "source_url": {"$ref": "#/$defs/sourceUrl"},
+        "source_observed_at": {"$ref": "#/$defs/nullableTime"},
+        "verification_level": {"$ref": "#/$defs/verificationLevel"},
         "untrusted_listing_text": {"const": true},
         "last_successful_scan_at": {"$ref": "#/$defs/nullableTime"},
         "status_message": {"type": "string"},
@@ -36,7 +45,21 @@
         "location": {"type": "object"},
         "criteria": {"type": "object"},
         "stats": {"type": "object"},
-        "coverage": {"type": "object"},
+        "coverage": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "requests_this_run": {"type": "integer", "minimum": 0},
+            "pages_fetched": {"type": "integer", "minimum": 0},
+            "page_size": {"type": ["integer", "null"], "minimum": 1},
+            "source_total_reported": {"type": ["integer", "null"], "minimum": 0},
+            "source_cache_max_age_minutes": {"type": ["number", "null"], "minimum": 0},
+            "source_claims_only": {"type": "boolean"},
+            "next_offset": {"type": ["integer", "null"], "minimum": 0},
+            "capped": {"type": "boolean"},
+            "complete": {"type": "boolean"}
+          }
+        },
         "ai_enabled": {"type": "boolean"},
         "ai_metadata": {"type": "object"},
         "freshness": {
@@ -46,7 +69,9 @@
             "maximum_source_age_hours": {"type": "number", "exclusiveMinimum": 0, "maximum": 6},
             "evaluated_at": {"type": "string", "format": "date-time"},
             "recheck_at_read_time": {"const": true},
-            "observation_is_not_condition_verification": {"const": true}
+            "observation_is_not_condition_verification": {"const": true},
+            "direct_ebay_verification": {"type": "boolean"},
+            "upstream_cache_age_is_provider_claim": {"type": "boolean"}
           }
         }
       }
@@ -86,6 +111,10 @@
         "reserve_status": {"enum": ["none", "not_met", "met", "unknown"]},
         "reserve_price_met": {"type": ["boolean", "null"]},
         "local_pickup_confirmed": {"type": "boolean"},
+        "pickup_available": {"type": ["boolean", "null"]},
+        "pickup_search_confirmed": {"type": "boolean"},
+        "pickup_search_postcode": {"type": "string", "pattern": "^[0-9]{5}$"},
+        "pickup_search_radius_km": {"type": "number", "exclusiveMinimum": 0},
         "pickup_radius_km": {"$ref": "#/$defs/nullableNumber"},
         "score": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
         "interest_score": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
@@ -115,6 +144,10 @@
         "carried": {"type": "boolean"},
         "stale": {"type": "boolean"},
         "source": {"$ref": "#/$defs/nullableText"},
+        "source_provider": {"$ref": "#/$defs/sourceProvider"},
+        "source_url": {"$ref": "#/$defs/sourceUrl"},
+        "source_observed_at": {"$ref": "#/$defs/nullableTime"},
+        "verification_level": {"$ref": "#/$defs/verificationLevel"},
         "category_id": {"$ref": "#/$defs/nullableText"},
         "category_name": {"$ref": "#/$defs/nullableText"},
         "model": {"$ref": "#/$defs/nullableText"},

@@ -40,10 +40,11 @@
         </section>
 
         <section id="notice" class="notice" role="status" aria-live="polite" hidden></section>
+        <section id="source-attribution" class="source-attribution" aria-label="Datenherkunft und Verifikation" hidden></section>
         <noscript><p class="notice">Das Dashboard benötigt JavaScript. Die <a href="./api/manifest.json">JSON-Schnittstelle</a> und der <a href="./api/guide.md">Leseleitfaden</a> sind auch ohne JavaScript zugänglich.</p></noscript>
 
         <section class="metric-strip" aria-label="Übersicht">
-          <div class="metric"><p>ANGEBOTE GESICHTET</p><strong id="metric-scanned">—</strong><span>im letzten Teilscan</span></div>
+          <div class="metric"><p>ANGEBOTE GESICHTET</p><strong id="metric-scanned">—</strong><span id="metric-scanned-note">im letzten Quellenabruf</span></div>
           <div class="metric"><p>AKTIVE KANDIDATEN</p><strong id="metric-candidates">—</strong><span id="metric-candidate-note">nach dem Vorfilter</span></div>
           <div class="metric"><p id="metric-highvalue-label">HÖHERWERTIG MÖGLICH</p><strong id="metric-highvalue">—</strong><span>Grobe Klasse, kein Marktwert</span></div>
           <div class="metric metric-last"><p>SNAPSHOT ERSTELLT</p><strong id="metric-updated" class="metric-date">—</strong><span id="metric-source">Warte auf Datenquelle</span></div>
@@ -52,7 +53,7 @@
         <details id="coverage-details" class="coverage-details" hidden>
           <summary><span id="coverage-summary">Scan-Abdeckung und Datenalter</span><span class="coverage-chevron" aria-hidden="true">⌄</span></summary>
           <div id="coverage-content" class="coverage-content"></div>
-          <p class="coverage-note">Unterkategorien werden rotierend geprüft. Dieser Snapshot ist keine vollständige oder sekundengenaue Abbildung aller eBay-Auktionen. Der Stand jedes Angebots ist separat gekennzeichnet. Quellenangaben älter als sechs Stunden oder ohne Zeitstempel bleiben standardmäßig ausgeblendet.</p>
+          <p id="coverage-note" class="coverage-note">Die Abdeckung hängt von der ausgewählten Quelle ab. Dieser Snapshot ist keine vollständige oder sekundengenaue Abbildung aller eBay-Auktionen. Quellenangaben älter als sechs Stunden oder ohne Zeitstempel bleiben standardmäßig ausgeblendet.</p>
         </details>
 
         <section class="results" aria-label="Angebote">
@@ -112,8 +113,10 @@
           <div class="tool-handoff">
             <div><span class="tool-handoff-label">DIREKTER GITHUB-TOOL-ZUGRIFF</span><pre id="tool-instructions">Repository: Pogoner/fundgrube
 Branch: data
+Branch einmalig auf Commit-SHA auflösen.
 Startdatei: api/manifest.json
-Danach den Seiten- und Detailpfaden folgen.
+Alle Seiten und Details unter demselben SHA lesen.
+Quellenhinweise und Datenalter beachten.
 Semantisches Interesse 0–100 und grobe Klasse:
 eher 5 / 50 / 500 € / unklar. Keine Preisempfehlung.</pre></div>
             <button id="copy-instructions" class="secondary-button" type="button">Leseauftrag kopieren</button>

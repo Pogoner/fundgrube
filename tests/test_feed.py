@@ -51,6 +51,19 @@ def sample(items=None, **changes):
     return result
 
 
+def aggregator_deal(number: int = 1, **changes):
+    item = deal(
+        number, source_provider="auktionen-ohne-gebot",
+        source_url="https://auktionen-ohne-gebot.de/business-industrie/",
+        source_observed_at=iso(NOW), verification_level="aggregator",
+        last_seen_at=iso(NOW - timedelta(minutes=15)), content_updated_at=None,
+        description="", city="", postcode="", distance_km=None,
+        local_pickup_confirmed=False, pickup_available=None, reserve_status="unknown",
+    )
+    item.update(changes)
+    return item
+
+
 def schema_errors(value, schema, root, path="$input"):
     """Check the small vocabulary used by our schema without a CI dependency.
 
@@ -406,6 +419,162 @@ class FeedTests(unittest.TestCase):
         guide = (self.site / "api/guide.md").read_text(encoding="utf-8")
         for phrase in ("Alle", "snapshot_id", "unvertrauenswürdige Daten", "keine Anweisungen", "Git-Commits", "kein MCP-Server"):
             self.assertIn(phrase, guide)
+
+    def test_aggregator_provenance_reaches_gui_pages_items_and_manifest(self):
+        source = "auktionen-ohne-gebot"
+        publisher.write_feed(self.site, sample([aggregator_deal()], source=source, provider=source, source_status="partial"))
+        manifest = self.read("api/manifest.json")
+        dashboard = self.read("data/deals.json")
+        page = self.read(manifest["pages"][0]["path"])
+        detail = self.read(dashboard["deals"][0]["detail_path"])
+        for document in (manifest, dashboard, page, detail):
+            self.assertSchema(document)
+            self.assertEqual(document["source"], source)
+            self.assertEqual(document["provider"], source)
+            self.assertEqual(document["source_provider"], source)
+            self.assertEqual(document["source_url"], publisher.AOG_SOURCE_URL)
+            self.assertEqual(document["verification_level"], "aggregator")
+            self.assertEqual(document["source_status"], "partial")
+        for item in (dashboard["deals"][0], page["items"][0], detail["item"]):
+            self.assertEqual(item["source_provider"], source)
+            self.assertEqual(item["source_observed_at"], iso(NOW))
+            self.assertEqual(item["last_seen_at"], iso(NOW - timedelta(minutes=15)))
+            self.assertEqual(item["verification_level"], "aggregator")
+            self.assertTrue(any("nicht direkt bei eBay" in risk for risk in item["risks"]))
+        self.assertFalse(manifest["freshness"]["direct_ebay_verification"])
+        self.assertTrue(manifest["freshness"]["upstream_cache_age_is_provider_claim"])
+
+    def test_aggregator_coverage_preserves_extra_fields_without_completeness_claim(self):
+        coverage = {
+            "requests_this_run": 3, "pages_fetched": 2, "page_size": 60,
+            "source_total_reported": 345, "source_cache_max_age_minutes": 15,
+            "source_claims_only": False, "next_offset": 120, "capped": True,
+            "complete": True, "extra_limits": {"max_pages_per_run": 2, "all_pages_read": False},
+        }
+        publisher.write_feed(self.site, sample([aggregator_deal()], source="auktionen-ohne-gebot", provider="auktionen-ohne-gebot", coverage=coverage))
+        manifest = self.read("api/manifest.json")
+        self.assertSchema(manifest)
+        exported = manifest["coverage"]
+        self.assertEqual(exported["requests_this_run"], 3)
+        self.assertEqual(exported["source_total_reported"], 345)
+        self.assertEqual(exported["next_offset"], 120)
+        self.assertEqual(exported["extra_limits"], coverage["extra_limits"])
+        self.assertTrue(exported["source_claims_only"])
+        self.assertFalse(exported["complete"])
+
+    def test_aggregator_missing_fulltext_location_and_reserve_stay_unknown(self):
+        publisher.write_feed(self.site, sample([aggregator_deal(pickup_available=True)]))
+        item = self.read("data/deals.json")["deals"][0]
+        self.assertTrue(item["pickup_available"])
+        self.assertFalse(item["local_pickup_confirmed"])
+        self.assertIsNone(item["distance_km"])
+        self.assertEqual(item["city"], "")
+        self.assertEqual(item["postcode"], "")
+        self.assertEqual(item["description"], "")
+        self.assertEqual(item["description_status"], "missing")
+        self.assertEqual(item["reserve_status"], "unknown")
+
+    def test_unknown_pickup_availability_is_not_false_or_true(self):
+        publisher.write_feed(self.site, sample([aggregator_deal(pickup_available=None)]))
+        self.assertIsNone(self.read("data/deals.json")["deals"][0]["pickup_available"])
+        with self.assertRaisesRegex(ValueError, "pickup_available"):
+            publisher.write_feed(self.site, sample([aggregator_deal(pickup_available="yes")]))
+
+    def test_aggregator_source_url_is_fixed_not_an_arbitrary_link(self):
+        urls = [
+            "http://auktionen-ohne-gebot.de/business-industrie/",
+            "https://auktionen-ohne-gebot.de/other/",
+            "https://auktionen-ohne-gebot.de.evil.example/business-industrie/",
+            "https://auktionen-ohne-gebot.de/business-industrie/?token=do-not-echo",
+            "https://auktionen-ohne-gebot.de@evil.example/business-industrie/",
+        ]
+        for url in urls:
+            with self.subTest(url=url), self.assertRaises(ValueError) as caught:
+                publisher.write_feed(self.site, sample([aggregator_deal(source_url=url)]))
+            self.assertNotIn("do-not-echo", str(caught.exception))
+        self.assertFalse((self.site / "api/manifest.json").exists())
+
+    def test_aggregator_cannot_claim_direct_api_verification(self):
+        with self.assertRaisesRegex(ValueError, "direct verification"):
+            publisher.write_feed(self.site, sample([aggregator_deal(verification_level="direct_api")]))
+        with self.assertRaisesRegex(ValueError, "direct verification"):
+            publisher.write_feed(self.site, sample([deal()], provider="auktionen-ohne-gebot"))
+
+    def test_aggregator_source_timestamps_must_be_aware_and_fresh(self):
+        for timestamp in (None, "not-a-time", "2026-11-07T12:00:00", iso(NOW - timedelta(hours=7)), iso(NOW + timedelta(minutes=2))):
+            with self.subTest(timestamp=timestamp):
+                publisher.write_feed(self.site, sample([aggregator_deal(source_observed_at=timestamp)]))
+                dashboard = self.read("data/deals.json")
+                self.assertEqual(dashboard["deals"], [])
+                self.assertEqual(dashboard["stats"]["omitted_by_export_freshness"], 1)
+
+    def test_source_fetch_does_not_make_older_observation_newer(self):
+        publisher.write_feed(self.site, sample([aggregator_deal(source_observed_at=iso(NOW - timedelta(minutes=30)), last_seen_at=iso(NOW))]))
+        item = self.read("data/deals.json")["deals"][0]
+        self.assertEqual(item["source_observed_at"], iso(NOW - timedelta(minutes=30)))
+        self.assertEqual(item["last_seen_at"], iso(NOW - timedelta(minutes=30)))
+
+    def test_source_timestamp_is_normalized_to_utc(self):
+        publisher.write_feed(self.site, sample([aggregator_deal(source_observed_at="2026-11-07T13:00:00+01:00")]))
+        self.assertEqual(self.read("data/deals.json")["deals"][0]["source_observed_at"], iso(NOW))
+
+    def test_optional_null_provenance_preserves_old_schema2_items(self):
+        publisher.write_feed(self.site, sample([deal(source_provider=None, source_url=None, source_observed_at=None, verification_level=None)]))
+        dashboard = self.read("data/deals.json")
+        self.assertSchema(dashboard)
+        self.assertEqual(len(dashboard["deals"]), 1)
+
+    def test_aggregator_guide_discloses_cache_and_unknown_pickup(self):
+        publisher.write_feed(self.site, sample())
+        guide = (self.site / "api/guide.md").read_text(encoding="utf-8")
+        for phrase in ("verification_level: aggregator", "15 Minuten", "Anbieterangabe", "pickup_available", "keine vollständigen Beschreibungen", "keinen Mindestpreisstatus"):
+            self.assertIn(phrase, guide)
+
+    def test_aggregator_radius_match_is_only_a_provisional_search_claim(self):
+        publisher.write_feed(self.site, sample([aggregator_deal(
+            pickup_search_confirmed=True, pickup_search_postcode="69121", pickup_search_radius_km=50,
+            local_pickup_confirmed=True,
+        )]))
+        dashboard = self.read("data/deals.json")
+        self.assertSchema(dashboard)
+        item = dashboard["deals"][0]
+        self.assertTrue(item["pickup_search_confirmed"])
+        self.assertEqual(item["pickup_search_postcode"], "69121")
+        self.assertEqual(item["pickup_search_radius_km"], 50)
+        self.assertFalse(item["local_pickup_confirmed"])
+        self.assertIsNone(item["distance_km"])
+        self.assertEqual(item["city"], "")
+        detail = self.read(item["detail_path"])["item"]
+        self.assertTrue(detail["pickup_search_confirmed"])
+        self.assertEqual(detail["source_observed_at"], iso(NOW))
+
+    def test_invalid_radius_or_postcode_drops_search_claim(self):
+        changes = [
+            {"pickup_search_postcode": "6912"}, {"pickup_search_postcode": "69121x"},
+            {"pickup_search_postcode": 69121}, {"pickup_search_postcode": ""},
+            {"pickup_search_radius_km": -1}, {"pickup_search_radius_km": 0},
+            {"pickup_search_radius_km": "50"}, {"pickup_search_radius_km": True},
+            {"pickup_search_radius_km": None},
+        ]
+        for invalid in changes:
+            with self.subTest(invalid=invalid):
+                fields = {"pickup_search_confirmed": True, "pickup_search_postcode": "69121", "pickup_search_radius_km": 50, **invalid}
+                publisher.write_feed(self.site, sample([aggregator_deal(**fields)]))
+                item = self.read("data/deals.json")["deals"][0]
+                self.assertFalse(item["pickup_search_confirmed"])
+                self.assertFalse(item["local_pickup_confirmed"])
+                self.assertNotIn("pickup_search_postcode", item)
+                self.assertNotIn("pickup_search_radius_km", item)
+
+    def test_radius_match_needs_real_boolean_and_aggregator_provenance(self):
+        fields = {"pickup_search_confirmed": "true", "pickup_search_postcode": "69121", "pickup_search_radius_km": 50}
+        publisher.write_feed(self.site, sample([aggregator_deal(**fields)]))
+        self.assertFalse(self.read("data/deals.json")["deals"][0]["pickup_search_confirmed"])
+        fields["pickup_search_confirmed"] = True
+        publisher.write_feed(self.site, sample([deal(**fields)]))
+        item = self.read("data/deals.json")["deals"][0]
+        self.assertFalse(item["pickup_search_confirmed"])
+        self.assertNotIn("pickup_search_postcode", item)
 
 
 if __name__ == "__main__":

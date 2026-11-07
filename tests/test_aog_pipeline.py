@@ -1,0 +1,189 @@
+"""Public-source integration tests: no network and no eBay credentials."""
+
+import copy
+import unittest
+from datetime import datetime, timedelta, timezone
+
+from hunter.models import iso_time, normalize_item
+from hunter.pipeline import new_state, run_pipeline
+
+NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
+OBSERVED = NOW - timedelta(minutes=15)
+ENV = {"HUNTER_PUBLISH_LIVE_DATA": "true"}
+SETTINGS = {"postcode": "69121", "max_price_eur": 1, "pickup_radius_km": 50}
+SOURCE = "https://auktionen-ohne-gebot.de/business-industrie/"
+
+
+def item(**changes):
+    result = {
+        "id": "v1|123456789012|0", "title": "Tisch-Autoklav voll funktionsfähig",
+        "url": "https://www.ebay.de/itm/123456789012", "price_eur": 1,
+        "price_kind": "auction_price", "shipping_eur": None, "bid_count": 0,
+        "ends_at": iso_time(NOW + timedelta(hours=4)), "condition": "Gebraucht",
+        "is_auction": True, "source_provider": "auktionen-ohne-gebot",
+        "source_url": SOURCE, "source_observed_at": iso_time(OBSERVED),
+        "verification_level": "aggregator", "pickup_available": True,
+        "pickup_search_confirmed": True, "pickup_search_postcode": "69121",
+        "pickup_search_radius_km": 50,
+    }
+    result.update(changes)
+    return result
+
+
+def response(items=None, *, status="partial", pages=2, **changes):
+    result = {
+        "items": [item()] if items is None else items,
+        "status": status, "source_state": {"next_allowed_at": iso_time(NOW + timedelta(minutes=30))},
+        "observed_at": iso_time(OBSERVED), "warnings": [],
+        "coverage": {"requests_this_run": pages + 1, "pages_fetched": pages,
+                     "page_size": 48, "source_total_reported": 1200,
+                     "source_cache_max_age_minutes": 15, "complete": False},
+    }
+    result.update(changes)
+    return result
+
+
+def run(result=None, **kwargs):
+    kwargs.setdefault("source", "aog")
+    kwargs.setdefault("at", NOW)
+    kwargs.setdefault("environ", ENV)
+    kwargs.setdefault("aog_collect", lambda settings, at, state: copy.deepcopy(result or response()))
+    kwargs.setdefault("enrich", lambda rows, settings, state, at, **kw: (rows, {"ai_enabled": False, "llm_status": "disabled"}))
+    kwargs.setdefault("client_factory", lambda **kw: (_ for _ in ()).throw(AssertionError("eBay API must not be called")))
+    return run_pipeline(SETTINGS, **kwargs)
+
+
+class PublicSourcePipelineTests(unittest.TestCase):
+    def test_no_ebay_credentials_required(self):
+        feed, state = run()
+        self.assertEqual(feed["provider"], "auktionen-ohne-gebot")
+        self.assertEqual(feed["source_status"], "partial")
+        self.assertEqual(len(feed["deals"]), 1)
+        self.assertEqual(feed["coverage"]["browse_calls_this_run"], 0)
+        self.assertEqual(state["daily_budget"]["calls_used"], 0)
+        self.assertEqual(feed["coverage"]["source_total_reported"], 1200)
+        self.assertIsNone(feed["coverage"]["cycle_estimate_hours"])
+        self.assertFalse(feed["coverage"]["complete"])
+
+    def test_explicit_publication_switch_still_disables_network(self):
+        called = []
+        feed, _ = run(environ={}, aog_collect=lambda *args: called.append(args))
+        self.assertEqual(called, [])
+        self.assertEqual(feed["source_status"], "unconfigured")
+        self.assertNotIn("ebay_credentials_missing", [row["code"] for row in feed["blockers"]])
+
+    def test_observation_is_not_refreshed_to_import_time(self):
+        feed, _ = run()
+        row = feed["deals"][0]
+        self.assertEqual(row["last_seen_at"], iso_time(OBSERVED))
+        self.assertEqual(row["source_observed_at"], iso_time(OBSERVED))
+        self.assertEqual(row["price_kind"], "auction_price")
+        self.assertEqual(feed["last_successful_scan_at"], iso_time(NOW))
+
+    def test_no_fabricated_location_description_reserve_or_exact_distance(self):
+        injected = item(description="stale former text", city="Heidelberg", postcode="69121",
+                        reserve_status="none", distance_km=1, local_pickup_confirmed=True,
+                        _details_fetched=True)
+        feed, _ = run(response([injected]))
+        row = feed["deals"][0]
+        self.assertEqual(row["description"], "")
+        self.assertEqual(row["city"], "")
+        self.assertEqual(row["postcode"], "")
+        self.assertIsNone(row["distance_km"])
+        self.assertEqual(row["reserve_status"], "unknown")
+        self.assertFalse(row["local_pickup_confirmed"])
+        self.assertFalse(row["details_fetched"])
+        self.assertEqual(row["eligibility"], "review")
+
+    def test_pickup_query_provenance_survives_state_without_claiming_verified_nearness(self):
+        feed, state = run()
+        row = state["records"][0]
+        self.assertTrue(row["pickup_search_confirmed"])
+        self.assertEqual(row["pickup_search_postcode"], "69121")
+        self.assertEqual(row["pickup_search_radius_km"], 50)
+        self.assertFalse(row["local_pickup_confirmed"])
+        self.assertEqual(row, feed["deals"][0])
+
+    def test_invalid_pickup_claim_is_not_accepted(self):
+        for changes in ({"pickup_search_postcode": "not-a-postcode"},
+                        {"pickup_search_radius_km": True}, {"pickup_search_radius_km": 0},
+                        {"pickup_search_radius_km": 1000}, {"pickup_available": None}):
+            with self.subTest(changes=changes):
+                normalized = normalize_item(item(**changes), NOW)
+                self.assertFalse(normalized["pickup_search_confirmed"])
+                self.assertNotIn("pickup_search_postcode", normalized)
+
+    def test_future_or_missing_source_timestamp_is_not_current(self):
+        for value in (None, "not-a-time", iso_time(NOW + timedelta(minutes=1))):
+            with self.subTest(value=value):
+                feed, _ = run(response([item(source_observed_at=value)]))
+                self.assertEqual(feed["deals"], [])
+
+    def test_old_observations_expire_despite_fresh_request(self):
+        feed, _ = run(response([item(source_observed_at=iso_time(NOW - timedelta(hours=7)))]))
+        self.assertEqual(feed["deals"], [])
+
+    def test_cooldown_keeps_fresh_cache_without_updating_observation(self):
+        _, previous = run()
+        feed, _ = run(response([], status="cooldown", pages=0), state=previous, at=NOW + timedelta(minutes=10))
+        self.assertEqual(feed["source_status"], "partial")
+        self.assertEqual(feed["deals"][0]["last_seen_at"], iso_time(OBSERVED))
+        self.assertEqual(feed["last_successful_scan_at"], iso_time(NOW))
+
+    def test_error_without_cache_is_not_successful_empty_scan(self):
+        feed, _ = run(response([], status="error", pages=0, warnings=[{"code": "source_unavailable", "message": "Abruf fehlgeschlagen"}]))
+        self.assertEqual(feed["source_status"], "error")
+        self.assertIsNone(feed["last_successful_scan_at"])
+        self.assertEqual(feed["blockers"][0]["code"], "source_unavailable")
+
+    def test_evidence_from_another_source_is_not_inherited(self):
+        previous = new_state(NOW)
+        old = normalize_item({"id": "v1|123456789012|0", "title": "Autoklav", "description": "Old eBay detail",
+                              "ends_at": iso_time(NOW + timedelta(hours=3)), "reserve_status": "none",
+                              "local_pickup_confirmed": True, "_details_fetched": True}, NOW - timedelta(minutes=10))
+        previous["records"] = [old]
+        feed, _ = run(state=previous)
+        self.assertEqual(feed["deals"][0]["description"], "")
+        self.assertFalse(feed["deals"][0]["local_pickup_confirmed"])
+        self.assertEqual(feed["deals"][0]["reserve_status"], "unknown")
+
+    def test_aog_cooldown_state_roundtrips_and_is_checkpointed(self):
+        checkpoints = []
+        _, previous = run(checkpoint=lambda state: checkpoints.append(copy.deepcopy(state)))
+        self.assertTrue(checkpoints)
+        self.assertEqual(checkpoints[0]["aog"], previous["aog"])
+        supplied = []
+        def collect(settings, at, state):
+            supplied.append(state)
+            return response([], status="cooldown", pages=0)
+        run(state=previous, aog_collect=collect)
+        self.assertEqual(supplied[0], previous["aog"])
+
+    def test_general_refresh_does_not_renew_old_pickup_query_evidence(self):
+        _, previous = run()
+        general = item(pickup_search_confirmed=False, pickup_available=None,
+                       source_observed_at=iso_time(NOW + timedelta(minutes=15)))
+        feed, _ = run(response([general]), state=previous, at=NOW + timedelta(minutes=30))
+        self.assertFalse(feed["deals"][0]["pickup_search_confirmed"])
+        self.assertNotIn("pickup_search_postcode", feed["deals"][0])
+
+    def test_older_cached_page_cannot_restore_obsolete_zero_bid_price(self):
+        _, previous = run(response([item(price_eur=5, bid_count=1)]))
+        old_summary = item(price_eur=1, bid_count=0, source_observed_at=iso_time(NOW - timedelta(minutes=30)))
+        feed, _ = run(response([old_summary]), state=previous, at=NOW + timedelta(minutes=30))
+        row = feed["deals"][0]
+        self.assertEqual(row["price_eur"], 5)
+        self.assertEqual(row["bid_count"], 1)
+        self.assertEqual(row["last_seen_at"], iso_time(OBSERVED))
+        self.assertEqual(row["eligibility"], "excluded")
+        self.assertTrue(row["carried"])
+
+    def test_newly_received_but_old_source_data_is_marked_stale(self):
+        old_summary = item(source_observed_at=iso_time(NOW - timedelta(hours=2)))
+        feed, _ = run(response([old_summary]))
+        self.assertTrue(feed["deals"][0]["stale"])
+        self.assertEqual(feed["stats"]["stale"], 1)
+
+
+if __name__ == "__main__":
+    unittest.main()

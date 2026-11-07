@@ -274,3 +274,161 @@ test("failed refresh retains prior data and honestly reports the error", async (
   assert.match(h.nodes.get("sync-status").className, /error/);
   assert.equal(h.nodes.get("refresh-button").disabled, false);
 });
+
+test("aggregator attribution, bounded coverage and unknown transport remain explicit", async () => {
+  const item = offer({
+    source_provider: "auktionen-ohne-gebot", source_url: "javascript:alert(1)",
+    source_observed_at: iso(-15 * 60000), verification_level: "aggregator",
+    description: "", city: "", postcode: "", distance_km: null,
+    pickup_available: true, local_pickup_confirmed: false, shipping_eur: null,
+    reserve_status: "unknown", assessment_basis: "heuristic", semantic_assessed: true
+  });
+  const h = harness(fixture({
+    source: {provider: "auktionen-ohne-gebot"}, deals: [item], stats: {received: 80},
+    coverage: {
+      source_total_reported: 1200, pages_fetched: 2, requests_this_run: 2,
+      page_size: 40, source_cache_max_age_minutes: 15, request_cap: 3, complete: false,
+      // Stale metrics from another provider must not leak into aggregator coverage.
+      categories_total: 999, categories_scanned: 4, cycle_estimate_hours: 4321,
+      browse_calls_today: 5000, daily_budget: 5000
+    }
+  })); await flush();
+  assert.equal(h.nodes.get("result-count").textContent, "(1)");
+  assert.equal(h.nodes.get("source-attribution").hidden, false);
+  const source = h.nodes.get("source-attribution").innerHTML;
+  assert.match(source, /Zwischengespeicherte Aggregatordaten/);
+  assert.match(source, /Nicht direkt bei eBay verifiziert/);
+  assert.match(source, /href="https:\/\/auktionen-ohne-gebot\.de\/business-industrie\/"/);
+  assert.doesNotMatch(source, /javascript:/);
+  assert.match(source, /heuristisch; keine LLM-Analyse aktiviert/);
+  assert.match(h.nodes.get("metric-source").textContent, /Aggregator-Cache/);
+  const coverage = h.nodes.get("coverage-content").innerHTML;
+  assert.match(coverage, /80 \/ 1200/);
+  assert.match(coverage, /Abgerufene Quellseiten/);
+  assert.match(coverage, /Quellabrufe in diesem Lauf/);
+  assert.match(coverage, /Abruflimit pro Lauf/);
+  assert.match(coverage, /bis 15 Min\./);
+  assert.match(coverage, /Begrenzter Ausschnitt, keine Vollabdeckung/);
+  assert.doesNotMatch(coverage, /Unterkategorien|Durchlauf|Browse-Aufrufe|4321/);
+  assert.doesNotMatch(h.nodes.get("coverage-note").textContent, /Unterkategorien werden rotierend/);
+  const cards = h.nodes.get("cards").innerHTML;
+  assert.match(cards, /Quelle liefert keinen Beschreibungstext/);
+  assert.match(cards, /Aggregator-Cache · nicht direkt verifiziert/);
+  assert.match(cards, /QUELLE · 0 GEBOTE/);
+  assert.match(cards, /Stand: vor 15 Min\./);
+  assert.match(cards, /Versand ungeklärt/);
+  assert.match(cards, /Abholung möglich · Nähe ungeklärt/);
+  assert.match(cards, /Mindestpreis ungeklärt/);
+  assert.doesNotMatch(cards, /Versand 0,00|Abholung im 50-km|Abholung ca\./);
+  await h.value("transport", "pickup");
+  assert.equal(h.nodes.get("result-count").textContent, "(0)");
+  await h.value("transport", "shipping");
+  assert.equal(h.nodes.get("result-count").textContent, "(0)");
+  await h.value("transport", "all");
+  h.setFetch(async () => ({ok: true, json: async () => ({snapshot_id: "snapshot-a", item})}));
+  await h.detail(item.id);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Beim Aggregator beobachtet/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Zustand laut Quelle/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Quelle liefert keinen Beschreibungstext/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Keine direkte eBay-Verifikation/);
+  assert.doesNotMatch(h.nodes.get("dialog-content").innerHTML, /href="javascript/);
+  await h.click("copy-instructions");
+  assert.match(h.copied, /alle paginierten Angebotsseiten/);
+  assert.match(h.copied, /zwischengespeichert und nicht direkt bei eBay verifiziert/);
+  assert.match(h.copied, /Quellenattribution/);
+});
+
+test("aggregator age uses source observation, never a newer import timestamp", async () => {
+  const aggregate = overrides => offer({
+    source_provider: "auktionen-ohne-gebot", verification_level: "aggregator",
+    ends_at: iso(4 * hour), local_pickup_confirmed: false, ...overrides
+  });
+  const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [
+    aggregate({id: "recent", source_observed_at: iso(-hour), last_seen_at: iso(-7 * hour)}),
+    aggregate({id: "aging", source_observed_at: iso(-6 * hour + 60000), last_seen_at: iso(0)}),
+    aggregate({id: "old", source_observed_at: iso(-7 * hour), last_seen_at: iso(0)}),
+    aggregate({id: "undated", source_observed_at: null, last_seen_at: iso(0)})
+  ]})); await flush();
+  assert.equal(h.nodes.get("result-count").textContent, "(2)");
+  assert.match(h.nodes.get("cards").innerHTML, /data-id="recent"/);
+  assert.doesNotMatch(h.nodes.get("cards").innerHTML, /data-id="old"|data-id="undated"/);
+  await h.value("sort", "freshness");
+  assert.equal(h.nodes.get("cards").querySelectorAll(".detail-open")[0].dataset.id, "recent");
+  h.tick(2 * 60000);
+  assert.equal(h.nodes.get("result-count").textContent, "(1)");
+  h.tick(hour);
+  assert(h.nodes.get("cards").querySelectorAll("[data-last-seen]").some(node => node.classList.contains("freshness-warning")));
+  await h.check("show-stale", true);
+  assert.equal(h.nodes.get("result-count").textContent, "(4)");
+  assert.match(h.nodes.get("cards").innerHTML, /Datenalter unbekannt/);
+});
+
+test("matching pickup searches are provisional local evidence, not confirmed locations", async () => {
+  const aggregate = overrides => offer({
+    source_provider: "auktionen-ohne-gebot", verification_level: "aggregator",
+    source_observed_at: iso(-60000), pickup_available: true, local_pickup_confirmed: false,
+    distance_km: null, city: "", postcode: "", shipping_eur: null, eligibility: "review",
+    pickup_search_confirmed: true, pickup_search_postcode: "69121", pickup_search_radius_km: 50,
+    ...overrides
+  });
+  const cases = [
+    aggregate({id: "matching-50"}),
+    aggregate({id: "matching-25", pickup_search_radius_km: 25}),
+    aggregate({id: "wrong-postcode", pickup_search_postcode: "69115"}),
+    aggregate({id: "wider-radius", pickup_search_radius_km: 51}),
+    aggregate({id: "zero-radius", pickup_search_radius_km: 0}),
+    aggregate({id: "missing-radius", pickup_search_radius_km: null}),
+    aggregate({id: "pickup-only", pickup_search_confirmed: false}),
+    aggregate({id: "wrong-source", source_provider: "ebay", verification_level: "direct"})
+  ];
+  const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: cases})); await flush();
+  await h.value("transport", "pickup");
+  assert.equal(h.nodes.get("result-count").textContent, "(2)");
+  const cards = h.nodes.get("cards").innerHTML;
+  assert.match(cards, /Abholsuche · 50 km/);
+  assert.match(cards, /Abholsuche · 25 km/);
+  assert.match(cards, /Nähe laut Quelle; Standort im Original prüfen/);
+  assert.match(cards, /NOCH ZU PRÜFEN/);
+  assert.doesNotMatch(cards, /Abholung ca\.|Abholung im 50-km|wrong-postcode|wider-radius|zero-radius|missing-radius|pickup-only|wrong-source/);
+  assert.match(h.nodes.get("source-attribution").innerHTML, /vorläufiger Nähehinweis/);
+  h.setFetch(async () => ({ok: true, json: async () => ({snapshot_id: "snapshot-a", item: cases[0]})}));
+  await h.detail("matching-50");
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Abholsuche · 50 km/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Nähe laut Quelle; Standort im Original prüfen/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Standort<\/small><strong>Unbekannt/);
+  assert.equal(cases[0].local_pickup_confirmed, false);
+});
+
+test("old or undated pickup-search claims do not qualify even with stale items visible", async () => {
+  const item = overrides => offer({
+    source_provider: "auktionen-ohne-gebot", verification_level: "aggregator",
+    source_observed_at: iso(-7 * hour), pickup_available: true, local_pickup_confirmed: false,
+    distance_km: null, city: "", postcode: "", shipping_eur: null,
+    pickup_search_confirmed: true, pickup_search_postcode: "69121", pickup_search_radius_km: 50,
+    ...overrides
+  });
+  const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [
+    item({id: "old-claim"}), item({id: "undated-claim", source_observed_at: null})
+  ]})); await flush();
+  await h.check("show-stale", true);
+  assert.equal(h.nodes.get("result-count").textContent, "(2)");
+  assert.doesNotMatch(h.nodes.get("cards").innerHTML, /Abholsuche · 50 km/);
+  assert.match(h.nodes.get("cards").innerHTML, /Abholung möglich · Nähe ungeklärt/);
+  await h.value("transport", "pickup");
+  assert.equal(h.nodes.get("result-count").textContent, "(0)");
+});
+
+test("pickup-search label expires on the timer while old offers stay explicitly visible", async () => {
+  const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [offer({
+    source_provider: "auktionen-ohne-gebot", verification_level: "aggregator",
+    source_observed_at: iso(-6 * hour + 60000), pickup_available: true,
+    local_pickup_confirmed: false, distance_km: null, city: "", postcode: "",
+    pickup_search_confirmed: true, pickup_search_postcode: "69121", pickup_search_radius_km: 50
+  })]})); await flush();
+  await h.check("show-stale", true);
+  assert.match(h.nodes.get("cards").innerHTML, /Abholsuche · 50 km/);
+  h.tick(2 * 60000);
+  assert.equal(h.nodes.get("result-count").textContent, "(1)");
+  assert.doesNotMatch(h.nodes.get("cards").innerHTML, /Abholsuche · 50 km/);
+  assert.match(h.nodes.get("cards").innerHTML, /Abholung möglich · Nähe ungeklärt/);
+});

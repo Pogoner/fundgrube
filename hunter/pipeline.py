@@ -1,4 +1,4 @@
-"""Budgeted discovery, refresh and static-feed orchestration; no bids or scraping.
+"""Budgeted public-source discovery and static-feed orchestration; no bidding.
 
 HUNTER_PUBLISH_LIVE_DATA=true is required before publishing eBay/local JSON data.
 Deleting today's snapshot does not remove content from public Git history.
@@ -47,6 +47,8 @@ RECORD_FIELDS = frozenset({
     "semantic_assessed", "semantic_assessed_at", "value_reason", "fact_score", "fact_reasons", "fact_risks",
     "product_kind", "semantic_interest", "next_checks", "total_known_eur",
     "stale", "carried", "pickup_verified_at",
+    "source_provider", "source_url", "source_observed_at", "verification_level", "pickup_available",
+    "pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km",
 })
 
 
@@ -120,6 +122,7 @@ def prepare_state(state: dict[str, Any] | None, at: datetime) -> dict[str, Any]:
     result = {key: copy.deepcopy(value) for key, value in state.items() if key in {
         "schema_version", "updated_at", "daily_budget", "cursor", "taxonomy", "records",
         "last_successful_scan_at", "semantic_budget", "semantic_cache",
+        "aog", "active_source",
     }}
     budget = result.get("daily_budget")
     if not isinstance(budget, dict) or not isinstance(budget.get("date"), str):
@@ -182,6 +185,18 @@ def _block(blockers: list, code: str, message: str, action: str) -> None:
 
 def _upsert(records: dict, item: dict, at: datetime, settings: Mapping, assess: Callable) -> None:
     old = records.get(item["id"])
+    if old and old.get("source_provider") != item.get("source_provider"):
+        old = None
+    if old and item.get("source_provider") == "auktionen-ohne-gebot":
+        previous_seen = parse_time(old.get("source_observed_at"))
+        incoming_seen = parse_time(item.get("source_observed_at"))
+        if previous_seen and incoming_seen and incoming_seen < previous_seen:
+            # Differently cached source pages can arrive out of order. An
+            # older zero-bid summary must not undo newer price/bid evidence.
+            preserved = dict(old)
+            preserved.update(carried=True, stale=at - previous_seen >= timedelta(minutes=settings["refresh_after_minutes"]))
+            records[item["id"]] = _public_record(assess(preserved, settings, at))
+            return
     if old:
         # A summary from the other delivery mode cannot overwrite details read
         # in the same run. Older price/bid/reserve values are never filled in.
@@ -202,7 +217,8 @@ def _upsert(records: dict, item: dict, at: datetime, settings: Mapping, assess: 
             item.update(local_pickup_confirmed=True, pickup_verified_at=iso_time(at), distance_km=old.get("distance_km"))
     if item.get("local_pickup_confirmed"):
         item.setdefault("pickup_verified_at", iso_time(at))
-    item.update(carried=False, stale=False)
+    seen = parse_time(item.get("last_seen_at"))
+    item.update(carried=False, stale=not seen or at - seen >= timedelta(minutes=settings["refresh_after_minutes"]))
     _clear_stale_description(item, at, settings)
     records[item["id"]] = _public_record(assess(item, settings, at))
 
@@ -402,7 +418,8 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                  raw_items: list[dict] | None = None, at: datetime | None = None,
                  environ: Mapping[str, str] | None = None, client_factory: Callable = EbayClient,
                  normalize: Callable = normalize_item, assess: Callable = assess_item,
-                 enrich: Callable | None = None, checkpoint: Callable | None = None) -> tuple[dict, dict]:
+                 enrich: Callable | None = None, checkpoint: Callable | None = None,
+                 aog_collect: Callable | None = None) -> tuple[dict, dict]:
     """Return feed/state; inject dependencies for hermetic tests.
 
     Expected upstream blockers produce a feed. Invalid configuration/programming
@@ -415,7 +432,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
     at = at.astimezone(timezone.utc).replace(microsecond=0)
     state = prepare_state(state, at)
     env = os.environ if environ is None else environ
-    if source not in {"auto", "disabled", "json", "ebay"}:
+    if source not in {"auto", "disabled", "json", "ebay", "aog"}:
         raise ConfigurationError("Unsupported source.")
     manual_text = env.get("EBAY_LEAF_CATEGORY_IDS", "").strip()
     manual_ids = [part.strip() for part in manual_text.split(",")] if manual_text else []
@@ -424,6 +441,10 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
     manual_ids = sorted(set(manual_ids), key=int)
     records = {}
     for cached in state["records"]:
+        # Changing data source must not relabel old records or inherit richer
+        # eBay details under an aggregator-only claim (or vice versa).
+        if isinstance(cached, dict) and ((source == "aog") != (cached.get("source_provider") == "auktionen-ohne-gebot")):
+            continue
         if _fresh(cached, at, settings):
             item = _public_record(cached)
             _clear_stale_description(item, at, settings)
@@ -434,10 +455,17 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                 records[assessed["id"]] = assessed
     blockers, scan, status = [], _scan_stats(), "unconfigured"
     provider, calls_this_run = ("ebay" if source in {"auto", "ebay"} else source), 0
+    source_coverage = {}
+    if source == "aog":
+        provider = "auktionen-ohne-gebot"
+    if state.get("active_source") and state["active_source"] != provider:
+        state["last_successful_scan_at"] = None
+        state.pop("semantic_cache", None)
+    state["active_source"] = provider
     if source == "disabled":
         status = "disabled"
         records.clear()
-        _block(blockers, "source_disabled", "Die Datenquelle ist ausgeschaltet.", "HUNTER_SOURCE auf auto oder ebay setzen, wenn die Einrichtung abgeschlossen ist.")
+        _block(blockers, "source_disabled", "Die Datenquelle ist ausgeschaltet.", "HUNTER_SOURCE=aog aktiviert den öffentlichen Sammler; ebay wählt die optionale eBay-API.")
     elif env.get("HUNTER_PUBLISH_LIVE_DATA", "").lower() != "true":
         records.clear()
         _block(blockers, "publication_not_enabled", "Die Veröffentlichung echter Angebotsdaten ist noch nicht freigegeben.", "Datenrechte und öffentliche Git-Historie prüfen; anschließend HUNTER_PUBLISH_LIVE_DATA=true setzen.")
@@ -446,6 +474,44 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
     elif source in {"auto", "ebay"} and (not env.get("EBAY_CLIENT_ID", "").strip() or not env.get("EBAY_CLIENT_SECRET", "").strip()):
         records.clear()
         _failure(blockers, CredentialsMissing())
+    elif source == "aog":
+        if aog_collect is None:
+            from .aog import collect as aog_collect
+        result = aog_collect(settings, at, state.get("aog"))
+        if (not isinstance(result, dict) or result.get("status") not in {"live", "partial", "error", "cooldown"}
+                or not isinstance(result.get("items"), list) or len(result["items"]) > 1000
+                or not isinstance(result.get("source_state"), dict) or not isinstance(result.get("coverage"), dict)):
+            raise ConfigurationError("Public source returned an invalid result contract.")
+        state["aog"] = result["source_state"]
+        if checkpoint is not None:
+            # Persist the crawl cooldown even if a later processing step fails.
+            checkpoint(state)
+        source_coverage = result["coverage"]
+        scan["received"] = len(result["items"])
+        scan["searches_succeeded"] = _count(source_coverage.get("pages_fetched", 0), "aog.pages_fetched", 0, 6)
+        scan["categories_scanned"] = int(scan["searches_succeeded"] > 0)
+        scan["categories_total"] = scan["categories_planned"] = 1
+        for raw in result["items"]:
+            if not isinstance(raw, dict):
+                raise ConfigurationError("Public source item is not an object.")
+            observed = parse_time(raw.get("source_observed_at"))
+            if observed is None or observed > at or raw.get("source_provider") != provider:
+                continue
+            item = normalize(raw, at, local_pickup_confirmed=False, pickup_radius_km=settings["pickup_radius_km"])
+            if item is not None:
+                _upsert(records, item, at, settings, assess)
+        for warning in result.get("warnings", []):
+            if isinstance(warning, dict) and isinstance(warning.get("code"), str) and isinstance(warning.get("message"), str):
+                _block(blockers, warning["code"], warning["message"],
+                       "Quellenstand und Abdeckung beachten; vor einem Gebot das Originalangebot prüfen. Der nächste geplante Lauf berücksichtigt Wartezeiten.")
+        source_status = result["status"]
+        status = ("partial" if records else "error") if source_status in {"cooldown", "error"} else source_status
+        if scan["searches_succeeded"]:
+            state["last_successful_scan_at"] = iso_time(at)
+        if source_status == "error":
+            scan["searches_failed"] = 1
+        if checkpoint is not None:
+            checkpoint(state)
     elif source == "json":
         if not isinstance(raw_items, list) or len(raw_items) > 10000 or any(not isinstance(row, dict) for row in raw_items):
             raise ConfigurationError("JSON source must contain at most 10,000 item objects.")
@@ -510,6 +576,9 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         "error": "Die Datenquelle konnte in diesem Lauf nicht erfolgreich abgerufen werden."}
     if source == "json" and status == "live":
         messages["live"] = "Lokaler JSON-Import abgeschlossen; keine erneute Liveprüfung bei eBay."
+    if source == "aog":
+        messages["live"] = "Öffentliche Angebotsübersicht abgerufen; Angaben stammen von auktionen-ohne-gebot.de, nicht aus einer eigenen eBay-Prüfung."
+        messages["partial"] = "Öffentliche Quelle aktiv: begrenzter Ausschnitt mit zwischengespeicherten Angaben von auktionen-ohne-gebot.de."
     feed = {
         "schema_version": STATE_VERSION, "generated_at": iso_time(at), "last_successful_scan_at": state.get("last_successful_scan_at"),
         "source_status": status, "status_message": messages[status], "blockers": blockers, "source": provider, "provider": provider,
@@ -527,6 +596,15 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         "ai_enabled": bool(semantic.get("ai_enabled")), "semantic": semantic, "ai_metadata": semantic,
         "api_page_size": settings["api_page_size"], "deals": rows,
     }
+    if source == "aog":
+        feed["coverage"].update({
+            **source_coverage, "complete": False, "source_claims_only": True,
+            "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+            "cycle_estimate_hours": None, "manual_leaf_override": False,
+            "browse_calls_this_run": 0, "browse_calls_today": 0, "daily_budget": None,
+            "price_filter_applied": True,
+            "pagination_caveat": "Begrenzter Ausschnitt aus einer veränderlichen, zwischengespeicherten Ergebnisliste. Die Trefferzahl der Quelle ist keine garantierte vollständige Abdeckung.",
+        })
     json.dumps(feed, allow_nan=False)
     json.dumps(state, allow_nan=False)
     return feed, state
@@ -557,7 +635,7 @@ def _atomic_json(path: Path, data: Any) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build Fundgrube's static GUI and assistant-readable feed")
-    parser.add_argument("--source", choices=("auto", "disabled", "json", "ebay"), default=os.environ.get("HUNTER_SOURCE", "auto"))
+    parser.add_argument("--source", choices=("auto", "disabled", "json", "ebay", "aog"), default=os.environ.get("HUNTER_SOURCE", "auto"))
     parser.add_argument("--file", type=Path, help="Local licensed JSON input; never downloaded from a URL")
     parser.add_argument("--state-dir", type=Path, default=ROOT / "runtime")
     parser.add_argument("--site-dir", type=Path, default=ROOT / "site")
@@ -581,7 +659,8 @@ def main(argv: list[str] | None = None) -> int:
     except (ConfigurationError, OSError, ValueError, TypeError, KeyError):
         print("Fundgrube build failed: invalid configuration, state, input, or output. No success was claimed.", file=sys.stderr)
         return 1
-    print(f"Fundgrube: {feed['source_status']}; {len(feed['deals'])} active records; {feed['coverage']['browse_calls_this_run']} Browse calls.")
+    print(f"Fundgrube: {feed['source_status']}; source={feed['provider']}; {len(feed['deals'])} active records; "
+          f"{feed['coverage']['browse_calls_this_run']} Browse calls; {feed['coverage'].get('requests_this_run', 0)} public-source requests.")
     return 0
 
 

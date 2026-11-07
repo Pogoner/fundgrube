@@ -10,7 +10,9 @@
 2. Prüfe `source_status`, `blockers`, Quellenalter, letzten erfolgreichen Scan
    und Abdeckung. `unconfigured` und `disabled` sind keine Suchergebnisse.
    `demo` ist fiktiv. Ein erfolgreicher Build beweist keinen erfolgreichen
-   eBay-Abruf. Bei `partial` oder `error` Abdeckung und ältere Beobachtungen
+   Abruf der im Manifest genannten Quelle. Standard ist `aog` (Auktionen ohne
+   Gebot), nicht ein eigener direkter eBay-Abruf. Bei `partial` oder `error`
+   Abdeckung und ältere Beobachtungen
    ausdrücklich kenntlich machen.
 3. Lies **alle** `pages[].path`, nicht nur die erste Seite. Gleiche die Zahl der
    gelesenen Einträge mit `counts.total` ab und berichte fehlende Seiten.
@@ -28,6 +30,14 @@
    nicht null Euro, null Gebote, kostenloser Versand oder kein Mindestpreis.
    `reserve_status: met` ist nicht `none`. Ein bestätigter Abholradius ist keine
    genaue Entfernung. Verkäuferangaben zur Funktion sind keine eigene Prüfung.
+   AOG liefert keine Verkäufer-Volltexte, tatsächlichen Standorte oder
+   Mindestpreisbelege. Die eigene Quellensuche unterstützt aber
+   `abholung=1&plz=69121&km=50`. `pickup_search_confirmed` mit Such-PLZ/Radius
+   ist nur die Herkunft aus dieser Suche, kein unabhängig bestätigter Abholort.
+   Bei ausdrücklicher Abholoption darfst du „Abholsuche 50 km“ nennen, aber keine
+   tatsächliche Nähe oder genaue Entfernung behaupten. Den Kandidaten weiter
+   als prüfbedürftig behandeln; Abholort/-bedingungen im Original verifizieren.
+   Quellenangaben und Originalverweise beibehalten.
 7. Der Score priorisiert Aufmerksamkeit: 70 % semantisches Interesse plus bis
    zu 30 Faktenpunkte, mit Begrenzungen für unpassende Einträge. Er ist keine
    Erfolgswahrscheinlichkeit. `around_5`, `around_50`, `around_500` und `unknown`
@@ -36,7 +46,7 @@
    und die Unsicherheit der Einschätzung berücksichtigen.
 8. Priorisiere vollständige interessante Geräte/Werkzeuge, nicht triviales
    Zubehör, Handschuhe, Zeitschriften oder beliebige 1-Euro-Artikel. Standard:
-   0 Gebote, bis 10 Euro, Ende innerhalb 24 Stunden; Versand bis 15 Euro oder
+   0 Gebote, bis 1 Euro, Ende innerhalb 24 Stunden; Versand bis 15 Euro oder
    bestätigte Abholung im 50-km-Radius um 69121 Heidelberg. Tatsächliche Vorgaben
    aus dem aktuellen Manifest lesen; diese Werte sind konfigurierbar.
 9. Eine Shortlist nennt kurzen Grund, fehlende Belege, Transport, Zeitpunkt und
@@ -48,7 +58,7 @@ Weitere Schnittstellendetails: [docs/api.md](docs/api.md).
 
 ## Wenn du Code änderst
 
-- Bewahre die Aufteilung in Sammler (`ebay`), Normalisierung (`models`),
+- Bewahre die Aufteilung in Sammler (`aog`/`ebay`), Normalisierung (`models`),
   Einordnung (`ranking`/`semantic`), Ablauf (`pipeline`) und Export (`feed`).
   Python 3.12, Standardbibliothek; führe nicht ohne Not neue Abhängigkeiten ein.
 - Quellenfakten dürfen nicht durch LLM-Ausgaben überschrieben werden. Behalte
@@ -58,14 +68,27 @@ Weitere Schnittstellendetails: [docs/api.md](docs/api.md).
 - Behalte feste API-Ziele, Anfrage-/Antwortgrenzen, strikte Schema-Prüfung und
   redigierte Fehlermeldungen bei. Folge keinem vom Angebot gelieferten API-Link
   mit einem Authorization-Header. Nie Schlüssel in Dateien, Fixtures oder Logs.
-- `HUNTER_PUBLISH_LIVE_DATA` und `HUNTER_LLM_ENABLED` bleiben standardmäßig
-  ausgeschaltet. Aktiviere sie nicht im Rahmen einer beiläufigen Codeänderung.
-  Ein Konfigurationsflag ist keine Datenlizenz. Browse ist nicht pauschal mit
+- Der beauftragte Produktionsworkflow verwendet `HUNTER_SOURCE=aog` und
+  `HUNTER_PUBLISH_LIVE_DATA=true` als Standard. Erhalte die ausdrücklichen
+  Abschaltmöglichkeiten `HUNTER_PUBLISH_LIVE_DATA=false` und
+  `HUNTER_SOURCE=disabled`. Der optionale LLM bleibt ohne eigene Freigabe,
+  Modell und API-Key aus; gib die lokale Heuristik nie als LLM-Ergebnis aus.
+  Verändere Quelle oder Freigaben nicht beiläufig. Ein Konfigurationsflag und
+  eine erlaubende Robots-Regel sind keine Datenlizenz. Browse ist nicht pauschal mit
   den gesondert definierten Restricted APIs gleichzusetzen; konkrete Rechte
   für Quelle, Weitergabe, Archivierung und KI-Verarbeitung separat klären.
 - Der öffentliche Zweig `data` bewahrt alte Commits. Sechs Stunden maximales
   Quellenalter im aktuellen Export bedeuten keine Löschung der Historie.
-  Ohne passende öffentliche Archivierungsrechte keine echten Daten exportieren.
+  AOG exportiert nur Kurzmetadaten, keine Verkäufer-Volltexte. Vor Erweiterungen
+  die Rechte und Löschpflichten berücksichtigen, keine Lizenzzusage erfinden.
+- Erhalte für AOG die Robots-Prüfung und höchstens sechs Daten-API-Anfragen je
+  Lauf (zusammen höchstens sieben Quellenanfragen): allgemeine Seite 0 plus vier
+  rotierende Folgeseiten und Abholseite 0, jeweils höchstens 48 Einträge. Das
+  ergibt bis zu 240 allgemeine plus 48 Abholsuchtreffer vor Deduplizierung und
+  Filterung, keine Vollständigkeitszusage. Erhalte mindestens zehn Sekunden
+  Abstand und die gespeicherte 30-Minuten-Abkühlzeit. Sperren, Rate-Limits,
+  Login-Anforderungen und andere Zugriffsgrenzen
+  nicht durch zusätzliche Endpunkte, Accounts oder engere Takte umgehen.
 - Pflege `schema_version`, Schema, OpenAPI, Manifest und Dokumentation bei
   Schnittstellenänderungen gemeinsam. Erzeuge API-Dateien über `hunter.feed`,
   statt reale Angebotsdaten von Hand in den Quellcode einzubauen.

@@ -5,45 +5,78 @@ versionierten Datensnapshot auf `data` und veröffentlicht die Website separat
 als GitHub-Pages-Artefakt. Der Datenzugriff über die GitHub-Schnittstelle hängt
 deshalb nicht davon ab, ob Pages bereits aktiviert ist.
 
+Das Produktionsprofil nutzt standardmäßig **Auktionen ohne Gebot** (`aog`) als
+Quelle öffentlicher Kurzmetadaten. Der Workflow setzt ohne abweichende
+Repository-Variable `HUNTER_SOURCE=aog` und `HUNTER_PUBLISH_LIVE_DATA=true`.
+Für diesen Betrieb sind weder eBay-Zugangsdaten noch ein OpenAI-API-Key nötig.
+Die automatische KI-Vorsortierung ist davon getrennt und standardmäßig aus.
+
 ## Einmalige Einrichtung
 
 1. In [Settings → Pages](https://github.com/Pogoner/fundgrube/settings/pages)
    unter **Build and deployment → Source** die Option **GitHub Actions** wählen.
-2. In [Settings → Secrets and variables → Actions](https://github.com/Pogoner/fundgrube/settings/secrets/actions)
-   die Production-Zugangsdaten als **Repository Secrets** hinterlegen:
-   `EBAY_CLIENT_ID` und `EBAY_CLIENT_SECRET`. Keine Sandbox-Schlüssel verwenden.
-   Ein Developer-Konto allein garantiert nicht, dass eBay den benötigten
-   Production-Zugriff auf die Buy/Browse API freigegeben hat.
-3. Vor dem öffentlichen Export sicherstellen, dass die erforderlichen Rechte
-   bzw. Vereinbarungen die Veröffentlichung und diese Speicherung der
-   Angebotsdaten abdecken. Insbesondere die öffentliche, fortbestehende
-   Git-Historie beachten, nicht nur die Aufbewahrung des aktuellen Feeds.
-   Erst danach unter **Repository Variables** `HUNTER_PUBLISH_LIVE_DATA`
-   ausdrücklich auf `true` setzen. Standard ist `false`: Zugangsdaten allein
-   schalten den öffentlichen Live-Datenexport nicht frei.
-4. Unter den **Repository Variables** bei Bedarf `HUNTER_SOURCE` setzen.
-   Ohne Variable gilt `auto`. `EBAY_LEAF_CATEGORY_IDS` kann die zu prüfenden
-   Kategorien als kommaseparierte IDs festlegen. Für die optionale automatische
-   semantische Vorsortierung zusätzlich `HUNTER_LLM_ENABLED=true` und ein
-   explizites `OPENAI_MODEL` setzen; `OPENAI_API_KEY` ausschließlich als Secret
-   hinterlegen. Ohne LLM-Freigabe bleibt diese Funktion ausgeschaltet.
-5. Unter [Actions](https://github.com/Pogoner/fundgrube/actions) den Workflow
+2. Die Standardquelle benötigt keine Secrets. Unter
+   [Settings → Secrets and variables → Actions](https://github.com/Pogoner/fundgrube/settings/secrets/actions)
+   nur gewünschte Abweichungen setzen: `HUNTER_SOURCE=disabled` schaltet den
+   Sammler aus, `HUNTER_PUBLISH_LIVE_DATA=false` stoppt neue Live-Exporte.
+   Bestehende Repository-Variablen haben Vorrang vor dem Workflow-Standard;
+   insbesondere ein früher gesetztes `false` bleibt wirksam.
+3. Für optionale automatische KI-Vorsortierung `HUNTER_LLM_ENABLED=true` und
+   ein explizites `OPENAI_MODEL` als **Variables** setzen;
+   `OPENAI_API_KEY` ausschließlich als **Secret** hinterlegen. Ohne Freigabe,
+   Modell und Schlüssel bleibt die Einordnung als Heuristik erkennbar.
+4. Unter [Actions](https://github.com/Pogoner/fundgrube/actions) den Workflow
    **Fundgrube aktualisieren und veröffentlichen** über **Run workflow** starten.
    Ein Push auf `main` startet ihn ebenfalls.
-6. Beide Jobs prüfen: `snapshot` bestätigt den Datenzweig und das Artefakt;
+5. Beide Jobs prüfen: `snapshot` bestätigt den Datenzweig und das Artefakt;
    `pages` bestätigt die Veröffentlichung. Ein erfolgreicher Snapshot ist kein
-   Beleg für funktionierenden eBay-Zugriff: den Quellenstatus im Feed prüfen.
+   Beleg für einen neuen erfolgreichen Quellenabruf: Status und Abrufzeit im Feed prüfen.
 
-Fehlende Exportfreigabe oder eBay-Zugangsdaten werden im Quellenstatus
-ausgewiesen. Live-Daten werden erst mit Exportfreigabe und den erforderlichen
-Zugangsdaten verarbeitet und öffentlich bereitgestellt.
-Der Build veröffentlicht trotzdem eine ehrliche Oberfläche mit Status und
-maschinenlesbaren Schnittstellen, keine erfundenen Angebote. `disabled`
-schaltet externe Angebotsabfragen ausdrücklich aus. `ebay` verlangt die
-eBay-Quelle. `json` ist für manuell bereitgestellte lokale Fixtures oder einen
-zulässigen lokalen Feed vorgesehen; der Workflow konfiguriert dafür keinen
-externen Quellpfad. Der Export echter Daten aus einem JSON-Feed braucht
-ebenfalls `HUNTER_PUBLISH_LIVE_DATA=true`.
+Der Sammler prüft die Robots-Regeln vor dem AOG-Abruf. Er verwendet höchstens
+sechs Daten-API-Anfragen plus eine Robots-Anfrage pro Lauf: allgemeine Seite 0,
+bis zu vier rotierende allgemeine Folgeseiten sowie Abholseite 0. Jede Datenseite
+enthält höchstens 48 Einträge, also bis zu 240 allgemeine plus 48 Abholsuchtreffer
+vor Deduplizierung und Filterung; die tatsächliche Menge kann deutlich kleiner
+sein. Es gelten mindestens zehn Sekunden Anfrageabstand und eine im Zustand
+gespeicherte Abkühlzeit von mindestens 30 Minuten. Ein erneuter
+manueller Workflow-Start umgeht diese Abkühlzeit nicht. Sperren oder Fehler
+führen nicht zu aggressiven Ersatzabfragen; Quellenstatus und Abdeckung bleiben
+sichtbar. Ohne nutzbare Quelle veröffentlicht der Build Statusinformationen,
+keine erfundenen Live-Angebote.
+
+### Was die Standardquelle belegt
+
+Die öffentliche Schnittstelle von
+[Auktionen ohne Gebot](https://auktionen-ohne-gebot.de/)
+liefert Angebots-Kurzmetadaten: Titel, IDs, Preis, Gebotszahl, Versandangaben,
+Ablauf und Angebots-/Bildverweise, soweit vorhanden. Quelle und Originalverweis
+bleiben erhalten. **Keine Verkäufer-Volltexte, tatsächlichen Standorte oder
+Mindestpreisbelege werden geliefert oder nachgeladen.**
+
+Die öffentliche Quellensuche unterstützt `abholung=1&plz=69121&km=50`. Treffer
+daraus mit ausdrücklicher Abholoption können als **Abholsuche 50 km** erscheinen.
+`pickup_search_confirmed` und zugehörige Such-PLZ/Radius halten fest, dass das
+Angebot aus dieser Suche stammt. Das bestätigt **nicht unabhängig einen
+physischen Standort, eine Entfernung oder die tatsächliche Nähe zu Heidelberg**.
+Die PLZ ist weiterhin Suchprofil, nicht Artikelstandort. Diese Kandidaten
+bleiben als zu prüfen eingestuft; Abholort und -bedingungen müssen im
+Originalangebot bestätigt werden. Fehlende Werte bleiben unbekannt, auch bei
+Versand, Mindestpreis und Auktionsstatus.
+
+### Optionale andere Quellen
+
+`HUNTER_SOURCE=ebay` wählt den direkten eBay-Browse-Adapter. Nur dafür sind
+`EBAY_CLIENT_ID` und `EBAY_CLIENT_SECRET` als Production-Secrets nötig; optional
+begrenzt `EBAY_LEAF_CATEGORY_IDS` die Kategorien als kommaseparierte IDs.
+Gültiger Production-Zugang und passende Datenrechte sind für diesen Adapter
+separat sicherzustellen. Fehlende eBay-Schlüssel blockieren **nicht** den
+AOG-Standardbetrieb.
+
+`json` ist für manuell bereitgestellte lokale Fixtures oder einen zulässigen
+lokalen Feed vorgesehen; der Workflow konfiguriert keinen beliebigen externen
+JSON-Quellpfad. Öffentlicher Export ist weiterhin durch
+`HUNTER_PUBLISH_LIVE_DATA=false` abschaltbar; vor einem Quellenwechsel sind
+Weiterverwendung, Aufbewahrung und gegebenenfalls KI-Verarbeitung zu prüfen.
 Die übrigen Such- und Bewertungsparameter stehen in `config/settings.json`.
 
 Die LLM-Vorsortierung erkennt grobe Wertklassen und interessante vollständige
@@ -54,6 +87,9 @@ und die Übermittlung von Angebotstexten an den konfigurierten Anbieter
 auslösen. Der Betreiber muss vor Aktivierung auch hierfür die anwendbaren
 Nutzungsrechte und Datenbedingungen prüfen. Die Software behauptet weder eine
 pauschale Erlaubnis noch ein pauschales Verbot sämtlicher KI-Nutzung.
+Die bereits verbundene ChatGPT-GitHub-Anbindung kann den Feed im Gespräch
+semantisch prüfen, ohne dass dafür ein zusätzlicher OpenAI-API-Key im
+Repository hinterlegt wird.
 
 ## Warum Pages einmalig aktiviert werden muss
 
@@ -115,16 +151,20 @@ allein installiert kein neues Tool in einem Chat.
   `site/data/deals.json` und `runtime/state.json`. Das Wiederherstellungsmerkmal,
   sonstige Laufzeitdateien, Quellcode und Secrets werden nicht übernommen.
 - Der Datenzweig enthält `state.json` als öffentlichen, geheimnisfreien
-  technischen Dauerzustand. Nach Freigabe des Live-Exports sind insbesondere
-  Angebotstitel, Beschreibungen, Angebotsdaten und die konfigurierte Such-PLZ
+  technischen Dauerzustand. Im AOG-Standardbetrieb sind insbesondere
+  Angebotstitel, Kurzmetadaten, generierte Einschätzungen und die konfigurierte Such-PLZ
   **69121 Heidelberg** öffentlich zugänglich. Alles in diesem öffentlichen
   Repository und auf Pages ist öffentlich. Zugangsdaten gehören auch nicht
   vorübergehend in Dateien, Ausgaben, Issues oder Commits.
+- AOG liefert keine Verkäufer-Volltexte; der Standardbetrieb archiviert sie
+  deshalb nicht. Die öffentliche Abrufbarkeit und erlaubende Robots-Regeln sind
+  keine pauschale Lizenz. Quellenangabe, Nutzungsbedingungen und mögliche Lösch-
+  oder Aufbewahrungspflichten beachten, keine über die Daten hinausgehenden
+  Rechte behaupten. Bei einer Sperre nicht auf andere Wege ausweichen.
 - **Alte Commits bleiben in Git abrufbar.** Das Entfernen eines Angebots aus
   dem aktuellen Feed oder das Zurücksetzen von `HUNTER_PUBLISH_LIVE_DATA` auf
   `false` löscht frühere Veröffentlichungen nicht. Deshalb muss die erforderliche
-  Rechte- und Aufbewahrungsvereinbarung zu dieser Architektur passen, bevor der
-  Betreiber den Export freischaltet. Eine streng befristete Speicherung ist
+  Rechte- und Aufbewahrungssituation zu dieser Architektur passen. Eine streng befristete Speicherung ist
   mit der unverändert erhaltenen öffentlichen Git-Historie nicht zugesichert.
 - Der Helfer verweigert bekannte Credential-Feldnamen, das aktuelle
   GitHub-Token, Symlinks und unerwartete Dateitypen. Das ist zusätzliche
@@ -147,7 +187,7 @@ laufen nur auf dem Default-Branch; hier muss das `main` sein. In öffentlichen
 Repositories kann GitHub Zeitpläne nach 60 Tagen ohne Repository-Aktivität
 deaktivieren. In Actions lässt sich der Workflow dann wieder aktivieren.
 
-Der Scan-/Snapshot-Job ist auf 25 Minuten begrenzt. Versionsgeschichte und
+Der Scan-/Snapshot-Job ist auf 40 Minuten begrenzt. Versionsgeschichte und
 Actions-Verbrauch wachsen im Betrieb; die aktuelle Feedgröße ist begrenzt,
 eine automatische Umschreibung der Git-Historie findet bewusst nicht statt.
 Eine abgelaufene Auktion oder ein alter Feedstand ist keine Kaufgelegenheit.
@@ -186,6 +226,7 @@ Es gibt keinen alternativen Pfad zum Umgehen dieser Schutzgrenze.
 ## Primärquellen
 
 - [Eigene Workflows für GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+- [Auktionen ohne Gebot – Metadatenquelle](https://auktionen-ohne-gebot.de/)
 - [Configure Pages: enablement und Token-Anforderungen](https://github.com/actions/configure-pages/blob/v6.0.0/action.yml)
 - [Pages REST API: erstmaliges Einrichten](https://docs.github.com/en/rest/pages/pages#create-a-github-pages-site)
 - [Git-Tree-API: vollständige Snapshots](https://docs.github.com/en/rest/git/trees#create-a-tree)
