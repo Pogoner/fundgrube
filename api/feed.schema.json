@@ -102,6 +102,54 @@
           "type": "array"
         },
         "coverage": {
+          "additionalProperties": true,
+          "properties": {
+            "capped": {
+              "type": "boolean"
+            },
+            "complete": {
+              "type": "boolean"
+            },
+            "next_offset": {
+              "minimum": 0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "page_size": {
+              "minimum": 1,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "pages_fetched": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "requests_this_run": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "source_cache_max_age_minutes": {
+              "minimum": 0,
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "source_claims_only": {
+              "type": "boolean"
+            },
+            "source_total_reported": {
+              "minimum": 0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
           "type": "object"
         },
         "criteria": {
@@ -109,6 +157,9 @@
         },
         "freshness": {
           "properties": {
+            "direct_ebay_verification": {
+              "type": "boolean"
+            },
             "evaluated_at": {
               "format": "date-time",
               "type": "string"
@@ -123,6 +174,9 @@
             },
             "recheck_at_read_time": {
               "const": true
+            },
+            "upstream_cache_age_is_provider_claim": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -150,12 +204,24 @@
         "location": {
           "type": "object"
         },
+        "provider": {
+          "$ref": "#/$defs/nullableText"
+        },
         "schema_version": {
           "const": 2
         },
         "snapshot_id": {
           "pattern": "^sha256:[0-9a-f]{64}$",
           "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "source_observed_at": {
+          "$ref": "#/$defs/nullableTime"
+        },
+        "source_provider": {
+          "$ref": "#/$defs/sourceProvider"
         },
         "source_status": {
           "enum": [
@@ -167,6 +233,9 @@
             "demo"
           ]
         },
+        "source_url": {
+          "$ref": "#/$defs/sourceUrl"
+        },
         "stats": {
           "type": "object"
         },
@@ -175,6 +244,9 @@
         },
         "untrusted_listing_text": {
           "const": true
+        },
+        "verification_level": {
+          "$ref": "#/$defs/verificationLevel"
         }
       },
       "required": [
@@ -342,8 +414,25 @@
           "maxItems": 20,
           "type": "array"
         },
+        "pickup_available": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
         "pickup_radius_km": {
           "$ref": "#/$defs/nullableNumber"
+        },
+        "pickup_search_confirmed": {
+          "type": "boolean"
+        },
+        "pickup_search_postcode": {
+          "pattern": "^[0-9]{5}$",
+          "type": "string"
+        },
+        "pickup_search_radius_km": {
+          "exclusiveMinimum": 0,
+          "type": "number"
         },
         "postcode": {
           "$ref": "#/$defs/nullableText"
@@ -425,6 +514,15 @@
         "source": {
           "$ref": "#/$defs/nullableText"
         },
+        "source_observed_at": {
+          "$ref": "#/$defs/nullableTime"
+        },
+        "source_provider": {
+          "$ref": "#/$defs/sourceProvider"
+        },
+        "source_url": {
+          "$ref": "#/$defs/sourceUrl"
+        },
         "stale": {
           "type": "boolean"
         },
@@ -456,6 +554,9 @@
         },
         "value_reason": {
           "$ref": "#/$defs/nullableText"
+        },
+        "verification_level": {
+          "$ref": "#/$defs/verificationLevel"
         }
       },
       "required": [
@@ -673,6 +774,29 @@
       "type": [
         "string",
         "null"
+      ]
+    },
+    "sourceProvider": {
+      "maxLength": 80,
+      "minLength": 1,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "sourceUrl": {
+      "enum": [
+        "https://auktionen-ohne-gebot.de/business-industrie/",
+        null
+      ]
+    },
+    "verificationLevel": {
+      "enum": [
+        "aggregator",
+        "direct_api",
+        "user_supplied",
+        "unknown",
+        null
       ]
     }
   },

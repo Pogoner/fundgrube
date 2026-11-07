@@ -24,6 +24,78 @@
         "summary": "Kandidatenseite 1 lesen"
       }
     },
+    "/api/candidates/page-002.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates2",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+          }
+        },
+        "summary": "Kandidatenseite 2 lesen"
+      }
+    },
+    "/api/candidates/page-003.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates3",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+          }
+        },
+        "summary": "Kandidatenseite 3 lesen"
+      }
+    },
+    "/api/candidates/page-004.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates4",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+          }
+        },
+        "summary": "Kandidatenseite 4 lesen"
+      }
+    },
+    "/api/candidates/page-005.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates5",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+          }
+        },
+        "summary": "Kandidatenseite 5 lesen"
+      }
+    },
     "/api/items/{item_file}": {
       "get": {
         "description": "Nur bereits im Snapshot referenzierte Dateien existieren. Kein dynamischer Suchendpunkt.",
