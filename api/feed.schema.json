@@ -190,6 +190,32 @@
           "format": "date-time",
           "type": "string"
         },
+        "interactive_review": {
+          "properties": {
+            "applied": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "available": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "reviewed_at": {
+              "$ref": "#/$defs/nullableTime"
+            },
+            "reviewer": {
+              "const": "ChatGPT"
+            },
+            "status": {
+              "type": "string"
+            },
+            "unreviewed": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
         "kind": {
           "enum": [
             "feed",
@@ -504,6 +530,12 @@
           "maximum": 100,
           "minimum": 0,
           "type": "integer"
+        },
+        "semantic_review_mode": {
+          "enum": [
+            "interactive",
+            "api"
+          ]
         },
         "shipping_confirmed": {
           "type": "boolean"

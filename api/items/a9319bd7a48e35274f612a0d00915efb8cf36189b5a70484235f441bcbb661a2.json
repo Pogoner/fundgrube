@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-07T22:29:15Z",
+  "generated_at": "2026-11-07T22:55:33Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "medium",
+    "assessment_basis": "llm",
+    "assessment_confidence": "high",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Neu ohne Etikett",
     "content_updated_at": "2026-11-07T22:14:15Z",
@@ -30,7 +30,7 @@
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Nicht für die Geräte-Shortlist priorisieren"
     ],
     "pickup_available": null,
     "pickup_radius_km": 50,
@@ -43,18 +43,22 @@
       "Aktueller Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Kleinteile oder gewöhnliches Verbrauchsmaterial passen kaum zum Interesseprofil; Menge kann die Größenordnung ändern."
+      "Alltagsverbrauchsmaterial",
+      "Kein nennenswerter Maschinen- oder Werkzeugnutzen"
     ],
     "reserve_status": "unknown",
     "risks": [
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Bei Hygieneartikeln sind Verpackungszustand und gegebenenfalls Verfall nicht geprüft",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "score": 25,
     "semantic_assessed": true,
-    "semantic_interest": 6,
+    "semantic_assessed_at": "2026-11-07T22:40:01Z",
+    "semantic_interest": 3,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 3.2,
     "source_observed_at": "2026-11-07T22:14:15Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -66,13 +70,13 @@
     "url": "https://www.ebay.de/itm/128167966630?hash=item1dd767f7a6%3Ag%3AYX8AAeSwPvlpuT%7ES&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
     "valid_until": "2026-11-08T04:14:15Z",
     "value_band": "around_5",
-    "value_reason": "Kleinteile oder gewöhnliches Verbrauchsmaterial passen kaum zum Interesseprofil; Menge kann die Größenordnung ändern.",
+    "value_reason": "Kleine Mengen Einweggeschirr, Textilreste oder gewöhnliches Hygiene- und Markierungsmaterial; kein Gerät.",
     "verification_level": "aggregator"
   },
   "kind": "item",
   "provider": "auktionen-ohne-gebot",
   "schema_version": 2,
-  "snapshot_id": "sha256:6965aeef4bdcaf74c4d14c549e441f37e4a93f92e7fc59e5104d738bf8705196",
+  "snapshot_id": "sha256:116435e0998428c4c0733a21adc9b2ebd9389ddccc4954588f5b6b7f4dbfc866",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",

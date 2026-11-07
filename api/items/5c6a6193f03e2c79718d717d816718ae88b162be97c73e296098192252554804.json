@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-07T22:29:15Z",
+  "generated_at": "2026-11-07T22:55:33Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "New – Open box",
     "content_updated_at": "2026-11-07T22:14:15Z",
@@ -31,7 +31,7 @@
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Tatsächliche Lagerkennungen, Stückzahl und Zustand prüfen"
     ],
     "pickup_available": null,
     "pickup_radius_km": 50,
@@ -39,11 +39,11 @@
     "postcode": "",
     "price_eur": 0.63,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "accessory",
     "reasons": [
       "Aktueller Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Mehrere benannte Lager statt unbekannter Einzelteile"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -51,11 +51,15 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Altbestand und offene Verpackungen",
+      "Beschriftung der Schachteln muss nicht den Inhalt beweisen",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "score": 15,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-07T22:40:01Z",
+    "semantic_interest": 26,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 22.61,
     "source_observed_at": "2026-11-07T22:14:15Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -66,14 +70,14 @@
     "total_known_eur": 23.24,
     "url": "https://www.ebay.de/itm/147660000736?hash=item226138cde0%3Ag%3A6e8AAeSwMp1qq17o&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
     "valid_until": "2026-11-08T01:23:33Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "Ein kleines Los genannter Markenlager kann nützlich sein, ist aber keine vollständige Maschine und die genaue Zahl der Lager bleibt offen.",
     "verification_level": "aggregator"
   },
   "kind": "item",
   "provider": "auktionen-ohne-gebot",
   "schema_version": 2,
-  "snapshot_id": "sha256:6965aeef4bdcaf74c4d14c549e441f37e4a93f92e7fc59e5104d738bf8705196",
+  "snapshot_id": "sha256:116435e0998428c4c0733a21adc9b2ebd9389ddccc4954588f5b6b7f4dbfc866",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
