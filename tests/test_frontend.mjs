@@ -300,7 +300,8 @@ test("aggregator attribution, bounded coverage and unknown transport remain expl
   assert.match(source, /Nicht direkt bei eBay verifiziert/);
   assert.match(source, /href="https:\/\/auktionen-ohne-gebot\.de\/business-industrie\/"/);
   assert.doesNotMatch(source, /javascript:/);
-  assert.match(source, /heuristisch; keine LLM-Analyse aktiviert/);
+  assert.match(source, /Automatische LLM-Aufrufe aus/);
+  assert.match(source, /heuristisch priorisierte Angebote sind als „Heuristik“ markiert/);
   assert.match(h.nodes.get("metric-source").textContent, /Aggregator-Cache/);
   const coverage = h.nodes.get("coverage-content").innerHTML;
   assert.match(coverage, /80 \/ 1200/);
@@ -431,4 +432,54 @@ test("pickup-search label expires on the timer while old offers stay explicitly 
   assert.equal(h.nodes.get("result-count").textContent, "(1)");
   assert.doesNotMatch(h.nodes.get("cards").innerHTML, /Abholsuche · 50 km/);
   assert.match(h.nodes.get("cards").innerHTML, /Abholung möglich · Nähe ungeklärt/);
+});
+
+test("interactive ChatGPT ratings are distinct from both heuristic rows and automatic API calls", async () => {
+  const aggregate = overrides => offer({
+    source_provider: "auktionen-ohne-gebot", verification_level: "aggregator",
+    source_observed_at: iso(-60000), detail_path: null, semantic_assessed: true,
+    assessment_confidence: "low", ...overrides
+  });
+  const h = harness(fixture({provider: "auktionen-ohne-gebot", ai_enabled: false,
+    interactive_review: {status: "applied", reviewer: "ChatGPT", reviewed_at: iso(-2 * hour), applied: 1, available: 1, unreviewed: 2},
+    deals: [
+      aggregate({id: "interactive", assessment_basis: "llm", semantic_review_mode: "interactive", semantic_assessed_at: iso(-2 * hour), interest_score: 97}),
+      aggregate({id: "heuristic", assessment_basis: "heuristic", semantic_review_mode: "interactive", interest_score: 55}),
+      aggregate({id: "api-llm", assessment_basis: "llm", semantic_review_mode: "api", interest_score: 75})
+    ]
+  })); await flush();
+  const metric = h.nodes.get("metric-source").textContent;
+  assert.match(metric, /ChatGPT-Sichtung: 1 Angebot/);
+  assert.match(metric, /Automatische LLM-Aufrufe aus/);
+  const source = h.nodes.get("source-attribution").innerHTML;
+  assert.match(source, /ChatGPT-Sichtung: 1 Angebot/);
+  assert.match(source, /2 Angebote ohne angewendete ChatGPT-Sichtung/);
+  assert.doesNotMatch(source, /keine LLM-Analyse aktiviert/);
+  const cards = h.nodes.get("cards").innerHTML;
+  assert.match(cards, /ChatGPT · Konfidenz niedrig/);
+  assert.match(cards, /Heuristik · Konfidenz niedrig/);
+  assert.match(cards, /LLM · Konfidenz niedrig/);
+  assert.equal(h.nodes.get("cards").querySelectorAll(".detail-open")[0].dataset.id, "interactive");
+  assert.match(h.nodes.get("coverage-content").innerHTML, /Ohne angewendete ChatGPT-Sichtung/);
+  await h.detail("interactive");
+  assert.match(h.nodes.get("dialog-content").innerHTML, /ChatGPT-Sichtung \(Berlin\)/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /ChatGPT \/ niedrig/);
+  await h.detail("heuristic");
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Heuristik \/ niedrig/);
+  assert.doesNotMatch(h.nodes.get("dialog-content").innerHTML, /ChatGPT-Sichtung \(Berlin\)/);
+});
+
+test("none, expired and invalid interactive reviews are not reported as applied", async () => {
+  for (const [status, label] of [["none", "noch keine"], ["expired", "abgelaufen"], ["invalid", "ungültig"]]) {
+    const h = harness(fixture({provider: "auktionen-ohne-gebot", ai_enabled: status === "none",
+      interactive_review: {status, reviewer: "ChatGPT", reviewed_at: iso(-49 * hour), applied: 0, available: 238, unreviewed: 1},
+      deals: [offer({source_provider: "auktionen-ohne-gebot", verification_level: "aggregator", source_observed_at: iso(-60000), assessment_basis: "heuristic", semantic_assessed: true})]
+    })); await flush();
+    const metric = h.nodes.get("metric-source").textContent;
+    assert(metric.includes(`ChatGPT-Sichtung: ${label}`));
+    assert(metric.includes(status === "none" ? "Automatische LLM-Aufrufe aktiv" : "Automatische LLM-Aufrufe aus"));
+    assert.doesNotMatch(metric, /ChatGPT-Sichtung: 238 Angebote/);
+    assert.match(h.nodes.get("cards").innerHTML, /Heuristik · Konfidenz niedrig/);
+    assert.doesNotMatch(h.nodes.get("cards").innerHTML, /ChatGPT · Konfidenz/);
+  }
 });

@@ -89,6 +89,10 @@ def _provisional_pickup_match(item: dict[str, Any], settings: dict[str, Any]) ->
 
 def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) -> dict[str, Any]:
     result = dict(item)
+    # Recomputing facts starts with the explicitly labelled fallback. Optional
+    # API or interactive reviews must attach their own validated provenance.
+    result.pop("semantic_review_mode", None)
+    result.pop("semantic_assessed_at", None)
     reasons: list[str] = []
     risks: list[str] = []
     failed: list[str] = []

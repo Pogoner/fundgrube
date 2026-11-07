@@ -5,8 +5,8 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # UTC; GitHub kann geplante Läufe verzögern oder auslassen.
-    - cron: "7,37 * * * *"
+    # Alle 10 Minuten (UTC), abseits des Stundenanfangs; nicht echtzeitgarantiert.
+    - cron: "3,13,23,33,43,53 * * * *"
 
 permissions:
   contents: read

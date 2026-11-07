@@ -5,6 +5,10 @@ link is requested. Each scan checks robots.txt, refreshes general page zero,
 rotates bounded general tail pages, and optionally reads pickup page zero.
 The public search UI uses pages of 48 and the query parameters below.
 
+Publication is planned every ten minutes. The nine-minute safety debounce
+allows modest scheduler jitter; it is not the requested schedule. Existing
+cooldowns, HTTP Retry-After and access-denial pauses are never shortened.
+
 The application must preserve source_observed_at: response data may already
 have been cached. Unknown shipping, bids, reserve and actual location remain
 unknown. A nearby pickup search is a provisional source claim, not a verified
@@ -37,13 +41,16 @@ PRODUCT_TOKEN = "FundgrubeBot"
 USER_AGENT = PRODUCT_TOKEN + "/1.0 (+https://github.com/Pogoner/fundgrube)"
 PAGE_SIZE = 48
 MAX_API_REQUESTS = 6
+DEFAULT_API_REQUESTS = 4
 MAX_SOURCE_ITEMS = 9600
 MIN_REQUEST_GAP = 10.0
-MIN_SCAN_INTERVAL = 1800
+PLANNED_SCAN_INTERVAL = 600
+MIN_SCAN_INTERVAL = 540
+DEFAULT_RATE_LIMIT_BACKOFF = 1800
 SOURCE_CACHE_SECONDS = 900
 MAX_JSON_BYTES = 2 * 1024 * 1024
 MAX_ROBOTS_BYTES = 256 * 1024
-MAX_DAILY_REQUESTS = 350
+MAX_DAILY_REQUESTS = 750
 
 
 @dataclass(frozen=True)
@@ -108,7 +115,7 @@ def _retry_after(headers: Mapping[str, str], at: datetime) -> float:
         # pause, never a truncated shorter wait. Avoid int() on unbounded input.
         return float(int(value) if len(value) <= 12 else 10**12)
     date = _http_time(value)
-    return max((date - at).total_seconds(), 0) if date else MIN_SCAN_INTERVAL
+    return max((date - at).total_seconds(), 0) if date else DEFAULT_RATE_LIMIT_BACKOFF
 
 
 def _normalized_robots_path(value: str) -> str:
@@ -363,15 +370,17 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
     """Fetch a bounded aggregator snapshot. All network boundaries are injectable.
 
     transport receives keyword url/headers/timeout and returns HttpResponse.
-    settings accepts aog_page_size (12 or 48), aog_max_requests_per_run (1..6),
+    settings accepts aog_page_size (12 or 48), aog_max_requests_per_run (1..6, default 4),
     aog_pickup_enabled (boolean), max_price_eur, postcode, pickup_radius_km.
     The internal API cap excludes the robots request; coverage counts both.
+    Planned cadence is ten minutes, with a nine-minute duplicate-run debounce.
+    The 750-request daily cap includes robots (144 default runs use 720 requests).
     """
     if not isinstance(at, datetime) or at.tzinfo is None or at.utcoffset() is None:
         raise ValueError("at must be timezone-aware")
     at = at.astimezone(timezone.utc).replace(microsecond=0)
     page_size = settings.get("aog_page_size", PAGE_SIZE)
-    limit = settings.get("aog_max_requests_per_run", MAX_API_REQUESTS)
+    limit = settings.get("aog_max_requests_per_run", DEFAULT_API_REQUESTS)
     pickup_enabled = settings.get("aog_pickup_enabled", True)
     maximum, radius = settings.get("max_price_eur", 1), settings.get("pickup_radius_km", 50)
     postcode = settings.get("postcode", "69121")
@@ -390,7 +399,9 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
     coverage = {"requests_this_run": 0, "api_requests_this_run": 0, "pages_fetched": 0, "page_size": page_size,
                 "source_total_reported": None, "source_cache_max_age_minutes": 15, "complete": False,
                 "next_offset": state["general_next_offset"], "source_claims_only": True,
-                "pickup_search_count": 0, "pickup_total_reported": None, "pagination_is_stable": False}
+                "pickup_search_count": 0, "pickup_total_reported": None, "pagination_is_stable": False,
+                "planned_interval_minutes": PLANNED_SCAN_INTERVAL // 60,
+                "debounce_seconds": MIN_SCAN_INTERVAL, "daily_request_budget": MAX_DAILY_REQUESTS}
     def warning(code: str, message: str):
         if not any(value["code"] == code for value in warnings):
             warnings.append({"code": code, "message": message})

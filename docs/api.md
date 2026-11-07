@@ -4,6 +4,8 @@ Die Fundgrube veröffentlicht **statische JSON-Snapshots**, keinen dauerhaft
 laufenden MCP-Server. Dafür sind weder eine Datenbank noch ein eigener Webserver
 oder ein zusätzlicher OpenAI-Schlüssel erforderlich. Erst die optionale automatische
 LLM-Sichtung im Workflow verwendet einen separat eingerichteten API-Zugang.
+Echte ChatGPT-Bewertungen aus einer interaktiven Sichtung im Gespräch können
+zusätzlich in die GUI übernommen werden, ohne diesen API-Zugang einzurichten.
 
 ## Einstieg
 
@@ -18,14 +20,15 @@ Nach einem erfolgreichen Workflow:
 
 Diese URLs beschreiben das Ziel der Veröffentlichung, nicht deren gegenwärtige
 Erreichbarkeit. Ein erfolgreicher Quellcode-Commit beweist weder ein erfolgreiches
-Deployment noch einen funktionierenden eBay-Zugang.
+Deployment noch einen erfolgreichen Abruf der gewählten Quelle.
 
 ### Mit der GitHub-Anbindung lesen
 
 1. `refs/heads/data` zum aktuellen Commit-SHA auflösen.
 2. `api/manifest.json` mit diesem SHA als `ref` lesen.
 3. Alle `pages[].path` mit **demselben SHA** abrufen. Nicht nach jeder Seite erneut
-   den beweglichen Branch auflösen.
+   den beweglichen Branch auflösen. Unabhängige Kandidatenseiten parallel lesen;
+   das Manifest dafür nur einmal laden.
 4. Für interessante oder unklare Kandidaten die referenzierten `detail_path`-Dateien
    ebenfalls mit diesem SHA lesen.
 
@@ -44,6 +47,22 @@ Pages ersetzt Dateien nicht als transaktionale API: Ändert sich die Generation
 zwischen zwei Abrufen, ist erneut beim Manifest zu beginnen. Nicht gefundene
 Detaildateien können bedeuten, dass das Angebot inzwischen aus dem Snapshot
 entfernt wurde.
+
+### Effiziente wiederholte Sichtung
+
+Die vorhandenen Snapshot-Dateien reichen für eine inkrementelle Bewertung:
+Manifest einmal lesen, den Daten-SHA festhalten, alle Kandidatenseiten parallel
+abrufen und lokal mit den gültigen Einordnungen abgleichen. Nur Angebote ohne
+gültige Bewertung oder mit geändertem Titel, Beschreibung oder Zustand brauchen
+eine neue LLM-Einordnung. Preis-/Gebotsänderungen verändern Quellenfakten und
+gegebenenfalls die Faktenpunkte, nicht automatisch die inhaltsgebundene Semantik.
+Abgelaufene Reviews müssen bei Bedarf tatsächlich neu gesichtet werden; ihre
+Zeitstempel dürfen nicht bloß verlängert werden.
+
+Hohe Interesse-Scores und nahes Auktionsende priorisieren die erneute
+Faktenprüfung im Originalangebot. Das ist getrennt von einer erneuten
+semantischen Bewertung. Hier wird eine Vorgehensweise mit vorhandenen Dateien
+beschrieben, **kein neuer Delta- oder Suchendpunkt**.
 
 ## Dateien und Felder
 
@@ -81,6 +100,14 @@ Wichtige Begriffe:
   unsichere Größenordnung, keine Wertermittlung und kein konkret belegter Marktpreis.
 - `assessment_basis`: `heuristic` oder `llm`; `assessment_confidence` bezeichnet
   die Sicherheit dieser Einordnung, nicht die geprüfte Funktionsfähigkeit.
+- `semantic_review_mode: interactive`: Die LLM-Einordnung stammt aus einer
+  ausdrücklich erarbeiteten ChatGPT-Sichtung, nicht aus einer unbeaufsichtigten
+  API-Anfrage. Das Feld ist optional; ältere Datensätze bleiben lesbar.
+- `semantic_assessed_at`: Zeitpunkt der semantischen Bewertung, kein neuer
+  Quellenabruf und keine Bestätigung aktueller Preise oder Zustände.
+- `interactive_review`: Metadaten auf Snapshot-Ebene zur Anwendung der
+  hinterlegten interaktiven Reviews. Sie ersetzen weder Quellenstatus noch
+  Abdeckungsprüfung und bedeuten nicht, dass sämtliche neuen Angebote bewertet sind.
 - `next_checks`: Konkrete offene Prüfpunkte, beispielsweise Modell, Lieferumfang
   oder Funktionsnachweis. `price_kind` unterscheidet etwa aktuelles Gebot und
   erforderliches Mindestgebot; ein Sofortkaufpreis darf nicht damit verwechselt werden.
@@ -94,6 +121,83 @@ Unbekannte Angaben bleiben `null`. Das bedeutet insbesondere **nicht** „0 Gebo
 „kostenloser Versand“ oder „kein Mindestpreis“. `reserve_status: met` bedeutet nur,
 dass ein Mindestpreis erreicht wurde. Ein bestätigter Abhol-Suchradius ist keine
 gemessene Entfernung und keine Fahrzeit.
+
+## Interaktive ChatGPT-Bewertungen zurück in die GUI
+
+Die öffentliche JSON-Schnittstelle bleibt **nur lesend**. Bewertungen werden
+nicht per HTTP an Pages geschickt, sondern nach einem ausdrücklichen
+Speicherauftrag als Dateien im Quellcode-Zweig `main` hinterlegt. Dafür wird die
+bereits verbundene GitHub-Anbindung mit ihren regulären Schreibrechten verwendet;
+es braucht keinen zusätzlichen OpenAI-API-Key. Eine bloße Bitte um eine Shortlist
+ist keine Erlaubnis für einen Commit.
+
+Der Ablauf ist:
+
+1. Einen unveränderlichen Daten-Snapshot wie oben vollständig lesen. Den
+   zugehörigen `data/deals.json`-Feed für das Packen lokal verwenden; keine
+   verschiedenen Generationen vermischen.
+2. ChatGPT erstellt die echten semantischen Einordnungen für diesen Snapshot
+   in `reviews/ratings.json`. Das vorhandene Dateiformat verwenden; in Gruppen
+   zusammengefasste Bewertungen müssen die tatsächlich zugehörigen IDs nennen.
+   Gründe, grobe Wertklasse, Unsicherheit und Prüfpunkte bleiben Einschätzungen.
+3. Eingaben validieren und inhaltsgebundene Reviews erzeugen:
+
+   ```bash
+   python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/ratings.json --output reviews/current.json
+   ```
+
+4. Nur bei beauftragter Speicherung die Review-Dateien auf `main` committen.
+   Der nächste Workflow lädt optional `reviews/current.json`, berechnet die
+   Quellen- und Eignungsfakten erneut und exportiert passende Einordnungen.
+
+Der Pack-Helfer prüft die Snapshot-Zuordnung. Doppelte IDs, IDs außerhalb dieses
+Feeds und exakte Preisfelder werden zurückgewiesen. Er verknüpft jede Bewertung
+mit Angebots-ID und Hash von **Titel, Beschreibung und Zustand**; er macht keine
+eigene Modellbewertung und beglaubigt keine Verkäuferangaben. Der Hash ist eine
+Inhaltsbindung, keine kryptografische Signatur der Urheberschaft; die regulären
+Repository-Schreibrechte sichern den Eintragspfad.
+
+`ratings.json` verwendet Version 1 mit genau den Kopf-Feldern `schema_version`,
+`source_snapshot_id`, `reviewed_at`, `reviewer` und `groups`. `reviewer` ist
+`ChatGPT`; die Quell-Snapshot-ID muss dem Feed entsprechen, der Zeitpunkt eine
+Zeitzone enthalten und darf nicht vor der Feed-Erzeugung liegen. Ein zukünftiger
+Bewertungszeitpunkt wird beim Anwenden nicht akzeptiert. Jede Gruppe enthält
+genau `ids` und `assessment`; eine Bewertung enthält:
+
+| Feld | Zulässiger Inhalt |
+|---|---|
+| `semantic_interest` | ganze Zahl 0–100, keine Erfolgswahrscheinlichkeit |
+| `value_band` | `around_5`, `around_50`, `around_500`, `unknown` |
+| `assessment_confidence` | `low`, `medium`, `high` |
+| `product_kind` | `apparatus`, `tool`, `accessory`, `media`, `consumable`, `unknown` |
+| `value_reason` | kurze begründete Einschätzung |
+| `reasons`, `risks`, `next_checks` | begrenzte Listen kurzer Hinweise |
+
+Zusätzliche Felder, URLs, HTML-Tags und Codeblöcke gehören nicht in Bewertungen.
+Der Helfer akzeptiert höchstens 800 Reviews. Ein Datensatz mit
+`description_truncated: true` kann nicht als vollständig gelesen gebunden werden:
+zuerst die vollständigen Details desselben Snapshots laden und einen verlustfreien
+lokalen Feed verwenden, nicht nur die Kürzungsmarkierung entfernen. Ein wirklich
+fehlender Beschreibungstext bleibt dagegen leer und unbekannt.
+
+Beim späteren Anwenden darf der Feed bereits eine neue Generation haben: Die
+einzelne Bewertung muss weiterhin zum Inhalt passen und höchstens 48 Stunden
+alt sein. Eine Änderung von Titel, Beschreibung oder Zustand verhindert die
+Übernahme. Neue Preise oder Gebotszahlen werden nicht aus dem Review übernommen;
+Quellenfakten und `eligibility` bleiben maßgeblich. Eine neuere automatische
+API-Bewertung hat Vorrang vor dem älteren interaktiven Review.
+
+Übernommene Einordnungen erhalten `assessment_basis: llm`,
+`semantic_review_mode: interactive` und einen Bewertungszeitpunkt in
+`semantic_assessed_at`. Neue, veränderte oder nicht mehr passend bewertete
+Angebote nutzen ohne andere gültige LLM-Bewertung die lokale Heuristik.
+Interaktive Reviews verfallen nach 48 Stunden; das Quellenalter von höchstens
+sechs Stunden und das Auktionsende gelten zusätzlich, nicht alternativ.
+
+`HUNTER_LLM_ENABLED` schaltet die getrennte, automatische API-Sichtung. Ein
+ausgeschalteter API-Modus schließt echte interaktive LLM-Bewertungen nicht aus.
+Diese Funktion ist keine kontinuierliche unbeaufsichtigte LLM-Bewertung:
+Eine neue interaktive Charge erfordert eine neue tatsächliche Sichtung im Chat.
 
 ## Quelle „Auktionen ohne Gebot“
 
@@ -122,6 +226,23 @@ Der Anbieter nennt einen Cache von bis zu **15 Minuten**. Das bleibt eine
 Collector konservativ unter Berücksichtigung dieses Alters gesetzt;
 `source_observed_at` und erst recht `generated_at` dürfen es nicht ersetzen.
 Zusätzliche Zeit zwischen Abruf und Lesen kann die Angaben weiter veralten lassen.
+
+Der Veröffentlichungsworkflow ist alle zehn Minuten auf Minute 03, 13, 23, 33,
+43 und 53 jeder UTC-Stunde geplant. GitHub kann diese Läufe verzögern, aufreihen
+oder auslassen; ein erfolgreicher Zehn-Minuten-Lauf kann wegen des
+15-Minuten-Anbietercaches dieselben Daten liefern. `generated_at` ist kein
+Beleg einer neueren Quellenbeobachtung.
+
+Der Produktionsstandard liest bis zu vier Daten-API-Seiten plus `robots.txt`:
+allgemeine Seite 0, bis zu zwei rotierende Folgeseiten und die erste Abholseite,
+jeweils höchstens 48 Einträge. Das sind bis zu 144 allgemeine plus 48
+Abholsuchtreffer vor Deduplizierung, keine vollständige Marktabdeckung. Zehn
+Sekunden Anfrageabstand, ein gespeicherter neunminütiger Doppelstartschutz und
+750 HTTP-Anfragen je UTC-Tag begrenzen den Sammler; bei planmäßigem Maximalabruf
+sind es nominal 720 pro Tag. Der Adapter erlaubt technisch maximal sechs
+Daten-API-Seiten pro Lauf, die Voreinstellung bleibt vier. Echte längere
+`Retry-After`- und Sicherheitspausen bleiben gültig; eine ältere gespeicherte
+30-Minuten-Pause kann beim Übergang einmal noch auslaufen.
 
 Die verwendete Quelle liefert Titel, Bild, Preis, Versand, Gebotszahl, Ende,
 Zustandsangabe und eBay-Link, aber hier **keine vollständigen Beschreibungen, keine
@@ -188,13 +309,16 @@ vollständiger eBay-Abdeckung.
 
 Live-Veröffentlichung und automatische LLM-Verarbeitung sind getrennt zu
 konfigurieren (`HUNTER_PUBLISH_LIVE_DATA` und `HUNTER_LLM_ENABLED`). Die Schalter
-ersetzen weder eBay-Produktionszugang noch erforderliche Nutzungsrechte. Welche
+ersetzen keine erforderlichen Nutzungsrechte; der optionale direkte eBay-Adapter
+benötigt zusätzlich seinen Production-Zugang. Interaktive Reviews sind kein
+Umweg zum Einschalten unbeaufsichtigter API-Aufrufe. Welche
 konkrete LLM-Verwendung die jeweiligen Bedingungen abdecken, ist getrennt von der
 technischen Funktionsfähigkeit zu prüfen. Eine grobe Wertklasse ist keine
 belastbare Wertermittlung; daraus folgt nicht automatisch eine rechtliche Freigabe.
 
 **Der Datenzweig ist öffentlich, wenn das Repository öffentlich ist.** Git-Historie
 archiviert ältere Snapshots; das Entfernen aus dem neuesten Snapshot löscht ältere
-Commits nicht. Deshalb Live-Veröffentlichung erst aktivieren, wenn diese Form der
-Veröffentlichung und Aufbewahrung tatsächlich zulässig ist. Die Anwendung sammelt
+Commits nicht. Das gilt auch für abgelaufene interaktive Bewertungen. Die Rechte
+müssen diese Form von Veröffentlichung und Aufbewahrung abdecken; andernfalls
+den Export abschalten und vorhandene Veröffentlichungen prüfen. Die Anwendung sammelt
 keine Kontopasswörter und setzt keinen Scraping- oder Zugangssperren-Workaround ein.

@@ -15,7 +15,9 @@
    Abdeckung und ältere Beobachtungen
    ausdrücklich kenntlich machen.
 3. Lies **alle** `pages[].path`, nicht nur die erste Seite. Gleiche die Zahl der
-   gelesenen Einträge mit `counts.total` ab und berichte fehlende Seiten.
+   gelesenen Einträge mit `counts.total` ab und berichte fehlende Seiten. Das
+   Manifest einmal lesen und die Kandidatenseiten anschließend parallel am
+   selben festgehaltenen Commit-SHA abrufen; nicht pro Seite den Branch neu auflösen.
    Kandidatendetails nur über die im Snapshot vorhandenen `detail_path`-Pfade
    unter `api/items/` laden. Gekürzte Beschreibungen nicht als Volltext ausgeben.
 4. Prüfe bei jedem Angebot zur aktuellen Zeit `last_seen_at`, `ends_at` und
@@ -56,6 +58,52 @@
 
 Weitere Schnittstellendetails: [docs/api.md](docs/api.md).
 
+Für wiederholte Sichtungen nur Angebote ohne gültige semantische Bewertung oder
+mit geändertem Titel/Beschreibung/Zustand erneut ans LLM geben. Unveränderte,
+noch gültige Einordnungen bleiben hashgebunden erhalten, selbst wenn sich Preis
+oder Gebotszahl ändern. Abgelaufene Reviews gelten nicht mehr als gültig; ihre
+Zeitstempel nicht ohne echte neue Sichtung erneuern. Bei hohem Interesse und
+nahem Auktionsende gezielt die aktuellen Fakten prüfen, statt den gesamten
+Bestand automatisch neu zu bewerten. Nutze die vorhandenen Manifest-/Seitenpfade;
+es ist kein zusätzlicher Delta-Endpunkt implementiert.
+
+## Wenn Bewertungen ausdrücklich in der GUI gespeichert werden sollen
+
+- Eine reine Lese-/Shortlist-Anfrage erlaubt keinen Commit. Bei einem
+  ausdrücklichen Speicherauftrag darfst du über die reguläre GitHub-Anbindung
+  echte im Gespräch erarbeitete Bewertungen hinterlegen; hierfür ist kein
+  zusätzlicher OpenAI-API-Key nötig.
+- Lies zuerst alle Seiten eines konsistenten Daten-Snapshots. Verwende beim
+  Packen den genau zugehörigen lokalen Feed und erstelle `reviews/ratings.json`
+  im vorhandenen Format. Gruppen dürfen nur tatsächlich zugehörige Angebots-IDs
+  enthalten. Erfinde keine Bewertungen oder überspringe unbemerkt ungelesene Seiten.
+- Erzeuge die inhaltsgebundene Fassung mit:
+
+```bash
+python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/ratings.json --output reviews/current.json
+```
+
+- Snapshot-Abweichungen, doppelte/unbekannte IDs oder exakte Preisfelder sind
+  Fehler, keine Einladung, die Validierung abzuschalten. Der Helfer bindet ID
+  und Titel-/Beschreibungs-/Zustands-Hash; er bewertet nicht selbst. Keine
+  Heuristik als echte ChatGPT-Ausgabe umetikettieren. Der Hash beweist keine
+  Urheberschaft. Gekürzte Beschreibungen erst durch vollständige Details
+  desselben Snapshots ergänzen, nicht bloß die Kürzungsmarkierung löschen.
+- Nach beauftragtem Commit der Review-Dateien auf `main` wendet der nächste
+  Workflow passende Einordnungen an. Sie dürfen höchstens 48 Stunden alt sein,
+  keine Quellenfakten oder `eligibility` verändern und keine neuere automatische
+  API-Bewertung verdrängen. Das Quellenalter von höchstens sechs Stunden gilt
+  zusätzlich. Neue, geänderte oder nicht passend bewertete Angebote bleiben
+  ohne andere gültige LLM-Bewertung heuristisch.
+- Erkenne interaktive Einordnungen an `assessment_basis: llm`,
+  `semantic_review_mode: interactive` und `semantic_assessed_at`; beachte die
+  Snapshot-Metadaten `interactive_review`. Ein fehlender API-Key bedeutet nicht,
+  dass eine vorhandene echte interaktive Bewertung zur Heuristik wird.
+- Bezeichne dies als interaktive Chargenbewertung, niemals als automatisch
+  fortlaufende unbeaufsichtigte LLM-Sichtung. Die getrennte automatische API
+  benötigt weiterhin Freigabe, Modell und Schlüssel. Ablauf entfernt alte
+  Reviews nicht aus der öffentlichen Git-Historie.
+
 ## Wenn du Code änderst
 
 - Bewahre die Aufteilung in Sammler (`aog`/`ebay`), Normalisierung (`models`),
@@ -71,8 +119,9 @@ Weitere Schnittstellendetails: [docs/api.md](docs/api.md).
 - Der beauftragte Produktionsworkflow verwendet `HUNTER_SOURCE=aog` und
   `HUNTER_PUBLISH_LIVE_DATA=true` als Standard. Erhalte die ausdrücklichen
   Abschaltmöglichkeiten `HUNTER_PUBLISH_LIVE_DATA=false` und
-  `HUNTER_SOURCE=disabled`. Der optionale LLM bleibt ohne eigene Freigabe,
-  Modell und API-Key aus; gib die lokale Heuristik nie als LLM-Ergebnis aus.
+  `HUNTER_SOURCE=disabled`. Automatische LLM-API-Aufrufe bleiben ohne eigene
+  Freigabe, Modell und API-Key aus. Interaktive Reviews sind davon getrennt;
+  gib die lokale Heuristik nie als LLM-Ergebnis aus.
   Verändere Quelle oder Freigaben nicht beiläufig. Ein Konfigurationsflag und
   eine erlaubende Robots-Regel sind keine Datenlizenz. Browse ist nicht pauschal mit
   den gesondert definierten Restricted APIs gleichzusetzen; konkrete Rechte
@@ -81,12 +130,21 @@ Weitere Schnittstellendetails: [docs/api.md](docs/api.md).
   Quellenalter im aktuellen Export bedeuten keine Löschung der Historie.
   AOG exportiert nur Kurzmetadaten, keine Verkäufer-Volltexte. Vor Erweiterungen
   die Rechte und Löschpflichten berücksichtigen, keine Lizenzzusage erfinden.
-- Erhalte für AOG die Robots-Prüfung und höchstens sechs Daten-API-Anfragen je
-  Lauf (zusammen höchstens sieben Quellenanfragen): allgemeine Seite 0 plus vier
-  rotierende Folgeseiten und Abholseite 0, jeweils höchstens 48 Einträge. Das
-  ergibt bis zu 240 allgemeine plus 48 Abholsuchtreffer vor Deduplizierung und
-  Filterung, keine Vollständigkeitszusage. Erhalte mindestens zehn Sekunden
-  Abstand und die gespeicherte 30-Minuten-Abkühlzeit. Sperren, Rate-Limits,
+- Erhalte den Zehn-Minuten-Zeitplan `3,13,23,33,43,53 * * * *` (UTC) und
+  `cancel-in-progress: false`. GitHub kann Läufe verzögern oder aufreihen; der
+  Anbieter-Cache von bis zu 15 Minuten verhindert eine Zusage neuer Fakten
+  alle zehn Minuten.
+- AOG-Standard: vier Daten-API-Anfragen plus eine Robots-Anfrage je Lauf;
+  allgemeine Seite 0 plus zwei rotierende Folgeseiten und Abholseite 0 mit
+  jeweils höchstens 48 Einträgen. Das ergibt bis zu 144 allgemeine plus 48
+  Abholsuchtreffer vor Deduplizierung und Filterung. Technisch sind maximal sechs
+  Datenabrufe unterstützt, der Standard bleibt vier. Nominal höchstens 720 HTTP-
+  Anfragen pro Tag; die anwendungsseitige Tagesgrenze von 750 schließt Robots-
+  und zusätzliche manuelle Abrufe ein.
+- Erhalte mindestens zehn Sekunden Anfrageabstand und den gespeicherten
+  neunminütigen Doppelstartschutz. Echte längere `Retry-After`-/Sicherheitspausen
+  sowie eine noch laufende ältere 30-Minuten-Pause nicht verkürzen oder umgehen.
+  Sperren, Rate-Limits,
   Login-Anforderungen und andere Zugriffsgrenzen
   nicht durch zusätzliche Endpunkte, Accounts oder engere Takte umgehen.
 - Pflege `schema_version`, Schema, OpenAPI, Manifest und Dokumentation bei

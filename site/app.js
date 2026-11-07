@@ -47,7 +47,15 @@
   const valueBand = item => semanticAssessed(item) && ["around_5", "around_50", "around_500"].includes(item.value_band) ? item.value_band : "unknown";
   const interest = item => number(item.interest_score) ?? number(item.score);
   const confidenceText = item => ({low:"niedrig", medium:"mittel", high:"hoch"})[item.assessment_confidence] || "nicht angegeben";
-  const basisText = item => !semanticAssessed(item) ? "Noch nicht eingeordnet" : ({heuristic:"Heuristik", llm:"LLM"})[item.assessment_basis] || "Basis unbekannt";
+  const interactiveAssessed = item => semanticAssessed(item) && item.assessment_basis === "llm" && item.semantic_review_mode === "interactive";
+  const basisText = item => !semanticAssessed(item) ? "Noch nicht eingeordnet" : interactiveAssessed(item) ? "ChatGPT" : ({heuristic:"Heuristik", llm:"LLM"})[item.assessment_basis] || "Basis unbekannt";
+  const automaticLlmText = () => feed?.ai_enabled ? "Automatische LLM-Aufrufe aktiv" : "Automatische LLM-Aufrufe aus";
+  function interactiveReviewText() {
+    const review = feed?.interactive_review;
+    if (!review || review.reviewer !== "ChatGPT") return "";
+    if (review.status === "applied" && number(review.applied) !== null) return `ChatGPT-Sichtung: ${review.applied} ${review.applied === 1 ? "Angebot" : "Angebote"}`;
+    return ({none:"ChatGPT-Sichtung: noch keine", expired:"ChatGPT-Sichtung: abgelaufen", invalid:"ChatGPT-Sichtung: ungültig"})[review.status] || "ChatGPT-Sichtung: Status unklar";
+  }
   const sourceLink = item => !isDemo && providerOf(item) === aggregatorProvider ? `<a href="${aggregatorSourceUrl}" target="_blank" rel="noopener noreferrer">Auktionen ohne Gebot ↗</a>` : "";
   const descriptionText = item => typeof item.description === "string" && item.description.trim() ? item.description : isAggregator(item) ? "Quelle liefert keinen Beschreibungstext. Originalanzeige bei eBay prüfen." : "Beschreibung nicht verfügbar – Originalanzeige prüfen.";
 
@@ -249,13 +257,16 @@
     els["metric-highvalue"].textContent = live.some(semanticAssessed) ? String(live.filter(item => eligibility(item) !== "excluded" && valueBand(item) === "around_500").length) : "—";
     els["metric-highvalue-label"].textContent = "HÖHERWERTIG MÖGLICH";
     els["metric-updated"].textContent = isDemo ? "BEISPIELDATEN" : dateText(feed.generated_at);
-    els["metric-source"].textContent = isDemo ? "Kein eBay-Import" : `${aggregated ? "Aggregator-Cache" : statuses[feed.source_status] || "Status unbekannt"} · ${feed.ai_enabled ? "LLM-Triage aktiv" : "ohne LLM-Triage"}`;
+    const interactive = feed.interactive_review;
+    const reviewText = interactiveReviewText();
+    els["metric-source"].textContent = isDemo ? "Kein eBay-Import" : [aggregated ? "Aggregator-Cache" : statuses[feed.source_status] || "Status unbekannt", reviewText, automaticLlmText()].filter(Boolean).join(" · ");
     const coverage = feed.coverage || {};
     els["source-attribution"].hidden = !aggregated;
     if (aggregated) {
       const attribution = sourceLink() || sourceLink(feed.deals.find(item => providerOf(item) === aggregatorProvider)) || "Drittquelle";
       const cache = number(coverage.source_cache_max_age_minutes);
-      els["source-attribution"].innerHTML = `<div class="source-heading"><strong>Zwischengespeicherte Aggregatordaten</strong><span>${attribution}</span></div><p>Nicht direkt bei eBay verifiziert. Die Quelle liefert Titel, Bild, Preis, Versand, Gebotszahl, Endzeit und Zustand, aber keinen Beschreibungstext, Standort oder Mindestpreisstatus. Abholmöglichkeit allein bestätigt keine Nähe zu Heidelberg. Eine ausdrücklich passende Abholsuche zählt im Nahfilter nur als vorläufiger Nähehinweis; den Standort im Original prüfen.</p><p>${cache === null ? "Der Quellcache kann älter sein als unser Abruf." : `Angegebener Quellcache: bis ${esc(cache)} Min.; hinzu kommt die Zeit seit unserer Quellenbeobachtung.`} ${feed.ai_enabled ? "Einordnungen nennen ihre jeweilige Basis und Konfidenz." : "Die automatische Einordnung ist heuristisch; keine LLM-Analyse aktiviert."} Vor dem Bieten den aktuellen Stand auf eBay prüfen.</p>`;
+      const reviewNote = reviewText ? `${esc(reviewText)}.${interactive.status === "applied" ? ` ${Number.isFinite(timestamp(interactive.reviewed_at)) ? `Sichtung vom ${esc(dateText(interactive.reviewed_at))} (Berlin).` : "Sichtungsdatum nicht belegt."}${number(interactive.unreviewed) !== null ? ` ${esc(interactive.unreviewed)} ${interactive.unreviewed === 1 ? "Angebot" : "Angebote"} ohne angewendete ChatGPT-Sichtung.` : ""}` : ""} ` : "";
+      els["source-attribution"].innerHTML = `<div class="source-heading"><strong>Zwischengespeicherte Aggregatordaten</strong><span>${attribution}</span></div><p>Nicht direkt bei eBay verifiziert. Die Quelle liefert Titel, Bild, Preis, Versand, Gebotszahl, Endzeit und Zustand, aber keinen Beschreibungstext, Standort oder Mindestpreisstatus. Abholmöglichkeit allein bestätigt keine Nähe zu Heidelberg. Eine ausdrücklich passende Abholsuche zählt im Nahfilter nur als vorläufiger Nähehinweis; den Standort im Original prüfen.</p><p>${cache === null ? "Der Quellcache kann älter sein als unser Abruf." : `Angegebener Quellcache: bis ${esc(cache)} Min.; hinzu kommt die Zeit seit unserer Quellenbeobachtung.`} ${reviewNote}${esc(automaticLlmText())}. Einordnungen nennen ihre jeweilige Basis und Konfidenz; heuristisch priorisierte Angebote sind als „Heuristik“ markiert. Vor dem Bieten den aktuellen Stand auf eBay prüfen.</p>`;
     }
     const cells = [];
     if (aggregated) {
@@ -278,6 +289,13 @@
     cells.push([aggregated ? "Letzter Aggregator-Abruf (Berlin)" : "Letzter bestätigter Scan (Berlin)", isDemo ? "Kein echter Scan" : dateText(feed.last_successful_scan_at)]);
     cells.push(["Aktive Quellenstände von 2–6 Std.", String(live.filter(stale).length)]);
     cells.push(["Quellenstand > 6 Std. / undatiert", String(feed.deals.filter(tooOld).length)]);
+    if (!isDemo && reviewText) {
+      cells.push(["Interaktive Sichtung", reviewText]);
+      if (interactive.status === "applied") {
+        cells.push(["ChatGPT-Sichtung (Berlin)", dateText(interactive.reviewed_at)]);
+        if (number(interactive.unreviewed) !== null) cells.push(["Ohne angewendete ChatGPT-Sichtung", String(interactive.unreviewed)]);
+      }
+    }
     if (number(feed.stats?.carried) !== null) cells.push(["Aus früheren Scans übernommen", String(feed.stats.carried)]);
     els["coverage-details"].hidden = false;
     els["coverage-summary"].textContent = isDemo ? "Demo-Szenarien und simuliertes Datenalter" : `${aggregated ? "Quellenabruf" : "Scan-Abdeckung"} & Datenalter · ${ageText(feed.last_successful_scan_at)}`;
@@ -370,6 +388,7 @@
       [isAggregator(item) ? "Zustand laut Quelle" : "Zustand laut Anzeige", item.condition || "Unbekannt", !item.condition], ["Prüfstatus", ({eligible:"Kandidat", review:"Noch zu prüfen", excluded:"Ausgeschlossen"})[eligibility(item)], eligibility(item) !== "eligible"],
       ["Semantisches Interesse", interest(item) === null ? "Nicht eingeordnet" : `${interest(item)} / 100`, false], ["Basis / Konfidenz", `${basisText(item)} / ${confidenceText(item)}`, false]
     ];
+    if (interactiveAssessed(item)) fields.push(["ChatGPT-Sichtung (Berlin)", dateText(item.semantic_assessed_at), !Number.isFinite(timestamp(item.semantic_assessed_at))]);
     els["dialog-content"].innerHTML = `${isDemo ? '<p class="demo-stamp">FIKTIVES BEISPIEL · KEINE ECHTE AUKTION</p>' : ""}
       <p class="detail-disclaimer">${isDemo ? "Alle folgenden Angaben sind erfunden und dienen nur zur Demonstration." : `${isAggregator(item) ? "Beim Aggregator beobachtet" : "Angebotsstand"}: ${esc(dateText(observedAt(item)))} (Berlin). ${isAggregator(item) ? "Zwischengespeicherte Drittquelle, nicht direkt bei eBay verifiziert. " : ""}${stale(item) ? "Daten älter als zwei Stunden oder Datenalter nicht belegt. " : ""}Vor jedem Gebot Preise, Mitbieter, Zustand, Versand und Mindestpreis bei eBay kontrollieren.`}</p>
       <div class="detail-grid">${fields.map(([label, value, warning]) => `<div class="detail-cell${warning ? " warning" : ""}"><small>${esc(label)}</small><strong>${esc(value)}</strong></div>`).join("")}</div>

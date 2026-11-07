@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 
 from hunter.models import iso_time, normalize_item
 from hunter.pipeline import new_state, run_pipeline
+from hunter.reviews import content_fingerprint
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 OBSERVED = NOW - timedelta(minutes=15)
@@ -183,6 +184,41 @@ class PublicSourcePipelineTests(unittest.TestCase):
         feed, _ = run(response([old_summary]))
         self.assertTrue(feed["deals"][0]["stale"])
         self.assertEqual(feed["stats"]["stale"], 1)
+
+    def test_interactive_reviews_are_applied_and_reported_separately_from_api(self):
+        normalized = normalize_item(item(), NOW)
+        document = {
+            "schema_version": 1, "source_snapshot_id": "sha256:" + "a" * 64,
+            "reviewed_at": iso_time(NOW), "reviewer": "ChatGPT",
+            "reviews": [{"id": normalized["id"], "content_fingerprint": content_fingerprint(normalized),
+                "assessment": {"semantic_interest": 86, "value_band": "around_500",
+                    "assessment_confidence": "low", "product_kind": "apparatus",
+                    "value_reason": "Eigenständiges Laborgerät; genauer Typ und Zustand unbekannt.",
+                    "reasons": ["Vollständiges Spezialgerät möglich"], "risks": ["Funktion nicht geprüft"],
+                    "next_checks": ["Typenschild und Vollständigkeit prüfen"]}}],
+        }
+        feed, state = run(review_doc=document)
+        self.assertEqual(feed["interactive_review"]["status"], "applied")
+        self.assertEqual(feed["interactive_review"]["applied"], 1)
+        self.assertEqual(feed["interactive_review"]["unreviewed"], 0)
+        self.assertFalse(feed["ai_enabled"])
+        row = feed["deals"][0]
+        self.assertEqual(row["assessment_basis"], "llm")
+        self.assertEqual(row["semantic_review_mode"], "interactive")
+        self.assertEqual(row["eligibility"], "review")
+        self.assertEqual(row["price_eur"], 1)
+        self.assertFalse(row["local_pickup_confirmed"])
+        self.assertEqual(row, state["records"][0])
+
+    def test_invalid_interactive_review_does_not_stop_the_public_feed(self):
+        feed, _ = run(review_doc={"unknown": "not trusted instructions"})
+        self.assertEqual(feed["source_status"], "partial")
+        self.assertEqual(feed["interactive_review"]["status"], "invalid")
+        self.assertEqual(feed["deals"][0]["assessment_basis"], "heuristic")
+
+    def test_published_schedule_metadata_matches_ten_minute_config(self):
+        feed, _ = run()
+        self.assertEqual(feed["coverage"]["schedule_interval_minutes"], 10)
 
 
 if __name__ == "__main__":

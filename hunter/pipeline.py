@@ -35,6 +35,7 @@ DEFAULTS = {
     "detail_limit_per_run": 35, "max_freshness_hours": 6,
     "refresh_after_minutes": 90, "max_records": 800,
     "max_ai_items_per_run": 20, "api_page_size": 50,
+    "schedule_interval_minutes": 10, "aog_max_requests_per_run": 4,
 }
 # State contains normalized records, never seller identities or raw payloads.
 RECORD_FIELDS = frozenset({
@@ -49,6 +50,7 @@ RECORD_FIELDS = frozenset({
     "stale", "carried", "pickup_verified_at",
     "source_provider", "source_url", "source_observed_at", "verification_level", "pickup_available",
     "pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km",
+    "semantic_review_mode",
 })
 
 
@@ -94,6 +96,7 @@ def validate_settings(settings: Mapping[str, Any]) -> dict[str, Any]:
         "categories_per_run": (1, 1000), "max_pages_per_category": (1, 50),
         "detail_limit_per_run": (0, 1000), "max_records": (1, 800),
         "max_ai_items_per_run": (0, 100), "api_page_size": (1, 100), "max_bids": (0, 1000000),
+        "schedule_interval_minutes": (5, 1440), "aog_max_requests_per_run": (1, 6),
     }.items():
         _count(result[key], key, *bounds)
     for key, bounds in {
@@ -419,7 +422,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                  environ: Mapping[str, str] | None = None, client_factory: Callable = EbayClient,
                  normalize: Callable = normalize_item, assess: Callable = assess_item,
                  enrich: Callable | None = None, checkpoint: Callable | None = None,
-                 aog_collect: Callable | None = None) -> tuple[dict, dict]:
+                 aog_collect: Callable | None = None, review_doc: dict | None = None) -> tuple[dict, dict]:
     """Return feed/state; inject dependencies for hermetic tests.
 
     Expected upstream blockers produce a feed. Invalid configuration/programming
@@ -564,6 +567,17 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
             _block(blockers, "semantic_failed", "Die optionale semantische Sichtung ist fehlgeschlagen.", "Fakten und manuelle Sichtung bleiben verfügbar; Modellkonfiguration prüfen.")
     else:
         state.pop("semantic_cache", None)
+    interactive_review = {"status": "none", "reviewer": "ChatGPT", "reviewed_at": None,
+                          "applied": 0, "available": 0, "unreviewed": len(rows)}
+    if review_doc is not None and status not in {"unconfigured", "disabled"}:
+        from .reviews import apply_reviews
+        rows, review_meta = apply_reviews(rows, review_doc, at)
+        interactive_review.update(review_meta)
+        interactive_review["validation_status"] = review_meta.get("status", "invalid")
+        interactive_review["status"] = {"ok": "applied", "partial": "applied", "absent": "none",
+                                        "future": "invalid"}.get(review_meta.get("status"), review_meta.get("status", "invalid"))
+        interactive_review["available"] = review_meta.get("total", 0)
+        interactive_review["unreviewed"] = sum(row.get("assessment_basis") != "llm" for row in rows)
     rows = sorted((_public_record(row) for row in rows if _fresh(row, at, settings)), key=_sort_key)
     state["records"], state["updated_at"] = rows[:settings["max_records"]], iso_time(at)
     rows = state["records"]
@@ -588,12 +602,13 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         "stats": {**scan, "shortlisted": counts["eligible"] + counts["review"], "active": len(rows), **counts,
                   "stale": sum(bool(row.get("stale")) for row in rows), "carried": sum(bool(row.get("carried")) for row in rows), "omitted_records": omitted_records},
         "coverage": {"categories_total": categories_total, "categories_scanned": scan["categories_scanned"], "categories_completed": scan["categories_completed"],
-                     "categories_planned": scan["categories_planned"], "cycle_estimate_hours": (math.ceil(categories_total / settings["categories_per_run"]) / 2) if categories_total else None,
-                     "cycle_estimate_is_lower_bound": True, "schedule_interval_minutes": 30, "browse_calls_this_run": calls_this_run,
+                     "categories_planned": scan["categories_planned"], "cycle_estimate_hours": (math.ceil(categories_total / settings["categories_per_run"]) * settings["schedule_interval_minutes"] / 60) if categories_total else None,
+                     "cycle_estimate_is_lower_bound": True, "schedule_interval_minutes": settings["schedule_interval_minutes"], "browse_calls_this_run": calls_this_run,
                      "browse_calls_today": state["daily_budget"]["calls_used"], "daily_budget": settings["browse_daily_budget"], "complete": False,
                      "price_filter_applied": False, "cursor": dict(state["cursor"]), "manual_leaf_override": bool(manual_ids),
                      "pagination_caveat": "Ergebnisse verändern sich während des Abrufs; Seiten werden nur innerhalb eines Laufs fortgesetzt. Dichte Kategorien können unvollständig bleiben."},
         "ai_enabled": bool(semantic.get("ai_enabled")), "semantic": semantic, "ai_metadata": semantic,
+        "interactive_review": interactive_review,
         "api_page_size": settings["api_page_size"], "deals": rows,
     }
     if source == "aog":
@@ -640,6 +655,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--state-dir", type=Path, default=ROOT / "runtime")
     parser.add_argument("--site-dir", type=Path, default=ROOT / "site")
     parser.add_argument("--config", type=Path, default=SETTINGS_PATH)
+    parser.add_argument("--reviews", type=Path, default=ROOT / "reviews" / "current.json",
+                        help="Optional content-bound interactive ChatGPT reviews; never instructions or source facts")
     args = parser.parse_args(argv)
     if args.source == "json" and args.file is None:
         parser.error("--source json requires --file with a local JSON path")
@@ -651,7 +668,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.source == "json" and os.environ.get("HUNTER_PUBLISH_LIVE_DATA", "").lower() == "true":
             obj = _read_json(args.file)
             raw_items = obj if isinstance(obj, list) else obj.get("itemSummaries", obj.get("items")) if isinstance(obj, dict) else None
-        feed, next_state = run_pipeline(settings, source=args.source, state=state, raw_items=raw_items,
+        review_doc = None
+        if args.reviews.exists():
+            from .reviews import load_reviews
+            try:
+                review_doc = load_reviews(args.reviews)
+            except (OSError, ValueError, TypeError):
+                review_doc = {"invalid_review_file": True}
+        feed, next_state = run_pipeline(settings, source=args.source, state=state, raw_items=raw_items, review_doc=review_doc,
                                        checkpoint=lambda value: _atomic_json(state_path, value))
         _atomic_json(state_path, next_state)
         from .feed import write_feed

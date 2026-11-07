@@ -202,7 +202,7 @@ class ParsingTests(unittest.TestCase):
         self.assertEqual(result["status"], "error")
         self.assertEqual(result["items"], [])
         self.assertEqual(result["warnings"][0]["code"], "invalid_payload")
-        self.assertEqual(result["source_state"]["next_allowed_at"], "2026-11-07T12:30:00Z")
+        self.assertEqual(result["source_state"]["next_allowed_at"], "2026-11-07T12:09:00Z")
         self.assertEqual(len(fake.requests), 2)
 
     def test_explicit_empty_distinguished_from_invalid_envelope(self):
@@ -276,12 +276,67 @@ class SchedulingTests(unittest.TestCase):
         offsets = [parse_qs(urlsplit(req["url"]).query)["ab"][0] for req in fake.requests[1:]]
         self.assertEqual(offsets, ["0", "240", "288", "336", "384", "0"])
 
-    def test_thirty_minute_cooldown_makes_zero_network_calls(self):
+    def test_debounce_before_nine_minutes_makes_zero_network_calls(self):
         first, _, _ = run([robots(), api([]), api([])])
-        second, fake, _ = run([], state=first["source_state"], at=NOW + timedelta(minutes=29))
+        second, fake, _ = run([], state=first["source_state"], at=NOW + timedelta(minutes=8, seconds=59))
         self.assertEqual(second["status"], "cooldown")
         self.assertEqual(fake.requests, [])
         self.assertEqual(second["items"], [])
+
+    def test_nine_minute_boundary_and_planned_ten_minute_cadence_are_allowed(self):
+        first, _, _ = run([robots(), api([]), api([])])
+        for minutes in (9, 10):
+            with self.subTest(minutes=minutes):
+                result, fake, _ = run([robots(), api([]), api([])], state=first["source_state"], at=NOW + timedelta(minutes=minutes))
+                self.assertEqual(result["status"], "partial")
+                self.assertEqual(len(fake.requests), 3)
+                self.assertEqual(result["coverage"]["planned_interval_minutes"], 10)
+                self.assertEqual(result["coverage"]["debounce_seconds"], 540)
+
+    def test_legacy_thirty_minute_pause_is_not_shortened(self):
+        legacy = {"last_attempt_at": "2026-11-07T12:00:00Z", "next_allowed_at": "2026-11-07T12:30:00Z"}
+        for minutes in (10, 29):
+            with self.subTest(minutes=minutes):
+                result, fake, _ = run([], state=legacy, at=NOW + timedelta(minutes=minutes))
+                self.assertEqual(result["status"], "cooldown")
+                self.assertEqual(result["source_state"]["next_allowed_at"], legacy["next_allowed_at"])
+                self.assertEqual(fake.requests, [])
+        result, fake, _ = run([robots(), api([]), api([])], state=legacy, at=NOW + timedelta(minutes=30))
+        self.assertEqual(result["status"], "partial")
+        self.assertEqual(len(fake.requests), 3)
+
+    def test_default_is_four_api_requests_plus_robots_with_ten_second_gaps(self):
+        pages = [api([article(str(336872529490 + i))], total=1128) for i in range(3)] + [api([])]
+        fake, delays = FakeTransport([robots()] + pages), []
+        result = collect({"max_price_eur": 1, "postcode": "69121", "pickup_radius_km": 50}, NOW, None,
+                         transport=fake, sleep=delays.append)
+        self.assertEqual(result["coverage"]["api_requests_this_run"], 4)
+        self.assertEqual(result["coverage"]["requests_this_run"], 5)
+        self.assertEqual(delays, [10] * 4)
+        self.assertEqual([parse_qs(urlsplit(req["url"]).query)["ab"][0] for req in fake.requests[1:]], ["0", "48", "96", "0"])
+
+    def test_144_default_runs_fit_daily_budget_at_ten_minute_intervals(self):
+        state = None
+        start = NOW.replace(hour=0)
+        for index in range(144):
+            pages = [api([article()], total=1128)] * 3 + [api([])]
+            result, fake, _ = run([robots()] + pages, settings={"aog_max_requests_per_run": 4},
+                                  state=state, at=start + timedelta(minutes=10 * index))
+            self.assertEqual(result["status"], "partial")
+            self.assertEqual(len(fake.requests), 5)
+            state = result["source_state"]
+        self.assertEqual(state["requests_today"], 720)
+        self.assertEqual(result["coverage"]["daily_request_budget"], 750)
+
+    def test_daily_limit_stops_before_request_751(self):
+        state = {"request_day": "2026-11-07", "requests_today": 749}
+        result, fake, _ = run([robots()], state=state)
+        self.assertEqual(len(fake.requests), 1)
+        self.assertEqual(result["source_state"]["requests_today"], 750)
+        self.assertEqual(result["status"], "cooldown")
+        result, fake, _ = run([], state={"request_day": "2026-11-07", "requests_today": 750})
+        self.assertEqual(fake.requests, [])
+        self.assertEqual(result["status"], "cooldown")
 
     def test_small_result_set_does_not_repeat_pages_to_fill_budget(self):
         result, fake, _ = run([robots(), api(), api([])], settings={"aog_max_requests_per_run": 6})
@@ -319,6 +374,20 @@ class HttpSafetyTests(unittest.TestCase):
                 self.assertEqual(result["status"], "error")
                 self.assertEqual(result["items"], [])
                 self.assertEqual(len(fake.requests), 2)
+
+    def test_access_denial_pause_still_blocks_ten_minute_run(self):
+        result, _, _ = run([robots(), api(status=403)])
+        later, fake, _ = run([], state=result["source_state"], at=NOW + timedelta(minutes=10))
+        self.assertEqual(later["status"], "cooldown")
+        self.assertEqual(fake.requests, [])
+        self.assertGreaterEqual(result["source_state"]["next_allowed_at"], "2026-11-08T12:00:00Z")
+
+    def test_missing_retry_after_keeps_thirty_minute_rate_limit_backoff(self):
+        result, _, _ = run([robots(), api(status=429)])
+        self.assertGreaterEqual(result["source_state"]["next_allowed_at"], "2026-11-07T12:30:00Z")
+        later, fake, _ = run([], state=result["source_state"], at=NOW + timedelta(minutes=10))
+        self.assertEqual(later["status"], "cooldown")
+        self.assertEqual(fake.requests, [])
 
     def test_retry_after_longer_than_31_days_is_not_shortened(self):
         result, _, _ = run([robots(), api(status=429, headers={"Retry-After": str(46 * 86400)})])
