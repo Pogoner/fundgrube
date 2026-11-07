@@ -1,0 +1,90 @@
+name: Fundgrube aktualisieren und veröffentlichen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # UTC; GitHub kann geplante Läufe verzögern oder auslassen.
+    - cron: "7,37 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fundgrube-snapshot-and-pages
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    steps:
+      - name: Quellcode laden
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Python bereitstellen
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Tests ausführen
+        run: python -m unittest discover -s tests -v
+      - name: JavaScript-Syntax prüfen
+        run: node --check site/app.js
+      - name: Oberfläche funktional prüfen
+        run: node tests/test_frontend.mjs
+      - name: Dauerhaften Zustand wiederherstellen
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/github_snapshot.py restore --state-dir runtime
+      - name: Angebote sammeln und Schnittstellen erzeugen
+        env:
+          HUNTER_SOURCE: ${{ vars.HUNTER_SOURCE || 'auto' }}
+          # Public export is opt-in; Git retains previously published snapshots.
+          HUNTER_PUBLISH_LIVE_DATA: ${{ vars.HUNTER_PUBLISH_LIVE_DATA || 'false' }}
+          HUNTER_LLM_ENABLED: ${{ vars.HUNTER_LLM_ENABLED || 'false' }}
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          EBAY_LEAF_CATEGORY_IDS: ${{ vars.EBAY_LEAF_CATEGORY_IDS }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+        run: python -m hunter.pipeline --state-dir runtime --site-dir site
+      - name: Datensnapshot unabhängig von Pages veröffentlichen
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/github_snapshot.py publish --state-dir runtime --site-dir site
+      - name: Website als Pages-Artefakt hochladen
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+          retention-days: 1
+
+  pages:
+    needs: snapshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Pages-Konfiguration lesen
+        id: pages_config
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+        with:
+          # GITHUB_TOKEN kann Pages nicht erstmalig aktivieren.
+          # Einmalig Settings > Pages > Source: GitHub Actions einstellen.
+          enablement: false
+      - name: Website veröffentlichen
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+      - name: Einrichtungshinweis bei Pages-Fehler
+        if: failure()
+        run: |
+          echo '::error::Pages-Veröffentlichung fehlgeschlagen. Unter Settings > Pages muss Build and deployment > Source auf GitHub Actions stehen. Prüfe außerdem Environment-Freigaben und Pages-Berechtigungen. Der Datensnapshot im Branch data wurde bereits unabhängig davon gespeichert.'
