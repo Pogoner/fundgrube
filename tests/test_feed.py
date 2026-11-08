@@ -1157,12 +1157,15 @@ class FeedTests(unittest.TestCase):
                   "total_reported_latest": 4177, "total_reported_min": 4177,
                   "total_reported_max": 4200, "total_changed": True, "next_offset": 4224,
                   "remaining_reported": 0, "unobserved_estimate": 0, "short_pages": 0,
-                  "repeated_pages": 0, "stop_reason": None}
+                  "repeated_pages": 0, "stop_reason": None, "empty_pages": 0,
+                  "sparse_pages": 1, "sparse_slots_estimate": 7,
+                  "absence_is_evidence": False, "reported_nonempty_but_no_records": False}
         coverage = {"complete": True, "traversal_completed": True,
                     "scan_started_at": search["started_at"], "scan_finished_at": iso(NOW),
                     "scan_completed_at": iso(NOW), "last_successful_full_scan_at": iso(NOW),
                     "planned_interval_minutes": 30, "schedule_interval_minutes": 30,
-                    "pagination_is_stable": False, "searches": {"general": search,
+                    "pagination_is_stable": False, "reported_nonempty_but_no_records": False,
+                    "searches": {"general": search,
                     "pickup": {"enabled": False, "status": "disabled", "traversal_completed": False}}}
         publisher.write_feed(self.site, sample([aggregator_deal()], provider="auktionen-ohne-gebot", coverage=coverage))
         for path in ("api/manifest.json", "data/deals.json"):
@@ -1173,7 +1176,9 @@ class FeedTests(unittest.TestCase):
             self.assertEqual(document["coverage"]["searches"]["general"], search)
         guide = (self.site / "api/guide.md").read_text(encoding="utf-8")
         for phrase in ("alle 30 Minuten", "traversal_completed", "personal_interest_excluded",
-                       "pickup_search_observed_at", "Teil E1", "BROSCHÜRE 12 Seiten"):
+                       "pickup_search_observed_at", "Teil E1", "BROSCHÜRE 12 Seiten",
+                       "sparse_slots_estimate", "absence_is_evidence",
+                       "reported_nonempty_but_no_records", "angefragten 48 Positionen"):
             self.assertIn(phrase, guide)
 
 

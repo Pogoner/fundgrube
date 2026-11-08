@@ -45,7 +45,13 @@ Prüfe Quellenstatus, letzten erfolgreichen Abruf, Abdeckung und Quellenalter.
 Lies coverage.traversal_completed, coverage.last_successful_full_scan_at,
 Anfang/Ende dieses Quellenlaufs, coverage.searches.general und
 coverage.searches.pickup samt ihren stop_reason.
-Ein neuer Snapshot nach einem Teilfehler ist kein neuer vollständiger Scan.
+traversal_completed bestätigt nur die angefragten Seitenpositionen, nicht alle
+eindeutigen Treffer. Prüfe duplicate_records, sparse_pages, empty_pages und
+sparse_slots_estimate; leere/kurze gültige Seiten stoppen die Offsetfolge nicht.
+Bei reported_nonempty_but_no_records meldet eine Suche Treffer, lieferte aber
+keinen Datensatz: trotz durchlaufener Offsets kein bestätigter Vollabgleich
+und kein erneuerter letzter erfolgreicher Vollscan. Ein neuer Snapshot nach
+einem Teilfehler ist kein neuer vollständiger Scan.
 Prüfe auch coverage.retention_omitted_records und die Kapazität: Vollständiger Quellenlauf
 und verlustlose Speicherübernahme sind unterschiedliche Dinge. complete=false
 und pagination_is_stable=false bleiben auch bei erreichtem Listenende bestehen;
@@ -64,7 +70,11 @@ zwei Stunden alte Quellenstände kennzeichnen, niemals als frisch verifiziert
 ausgeben. Nähe aus einer Abholsuche ist kein bestätigter Abholort. Beachte ihren
 eigenen pickup_search_observed_at: Ein frischer allgemeiner Preisstand bestätigt
 keine ältere Umkreissuche neu. Deren Alter getrennt benennen, ohne frische Preis-
-oder Gebotsangaben künstlich zu veralten.
+oder Gebotsangaben künstlich zu veralten. absence_is_evidence ist immer false:
+Auch nach vollständig angefragten Seitenpositionen beweist eine fehlende ID
+weder Auktionsende, neue Gebote noch entfallene Abholung. Frühere Abhol-Evidenz
+mit altem Zeitpunkt erhalten; nur eine ausdrückliche neue negative Angabe oder
+ein nicht mehr passendes Suchprofil hebt sie auf.
 
 Sichte neue, inhaltlich geänderte oder nicht mehr gültig semantisch bewertete
 Angebote. Verwende unveränderte gültige vollständige Bewertungen wieder;

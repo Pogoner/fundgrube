@@ -105,8 +105,8 @@ Such-PLZ und Radius dokumentieren diese Herkunft. Solche Kandidaten bleiben
 prüfbedürftig; genaue Nähe, Abholbedingungen und Mindestpreis sind im Original
 zu klären. Auch Versandangaben müssen dort nochmals bestätigt werden.
 
-Der AOG-Sammler beginnt **alle 30 Minuten einen vollständigen Durchlauf der
-vorhandenen Quellensuchen**: allgemeine Suche und Abholsuche starten jeweils bei
+Der AOG-Zeitplan sieht **alle 30 Minuten einen vollständigen Durchlauf der
+vorhandenen Quellensuchen** vor: allgemeine Suche und Abholsuche starten jeweils bei
 Offset 0 und werden bis zu ihrem aktuell gemeldeten Ende mit höchstens 48
 Einträgen pro Seite gelesen. Beide Suchen werden zunächst abwechselnd bedient;
 nach dem Ende einer Suche läuft nur die andere weiter. Es gibt keine feste
@@ -119,11 +119,17 @@ einschließlich Robots-Prüfungen. Grenzen sind keine Sollmengen: am Ende der
 Quelle wird gestoppt. Längere echte `Retry-After`- und Sicherheitspausen bleiben
 erhalten. Bei beispielhaft 4.177 allgemeinen und 258 Abholtreffern sind etwa
 94 Datenseiten plus Robots nötig: ungefähr 16 Minuten bei zehn Sekunden Abstand.
-Treffer können sich währenddessen verändern; Duplikate, schwankende Gesamtzahlen,
-vorzeitige Seitenenden und Teilabbrüche bleiben in `coverage.searches` sichtbar.
-`traversal_completed` meldet den erreichten Quellendurchlauf, nicht eine
-vollständige oder atomare eBay-Marktabdeckung. Verkäufer-Volltexte werden nicht
-nachgeladen.
+Treffer können sich währenddessen verändern. Gültige kurze oder leere Seiten
+werden weiter durchlaufen, solange weitere Positionen gemeldet werden; der
+Offset steigt um die angefragten 48 Positionen. Duplikate, schwankende
+Gesamtzahlen, dünn besetzte Seiten und Teilabbrüche bleiben in `coverage.searches`
+sichtbar. `traversal_completed` meldet besuchte Seitenpositionen, nicht eine
+vollständige oder atomare eBay-Marktabdeckung. Vollständig leere Antworten trotz
+positiver Trefferzahl bleiben als `partial` markiert und erneuern weder den
+erfolgreichen Zeitpunkt dieser Suche noch den des Volldurchlaufs. Ein echter
+Teilabruf der anderen Suche kann separat erfolgreich sein. Fehlende IDs beweisen auch nach einem Durchlauf
+keine Löschung; frühere Beobachtungen behalten ihr ursprüngliches Datum.
+Verkäufer-Volltexte werden nicht nachgeladen.
 
 Für den optionalen eBay-Adapter gelten **4.500 Browse-Aufrufe pro UTC-Tag**, höchstens **85 pro
 Lauf**, bis zu **20 Kategorien**, **2 Suchseiten je Kategorie und Suchmodus**

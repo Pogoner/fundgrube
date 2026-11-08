@@ -175,6 +175,50 @@ class RankingTests(unittest.TestCase):
                 self.assertFalse(result["personal_interest_excluded"])
                 self.assertIsNone(result["personal_interest_reason"])
 
+    def test_named_attachments_are_not_the_referenced_whole_machine(self):
+        cases = (
+            ("Drehmaschine Mazak QT 10 Quickturn Monitor - defekt", "component", 15),
+            ("CNC Monitor für Mazak QT 10", "component", 15),
+            ("SIP Mig Schweißgerät Spitzen und Düse für 0,8 mm Draht M5", "consumable", 35),
+            ("MIG Schweissgeraet Kontaktspitzen und Duesen M5", "consumable", 35),
+            ("Stichsägenblatt", "consumable", 40),
+            ("Stichsägeblätter Bosch 10 Stück", "consumable", 40),
+            ("Stichsaegeblaetter fuer Makita", "consumable", 40),
+            ("Schnellspannbohrfutter für Bohrmaschine | Werkzeugzubehör", "accessory", 45),
+            ("Bohrfutter fuer Bohrmaschine", "accessory", 45),
+        )
+        for title, kind, useability in cases:
+            with self.subTest(title=title):
+                result = self.rank(raw(title=title))
+                self.assertEqual(result["product_kind"], kind)
+                self.assertEqual(result["useability_score"], useability)
+                self.assertLess(result["interest_score"], 20)
+                self.assertEqual(result["value_band"], "unknown")
+                self.assertFalse(result["personal_interest_excluded"])
+                self.assertEqual(result["assessment_basis"], "heuristic")
+
+    def test_bundled_attachments_do_not_reduce_whole_device_scores(self):
+        cases = (
+            ("Drehmaschine Mazak QT 10 Quickturn mit Monitor - defekt", "Drehmaschine Mazak QT 10 Quickturn - defekt"),
+            ("Drehmaschine inklusive passendem Monitor", "Drehmaschine"),
+            ("SIP Mig Schweißgerät mit Spitzen und Düse für 0,8 mm Draht M5", "SIP Mig Schweißgerät"),
+            ("Schweißgerät mit Düse", "Schweißgerät"),
+            ("Bohrmaschine mit Schnellspannbohrfutter", "Bohrmaschine"),
+            ("Tischbohrmaschine mit Bohrfutter", "Tischbohrmaschine"),
+            ("Stichsäge mit Stichsägeblättern", "Stichsäge"),
+            ("Stichsäge inkl. Stichsägenblatt", "Stichsäge"),
+        )
+        for title, base in cases:
+            with self.subTest(title=title):
+                result, baseline = self.rank(raw(title=title)), self.rank(raw(title=base))
+                for field in ("product_kind", "scalp_score", "useability_score", "interest_score"):
+                    self.assertEqual(result[field], baseline[field], field)
+                self.assertFalse(result["personal_interest_excluded"])
+
+    def test_generic_monitor_is_not_invented_as_a_machine_part(self):
+        result = self.rank(raw(title="Samsung Monitor 24 Zoll"))
+        self.assertNotEqual(result["product_kind"], "component")
+
     def test_media_profile_cannot_be_overridden_by_high_or_wrong_semantic_scores(self):
         item = self.rank(raw(title="KAESER MOBILAIR Broschüre 12 Seiten RAR"))
         before = copy.deepcopy(item)

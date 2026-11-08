@@ -37,8 +37,11 @@ Repository übernehmen; dafür ist kein OpenAI-API-Key nötig.
 
 Der Sammler prüft vor jedem zugelassenen AOG-Durchlauf `robots.txt`. Er beginnt
 die allgemeine Suche und die aktivierte Abholsuche jeweils bei Offset 0 und
-liest ihre Seiten abwechselnd, bis beide ihr jeweils gemeldetes Ende erreicht
-haben oder eine Sicherheitsgrenze greift. Es gibt keine Rotation kleiner
+fragt ihre Seitenpositionen abwechselnd an, bis beide ihr jeweils gemeldetes
+Ende erreicht haben oder eine Sicherheitsgrenze greift. Eine strukturell gültige
+Antwort mit wenigen oder keinen Datensätzen beendet die Pagination nicht:
+Der nächste Offset steigt um die angefragte Seitengröße 48, nicht um die
+tatsächlich gelieferte Zeilenzahl. Es gibt keine Rotation kleiner
 Teilabrufe mehr. Seitengröße ist 48; weder ein unbelegter Bulk-Endpunkt noch
 zusätzliche direkte eBay-Abrufe werden benutzt.
 
@@ -62,8 +65,20 @@ umgeht weder den Doppelstartschutz noch das Tagesbudget. Gespeicherte längere
 verkürzt oder über andere Endpunkte umgangen. Ohne nutzbare Quelle veröffentlicht
 der Build einen ehrlichen Status statt erfundener Live-Angebote.
 
-`coverage.traversal_completed=true` bestätigt nur, dass beide aktivierten
-Suchlisten in diesem Lauf ihr jeweils gemeldetes Ende erreicht haben.
+`coverage.traversal_completed=true` bestätigt nur, dass die gemeldeten
+Seitenpositionen beider aktivierten Suchen bis zum jeweiligen Ende angefragt
+wurden. Es bestätigt weder jeden eindeutigen Treffer noch lückenlose Seiten.
+`duplicate_records`, `sparse_pages`, `empty_pages` und `sparse_slots_estimate`
+halten Wiederholungen bzw. dünn besetzte oder leere Antworten sichtbar.
+Diese Lücken sind keine präzise Menge fehlender Angebots-IDs und erklären
+nicht ohne weiteren Beleg die internen Filter der Quelle.
+
+Meldet eine aktivierte Suche Treffer, liefert aber über alle durchlaufenen
+Seitenpositionen keinen einzigen Datensatz, wird
+`reported_nonempty_but_no_records=true` gesetzt. Die Offsets können trotzdem
+vollständig durchlaufen sein; der Quellenstatus bleibt dann `partial`, und
+der letzte erfolgreiche vollständige Lauf wird nicht erneuert. Laufende
+Zeitstempel dürfen deshalb nicht allein als Erfolgsnachweis dienen.
 `coverage.complete=false` und `pagination_is_stable=false` bleiben bestehen:
 Die Quelle verändert ihre Reihenfolge während des Abrufs; es gibt weder einen
 atomaren Quellenstand noch eine Zusage aller eBay-Auktionen. Beginn, Ende,
@@ -125,8 +140,13 @@ daraus mit ausdrücklicher Abholoption können als **Abholsuche 50 km** erschein
 Angebot aus dieser Suche stammt. `pickup_search_observed_at` datiert diese
 Beobachtung getrennt: Ein neuer Preis-/Gebotsstand aus der allgemeinen Suche
 verjüngt keinen älteren Abholsuchtreffer. Bei einem unvollständigen Abgleich
-kann frühere Radius-Evidenz erhalten bleiben; ihr Alter bleibt sichtbar und
-wird nach mehr als zwei Stunden ausdrücklich gewarnt. Das bestätigt **nicht unabhängig einen
+kann frühere Radius-Evidenz erhalten bleiben; das gilt auch dann, wenn alle
+Seitenpositionen durchlaufen wurden und das Angebot dort fehlt.
+`absence_is_evidence=false`: Abwesenheit ist kein Beleg für neue Gebote,
+Auktionsende oder entfallene Abholung. Erst eine neue ausdrückliche negative
+Abholangabe oder ein nicht mehr passendes Suchprofil hebt den vorherigen
+Hinweis auf. Sein ursprüngliches Alter bleibt sichtbar und wird nach mehr als
+zwei Stunden ausdrücklich gewarnt. Das bestätigt **nicht unabhängig einen
 physischen Standort, eine Entfernung oder die tatsächliche Nähe zu Heidelberg**.
 Die PLZ ist weiterhin Suchprofil, nicht Artikelstandort. Diese Kandidaten
 bleiben als zu prüfen eingestuft; Abholort und -bedingungen müssen im

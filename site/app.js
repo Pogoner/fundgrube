@@ -38,6 +38,10 @@
   const providerOf = item => item?.source_provider || feed?.provider || feed?.source_provider || (typeof feed?.source === "string" ? feed.source : feed?.source?.provider) || "";
   const isAggregator = item => providerOf(item) === aggregatorProvider || item?.verification_level === "aggregator";
   const aggregatorFeed = () => !isDemo && (isAggregator() || array(feed?.deals).some(isAggregator));
+  const reportedWithoutRecords = coverage => coverage?.reported_nonempty_but_no_records === true || ["general", "pickup"].some(key => {
+    const search = coverage?.searches?.[key];
+    return search?.enabled !== false && (search?.reported_nonempty_but_no_records === true || search?.stop_reason === "reported_nonempty_but_no_records");
+  });
   // An import timestamp cannot make independently observed aggregator data fresh again.
   const observedAt = item => isAggregator(item) ? item.source_observed_at : item.last_seen_at;
   function activeWindowHours() {
@@ -278,7 +282,9 @@
   }
 
   function renderStatus() {
-    const status = isDemo ? "demo" : feed?.source_status || "unconfigured";
+    const unconfirmed = !isDemo && reportedWithoutRecords(feed?.coverage);
+    const rawStatus = feed?.source_status || "unconfigured";
+    const status = isDemo ? "demo" : unconfirmed && ["live", "partial"].includes(rawStatus) ? "partial" : rawStatus;
     const generated = timestamp(feed?.generated_at);
     const scan = timestamp(feed?.last_successful_scan_at);
     const aged = !isDemo && ["live", "partial"].includes(status) && (!Number.isFinite(scan) || Date.now() - scan > 7200000 || !Number.isFinite(generated) || Date.now() - generated > 7200000);
@@ -287,13 +293,16 @@
     const notices = [];
     const blockers = array(feed?.blockers).filter(blocker => blocker && typeof blocker === "object");
     const routineCodes = ["aggregator_claims_only", "bounded_coverage"];
-    const completedTraversal = feed?.coverage?.traversal_completed === true;
-    const routinePartial = !loadError && !aged && (status === "partial" || status === "live" && completedTraversal) && aggregatorFeed()
+    const completedTraversal = feed?.coverage?.traversal_completed === true && !unconfirmed;
+    const routinePartial = !loadError && !aged && !unconfirmed && (status === "partial" || status === "live" && completedTraversal) && aggregatorFeed()
       && blockers.length > 0 && blockers.every(blocker => routineCodes.includes(blocker.code));
     if (loadError) notices.push(`<strong>Abruf fehlgeschlagen</strong><p>${esc(loadError)}${feed ? " Der zuletzt geladene Snapshot bleibt sichtbar; sein Datenstand ist unverändert." : ""}</p>`);
     if (isDemo) notices.push("<strong>DEMO · Keine echten Angebote</strong><p>Fiktive Artikel, Preise und Scores. Keine echten Auktionslinks.</p>");
+    else if (unconfirmed) {
+      notices.push('<p><strong>Quellenabgleich nicht bestätigt.</strong> Mindestens eine Suche meldet Treffer, lieferte aber keinen einzigen Datensatz. Durchlaufene Seitenpositionen bestätigen hier keinen vollständigen Datenbestand. Vorhandene ältere Beobachtungen bleiben entsprechend datiert. <a href="./info.html#coverage">Abrufdetails ↗</a></p>');
+    }
     else if (routinePartial) {
-      notices.push(`<p><strong>${completedTraversal ? "Quellenlisten durchlaufen." : "Begrenzter Teilscan."}</strong> Aggregator-Cache, keine direkte eBay-Prüfung. Vor einem Gebot im Original prüfen. <a href="./info.html#coverage">Quelle &amp; Status ↗</a></p>`);
+      notices.push(`<p><strong>${completedTraversal ? "Quellseiten durchlaufen." : "Begrenzter Teilscan."}</strong> Aggregator-Cache; Lücken und Duplikate möglich, keine direkte eBay-Prüfung. Vor einem Gebot im Original prüfen. <a href="./info.html#coverage">Quelle &amp; Status ↗</a></p>`);
     } else if (feed && (status !== "live" || aged || blockers.length)) {
       const defaults = {unconfigured: "Die Datenquelle ist noch nicht vollständig eingerichtet.", partial: "Der Scan ist nur teilweise abgeschlossen; Hinweise unten beachten.", error: "Der letzte Import ist fehlgeschlagen. Bereits gespeicherte Angebote können veraltet sein.", disabled: "Der automatische Import ist derzeit deaktiviert."};
       notices.push(`<strong>${esc(aged ? "Datenstand prüfen" : statuses[status] || "Unbekannter Quellenstatus")}</strong><p>${esc(String(feed.status_message || defaults[status] || "Dieser Snapshot ist keine Echtzeit-Abfrage.").slice(0, 240))}${aged ? " Abrufstand älter als zwei Stunden oder ungeklärt." : ""} <a href="./info.html#source">Statusdetails ↗</a></p>`);

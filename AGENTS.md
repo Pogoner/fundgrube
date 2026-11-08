@@ -228,12 +228,21 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
   Datenanfragen pro Lauf, 25 Minuten Scanzeit und 8.000 HTTP-Anfragen je
   UTC-Tag einschließlich Robots und manueller Starts. Dies sind Sicherheits-
   grenzen, keine Sollmengen: am tatsächlichen Ende ohne Zusatzabruf stoppen.
-  Leere/zu kurze/wiederholte Seiten, veränderte Trefferzahlen, Duplikate und
-  abgebrochene Teilscans ehrlich dokumentieren; kein Endlos-Nachholen.
-  `coverage.traversal_completed` beschreibt den Durchlauf aller aktivierten
-  Quellensuchen. `coverage.complete` bleibt für AOG `false`: veränderliche
+  Gültige kurze/leere Seiten bis zum gemeldeten Offset-Ende fortsetzen;
+  um die angefragten 48 Positionen erhöhen, nicht um die erhaltene Artikelzahl.
+  Wiederholte identische nichtleere Seiten und echte Fehler bleiben Abbruchgründe.
+  Dünn besetzte Seiten, schwankende Trefferzahlen, Duplikate und Teilabbrüche
+  ehrlich dokumentieren; kein Endlos-Nachholen. `sparse_slots_estimate` ist
+  eine Positionsschätzung, keine nachgewiesene Zahl fehlender Auktionen.
+  `coverage.traversal_completed` beschreibt besuchte Offsets aller aktivierten
+  Quellensuchen. Bei `reported_nonempty_but_no_records` bleibt der Quellenstand
+  `partial`; keine erfolgreichen Zeitstempel der widersprüchlichen Suche oder
+  des Volldurchlaufs erneuern. `last_successful_scan_at` darf nur dann einen
+  Teilabruf dokumentieren, wenn die andere Suche tatsächlich Artikel lieferte.
+  `coverage.complete` bleibt für AOG `false`: veränderliche
   Offset-Listen sind weder atomar noch eine Garantie vollständiger eBay-Daten.
-  Fehlende IDs aus einem Teilscan sind kein Löschbeweis. Die Speicherkapazität
+  `searches.*.absence_is_evidence` bleibt `false`: Fehlende IDs sind auch nach
+  vollständig durchlaufenen Offsets kein Löschbeweis. Die Speicherkapazität
   bleibt 5.000; ausgelassene Datensätze ausdrücklich zählen.
 - Erhalte mindestens zehn Sekunden Anfrageabstand und den gespeicherten
   29-minütigen Doppelstartschutz ab Scanbeginn. Echte längere
@@ -244,9 +253,10 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
 - Bei längeren Scans pro Seite den tatsächlichen Beobachtungszeitpunkt
   konservativ um Cache-Alter berichtigen; am Scanende exportieren und erst
   dann Restlaufzeit/abgelaufene Auktionen bewerten. Allgemeine Aktualisierungen
-  erneuern `pickup_search_observed_at` nicht. Bei nur teilweise gelesener
-  Abholsuche darf älterer Suchbeleg separat datiert erhalten bleiben; eine
-  ausdrückliche gegenteilige Abholangabe ist kein bestätigter Suchbeleg.
+  erneuern `pickup_search_observed_at` nicht. Bei bloßer Abwesenheit in der
+  Abholsuche bleibt älterer Suchbeleg separat datiert erhalten, auch nach
+  vollständig durchlaufenen Offsets. Eine ausdrückliche neuere Gegenangabe
+  oder ein nicht mehr passendes Suchprofil hebt ihn auf.
 - Der tatsächlich angebotene Gegenstand bestimmt die Einordnung: „Teil E1
   für Mikroskop“ ist ein Teil, „Kompressor Broschüre“ eine Drucksache. Nicht
   den Wert oder die Eigenständigkeit der erwähnten Hauptmaschine übertragen.

@@ -35,6 +35,12 @@ TOOL = r"(messgerät|messgeraet|akkuschrauber|stichsäge|stichsaege|bohrmaschine
 MATERIAL = r"\b(sockelleisten?|aluprofile?|aluminiumprofile?|stahlprofile?|rohre|bleche)\b"
 DAMAGE = r"\b(defekt\w*|ungeprüft|ungeprueft|bastler\w*|unvollständig|unvollstaendig|ersatzteil\w*)\b"
 LEGACY_USEABILITY_REASON = "Useability wurde in dieser älteren Bewertung noch nicht beurteilt."
+ATTACHMENT_NOUNS = (
+    ("blade", re.compile(r"\bstichs(?:ä|ae)ge(?:n)?[\s-]*bl(?:att|ätter(?:n)?|aetter(?:n)?)\b", re.I)),
+    ("chuck", re.compile(r"\b(?:schnellspann)?bohrfutter\b", re.I)),
+    ("welding_tip", re.compile(r"\b(?:(?:strom|gas|kontakt)?d(?:ü|ue)se(?:n)?|(?:kontakt|schwei(?:ß|ss))?spitze(?:n)?)\b", re.I)),
+    ("machine_monitor", re.compile(r"\bmonitor(?:e)?\b", re.I)),
+)
 
 
 def _standalone_media(title: str) -> bool:
@@ -71,6 +77,25 @@ def _offered_part(title: str) -> bool:
     return False
 
 
+def _offered_attachment(title: str) -> str | None:
+    """Head nouns beat the referenced machine, but bundled fittings do not.
+
+    Keep these guards narrow: a generic monitor is not automatically a machine
+    component, and a nozzle mention requires a welding context. No parts are
+    excluded from the user's profile by this fallback classification.
+    """
+    for kind, pattern in ATTACHMENT_NOUNS:
+        if kind == "machine_monitor" and not re.search(DEVICE + r"|\bcnc\b", title, re.I):
+            continue
+        if kind == "welding_tip" and not re.search(r"schwei(?:ß|ss)(?:gerät|geraet|brenner)|\b(?:mig|mag)\b", title, re.I):
+            continue
+        for mention in pattern.finditer(title):
+            if MEDIA_COMPLEMENT_PREFIX.search(title[:mention.start()]):
+                continue
+            return kind
+    return None
+
+
 def apply_interest_profile(item: dict[str, Any]) -> dict[str, Any]:
     """Recompute user exclusions separately from source facts and score axes.
 
@@ -100,6 +125,7 @@ def heuristic_assessment(item: dict[str, Any]) -> dict[str, Any]:
     an explicitly missing assembly is a different, integration-dependent item.
     """
     title = str(item.get("title", "")).casefold()
+    attachment = _offered_attachment(title)
     dependencies: list[str] = []
     if _standalone_media(title):
         kind, scalp, useability, band, confidence = "media", 4, 95, "around_5", "medium"
@@ -110,6 +136,28 @@ def heuristic_assessment(item: dict[str, Any]) -> dict[str, Any]:
         reason = "Angeboten wird ausdrücklich ein Teil für ein anderes Gerät; dessen Gerätename beschreibt nicht den Lieferumfang."
         use_reason = "Das genannte Teil benötigt das genau passende Hauptgerät; es ist selbst kein eigenständig nutzbares Gesamtgerät."
         dependencies = ["Passendes Hauptgerät und kompatible Ausführung des Teils"]
+    elif attachment:
+        band, confidence = "unknown", "low"
+        if attachment == "machine_monitor":
+            kind, scalp, useability = "component", 40, 15
+            reason = "Der angebotene Gegenstand ist der Monitor einer Maschine, nicht die im Titel genannte vollständige Drehmaschine oder Anlage."
+            use_reason = "Maschinenmonitor mit ungeklärten Anschlüssen und Steuerungskompatibilität; benötigt eine passende Anlage."
+            dependencies = ["Passende Maschinensteuerung, Schnittstellen und Versorgung"]
+        elif attachment == "chuck":
+            kind, scalp, useability = "accessory", 25, 45
+            reason = "Angeboten wird ein Bohrfutter als Werkzeugzubehör, nicht die erwähnte vollständige Bohrmaschine; Ausführung und Qualität bleiben offen."
+            use_reason = "Das Bohrfutter benötigt eine Bohrmaschine oder Spindel mit passender Aufnahme; kein eigenständiger Antrieb."
+            dependencies = ["Bohrmaschine oder Spindel mit kompatibler Aufnahme"]
+        elif attachment == "blade":
+            kind, scalp, useability = "consumable", 14, 40
+            reason = "Angeboten werden Stichsägeblätter, keine vollständige Stichsäge; Menge, Werkstoff und Ausführung sind gesondert zu prüfen."
+            use_reason = "Sägeblätter sind wechselbare Schneidmittel und benötigen eine passende Stichsäge und Blattaufnahme."
+            dependencies = ["Passende Stichsäge und kompatible Blattaufnahme"]
+        else:
+            kind, scalp, useability = "consumable", 14, 35
+            reason = "Angeboten werden Schweißspitzen oder Düsen, nicht das im Titel genannte vollständige Schweißgerät; Menge und Ausführung prüfen."
+            use_reason = "Spitzen und Düsen benötigen einen passenden Schweißbrenner sowie ein Schweißgerät; Gewinde und Drahtmaß müssen passen."
+            dependencies = ["Kompatibler Schweißbrenner und Schweißgerät", "Passende Gewinde und Drahtabmessungen"]
     elif re.search(ACCESSORY, title):
         kind, scalp, useability, band, confidence = "accessory", 20, 10, "unknown", "low"
         reason = "Möglicherweise nur Zubehör oder Ersatzteil statt des genannten Geräts; Ausführung und Vollständigkeit prüfen."

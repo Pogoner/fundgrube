@@ -69,11 +69,16 @@ eines neuen Snapshots ist weder eine neue Bewertung noch eine Quellenprüfung.
 Der geplante 30-Minuten-Abgleich versucht, die allgemeine und die Abholsuche
 jedes Mal vollständig zu durchlaufen. Die Info-Seite zeigt den tatsächlichen
 Durchlaufstatus, Seitenfortschritt, Abbrüche und den letzten erfolgreichen
-vollständigen Quellenlauf. Das Erreichen aller gemeldeten Seiten ist weder ein
-atomarer Snapshot der veränderlichen Quelle noch eine eBay-Vollabdeckungszusage.
-Ein erfolgreiches Deployment ersetzt diesen Status nicht. Die Hauptseite bleibt
-kompakt; ein abgeschlossener Quellenlauf darf dort nicht als bloßer Teilscan
-bezeichnet werden, aber auch keine direkte eBay-Verifikation suggerieren.
+vollständigen Quellenlauf. Durchlaufene Seitenpositionen sind nicht automatisch
+alle eindeutigen Artikel: Leere/dünn besetzte Antworten und Duplikate werden
+getrennt ausgewiesen, auch nach erreichtem Offset-Ende. Fehlen trotz gemeldeter
+Treffer sämtliche Datensätze einer Suche, bleibt der Abgleich unbestätigt;
+ein durchlaufener Offset-Bereich darf dann nicht als gesunder Vollscan erscheinen.
+Das Erreichen aller gemeldeten Seiten ist weder ein atomarer Snapshot der
+veränderlichen Quelle noch eine eBay-Vollabdeckungszusage. Aus fehlenden IDs
+werden keine negativen Zustands- oder Abholangaben abgeleitet. Ein erfolgreiches
+Deployment ersetzt diesen Status nicht. Die Hauptseite bleibt kompakt und
+suggeriert keine direkte eBay-Verifikation.
 
 ## Bilder, Bewegung und Fehler
 

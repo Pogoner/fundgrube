@@ -19,6 +19,10 @@
   };
   const provider = () => feed?.provider || feed?.source_provider || (typeof feed?.source === "string" ? feed.source : feed?.source?.provider) || "";
   const aggregated = () => ["aog", "auktionen-ohne-gebot"].includes(provider()) || array(feed?.deals).some(item => item.source_provider === "auktionen-ohne-gebot" || item.verification_level === "aggregator");
+  const reportedWithoutRecords = coverage => coverage?.reported_nonempty_but_no_records === true || ["general", "pickup"].some(key => {
+    const search = coverage?.searches?.[key];
+    return search?.enabled !== false && (search?.reported_nonempty_but_no_records === true || search?.stop_reason === "reported_nonempty_but_no_records");
+  });
   $("#home-link").href = demo ? "./?demo=1" : "./";
 
   // Keep this legacy-snapshot title guard identical to the one in app.js.
@@ -42,22 +46,26 @@
   function traversalCells(coverage) {
     const cells = [];
     if (typeof coverage.traversal_completed === "boolean") {
-      cells.push(["Quellenlauf dieses Snapshots", coverage.traversal_completed ? "Alle aktivierten Suchlisten bis zum gemeldeten Ende durchlaufen" : "Nicht vollständig durchlaufen; Teilstände möglich"]);
+      cells.push(["Quellenlauf dieses Snapshots", coverage.traversal_completed ? reportedWithoutRecords(coverage) ? "Seitenpositionen durchlaufen; gemeldete Treffer nicht durch Datensätze bestätigt" : "Alle gemeldeten Seitenpositionen der aktivierten Suchen durchlaufen" : "Nicht vollständig durchlaufen; Teilstände möglich"]);
       cells.push(["Beginn / Ende des Quellenlaufs", `${dateText(coverage.scan_started_at)} / ${dateText(coverage.scan_finished_at)} (Berlin)`]);
       cells.push(["Letzter vollständiger Quellenlauf", Number.isFinite(timestamp(coverage.last_successful_full_scan_at)) ? `${dateText(coverage.last_successful_full_scan_at)} (Berlin)` : "Noch nicht belegt"]);
     }
-    const reasons = {not_started:"Nicht gestartet", disabled:"Deaktiviert", reported_end:"Gemeldetes Listenende erreicht", short_page:"Unvollständige Quellseite", empty_page:"Unerwartet leere Quellseite", repeated_page:"Wiederholte Quellseite", source_growth_limit:"Trefferzahl über Abrufgrenze gewachsen", source_run_budget:"Abruflimit dieses Laufs erreicht", source_run_deadline:"Zeitlimit dieses Laufs erreicht", robots_disallowed:"Abruf laut robots.txt nicht erlaubt", robots_unavailable:"robots.txt nicht erreichbar", robots_invalid:"robots.txt nicht auswertbar", robots_delay:"Robots-Abrufpause", source_network_error:"Quellen-Netzwerkfehler", source_rate_limited:"Rate-Limit der Quelle", source_access_denied:"Zugriff von der Quelle abgelehnt", source_http_error:"HTTP-Fehler der Quelle", source_daily_budget:"Tagesbudget erreicht", invalid_json:"Ungültiges JSON", invalid_payload:"Ungültige Quellstruktur", invalid_response:"Ungültige Quellenantwort", unexpected_content:"Unerwarteter Antwortinhalt", response_too_large:"Quellenantwort über Größenlimit", source_payload_warning:"Quellendaten nicht vollständig verwendbar"};
+    const reasons = {not_started:"Nicht gestartet", disabled:"Deaktiviert", reported_end:"Gemeldetes Listenende erreicht", short_page:"Teilabruf wegen kurzer Quellseite (älterer Sammler)", empty_page:"Teilabruf wegen leerer Quellseite (älterer Sammler)", repeated_page:"Wiederholte Quellseite", reported_nonempty_but_no_records:"Treffer gemeldet, aber keine Datensätze geliefert", source_growth_limit:"Trefferzahl über Abrufgrenze gewachsen", source_run_budget:"Abruflimit dieses Laufs erreicht", source_run_deadline:"Zeitlimit dieses Laufs erreicht", robots_disallowed:"Abruf laut robots.txt nicht erlaubt", robots_unavailable:"robots.txt nicht erreichbar", robots_invalid:"robots.txt nicht auswertbar", robots_delay:"Robots-Abrufpause", source_network_error:"Quellen-Netzwerkfehler", source_rate_limited:"Rate-Limit der Quelle", source_access_denied:"Zugriff von der Quelle abgelehnt", source_http_error:"HTTP-Fehler der Quelle", source_daily_budget:"Tagesbudget erreicht", invalid_json:"Ungültiges JSON", invalid_payload:"Ungültige Quellstruktur", invalid_response:"Ungültige Quellenantwort", unexpected_content:"Unerwarteter Antwortinhalt", response_too_large:"Quellenantwort über Größenlimit", source_payload_warning:"Quellendaten nicht vollständig verwendbar"};
     for (const [key, label] of [["general", "Allgemeine Suche"], ["pickup", "Abholsuche"]]) {
       const search = coverage.searches?.[key];
       if (!search || typeof search !== "object") continue;
       if (search.enabled === false) { cells.push([label, "Nicht aktiviert"]); continue; }
-      const state = search.traversal_completed === true ? "Listenende erreicht" : "Nicht vollständig durchlaufen";
+      const noRecords = search.reported_nonempty_but_no_records === true || search.stop_reason === "reported_nonempty_but_no_records";
+      const state = search.traversal_completed === true ? "Seitenpositionen bis Listenende durchlaufen" : "Nicht vollständig durchlaufen";
       const pages = count(search.pages_fetched), unique = count(search.unique_records), duplicates = count(search.duplicate_records);
-      cells.push([label, `${state}${pages !== null ? ` · ${pages} Seiten` : ""}${unique !== null ? ` · ${unique} unterschiedliche Treffer` : ""}${duplicates ? ` · ${duplicates} wiederholte Treffer` : ""}`]);
+      cells.push([label, `${state}${pages !== null ? ` · ${pages} Seiten` : ""}${unique !== null ? ` · ${unique} unterschiedliche Treffer` : ""}${duplicates !== null ? ` · ${duplicates} wiederholte Treffer` : ""}`]);
+      const sparse = count(search.sparse_pages), empty = count(search.empty_pages), slots = count(search.sparse_slots_estimate);
+      if (sparse !== null || empty !== null || slots !== null) cells.push([`${label} · Seiten mit Lücken`, `${sparse ?? "?"} dünn besetzte / ${empty ?? "?"} leere Seiten${slots !== null ? ` · geschätzt ${slots} unbesetzte Seitenplätze` : ""}; keine eindeutige Fehlmenge`]);
+      if (noRecords) cells.push([`${label} · Daten nicht bestätigt`, "Treffer gemeldet, aber kein einziger Datensatz geliefert; kein erfolgreicher vollständiger Quellenabgleich"]);
       const initial = count(search.total_reported_initial), latest = count(search.total_reported_latest);
       if (initial !== null || latest !== null) cells.push([`${label} · gemeldete Treffer`, `${initial ?? "?"} bei Start / ${latest ?? "?"} zuletzt${search.total_changed === true ? " · während des Laufs verändert" : ""}`]);
       const unobserved = count(search.unobserved_estimate);
-      if (search.traversal_completed !== true && unobserved !== null) cells.push([`${label} · noch nicht beobachtet`, `${unobserved} laut Schätzung; veränderliche Ergebnisliste`]);
+      if (unobserved !== null && (unobserved > 0 || search.traversal_completed !== true)) cells.push([`${label} · noch nicht beobachtet`, `${unobserved} laut Schätzung; veränderliche Ergebnisliste`]);
       if (search.traversal_completed !== true && typeof search.stop_reason === "string") cells.push([`${label} · Unterbrechung`, reasons[search.stop_reason] || `Quellenmeldung: ${search.stop_reason.slice(0, 160)}`]);
     }
     return cells;
@@ -72,11 +80,13 @@
   }
 
   function render() {
-    const status = demo ? "demo" : feed?.source_status || "unconfigured";
+    const unconfirmed = !demo && reportedWithoutRecords(feed?.coverage);
+    const rawStatus = feed?.source_status || "unconfigured";
+    const status = demo ? "demo" : unconfirmed && ["live", "partial"].includes(rawStatus) ? "partial" : rawStatus;
     const blocks = [];
     if (failure) blocks.push(`<strong>Abruf fehlgeschlagen</strong><p>${esc(failure)}${feed ? " Der zuletzt geladene Snapshot bleibt unverändert sichtbar." : ""}</p>`);
     if (feed) {
-      blocks.push(`<strong>${esc(statuses[status] || "Quellenstatus unbekannt")}</strong><p>${demo ? "Alle Demo-Angebote, Preise, Scores und Quellenstände sind fiktiv. Kein Live-Import." : esc(feed.status_message || "Dieser Snapshot ist keine Echtzeit-Abfrage.")}</p>`);
+      blocks.push(`<strong>${esc(statuses[status] || "Quellenstatus unbekannt")}</strong><p>${demo ? "Alle Demo-Angebote, Preise, Scores und Quellenstände sind fiktiv. Kein Live-Import." : unconfirmed ? "Quellenabgleich nicht bestätigt: Mindestens eine Suche meldet Treffer, lieferte aber keinen einzigen Datensatz. Ein durchlaufener Offset-Bereich ist hier kein erfolgreicher vollständiger Datenabgleich." : esc(feed.status_message || "Dieser Snapshot ist keine Echtzeit-Abfrage.")}</p>`);
       const blockers = array(feed.blockers).filter(item => item && typeof item === "object");
       if (blockers.length) blocks.push(`<ul>${blockers.map(item => `<li>${esc(item.message || item.code || "Offener Einrichtungsschritt")}${item.action ? `<span class="blocker-action">${esc(item.action)}</span>` : ""}</li>`).join("")}</ul>`);
     }
@@ -109,7 +119,8 @@
       if (count(coverage.elapsed_seconds) !== null) cells.push(["Tatsächliche Laufdauer", `${Math.floor(coverage.elapsed_seconds / 60)} Min. ${coverage.elapsed_seconds % 60} Sek.`]);
       if (count(coverage.planned_interval_minutes) !== null && coverage.planned_interval_minutes > 0) cells.push(["Geplanter Startabstand", `${coverage.planned_interval_minutes} Min.; Ausführung kann sich verzögern`]);
       if (number(coverage.source_cache_max_age_minutes) !== null) cells.push(["Angesetzter Cache-Abstand", `bis ${coverage.source_cache_max_age_minutes} Min. in diesem Lauf; keine eBay-Frischegarantie`]);
-      cells.push(["Abdeckung", coverage.traversal_completed === true ? "Quellenlisten durchlaufen; veränderliche Pagination, keine eBay-Vollabdeckung" : coverage.complete === true ? "Quellenliste eingelesen; keine eBay-Vollabdeckung" : "Begrenzter Ausschnitt, keine Vollabdeckung"]);
+      cells.push(["Abdeckung", reportedWithoutRecords(coverage) ? "Quellenabgleich nicht bestätigt; gemeldete Treffer ohne Datensätze" : coverage.traversal_completed === true ? "Seitenpositionen durchlaufen; Lücken und Duplikate möglich, keine eBay-Vollabdeckung" : coverage.complete === true ? "Quellenliste eingelesen; keine eBay-Vollabdeckung" : "Begrenzter Ausschnitt, keine Vollabdeckung"]);
+      cells.push(["Fehlende Angebots-IDs", "Kein Beleg für Auktionsende, neue Gebote oder entfallene Abholung — auch nach einem durchlaufenen Offset-Bereich"]);
     } else {
       if (number(coverage.categories_scanned) !== null || number(coverage.categories_total) !== null) cells.push(["Unterkategorien im Teilscan", `${number(coverage.categories_scanned) ?? "?"} / ${number(coverage.categories_total) ?? "?"}`]);
       if (number(coverage.cycle_estimate_hours) !== null) cells.push([coverage.cycle_estimate_is_lower_bound ? "Theoretische Mindestdauer" : "Geschätzte Durchlaufdauer", `${coverage.cycle_estimate_is_lower_bound ? "Mindestens" : "Ca."} ${coverage.cycle_estimate_hours} Std.; vollständige Abdeckung nicht garantiert`]);
@@ -147,6 +158,7 @@
       "Lies api/manifest.json und alle paginierten Angebotsseiten samt benötigten Details unter demselben Commit-SHA; gleiche die Anzahl mit counts.total ab.",
       "Prüfe Quellenstatus, Abdeckung, snapshot_id, Quellenzeitstempel, ends_at und valid_until.",
       "Prüfe coverage.traversal_completed, den letzten vollständigen Quellenlauf, die Teilsuchen und retention_omitted_records: Ein abgeschlossener Quellenlauf ist keine atomare oder garantierte eBay-Vollabdeckung und belegt keine verlustlose Speicherübernahme. Der geplante 30-Minuten-Takt ist keine Aktualitätszusage.",
+      "traversal_completed bestätigt nur durchlaufene Seitenpositionen. Beachte sparse_pages, empty_pages, sparse_slots_estimate, duplicate_records und reported_nonempty_but_no_records: Gemeldete Treffer ohne gelieferte Datensätze sind kein erfolgreicher vollständiger Abgleich. absence_is_evidence ist false; aus fehlenden IDs niemals Ende, neue Gebote oder entfallene Abholung ableiten. Frühere Abhol-Evidenz behält ihren eigenen alten Zeitpunkt.",
       `Das aktive Fenster ist strikt jetzt < ends_at < jetzt + ${activeWindowHours()} Stunden, zur tatsächlichen Lesezeit neu berechnet.`,
       "Metadaten bleiben unabhängig vom Quellenalter bis Auktionsende erhalten; valid_until entspricht in Feed-Version 3 diesem Ende.",
       "Eine alte altersbasierte V1/V2-Frist darf bekannte laufende Auktionen nicht aus dem neuen Fenster verdrängen.",

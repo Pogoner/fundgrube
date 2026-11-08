@@ -290,8 +290,8 @@ def _parse_page(response: HttpResponse, at: datetime, *, page_size: int, offset:
             or any(payload.get(key) is False for key in ("success", "erfolg", "ok"))):
         raise SourceError("source_payload_warning", "Die Quelle meldet einen Fehler oder eine Warnung; Filterergebnisse werden nicht als bestätigt übernommen.")
     total, articles = payload["gesamt"], payload["artikel"]
-    if total < len(articles) or (total > offset and not articles):
-        raise SourceError("invalid_payload", "Leere Artikeldaten widersprechen der gemeldeten Trefferzahl.")
+    if total < len(articles):
+        raise SourceError("invalid_payload", "Die Artikeldaten übersteigen die gemeldete Trefferzahl.")
     observed, cache_age = _cache_observation(response.headers, at)
     items = []
     for article in articles:
@@ -427,7 +427,9 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
             "total_reported_initial": None, "total_reported_latest": None,
             "total_reported_min": None, "total_reported_max": None, "total_changed": False,
             "next_offset": 0, "remaining_reported": None, "unobserved_estimate": None,
-            "short_pages": 0, "repeated_pages": 0, "stop_reason": "not_started" if enabled else "disabled",
+            "short_pages": 0, "empty_pages": 0, "sparse_pages": 0, "sparse_slots_estimate": 0,
+            "absence_is_evidence": False, "reported_nonempty_but_no_records": False,
+            "repeated_pages": 0, "stop_reason": "not_started" if enabled else "disabled",
         }
         seen_ids[name], page_signatures[name] = set(), set()
     coverage = {
@@ -440,7 +442,8 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
         "max_run_seconds": duration, "max_source_items_per_search": MAX_SOURCE_ITEMS,
         "traversal_completed": False, "scan_started_at": None, "scan_finished_at": None, "scan_completed_at": None,
         "last_successful_full_scan_at": state.get("last_successful_full_scan_at"),
-        "records_read": 0, "unique_records": 0, "duplicate_records": 0, "searches": searches,
+        "records_read": 0, "unique_records": 0, "duplicate_records": 0,
+        "reported_nonempty_but_no_records": False, "searches": searches,
     }
 
     def elapsed() -> float:
@@ -462,8 +465,9 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
         meta["traversal_completed"] = completed
         if completed:
             meta["completed_at"] = iso_time(current_time())
-            meta["last_successful_traversal_at"] = meta["completed_at"]
-            state["last_successful_traversals"][name] = meta["completed_at"]
+            if not meta["reported_nonempty_but_no_records"]:
+                meta["last_successful_traversal_at"] = meta["completed_at"]
+                state["last_successful_traversals"][name] = meta["completed_at"]
 
     def result(status: str):
         finished = iso_time(current_time())
@@ -476,13 +480,20 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
         coverage["unique_records"] = len(items)
         coverage["duplicate_records"] = coverage["records_read"] - len(items)
         coverage["traversal_completed"] = all(meta["traversal_completed"] for meta in searches.values() if meta["enabled"])
-        if observations:
+        coverage["reported_nonempty_but_no_records"] = any(meta["reported_nonempty_but_no_records"]
+                                                          for meta in searches.values() if meta["enabled"])
+        if observations and (items or not coverage["reported_nonempty_but_no_records"]):
             state["last_success_at"] = finished
         if coverage["traversal_completed"]:
             coverage["scan_completed_at"] = finished
-            state["last_successful_full_scan_at"] = finished
-            state["last_full_scan_started_at"] = coverage["scan_started_at"]
+            if not coverage["reported_nonempty_but_no_records"]:
+                state["last_successful_full_scan_at"] = finished
+                state["last_full_scan_started_at"] = coverage["scan_started_at"]
         coverage["last_successful_full_scan_at"] = state.get("last_successful_full_scan_at")
+        if coverage["reported_nonempty_but_no_records"]:
+            warning("source_empty_results", "Mindestens eine Suche meldet Treffer, hat aber keinen Artikel geliefert. Besuchte Offsets sind keine bestätigte aktuelle Artikelliste; ältere Beobachtungen bleiben erhalten.")
+            if status == "live":
+                status = "partial"
         if coverage["scan_started_at"] is not None:
             warning("aggregator_claims_only", "Drittanbieter-Daten, keine direkte eBay-Liveprüfung und kein atomarer Snapshot; die Trefferliste kann sich während des Durchlaufs verändern.")
             if not coverage["traversal_completed"]:
@@ -599,10 +610,22 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
             seen_ids[name].update(ids)
             meta["unique_records"] = len(seen_ids[name])
             meta["duplicate_records"] = meta["records_read"] - meta["unique_records"]
-            meta["next_offset"] = offset + page_size if rows else offset
+            # The production pickup search can return only a few articles for
+            # a full requested page. Empty/short arrays are therefore not EOF.
+            # The source's filtering semantics are unknown: traverse the next
+            # requested offset, not offset + returned_count, until its reported
+            # end. This visits offsets; it never proves unique completeness.
+            meta["next_offset"] = offset + page_size
             meta["remaining_reported"] = max(0, total - meta["next_offset"])
             meta["unobserved_estimate"] = max(0, total - meta["unique_records"])
             meta["short_pages"] += int(len(rows) < page_size)
+            meta["empty_pages"] += int(not rows)
+            sparse_slots = max(0, min(page_size, total - offset) - len(rows))
+            meta["sparse_pages"] += int(sparse_slots > 0)
+            meta["sparse_slots_estimate"] += sparse_slots
+            meta["reported_nonempty_but_no_records"] = meta["total_reported_max"] > 0 and not meta["records_read"]
+            if sparse_slots:
+                warning("sparse_pages", "Die Quelle liefert weniger Artikel als die angefragten Seitenpositionen erwarten lassen. Weitere gemeldete Offsets werden gelesen; Zähldifferenzen können Filterung oder Änderungen betreffen und beweisen keine Zahl fehlender Angebote.")
             for row in rows:
                 _merge(items, row)
             if total > MAX_SOURCE_ITEMS:
@@ -611,12 +634,6 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
                 meta["repeated_pages"] += 1
                 stop_search(name, "repeated_page")
                 warning("repeated_page", "Die Quelle hat dieselbe Seite erneut geliefert; diese Suche wird nicht endlos fortgesetzt.")
-            elif not rows and offset:
-                stop_search(name, "empty_page")
-                warning("empty_page", "Eine spätere Quellenseite war leer; das wird nicht als bestätigter vollständiger Durchlauf gewertet.")
-            elif len(rows) < page_size and offset + len(rows) < total:
-                stop_search(name, "short_page")
-                warning("short_page", "Eine verkürzte Quellenseite widerspricht der Trefferzahl; die fehlenden Datensätze bleiben als Lücke sichtbar.")
             elif meta["next_offset"] >= total:
                 stop_search(name, "reported_end", completed=True)
             else:

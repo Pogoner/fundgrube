@@ -246,7 +246,7 @@ class ParsingTests(unittest.TestCase):
         self.assertTrue(result["coverage"]["traversal_completed"])
         self.assertEqual(result["coverage"]["source_total_reported"], 0)
         self.assertEqual(result["coverage"]["pages_fetched"], 2)
-        for payload in ({}, {"gesamt": 5, "artikel": []}, {"gesamt": 0, "artikel": "bad"}, {"gesamt": True, "artikel": []}):
+        for payload in ({}, {"gesamt": 0, "artikel": "bad"}, {"gesamt": True, "artikel": []}, {"gesamt": 0, "artikel": [article()]}):
             with self.subTest(payload=payload):
                 failed, _, _ = run([robots(), api(payload=payload)])
                 self.assertEqual(failed["status"], "error")
@@ -383,6 +383,10 @@ class SchedulingTests(unittest.TestCase):
             self.assertEqual(search["remaining_reported"], 0)
             self.assertEqual(search["unobserved_estimate"], 0)
             self.assertEqual(search["stop_reason"], "reported_end")
+            self.assertEqual(search["sparse_pages"], 0)
+            self.assertEqual(search["sparse_slots_estimate"], 0)
+            self.assertFalse(search["reported_nonempty_but_no_records"])
+            self.assertFalse(search["absence_is_evidence"])
         self.assertTrue(all(req["headers"]["User-Agent"] == USER_AGENT for req in fake.requests))
 
     def test_48_half_hour_runs_fit_daily_budget(self):
@@ -428,7 +432,7 @@ class SchedulingTests(unittest.TestCase):
         result, _, _ = run([robots(), api([]), api([])], state=state)
         self.assertNotIn("private", json.dumps(result))
         self.assertNotIn("secret document", json.dumps(result))
-        self.assertEqual(result["source_state"]["general_next_offset"], 0)
+        self.assertEqual(result["source_state"]["general_next_offset"], 48)
 
     def test_page_budget_cannot_be_raised_above_verified_bound(self):
         for settings in ({"aog_max_requests_per_run": 161}, {"aog_page_size": 1000}, {"aog_page_size": 12}, {"max_price_eur": float("inf")},
@@ -511,23 +515,91 @@ class SchedulingTests(unittest.TestCase):
         self.assertEqual(search["unique_records"], 48)
         self.assertEqual(search["unobserved_estimate"], 96)
 
-    def test_short_nonfinal_page_is_an_explicit_gap_not_successful_end(self):
-        result, fake, _ = run([robots(), api(rows(0, 1), total=144), api([])], settings={"aog_max_requests_per_run": 10})
-        self.assertEqual(len(fake.requests), 3)
-        self.assertEqual(result["status"], "partial")
-        self.assertEqual(result["coverage"]["searches"]["general"]["stop_reason"], "short_page")
-        self.assertEqual(result["coverage"]["searches"]["general"]["unobserved_estimate"], 143)
+    def test_short_nonfinal_pages_advance_requested_offsets_without_claiming_missing_articles(self):
+        result, fake, _ = run([robots(), api(rows(0, 1), total=144), api([]),
+                              api(rows(48, 2), total=144), api(rows(96, 1), total=144)],
+                              settings={"aog_max_requests_per_run": 10})
+        self.assertEqual(len(fake.requests), 5)
+        self.assertEqual(result["status"], "live")
+        search = result["coverage"]["searches"]["general"]
+        self.assertEqual(search["stop_reason"], "reported_end")
+        self.assertEqual(search["unique_records"], 4)
+        self.assertEqual(search["sparse_pages"], 3)
+        self.assertEqual(search["sparse_slots_estimate"], 140)
+        self.assertEqual(search["unobserved_estimate"], 140)
+        self.assertFalse(search["absence_is_evidence"])
+        self.assertFalse(result["coverage"]["complete"])
+        offsets = [parse_qs(urlsplit(request["url"]).query)["ab"][0] for request in fake.requests[1:]]
+        self.assertEqual(offsets, ["0", "0", "48", "96"])
 
-    def test_empty_tail_fails_closed_even_if_total_shrank(self):
-        for total, reason in ((96, "invalid_payload"), (48, "empty_page")):
+    def test_empty_tail_visits_reported_end_and_exposes_gap_or_shrunk_count(self):
+        for total, sparse in ((96, 1), (48, 0)):
             with self.subTest(total=total):
                 result, fake, _ = run([robots(), api(rows(), total=96), api([]), api([], total=total)],
                                       settings={"aog_max_requests_per_run": 10})
                 self.assertEqual(len(fake.requests), 4)
-                self.assertEqual(result["status"], "partial")
-                self.assertFalse(result["coverage"]["traversal_completed"])
-                self.assertEqual(result["coverage"]["searches"]["general"]["stop_reason"], reason)
+                self.assertEqual(result["status"], "live")
+                self.assertTrue(result["coverage"]["traversal_completed"])
+                search = result["coverage"]["searches"]["general"]
+                self.assertEqual(search["stop_reason"], "reported_end")
+                self.assertEqual(search["empty_pages"], 1)
+                self.assertEqual(search["sparse_pages"], sparse)
+                self.assertFalse(search["absence_is_evidence"])
                 self.assertEqual(len(result["items"]), 48)
+
+    def test_live_shaped_sparse_pickup_reads_all_248_reported_positions(self):
+        responses = [robots(), api(rows(), total=96), api(rows(100, 3, abholung=True), total=248),
+                     api(rows(48), total=96), api([], total=248), api(rows(103, 2, abholung=True), total=248),
+                     api([], total=248), api(rows(105, 1, abholung=True), total=248), api(rows(106, 1, abholung=True), total=248)]
+        result, fake, delays = run(responses, settings={"aog_max_requests_per_run": 20})
+        self.assertEqual(result["status"], "live")
+        self.assertTrue(result["coverage"]["traversal_completed"])
+        self.assertFalse(result["coverage"]["complete"])
+        self.assertEqual(len(fake.requests), 9)
+        self.assertEqual(delays, [10] * 8)
+        pickup = result["coverage"]["searches"]["pickup"]
+        self.assertEqual(pickup["total_reported_latest"], 248)
+        self.assertEqual(pickup["pages_fetched"], 6)
+        self.assertEqual(pickup["records_read"], 7)
+        self.assertEqual(pickup["unique_records"], 7)
+        self.assertEqual(pickup["empty_pages"], 2)
+        self.assertEqual(pickup["sparse_pages"], 6)
+        self.assertEqual(pickup["sparse_slots_estimate"], 241)
+        self.assertEqual(pickup["remaining_reported"], 0)
+        self.assertFalse(pickup["absence_is_evidence"])
+        self.assertFalse(pickup["reported_nonempty_but_no_records"])
+        queries = [parse_qs(urlsplit(request["url"]).query) for request in fake.requests[1:]]
+        self.assertEqual([query["ab"][0] for query in queries if "abholung" in query], ["0", "48", "96", "144", "192", "240"])
+        self.assertEqual(sum(row["pickup_search_confirmed"] for row in result["items"]), 7)
+
+    def test_all_empty_positive_total_traverses_but_never_renews_successful_fact_timestamps(self):
+        earlier = "2026-11-07T11:00:00Z"
+        state = {"last_success_at": earlier, "last_successful_full_scan_at": earlier,
+                 "last_successful_traversals": {"general": earlier}}
+        result, fake, _ = run([robots(), api([], total=96), api([], total=96)], state=state,
+                              settings={"aog_pickup_enabled": False, "aog_max_requests_per_run": 10})
+        self.assertEqual(len(fake.requests), 3)
+        self.assertEqual(result["items"], [])
+        self.assertEqual(result["status"], "partial")
+        coverage = result["coverage"]
+        self.assertTrue(coverage["traversal_completed"])
+        self.assertTrue(coverage["reported_nonempty_but_no_records"])
+        self.assertEqual(coverage["scan_completed_at"], "2026-11-07T12:00:20Z")
+        self.assertEqual(coverage["last_successful_full_scan_at"], earlier)
+        self.assertEqual(result["source_state"]["last_success_at"], earlier)
+        search = coverage["searches"]["general"]
+        self.assertEqual(search["last_successful_traversal_at"], earlier)
+        self.assertEqual(search["empty_pages"], 2)
+        self.assertEqual(search["sparse_slots_estimate"], 96)
+        self.assertIn("source_empty_results", [warning["code"] for warning in result["warnings"]])
+
+    def test_sparse_empty_pages_remain_bounded_by_existing_request_budget(self):
+        result, fake, _ = run([robots(), api([], total=1000), api([], total=248)])
+        self.assertEqual(len(fake.requests), 3)
+        self.assertEqual(result["status"], "partial")
+        self.assertFalse(result["coverage"]["traversal_completed"])
+        self.assertTrue(result["coverage"]["reported_nonempty_but_no_records"])
+        self.assertTrue(all(meta["stop_reason"] == "source_run_budget" for meta in result["coverage"]["searches"].values()))
 
     def test_source_growth_beyond_cap_is_reported_without_bulk_endpoint(self):
         result, fake, _ = run([robots(), api(rows(), total=10000), api([])])

@@ -550,10 +550,6 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         scan["categories_scanned"] = int(scan["searches_succeeded"] > 0)
         scan["categories_total"] = scan["categories_planned"] = 1
         scan["categories_completed"] = int(source_coverage.get("traversal_completed") is True)
-        searches = source_coverage.get("searches", {})
-        pickup_scan = searches.get("pickup", {}) if isinstance(searches, dict) else {}
-        incomplete_pickup = (isinstance(pickup_scan, dict) and pickup_scan.get("enabled") is True
-                             and pickup_scan.get("traversal_completed") is not True)
         for raw in result["items"]:
             if not isinstance(raw, dict):
                 raise ConfigurationError("Public source item is not an object.")
@@ -564,13 +560,14 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
             if item is not None:
                 previous = records.get(item["id"], {})
                 old_pickup_at = parse_time(previous.get("pickup_search_observed_at") or previous.get("source_observed_at"))
-                if (incomplete_pickup and not item.get("pickup_search_confirmed") and item.get("pickup_available") is not False
+                if (not item.get("pickup_search_confirmed") and item.get("pickup_available") is not False
                         and previous.get("pickup_search_confirmed") is True and old_pickup_at and old_pickup_at <= at
                         and previous.get("pickup_search_postcode") == settings["postcode"]
                         and previous.get("pickup_search_radius_km") == settings["pickup_radius_km"]):
-                    # A failed/unvisited pickup page is not evidence that an
-                    # older radius-search claim disappeared. Preserve its own
-                    # clock, never relabel it as this general-page observation.
+                    # Missing from a mutable/sparse query is never refutation
+                    # of an older radius-search observation, even if offsets
+                    # were traversed. Keep its independent clock; explicit
+                    # no-pickup evidence or changed search settings can clear it.
                     for key in ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km"):
                         item[key] = previous[key]
                     item["pickup_search_observed_at"] = iso_time(old_pickup_at)
@@ -584,7 +581,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                        "Quellenstand und Abdeckung beachten; vor einem Gebot das Originalangebot prüfen. Der nächste geplante Lauf berücksichtigt Wartezeiten.")
         source_status = result["status"]
         status = ("partial" if records else "error") if source_status in {"cooldown", "error"} else source_status
-        if scan["searches_succeeded"]:
+        if scan["searches_succeeded"] and (scan["received"] or not source_coverage.get("reported_nonempty_but_no_records")):
             state["last_successful_scan_at"] = iso_time(at)
         if source_status == "error":
             scan["searches_failed"] = max(1, scan["searches_failed"])
@@ -682,8 +679,10 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
     if source == "json" and status == "live":
         messages["live"] = "Lokaler JSON-Import abgeschlossen; keine erneute Liveprüfung bei eBay."
     if source == "aog":
-        messages["live"] = "Quellenlisten bis zum gemeldeten Ende durchlaufen; veränderliche Aggregator-Daten, kein atomarer Snapshot und keine eigene eBay-Prüfung."
+        messages["live"] = "Gemeldete Seitenpositionen der Quellenlisten durchlaufen; veränderliche Aggregator-Daten, kein vollständiger atomarer Bestand und keine eigene eBay-Prüfung."
         messages["partial"] = "Unvollständiger Quelldurchlauf; bestätigte Teilbeobachtungen und ältere gespeicherte Angebote bleiben erhalten."
+        if source_coverage.get("reported_nonempty_but_no_records"):
+            messages["partial"] = "Quellenabgleich nicht vollständig bestätigt: Eine Suche meldet Treffer, liefert aber keine Artikel. Besuchte Seitenpositionen ersetzen keine Daten; ältere Beobachtungen bleiben erhalten."
     feed = {
         "schema_version": FEED_VERSION, "generated_at": iso_time(at), "last_successful_scan_at": state.get("last_successful_scan_at"),
         "source_status": status, "status_message": messages[status], "blockers": blockers, "source": provider, "provider": provider,

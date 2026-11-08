@@ -101,20 +101,20 @@ test("completed source traversal is distinct from stable pagination or full eBay
     }
   }});
   const text = ui.nodes.get("info-coverage").innerHTML;
-  assert.match(text, /Alle aktivierten Suchlisten bis zum gemeldeten Ende durchlaufen/);
+  assert.match(text, /Alle gemeldeten Seitenpositionen der aktivierten Suchen durchlaufen/);
   assert.match(text, /Beginn \/ Ende des Quellenlaufs/);
   assert.match(text, /08\.11\.26, 09:44 \/ 08\.11\.26, 10:00 \(Berlin\)/);
   assert.match(text, /Letzter vollständiger Quellenlauf<\/small><strong>08\.11\.26, 10:00/);
-  assert.match(text, /Allgemeine Suche<\/small><strong>Listenende erreicht · 87 Seiten · 4160 unterschiedliche Treffer · 14 wiederholte Treffer/);
+  assert.match(text, /Allgemeine Suche<\/small><strong>Seitenpositionen bis Listenende durchlaufen · 87 Seiten · 4160 unterschiedliche Treffer · 14 wiederholte Treffer/);
   assert.match(text, /4177 bei Start \/ 4174 zuletzt · während des Laufs verändert/);
-  assert.match(text, /Abholsuche<\/small><strong>Listenende erreicht · 6 Seiten · 260 unterschiedliche Treffer/);
+  assert.match(text, /Abholsuche<\/small><strong>Seitenpositionen bis Listenende durchlaufen · 6 Seiten · 260 unterschiedliche Treffer/);
   assert.match(text, /30 Min\.; Ausführung kann sich verzögern/);
   assert.match(text, /Angesetzter Cache-Abstand<\/small><strong>bis 15 Min\. in diesem Lauf; keine eBay-Frischegarantie/);
   assert.match(text, /Tatsächliche Laufdauer<\/small><strong>15 Min\. 40 Sek\./);
   assert.match(text, /Limit der Datenanfragen pro Lauf<\/small><strong>160/);
   assert.match(text, /95 \/ 8000; einschließlich robots\.txt/);
   assert.match(text, /1500 Sekunden; kein zugesicherter Abschluss/);
-  assert.match(text, /Quellenlisten durchlaufen; veränderliche Pagination, keine eBay-Vollabdeckung/);
+  assert.match(text, /Seitenpositionen durchlaufen; Lücken und Duplikate möglich, keine eBay-Vollabdeckung/);
   assert.doesNotMatch(text, /Begrenzter Ausschnitt|Keine Datenlücken|100\s*%/);
 });
 
@@ -132,8 +132,8 @@ test("partial traversals keep the last completed scan and explain per-search int
   assert.match(text, /Letzter vollständiger Quellenlauf<\/small><strong>03\.11\.26, 08:30/);
   assert.match(text, /Allgemeine Suche · Unterbrechung<\/small><strong>Wiederholte Quellseite/);
   assert.match(text, /4104 laut Schätzung; veränderliche Ergebnisliste/);
-  assert.match(text, /Abholsuche<\/small><strong>Listenende erreicht/);
-  assert.doesNotMatch(text, /Alle aktivierten Suchlisten bis zum gemeldeten Ende durchlaufen/);
+  assert.match(text, /Abholsuche<\/small><strong>Seitenpositionen bis Listenende durchlaufen/);
+  assert.doesNotMatch(text, /Alle gemeldeten Seitenpositionen der aktivierten Suchen durchlaufen/);
 });
 
 test("a completed traversal cannot hide records omitted by the storage bound", async () => {
@@ -142,11 +142,43 @@ test("a completed traversal cannot hide records omitted by the storage bound", a
     retention_omitted_records: 74, all_collected_records_retained: false
   }});
   const text = ui.nodes.get("info-coverage").innerHTML;
-  assert.match(text, /Alle aktivierten Suchlisten bis zum gemeldeten Ende durchlaufen/);
+  assert.match(text, /Alle gemeldeten Seitenpositionen der aktivierten Suchen durchlaufen/);
   assert.match(text, /Durch Speichergrenze ausgelassen<\/small><strong>74 Datensätze; getrennt vom Quellenlauf/);
   const unknown = await render({coverage: {retention_omitted_records: -1, all_collected_records_retained: false}});
   assert.match(unknown.nodes.get("info-coverage").innerHTML, /Speicherübernahme unvollständig/);
   assert.doesNotMatch(unknown.nodes.get("info-coverage").innerHTML, /-1 Datensätze/);
+});
+
+test("completed offset traversal still exposes duplicate and sparse-page gaps", async () => {
+  const ui = await render({source_status: "live", coverage: {
+    complete: false, traversal_completed: true, absence_is_evidence: false,
+    searches: {
+      general: {enabled: true, traversal_completed: true, pages_fetched: 89, records_read: 4242, unique_records: 3641, duplicate_records: 601, total_reported_latest: 4242, unobserved_estimate: 601, sparse_pages: 0, empty_pages: 0, sparse_slots_estimate: 0, absence_is_evidence: false},
+      pickup: {enabled: true, traversal_completed: true, pages_fetched: 6, records_read: 12, unique_records: 12, duplicate_records: 0, total_reported_latest: 248, unobserved_estimate: 236, sparse_pages: 6, empty_pages: 2, sparse_slots_estimate: 236, absence_is_evidence: false}
+    }
+  }});
+  const text = ui.nodes.get("info-coverage").innerHTML;
+  assert.match(text, /3641 unterschiedliche Treffer · 601 wiederholte Treffer/);
+  assert.match(text, /Allgemeine Suche · noch nicht beobachtet<\/small><strong>601 laut Schätzung/);
+  assert.match(text, /Abholsuche · Seiten mit Lücken<\/small><strong>6 dünn besetzte \/ 2 leere Seiten · geschätzt 236 unbesetzte Seitenplätze/);
+  assert.match(text, /keine eindeutige Fehlmenge/);
+  assert.match(text, /Kein Beleg für Auktionsende, neue Gebote oder entfallene Abholung/);
+  assert.doesNotMatch(text, /100\s*%|Keine Datenlücken/);
+});
+
+test("all-empty results with a nonzero reported total are not presented as a successful full scan", async () => {
+  const ui = await render({source_status: "live", status_message: "Nicht als Erfolg übernehmen", coverage: {
+    traversal_completed: true, scan_completed_at: latest, last_successful_full_scan_at: oldest,
+    reported_nonempty_but_no_records: true, absence_is_evidence: false,
+    searches: {pickup: {enabled: true, traversal_completed: true, pages_fetched: 6, unique_records: 0, total_reported_latest: 248, sparse_pages: 6, empty_pages: 6, sparse_slots_estimate: 248, reported_nonempty_but_no_records: true, stop_reason: "reported_end"}}
+  }});
+  const text = ui.nodes.get("info-coverage").innerHTML;
+  assert.match(ui.nodes.get("info-status").innerHTML, /Quellenabgleich nicht bestätigt/);
+  assert.doesNotMatch(ui.nodes.get("info-status").innerHTML, /Nicht als Erfolg übernehmen/);
+  assert.match(text, /Seitenpositionen durchlaufen; gemeldete Treffer nicht durch Datensätze bestätigt/);
+  assert.match(text, /Treffer gemeldet, aber kein einziger Datensatz geliefert/);
+  assert.match(text, /Letzter vollständiger Quellenlauf<\/small><strong>03\.11\.26, 08:30/);
+  assert.doesNotMatch(text, /Alle gemeldeten Seitenpositionen der aktivierten Suchen durchlaufen/);
 });
 
 test("invalid traversal fields cannot imply completion or inject HTML", async () => {
@@ -191,6 +223,8 @@ test("copied triage instructions preserve absolute scores and separate source fr
   assert.match(ui.copied, /Ein neues gutes Angebot senkt keine vorhandene Bewertung/);
   assert.match(ui.copied, /Preis, Gebote und Verfügbarkeit separat/);
   assert.match(ui.copied, /coverage\.traversal_completed/);
+  assert.match(ui.copied, /reported_nonempty_but_no_records/);
+  assert.match(ui.copied, /absence_is_evidence ist false/);
   assert.match(ui.copied, /30-Minuten-Takt ist keine Aktualitätszusage/);
   assert.match(ui.copied, /personal_interest_excluded unabhängig von Scores/);
   assert.match(ui.copied, /Verändere für diesen Profilausschluss keine gespeicherten LLM-Scores/);

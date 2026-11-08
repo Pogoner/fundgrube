@@ -444,7 +444,12 @@ Quellenbeobachtung.
 
 Jeder zugelassene Quellenlauf prüft `robots.txt` und beginnt die allgemeine
 Suche sowie die aktivierte Abholsuche bei Offset 0. Beide werden mit höchstens
-48 Treffern pro Seite abwechselnd bis zum jeweils gemeldeten Ende gelesen.
+48 angefragten Treffern pro Seite abwechselnd bis zum jeweils gemeldeten Ende
+gelesen. Strukturell gültige dünn besetzte oder leere Antworten führen nicht
+automatisch zum Abbruch: Der nächste Offset wird um die angefragten 48 erhöht,
+nicht nur um die gelieferte Anzahl. Normale kurze Endseiten sind keine
+unerwartete Lücke. Warum die Quelle für manche Seiten weniger Datensätze als
+erwartet liefert, wird ohne weitere Belege nicht behauptet.
 Es gibt keine persistente Folgeseiten-Rotation mehr. Der Standard und die harte
 Datenanfragegrenze liegen bei **160 Daten-API-Anfragen plus einer Robots-Anfrage
 pro Lauf**. Zusätzlich gelten **25 Minuten Quellenlaufzeit**, mindestens
@@ -483,7 +488,12 @@ liefern. Dafür sind vier optionale Felder vorgesehen:
 Ein neuer allgemeiner Quellenfund kann Preis, Gebote und `source_observed_at`
 aktualisieren, ohne einen früheren Umkreistreffer erneut zu bestätigen. Dessen
 `pickup_search_observed_at` bleibt dann unverändert. Bei Teilfehlern darf diese
-frühere vorläufige Evidenz erhalten bleiben, wird aber nach mehr als zwei
+frühere vorläufige Evidenz erhalten bleiben. Das gilt auch nach einem bis zum
+gemeldeten Ende durchlaufenen Offset-Bereich, wenn die ID dort nicht vorkommt:
+`absence_is_evidence` bleibt immer `false`. Fehlende IDs beweisen weder
+entfallene Abholung noch neue Gebote oder Auktionsende. Nur neue ausdrückliche
+negative Abhol-Evidenz oder ein nicht mehr passendes Suchprofil hebt den
+gespeicherten Suchhinweis auf. Der alte Hinweis wird nach mehr als zwei
 Stunden separat gewarnt; dadurch werden nicht künstlich die frischeren
 allgemeinen Preise gealtert. Bei Legacy-Daten ohne eigenen Abholzeitpunkt kann
 der Export den zugehörigen vorhandenen `source_observed_at` verwenden, niemals
@@ -499,10 +509,10 @@ ungültigen Angaben keinen Nähe-Bonus erhalten.
 
 | Feld | Bedeutung |
 |---|---|
-| `traversal_completed` | Beide aktivierten Suchlisten wurden in diesem Lauf bis zu ihrem jeweils gemeldeten Ende gelesen; kein atomarer oder vollständiger eBay-Snapshot |
+| `traversal_completed` | Alle gemeldeten Seitenpositionen beider aktivierten Suchen wurden bis zum jeweiligen Ende angefragt; kein Beleg für alle eindeutigen Treffer, einen atomaren oder vollständigen eBay-Snapshot |
 | `scan_started_at` / `scan_finished_at` | Tatsächlicher Beginn/Ende dieses Quellenlaufs; `null`, wenn kein neuer Lauf gestartet wurde |
-| `scan_completed_at` | Abschluss dieses vollständigen Durchlaufs; bei Teilabruf `null` |
-| `last_successful_full_scan_at` | Letzter vollständig abgeschlossener Quellenlauf; bleibt bei späteren Teilfehlern unverändert |
+| `scan_completed_at` | Zeitpunkt des abgeschlossenen Offset-Durchlaufs; kann auch bei gemeldeten Treffern ohne gelieferte Datensätze gesetzt sein, kein Erfolgsbeweis |
+| `last_successful_full_scan_at` | Letzter erfolgreicher vollständiger Durchlauf; bleibt bei späteren Teilfehlern oder `reported_nonempty_but_no_records` unverändert |
 | `elapsed_seconds` | Tatsächliche Dauer des Quellenlaufs, nicht sein geplanter Startabstand |
 | `requests_this_run` / `api_requests_this_run` / `pages_fetched` | HTTP-Anfragen einschließlich Robots / Datenanfragen / erfolgreich gelesene Quellseiten |
 | `page_size` / `next_offset` | Quellseitengröße und diagnostischer nächster allgemeiner Offset; jeder neue Lauf beginnt wieder bei 0; unabhängig von unseren JSON-Seiten |
@@ -518,28 +528,40 @@ ungültigen Angaben keinen Nähe-Bonus erhalten.
 | `retention_omitted_records` / `all_collected_records_retained` | Kapazitätsbedingt ausgelassene Datensätze / ob die Speichergrenze keine Datensätze ausließ; getrennt von der Traversierung |
 | `complete` / `pagination_is_stable` | Für diesen Provider weiterhin `false`, auch bei vollständig durchlaufenem Quellenverzeichnis |
 | `searches.general` / `searches.pickup` | Getrennter Fortschritt und Status der allgemeinen und der Abholsuche |
+| `reported_nonempty_but_no_records` | Mindestens eine aktivierte Suche meldet Treffer, lieferte aber keinen einzigen Datensatz; Quellenstatus `partial`, kein neuer erfolgreicher Vollabgleich |
 
 Die beiden Objekte unter `searches` haben folgende Felder:
 
 | Feld | Bedeutung |
 |---|---|
 | `enabled` / `status` | Aktivierung und Status: `not_started`, `disabled`, `completed`, `partial` oder `error` |
-| `traversal_completed` / `started_at` / `completed_at` | Vollständiger Durchlauf dieser Suche sowie ihre eigenen Anfangs-/Abschlusszeitpunkte |
-| `last_successful_traversal_at` | Letzter vollständiger Durchlauf genau dieser Suche, auch bei späterem Teilfehler |
+| `traversal_completed` / `started_at` / `completed_at` | Durchlauf der gemeldeten Seitenpositionen dieser Suche und dessen Zeitpunkte; keine Zusage, alle eindeutigen Treffer gelesen zu haben |
+| `last_successful_traversal_at` | Letzter erfolgreicher vollständiger Durchlauf dieser Suche; wird bei ausschließlich leeren Antworten trotz positiver Trefferzahl nicht erneuert |
 | `pages_fetched` / `records_read` / `unique_records` / `duplicate_records` | Seiten, gelesene Treffer, unterschiedliche IDs und Wiederholungen nur innerhalb dieser Suche |
 | `total_reported_initial` / `total_reported_latest` / `total_reported_min` / `total_reported_max` | Erste, letzte und während des Laufs kleinste/größte gemeldete Trefferzahl |
 | `total_changed` | Ob sich die gemeldete Trefferzahl im Lauf verändert hat |
 | `next_offset` / `remaining_reported` | Nächster Offset und verbleibende gemeldete Treffer; wegen beweglicher Pagination keine exakte Liste fehlender IDs |
 | `unobserved_estimate` | Geschätzte noch nicht beobachtete Treffer, keine verifizierte Fehlmenge |
-| `short_pages` / `repeated_pages` | Beobachtete auffällige Kurzseiten bzw. wiederholte Seiten |
-| `stop_reason` | Zum Beispiel `reported_end`, `short_page`, `empty_page`, `repeated_page`, `source_growth_limit`, `source_run_budget`, `source_run_deadline` oder ein konkreter Quellen-/Robotsfehler |
+| `short_pages` / `empty_pages` | Anzahl Antworten mit weniger als der angefragten Seitengröße bzw. ohne Datensätze; kurze Antworten können normale Endseiten sein |
+| `sparse_pages` / `sparse_slots_estimate` | Seiten mit weniger Einträgen als `min(48, gemeldete Gesamtzahl − Offset)` erwarten ließe / geschätzte unbesetzte Seitenplätze; keine Menge eindeutig fehlender IDs |
+| `repeated_pages` | Wiederholte, nicht leere Seiten als eigener Paginierungsfehler |
+| `reported_nonempty_but_no_records` | Diese Suche meldet Treffer, lieferte insgesamt aber keinen Datensatz; getrennt vom Erreichen des Offset-Endes |
+| `absence_is_evidence` | Auch pro Suche immer `false`; keine Statusänderung aus fehlenden IDs ableiten |
+| `stop_reason` | Zum Beispiel `reported_end`, `repeated_page`, `source_growth_limit`, `source_run_budget`, `source_run_deadline` oder ein Quellen-/Robotsfehler; alte Snapshots können noch `short_page`/`empty_page` als frühere Abbruchregel enthalten |
 
 `source_status: live` kann einen vollständig durchlaufenen AOG-Abruf bezeichnen,
 bleibt aber eine Aggregator-Beobachtung. `partial` bedeutet unvollständigen
 Durchlauf bzw. eingeschränkte Abdeckung; `error` kann einen gescheiterten Abruf
 mit weiterhin vorhandenen älteren Datensätzen begleiten. Eine Robots-Sperre,
-Rate-Limits, HTTP-Fehler, widersprüchliche leere/kurze oder wiederholte Seiten
-und erreichte Budgets werden nicht als vollständiger Lauf ausgegeben.
+Rate-Limits, HTTP-Fehler, wiederholte nicht leere Seiten und erreichte Budgets
+bleiben echte Abbruchgründe. Strukturell gültige kurze oder leere Seiten allein
+stoppen die Folgeoffsets dagegen nicht. Meldet eine Suche eine positive
+Trefferzahl, liefert aber insgesamt nichts, bleibt
+`reported_nonempty_but_no_records=true` und der Quellenstatus `partial` — auch
+bei `traversal_completed=true` und `stop_reason=reported_end`. Der letzte
+erfolgreiche Vollabgleich wird dann nicht erneuert. Liefert überhaupt keine
+Suche Daten, wird auch `last_successful_scan_at` nicht erneuert. Eine leere
+persönlich gefilterte Shortlist ist nicht mit diesem Quellenfehler gleichzusetzen.
 Zusätzliche Coverage-Felder bleiben erhalten. Weder die Vollständigkeit unserer
 ausgelieferten JSON-Seiten noch ein abgeschlossenes Quellenverzeichnis beweist
 Vollabdeckung von eBay oder einen gemeinsamen Beobachtungszeitpunkt aller Artikel.
@@ -593,8 +615,10 @@ Das Ziel „alle aktuell passenden 1-€-/0-Gebots-Auktionen“ erfordert mehr a
 einen wachsenden Speicher: Teilseiten mit beweglichen Offsets sind kein
 vollständiger Snapshot. Ein Gebot kann einen Treffer aus der gefilterten
 Quellenliste entfernen, ohne dass der Sammler eine negative Statusmeldung
-erhält. Abwesenheit aus einem Teilabruf beweist deshalb weder Verfügbarkeit noch
-Nichtverfügbarkeit. Auch ein in einem Lauf vollständig durchlaufenes
+erhält. Abwesenheit aus einem Teilabruf oder einem vollständig durchlaufenen
+Offset-Bereich beweist deshalb weder Verfügbarkeit noch Nichtverfügbarkeit;
+`absence_is_evidence=false` gilt unabhängig vom Abschluss der Pagination.
+Auch ein in einem Lauf vollständig durchlaufenes
 Quellenverzeichnis ist nicht atomar und bestätigt nicht sämtliche älteren
 Quellenfakten zum gleichen Zeitpunkt.
 Ein zuverlässiger Vollbestand braucht eine geeignete vollständige oder

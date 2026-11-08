@@ -636,7 +636,8 @@ alte `last_seen_at + 24h`-Regel weiterverwenden; sie benötigen ein Vertragsupda
 
 Bei `source_provider: auktionen-ohne-gebot` stammen Titel, Bild, Preis, Versand,
 Gebote, Ende und Zustandsangabe aus `{AOG_SOURCE_URL}`, nicht aus einem direkten
-eBay-Abruf. `source_url` und `source_observed_at` nennen Quelle und Abrufzeit;
+eBay-Abruf. `source_url` und `source_observed_at` nennen Quelle und den
+konservativ angesetzten, cachebereinigten Quellenstand;
 `verification_level: aggregator` kennzeichnet diese Grenze in jedem Datensatz.
 Der Anbieter nennt einen Cache von bis zu 15 Minuten. Das ist eine Anbieterangabe,
 keine von uns geprüfte Echtzeitgarantie. `last_seen_at` berücksichtigt das
@@ -662,17 +663,32 @@ beide offen sind, werden Seiten abwechselnd gelesen. Keine zusätzlichen
 eBay-Einzelabrufe oder Verkäufertexte. Harte Grenzen: 160 Datenanfragen, 25
 Minuten Scanzeit, mindestens zehn Sekunden Anfrageabstand, 29 Minuten
 Doppelstartschutz ab Beginn und 8.000 HTTP-Anfragen je UTC-Tag. Längere echte
-Warte-/Sperrzeiten bleiben bestehen; leere, kurze oder wiederholte Seiten
-werden nicht durch unbegrenztes Nachladen kaschiert.
+Warte-/Sperrzeiten bleiben bestehen. Gültige kurze oder leere Seiten sind kein
+Endsignal, solange die Quelle weitere Positionen meldet: Der nächste Offset
+steigt um die angefragten 48 Positionen, nicht um die erhaltene Artikelzahl.
+Wiederholte identische nichtleere Seiten und echte Fehler stoppen weiterhin;
+die Grenzen werden nicht durch unbegrenztes Nachladen umgangen.
 
 `coverage.traversal_completed` bedeutet, dass alle aktivierten Quellensuchen
-in diesem Lauf ihr damals gemeldetes Ende erreicht haben. Es ist **nicht**
+in diesem Lauf alle Positionen bis zu ihrem damals gemeldeten Ende besucht
+haben. Es ist **nicht**
 `coverage.complete`: Offset-Listen bewegen sich und sind keine atomare eBay-Sicht.
 `scan_started_at`, `scan_finished_at`, `scan_completed_at` und
 `last_successful_full_scan_at` trennen Versuch, Laufende und zuletzt gelungenen
-Durchlauf. `searches.general` / `searches.pickup` nennen Seiten, eindeutige und
-doppelte Datensätze, Anfangs-/End-Trefferzahlen, verbleibende bzw. nicht gesehene
-Schätzmengen und Abbruchgründe. `traversal_completed: false` darf auch bei
+Durchlauf. Bei gemeldeten Treffern ohne einen einzigen gelieferten Artikel
+bleibt der Quellenstand `partial`; `reported_nonempty_but_no_records` kennzeichnet
+diesen Widerspruch. Ein Offset-Abschluss erneuert dann weder den erfolgreichen
+Zeitstempel dieser Suche noch `last_successful_full_scan_at`. Liefert die andere
+Suche Artikel, kann `last_successful_scan_at` deren Teilabruf dokumentieren;
+ohne einen einzigen gelieferten Artikel wird auch dieser Zeitpunkt nicht erneuert.
+`searches.general` / `searches.pickup` nennen Seiten, eindeutige
+und doppelte Datensätze, Anfangs-/End-Trefferzahlen, verbleibende bzw. nicht
+gesehene Schätzmengen und Abbruchgründe. `empty_pages`, `sparse_pages` und
+`sparse_slots_estimate` dokumentieren leere/dünn besetzte Seiten und geschätzte
+unbesetzte Positionen, nicht nachgewiesene zusätzliche Auktionen.
+`absence_is_evidence` bleibt für jede AOG-Suche `false`: Auch ein abgeschlossener
+Offset-Durchlauf macht fehlende IDs nicht zum Löschbeweis.
+`traversal_completed: false` darf auch bei
 neuem `generated_at` nicht als Vollscan berichtet werden. Fehlende alte IDs
 bleiben ohne neuen Gegenbeleg nur alte Beobachtungen, keine frisch bestätigten
 Angebote. Speicherauslassungen sind zusätzlich zu prüfen.
@@ -685,7 +701,10 @@ Eine getrennte Umkreissuche kann vorläufige Abhol-Kandidaten liefern.
 `pickup_search_confirmed: true` bedeutet nur, dass der Aggregator das Angebot
 für `pickup_search_postcode` und `pickup_search_radius_km` zurückgegeben hat.
 `pickup_search_observed_at` datiert diese unabhängige Beobachtung. Eine spätere
-allgemeine Preis-/Gebotsbeobachtung erneuert sie nicht. Bei älteren Datensätzen
+allgemeine Preis-/Gebotsbeobachtung erneuert sie nicht. Auch nach vollständig
+durchlaufenen Offsets kann ein älterer Abholhinweis bei bloßer Abwesenheit mit
+seinem ursprünglichen Zeitpunkt erhalten bleiben; nur eine neue ausdrückliche
+Gegenangabe oder ein nicht mehr passendes Suchprofil hebt ihn auf. Bei älteren Datensätzen
 ohne eigenen Zeitpunkt wird nur deren vorhandener Quellenzeitpunkt übernommen,
 nicht die neue Exportzeit. Das beweist weder tatsächliche Nähe noch eine genaue
 Entfernung; `local_pickup_confirmed` bleibt `false`.

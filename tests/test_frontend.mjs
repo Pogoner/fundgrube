@@ -199,7 +199,7 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
-  assert(versions.has("design-v3.4"), "new design cannot reuse an older asset cache key");
+  assert(versions.has("design-v3.5"), "new design cannot reuse an older asset cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {
@@ -339,9 +339,23 @@ test("routine partial scans are compact while real blockers and aged partial sna
   assert.match(aged.nodes.get("notice").innerHTML, /Datenstand prüfen/);
   const completed = harness({...data, source_status: "live", blockers: standard.slice(0, 1), coverage: {complete: false, traversal_completed: true}}); await flush();
   assert.match(completed.nodes.get("notice").className, /compact-notice/);
-  assert.match(completed.nodes.get("notice").innerHTML, /Quellenlisten durchlaufen/);
+  assert.match(completed.nodes.get("notice").innerHTML, /Quellseiten durchlaufen/);
   assert.match(completed.nodes.get("notice").innerHTML, /keine direkte eBay-Prüfung/);
   assert.doesNotMatch(completed.nodes.get("notice").innerHTML, /Begrenzter Teilscan/);
+});
+
+test("reported nonempty searches without records never look like a healthy completed source scan", async () => {
+  for (const coverage of [
+    {traversal_completed: true, reported_nonempty_but_no_records: true},
+    {traversal_completed: true, searches: {pickup: {enabled: true, traversal_completed: true, reported_nonempty_but_no_records: true, stop_reason: "reported_end"}}}
+  ]) {
+    const h = harness(fixture({provider: "auktionen-ohne-gebot", source_status: "live", coverage, blockers: [{code: "aggregator_claims_only"}], status_message: "Ein vermeintlich vollständiger Lauf"})); await flush();
+    assert.match(h.nodes.get("notice").innerHTML, /Quellenabgleich nicht bestätigt/);
+    assert.match(h.nodes.get("notice").innerHTML, /keinen einzigen Datensatz/);
+    assert.doesNotMatch(h.nodes.get("notice").innerHTML, /Quellseiten durchlaufen|vermeintlich vollständiger Lauf/);
+    assert.match(h.nodes.get("sync-status").className, /partial/);
+    assert.doesNotMatch(h.nodes.get("notice").className, /compact-notice/);
+  }
 });
 
 test("actual seven-item demo is fictitious and starts at Interest 40", async () => {

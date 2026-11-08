@@ -281,8 +281,9 @@ class PublicSourcePipelineTests(unittest.TestCase):
         general = item(pickup_search_confirmed=False, pickup_available=None,
                        source_observed_at=iso_time(NOW + timedelta(minutes=15)))
         feed, _ = run(response([general]), state=previous, at=NOW + timedelta(minutes=30))
-        self.assertFalse(feed["deals"][0]["pickup_search_confirmed"])
-        self.assertNotIn("pickup_search_postcode", feed["deals"][0])
+        self.assertTrue(feed["deals"][0]["pickup_search_confirmed"])
+        self.assertEqual(feed["deals"][0]["pickup_search_observed_at"], iso_time(OBSERVED))
+        self.assertEqual(feed["deals"][0]["source_observed_at"], general["source_observed_at"])
 
     def test_partial_pickup_traversal_preserves_separately_dated_old_radius_evidence(self):
         _, previous = run()
@@ -297,17 +298,41 @@ class PublicSourcePipelineTests(unittest.TestCase):
         self.assertEqual(row["pickup_search_observed_at"], iso_time(OBSERVED))
         self.assertEqual(row["last_seen_at"], general["source_observed_at"])
 
-    def test_completed_pickup_search_or_explicit_no_pickup_does_not_reuse_old_claim(self):
+    def test_only_explicit_no_pickup_not_completed_sparse_absence_refutes_old_claim(self):
         _, previous = run()
         for completed, available in ((True, None), (False, False)):
             with self.subTest(completed=completed, available=available):
                 general = item(pickup_search_confirmed=False, pickup_available=available,
                                source_observed_at=iso_time(NOW + timedelta(minutes=15)))
                 result = response([general])
-                result["coverage"]["searches"] = {"pickup": {"enabled": True, "traversal_completed": completed}}
+                result["coverage"]["searches"] = {"pickup": {"enabled": True, "traversal_completed": completed,
+                                                               "absence_is_evidence": False, "sparse_pages": 6}}
                 feed, _ = run(result, state=previous, at=NOW + timedelta(minutes=30))
-                self.assertFalse(feed["deals"][0]["pickup_search_confirmed"])
-                self.assertNotIn("pickup_search_observed_at", feed["deals"][0])
+                self.assertEqual(feed["deals"][0]["pickup_search_confirmed"], available is not False)
+                if available is False:
+                    self.assertNotIn("pickup_search_observed_at", feed["deals"][0])
+                else:
+                    self.assertEqual(feed["deals"][0]["pickup_search_observed_at"], iso_time(OBSERVED))
+
+    def test_changed_radius_profile_does_not_reuse_old_pickup_claim(self):
+        _, previous = run()
+        previous["records"][0]["pickup_search_radius_km"] = 100
+        general = item(pickup_search_confirmed=False, pickup_available=None,
+                       source_observed_at=iso_time(NOW + timedelta(minutes=15)))
+        feed, _ = run(response([general]), state=previous, at=NOW + timedelta(minutes=30))
+        self.assertFalse(feed["deals"][0]["pickup_search_confirmed"])
+        self.assertNotIn("pickup_search_observed_at", feed["deals"][0])
+
+    def test_empty_arrays_with_positive_totals_do_not_relabel_old_facts_as_fresh(self):
+        _, previous = run()
+        result = response([], status="partial", pages=3)
+        result["coverage"].update(traversal_completed=True, reported_nonempty_but_no_records=True)
+        feed, _ = run(result, state=previous, at=NOW + timedelta(minutes=30))
+        self.assertEqual(feed["source_status"], "partial")
+        self.assertIn("meldet Treffer, liefert aber keine Artikel", feed["status_message"])
+        self.assertEqual(feed["last_successful_scan_at"], iso_time(NOW))
+        self.assertEqual(feed["deals"][0]["source_observed_at"], iso_time(OBSERVED))
+        self.assertTrue(feed["deals"][0]["carried"])
 
     def test_absence_from_a_partial_page_never_deletes_still_running_records(self):
         _, previous = run()
