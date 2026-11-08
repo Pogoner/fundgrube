@@ -19,6 +19,7 @@
   };
   const provider = () => feed?.provider || feed?.source_provider || (typeof feed?.source === "string" ? feed.source : feed?.source?.provider) || "";
   const aggregated = () => ["aog", "auktionen-ohne-gebot"].includes(provider()) || array(feed?.deals).some(item => item.source_provider === "auktionen-ohne-gebot" || item.verification_level === "aggregator");
+  const cooldownSnapshot = () => !demo && number(feed?.coverage?.requests_this_run) === 0 && array(feed?.blockers).some(blocker => blocker?.code === "source_cooldown");
   const reportedWithoutRecords = coverage => coverage?.reported_nonempty_but_no_records === true || ["general", "pickup"].some(key => {
     const search = coverage?.searches?.[key];
     return search?.enabled !== false && (search?.reported_nonempty_but_no_records === true || search?.stop_reason === "reported_nonempty_but_no_records");
@@ -30,7 +31,7 @@
   function personalInterestExcluded(item) {
     if (typeof item.personal_interest_excluded === "boolean") return item.personal_interest_excluded;
     const title = String(item.title || "").toLocaleLowerCase("de-DE").replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
-    const media = /\b(?:zeitschrift(?:en)?|(?:falt|landmaschinen)?prospekt(?:e|en|s)?|prospekt(?:blatt|blaetter(?:n)?|typ(?:en)?)|(?:kugellager)?preisliste(?:n)?|(?:ersatzteile?|teile)?katalog(?:e|en|s)?|(?:daten|falt)bl(?:att|aetter(?:n)?)|flyer(?:n)?|parts\s+manual(?:s)?|gesamtuebersicht|broschuere(?:n)?|(?:bedienungs|betriebs|gebrauchs|wartungs|reparatur|justier|montage|bau)?anleitung(?:en)?|(?:benutzer|wartungs|bedienungs|bedinungs|kollegen)?handb(?:uch|uecher)(?:s|n)?|(?:koch|sach|lehr|ernaehrungs|taschen|klapp|garten|daten)buch|magazin(?:e)?|heft(?:e|en)?|werbebl(?:att|aetter)|aufkleber|sticker)\b/g;
+    const media = /\b(?:zeitschrift(?:en)?|[a-z]{0,48}(?:prospekt(?:e|en|s)?|katalog(?:e|en|s)?|preisliste(?:n)?|anleitung(?:en)?|handb(?:uch|uecher)(?:s|n)?)|prospekt(?:blatt|blaetter(?:n)?|typ(?:en)?|heft(?:e|en)?)|(?:daten|falt)bl(?:att|aetter(?:n)?)|flyer(?:n)?|parts\s+manual(?:s)?|gesamtuebersicht|broschuere(?:n)?|(?:koch|sach|lehr|ernaehrungs|taschen|klapp|garten|daten)buch|magazin(?:e)?|heft(?:e|en)?|werbebl(?:att|aetter)|aufkleber|sticker)\b/g;
     const hardware = [...title.matchAll(/\b(?:prospekt(?:e|en)?|broschuere(?:n)?|katalog(?:e|en)?|zeitschrift(?:en)?|flyer)[\s-]*(?:halter\w*|staender\w*|huelle(?:n)?\w*|regal\w*|spender\w*|display\w*)\b/g)];
     for (const mention of title.matchAll(media)) {
       const prefix = title.slice(0, mention.index), suffix = title.slice(mention.index + mention[0].length);
@@ -81,13 +82,14 @@
   }
 
   function render() {
+    const paused = cooldownSnapshot();
     const unconfirmed = !demo && reportedWithoutRecords(feed?.coverage);
     const rawStatus = feed?.source_status || "unconfigured";
     const status = demo ? "demo" : unconfirmed && ["live", "partial"].includes(rawStatus) ? "partial" : rawStatus;
     const blocks = [];
     if (failure) blocks.push(`<strong>Abruf fehlgeschlagen</strong><p>${esc(failure)}${feed ? " Der zuletzt geladene Snapshot bleibt unverändert sichtbar." : ""}</p>`);
     if (feed) {
-      blocks.push(`<strong>${esc(statuses[status] || "Quellenstatus unbekannt")}</strong><p>${demo ? "Alle Demo-Angebote, Preise, Scores und Quellenstände sind fiktiv. Kein Live-Import." : unconfirmed ? "Quellenabgleich nicht bestätigt: Mindestens eine Suche meldet Treffer, lieferte aber keinen einzigen Datensatz. Ein durchlaufener Offset-Bereich ist hier kein erfolgreicher vollständiger Datenabgleich." : esc(feed.status_message || "Dieser Snapshot ist keine Echtzeit-Abfrage.")}</p>`);
+      blocks.push(`<strong>${esc(paused ? "Abrufpause" : statuses[status] || "Quellenstatus unbekannt")}</strong><p>${demo ? "Alle Demo-Angebote, Preise, Scores und Quellenstände sind fiktiv. Kein Live-Import." : paused ? "Kein neuer Quellenabruf in diesem Lauf. Die vorhandenen Datensätze behalten ihre ursprünglichen Quellenzeitpunkte; ein neuer Veröffentlichungszeitpunkt bestätigt sie nicht erneut." : unconfirmed ? "Quellenabgleich nicht bestätigt: Mindestens eine Suche meldet Treffer, lieferte aber keinen einzigen Datensatz. Ein durchlaufener Offset-Bereich ist hier kein erfolgreicher vollständiger Datenabgleich." : esc(feed.status_message || "Dieser Snapshot ist keine Echtzeit-Abfrage.")}</p>`);
       const blockers = array(feed.blockers).filter(item => item && typeof item === "object");
       if (blockers.length) blocks.push(`<ul>${blockers.map(item => `<li>${esc(item.message || item.code || "Offener Einrichtungsschritt")}${item.action ? `<span class="blocker-action">${esc(item.action)}</span>` : ""}</li>`).join("")}</ul>`);
     }
@@ -109,9 +111,12 @@
     const coverage = feed.coverage || {};
     const cells = [];
     if (aog) {
-      cells.push(["In diesem Lauf erhalten", String(number(feed.stats?.received) ?? "?")]);
+      cells.push(["In diesem Lauf erhalten", paused ? "Kein neuer Quellenabruf · Abrufpause; kein leerer Bestand" : String(number(feed.stats?.received) ?? "?")]);
       cells.push(["Allgemeine Treffer laut Quelle", String(number(coverage.source_total_reported) ?? "?")]);
-      cells.push(...traversalCells(coverage));
+      if (paused) {
+        cells.push(["Quellenlauf dieses Snapshots", "Nicht gestartet · Abrufpause"]);
+        cells.push(["Letzter vollständiger Quellenlauf", Number.isFinite(timestamp(coverage.last_successful_full_scan_at)) ? `${dateText(coverage.last_successful_full_scan_at)} (Berlin)` : "Noch nicht belegt"]);
+      } else cells.push(...traversalCells(coverage));
       for (const [key, label] of [["pages_fetched", "Quellseiten"], ["page_size", "Angefragte Seitengröße"], ["requests_this_run", "Quellabrufe in diesem Lauf"]]) if (number(coverage[key]) !== null) cells.push([label, String(coverage[key])]);
       const cap = count(coverage.max_api_requests_per_run) ?? count(coverage.request_cap) ?? count(coverage.max_requests);
       if (cap !== null) cells.push(["Limit der Datenanfragen pro Lauf", String(cap)]);

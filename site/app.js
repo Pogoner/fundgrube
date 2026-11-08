@@ -38,6 +38,7 @@
   const providerOf = item => item?.source_provider || feed?.provider || feed?.source_provider || (typeof feed?.source === "string" ? feed.source : feed?.source?.provider) || "";
   const isAggregator = item => providerOf(item) === aggregatorProvider || item?.verification_level === "aggregator";
   const aggregatorFeed = () => !isDemo && (isAggregator() || array(feed?.deals).some(isAggregator));
+  const cooldownSnapshot = () => !isDemo && number(feed?.coverage?.requests_this_run) === 0 && array(feed?.blockers).some(blocker => blocker?.code === "source_cooldown");
   const reportedWithoutRecords = coverage => coverage?.reported_nonempty_but_no_records === true || ["general", "pickup"].some(key => {
     const search = coverage?.searches?.[key];
     return search?.enabled !== false && (search?.reported_nonempty_but_no_records === true || search?.stop_reason === "reported_nonempty_but_no_records");
@@ -83,7 +84,7 @@
   function personalInterestExcluded(item) {
     if (typeof item.personal_interest_excluded === "boolean") return item.personal_interest_excluded;
     const title = String(item.title || "").toLocaleLowerCase("de-DE").replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
-    const media = /\b(?:zeitschrift(?:en)?|(?:falt|landmaschinen)?prospekt(?:e|en|s)?|prospekt(?:blatt|blaetter(?:n)?|typ(?:en)?)|(?:kugellager)?preisliste(?:n)?|(?:ersatzteile?|teile)?katalog(?:e|en|s)?|(?:daten|falt)bl(?:att|aetter(?:n)?)|flyer(?:n)?|parts\s+manual(?:s)?|gesamtuebersicht|broschuere(?:n)?|(?:bedienungs|betriebs|gebrauchs|wartungs|reparatur|justier|montage|bau)?anleitung(?:en)?|(?:benutzer|wartungs|bedienungs|bedinungs|kollegen)?handb(?:uch|uecher)(?:s|n)?|(?:koch|sach|lehr|ernaehrungs|taschen|klapp|garten|daten)buch|magazin(?:e)?|heft(?:e|en)?|werbebl(?:att|aetter)|aufkleber|sticker)\b/g;
+    const media = /\b(?:zeitschrift(?:en)?|[a-z]{0,48}(?:prospekt(?:e|en|s)?|katalog(?:e|en|s)?|preisliste(?:n)?|anleitung(?:en)?|handb(?:uch|uecher)(?:s|n)?)|prospekt(?:blatt|blaetter(?:n)?|typ(?:en)?|heft(?:e|en)?)|(?:daten|falt)bl(?:att|aetter(?:n)?)|flyer(?:n)?|parts\s+manual(?:s)?|gesamtuebersicht|broschuere(?:n)?|(?:koch|sach|lehr|ernaehrungs|taschen|klapp|garten|daten)buch|magazin(?:e)?|heft(?:e|en)?|werbebl(?:att|aetter)|aufkleber|sticker)\b/g;
     const hardware = [...title.matchAll(/\b(?:prospekt(?:e|en)?|broschuere(?:n)?|katalog(?:e|en)?|zeitschrift(?:en)?|flyer)[\s-]*(?:halter\w*|staender\w*|huelle(?:n)?\w*|regal\w*|spender\w*|display\w*)\b/g)];
     for (const mention of title.matchAll(media)) {
       const prefix = title.slice(0, mention.index), suffix = title.slice(mention.index + mention[0].length);
@@ -283,6 +284,7 @@
   }
 
   function renderStatus() {
+    const paused = cooldownSnapshot();
     const unconfirmed = !isDemo && reportedWithoutRecords(feed?.coverage);
     const rawStatus = feed?.source_status || "unconfigured";
     const status = isDemo ? "demo" : unconfirmed && ["live", "partial"].includes(rawStatus) ? "partial" : rawStatus;
@@ -290,7 +292,7 @@
     const scan = timestamp(feed?.last_successful_scan_at);
     const aged = !isDemo && ["live", "partial"].includes(status) && (!Number.isFinite(scan) || Date.now() - scan > 7200000 || !Number.isFinite(generated) || Date.now() - generated > 7200000);
     els["sync-status"].className = "sync-status " + (loadError ? "error" : aged ? "stale" : status);
-    els["sync-label"].textContent = loadError ? "Ladefehler" : aged ? "Stand älter / ungeklärt" : statuses[status] || "Status unbekannt";
+    els["sync-label"].textContent = loadError ? "Ladefehler" : paused ? "Abrufpause" : aged ? "Stand älter / ungeklärt" : statuses[status] || "Status unbekannt";
     const notices = [];
     const blockers = array(feed?.blockers).filter(blocker => blocker && typeof blocker === "object");
     const routineCodes = ["aggregator_claims_only", "bounded_coverage"];
@@ -299,6 +301,9 @@
       && blockers.length > 0 && blockers.every(blocker => routineCodes.includes(blocker.code));
     if (loadError) notices.push(`<strong>Abruf fehlgeschlagen</strong><p>${esc(loadError)}${feed ? " Der zuletzt geladene Snapshot bleibt sichtbar; sein Datenstand ist unverändert." : ""}</p>`);
     if (isDemo) notices.push("<strong>DEMO · Keine echten Angebote</strong><p>Fiktive Artikel, Preise und Scores. Keine echten Auktionslinks.</p>");
+    else if (paused) {
+      notices.push(`<strong>Abrufpause · kein neuer Quellenabruf.</strong><p>Dieser Lauf hat keine Anfrage an die Quelle gestellt. Vorhandene Angebote behalten ihren ursprünglichen Quellenstand. Letzter erfolgreicher Quellenabruf: ${esc(dateText(feed.last_successful_scan_at))} (Berlin).${aged ? " Dieser Abrufstand ist älter als zwei Stunden oder ungeklärt; nicht aktuell bestätigt." : " Das ist keine erneute Prüfung der Angebote."} <a href="./info.html#coverage">Abrufdetails ↗</a></p>`);
+    }
     else if (unconfirmed) {
       notices.push('<p><strong>Quellenabgleich nicht bestätigt.</strong> Mindestens eine Suche meldet Treffer, lieferte aber keinen einzigen Datensatz. Durchlaufene Seitenpositionen bestätigen hier keinen vollständigen Datenbestand. Vorhandene ältere Beobachtungen bleiben entsprechend datiert. <a href="./info.html#coverage">Abrufdetails ↗</a></p>');
     }
@@ -332,8 +337,9 @@
     const pending = buffered.filter(item => !scores(item).complete).length;
     const review = buffered.filter(item => eligibility(item) === "review").length;
     const minimum = minimumInterest();
-    els["metric-scanned"].textContent = number(feed.stats?.received) === null ? "—" : String(feed.stats.received);
-    els["metric-scanned-note"].textContent = isDemo ? "fiktive Datensätze" : aggregatorFeed() ? "Aggregator-Datensätze" : "eingelesene Datensätze";
+    const paused = cooldownSnapshot();
+    els["metric-scanned"].textContent = paused || number(feed.stats?.received) === null ? "—" : String(feed.stats.received);
+    els["metric-scanned-note"].textContent = paused ? "Kein neuer Quellenabruf" : isDemo ? "fiktive Datensätze" : aggregatorFeed() ? "Aggregator-Datensätze" : "eingelesene Datensätze";
     els["metric-candidates"].textContent = String(buffered.length);
     els["metric-candidate-note"].textContent = `${review} Prüffälle${pending ? ` · ${pending} Scores offen` : ""}`;
     els["metric-highvalue-label"].textContent = minimum ? `INTEREST ≥ ${minimum}` : "ALLE SCORE-STÄNDE";
@@ -342,8 +348,8 @@
     els["show-all-interest"].setAttribute("aria-pressed", String(minimum === 0));
     els["show-stale-label"].textContent = "Unklare Zeitstempel anzeigen";
     els["retention-note"].textContent = `${windowLabel()} · Quellenalter bleibt sichtbar`;
-    els["metric-updated"].textContent = isDemo ? "DEMO" : dateText(feed.generated_at);
-    els["metric-source"].textContent = isDemo ? "Keine echten Auktionen" : interactiveReviewText() || statuses[feed.source_status] || "Status unbekannt";
+    els["metric-updated"].textContent = isDemo ? "DEMO" : dateText(paused ? feed.last_successful_scan_at : feed.generated_at);
+    els["metric-source"].textContent = paused ? "Letzter erfolgreicher Quellenabruf" : isDemo ? "Keine echten Auktionen" : interactiveReviewText() || statuses[feed.source_status] || "Status unbekannt";
     els["source-attribution"].innerHTML = isDemo ? "Fiktive Beispieldaten" : aggregatorFeed() ? `Aggregator-Cache · nicht direkt verifiziert · ${sourceLink() || sourceLink(feed.deals.find(item => providerOf(item) === aggregatorProvider)) || "Drittquelle"}` : "Quellenstand aus veröffentlichtem Snapshot";
   }
 

@@ -162,6 +162,8 @@ class RankingTests(unittest.TestCase):
             "Analog Devices: Systeme Gesamtübersicht Juli 1986 (mit Preisliste)",
             "Woolworths Memorabilia. Woolies Chancengleichheit 1996 Kollegenhandbuch",
             "Datenbuch Passive Bauelemente 1996 Siemens Matsushita",
+            "RFT Messgeräte für Kabel und Leitungen - Prospektheft, 1986 (DDR)",
+            "Telmes: Messgeräte - Kurzkatalog, 1987",
         ):
             with self.subTest(title=title):
                 result = self.rank(raw(title=title))
@@ -201,6 +203,7 @@ class RankingTests(unittest.TestCase):
             "Prospekthüllen DIN A4", "Prospekthuellen DIN A4", "Prospekt-Hülle DIN A4",
             "Transparenter Acryl Prospektständer/Flyerständer aus Kunststoff, 2 Fächer",
             "Blau A4 Ringbuch Dokumentenhalter",
+            "Anleitungshalter für Werkstatt", "Kataloghalter Metall",
             "118 Teile Schulsachen,Schreibwaren, Prospekthüllen, Schnellhefter, Hefteinbände",
         ):
             with self.subTest(title=title):

@@ -199,7 +199,7 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
-  assert(versions.has("design-v3.6"), "new design cannot reuse an older asset cache key");
+  assert(versions.has("design-v3.7"), "new design cannot reuse an older asset cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {
@@ -356,6 +356,33 @@ test("reported nonempty searches without records never look like a healthy compl
     assert.match(h.nodes.get("sync-status").className, /partial/);
     assert.doesNotMatch(h.nodes.get("notice").className, /compact-notice/);
   }
+});
+
+test("cooldown without source requests is a pause, not a failed scan or empty inventory", async () => {
+  const data = fixture({source_status: "partial", provider: "auktionen-ohne-gebot", stats: {received: 0},
+    generated_at: iso(0), last_successful_scan_at: iso(-3 * hour),
+    blockers: [{code: "source_cooldown", message: "Die Abrufpause ist noch nicht abgelaufen."}],
+    coverage: {requests_this_run: 0, traversal_completed: false, last_successful_full_scan_at: iso(-3 * hour), searches: {general: {enabled: true, status: "not_started", traversal_completed: false}}},
+    deals: [aggregate({source_observed_at: iso(-3 * hour), detail_path: null})]});
+  const h = harness(data); await flush();
+  assert.equal(h.count, 1);
+  assert.equal(h.nodes.get("sync-label").textContent, "Abrufpause");
+  assert.match(h.nodes.get("sync-status").className, /stale/);
+  assert.equal(h.nodes.get("metric-scanned").textContent, "—");
+  assert.equal(h.nodes.get("metric-scanned-note").textContent, "Kein neuer Quellenabruf");
+  assert.equal(h.nodes.get("metric-updated").textContent, "02.01.30, 10:00");
+  assert.equal(h.nodes.get("metric-source").textContent, "Letzter erfolgreicher Quellenabruf");
+  assert.match(h.nodes.get("notice").innerHTML, /Abrufpause · kein neuer Quellenabruf/);
+  assert.match(h.nodes.get("notice").innerHTML, /älter als zwei Stunden oder ungeklärt/);
+  assert.doesNotMatch(h.nodes.get("notice").innerHTML, /teilweise abgeschlossen|Begrenzter Teilscan|Import fehlgeschlagen/);
+  assert.match(h.nodes.get("cards").innerHTML, /ältere Beobachtung, nicht aktuell bestätigt/);
+  const info = harness(data, {page: "info"}); await flush();
+  assert.match(info.nodes.get("info-status").innerHTML, /Abrufpause/);
+  assert.doesNotMatch(info.nodes.get("info-status").innerHTML, /Begrenzter Teilabruf/);
+  assert.match(info.nodes.get("info-coverage").innerHTML, /Nicht gestartet · Abrufpause/);
+  assert.doesNotMatch(info.nodes.get("info-coverage").innerHTML, /Nicht vollständig durchlaufen/);
+  assert.match(info.nodes.get("info-source").innerHTML, /letzter erfolgreicher Abruf: 02\.01\.30, 10:00/);
+  assert.equal(data.source_status, "partial");
 });
 
 test("actual seven-item demo is fictitious and starts at Interest 40", async () => {
@@ -590,6 +617,8 @@ test("media-title plus signs and ampersands cannot masquerade as bundled manuals
 
 test("known printed compounds are excluded without a generic book or prospect prefix rule", async () => {
   const papers = [
+    "RFT Messgeräte für Kabel und Leitungen - Prospektheft, 1986 (DDR)",
+    "Telmes: Messgeräte - Kurzkatalog, 1987",
     "Papke Verpackungstechnik Prospektblätter", "COLLICO Plibox Prospektblatt",
     "Brandner & Söhne Prospektblaetter", "ZIRA Preisliste 2/85+2 Prospektblätter",
     "ZIRA Preisliste 2/85", "FARMTECH Stalldungstreuer für alpines Gelände ProspektTyp 400 500 550",
@@ -605,7 +634,7 @@ test("known printed compounds are excluded without a generic book or prospect pr
   ];
   const physical = [
     "Prospekthalter", "Prospekthüllen DIN A4", "Prospekthuellen DIN A4", "Prospekt Hüllen DIN A4",
-    "Prospektständer", "Flyerhalter", "Flyer Ständer", "Ringbuch DIN A4",
+    "Prospektständer", "Flyerhalter", "Flyer Ständer", "Ringbuch DIN A4", "Anleitungshalter Metall",
     "Bohrmaschine mit Datenblatt", "Oszilloskop + Benutzerhandbuch", "Drehmaschine mit Wartungshandbuch"
   ];
   const rows = [

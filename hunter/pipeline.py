@@ -683,6 +683,9 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         messages["partial"] = "Unvollständiger Quelldurchlauf; bestätigte Teilbeobachtungen und ältere gespeicherte Angebote bleiben erhalten."
         if source_coverage.get("reported_nonempty_but_no_records"):
             messages["partial"] = "Quellenabgleich nicht vollständig bestätigt: Eine Suche meldet Treffer, liefert aber keine Artikel. Besuchte Seitenpositionen ersetzen keine Daten; ältere Beobachtungen bleiben erhalten."
+        elif (source_coverage.get("requests_this_run") == 0
+              and any(blocker.get("code") == "source_cooldown" for blocker in blockers)):
+            messages["partial"] = "Abrufpause: In diesem Lauf wurde keine neue Quellenabfrage gestartet. Der gespeicherte Bestand und seine ursprünglichen Quellenzeitpunkte bleiben erhalten."
     feed = {
         "schema_version": FEED_VERSION, "generated_at": iso_time(at), "last_successful_scan_at": state.get("last_successful_scan_at"),
         "source_status": status, "status_message": messages[status], "blockers": blockers, "source": provider, "provider": provider,

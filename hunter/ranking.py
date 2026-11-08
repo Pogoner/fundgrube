@@ -9,13 +9,16 @@ from typing import Any
 from hunter.models import finite_number, parse_time, plain_text
 
 MEDIA = re.compile(
-    r"\b(?:zeitschrift(?:en)?|(?:falt|landmaschinen)?prospekt(?:e|en|s)?|prospekt(?:blatt|bl(?:ä|ae)tter(?:n)?|typ(?:en)?)|"
-    r"(?:kugellager)?preisliste(?:n)?|(?:ersatzteile?|teile)?katalog(?:e|en|s)?|"
+    r"\b(?:zeitschrift(?:en)?|[a-zäöüß]{0,48}(?:prospekt(?:e|en|s)?|katalog(?:e|en|s)?|preisliste(?:n)?|"
+    r"anleitung(?:en)?|handb(?:uch|ücher|uecher)(?:s|n)?)|"
+    r"prospekt(?:blatt|bl(?:ä|ae)tter(?:n)?|typ(?:en)?|heft(?:e|en)?)|"
     r"(?:daten|falt)bl(?:att|(?:ä|ae)tter(?:n)?)|flyer(?:n)?|parts\s+manual(?:s)?|gesamt(?:ü|ue)bersicht|"
-    r"brosch(?:ü|ue)re(?:n)?|(?:bedienungs|betriebs|gebrauchs|wartungs|reparatur|justier|montage|bau)?anleitung(?:en)?|"
-    r"(?:benutzer|wartungs|bedienungs|bedinungs|kollegen)?handb(?:uch|ücher|uecher)(?:s|n)?|"
+    r"brosch(?:ü|ue)re(?:n)?|"
     r"(?:koch|sach|lehr|ern(?:ä|ae)hrungs|taschen|klapp|garten|daten)buch|"
     r"magazin(?:e)?|magazine|heft(?:e|en)?|werbebl(?:att|ätter|aetter)|aufkleber|sticker)\b", re.I)
+# German compounds are identified by the document HEAD at the end of a whole
+# word: Kurzkatalog is a catalog; Kataloghalter/Anleitungshalter are not. The
+# bounded prefix avoids an ever-growing manufacturer/document-prefix list.
 # Only whole media nouns: Prospekthalter/Broschürenständer are physical objects.
 # Separated spellings and "Halter für Prospekte" need the same protection.
 MEDIA_HARDWARE = re.compile(

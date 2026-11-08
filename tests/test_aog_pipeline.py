@@ -235,6 +235,22 @@ class PublicSourcePipelineTests(unittest.TestCase):
         self.assertEqual(feed["deals"][0]["last_seen_at"], iso_time(OBSERVED))
         self.assertEqual(feed["last_successful_scan_at"], iso_time(NOW))
 
+    def test_no_request_cooldown_is_named_without_claiming_a_new_scan(self):
+        _, previous = run()
+        result = response([], status="cooldown", pages=0,
+                          warnings=[{"code": "source_cooldown", "message": "Abrufpause"}])
+        result["coverage"].update(requests_this_run=0, last_successful_full_scan_at=iso_time(NOW))
+        feed, _ = run(result, state=previous, at=NOW + timedelta(minutes=10))
+        self.assertEqual(feed["source_status"], "partial")
+        self.assertIn("Abrufpause", feed["status_message"])
+        self.assertIn("keine neue Quellenabfrage", feed["status_message"])
+        self.assertEqual(feed["coverage"]["last_successful_full_scan_at"], iso_time(NOW))
+        self.assertEqual(feed["last_successful_scan_at"], iso_time(NOW))
+        self.assertEqual(feed["deals"][0]["source_observed_at"], iso_time(OBSERVED))
+        result["coverage"]["requests_this_run"] = 1
+        attempted, _ = run(result, state=previous, at=NOW + timedelta(minutes=10))
+        self.assertNotIn("keine neue Quellenabfrage", attempted["status_message"])
+
     def test_cooldown_keeps_week_old_cache_without_refreshing_observation(self):
         observed = iso_time(NOW - timedelta(days=7))
         _, previous = run(response([item(source_observed_at=observed)]))
