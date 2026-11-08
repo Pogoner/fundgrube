@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T21:35:55Z",
+    "evaluated_at": "2026-11-08T21:42:04Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,20 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T21:35:55Z",
+  "generated_at": "2026-11-08T21:42:04Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
     "content_updated_at": "2026-11-08T21:19:38Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Passender Verteiler",
+      "Elektrischer Einbau"
     ],
     "description": "",
     "description_status": "missing",
@@ -44,13 +45,13 @@
     "ends_at": "2026-11-15T21:28:30Z",
     "id": "v1|287714696091|0",
     "image": "https://i.ebayimg.com/images/g/FLQAAOSw-Mxkqt0Y/s-l1600.jpg",
-    "interest_score": 18,
+    "interest_score": 5,
     "is_auction": true,
     "last_seen_at": "2026-11-08T21:19:38Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Stückzahl, Lieferumfang, Typen, Charakteristiken, Nennströme und Polzahlen klären."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -60,12 +61,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "component",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Leitungsschutzschalter sind als Gegenstände erkennbar; Anzahl, Typen und tatsächlicher Angebotsumfang fehlen."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -73,13 +74,16 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Ohne Beschreibung ist unklar, ob der gesamte Posten oder eine Auswahl geliefert wird.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 12,
+    "score": 5,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-08T21:39:23Z",
+    "semantic_interest": 12,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.0,
     "source_observed_at": "2026-11-08T21:19:38Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -90,11 +94,11 @@
     "total_eur": null,
     "total_known_eur": 6.0,
     "url": "https://www.ebay.de/itm/287714696091?hash=item42fd21db9b%3Ag%3AFLQAAOSw-Mxkqt0Y&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Leitungsschutzschalter benötigen passende Verteileraufnahme, Stromkreise und elektrische Verdrahtung.",
+    "useability_score": 40,
     "valid_until": "2026-11-15T21:28:30Z",
     "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_reason": "Leitungsschutzschalter sind als Gegenstände erkennbar; Anzahl, Typen und tatsächlicher Angebotsumfang fehlen.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -151,10 +155,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:574bdb5b26117338bc39bfe1dbcf2fc658dd908660a4facf05ccdac7e6cb9545",
+  "snapshot_id": "sha256:006c49d2003559a02e72537edcf230689e0fc105d498b7d5c00e61a697512f0d",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
