@@ -54,7 +54,7 @@ Die Vorgaben stehen in [config/settings.json](config/settings.json):
 | Gebote | 0 zum letzten Abrufzeitpunkt |
 | Transport | Versand höchstens 15 € **oder** bestätigte Abholung innerhalb 50 km um 69121 Heidelberg |
 | Aktives Auktionsfenster | strikt weniger als 72 Stunden Restlaufzeit; bereits abgelaufene Angebote ausgeschlossen |
-| Speicherfrist im aktuellen Export | bis zum bekannten Auktionsende, unabhängig vom Alter der Quellenbeobachtung; höchstens 800 Datensätze |
+| Speicherfrist im aktuellen Export | bis zum bekannten Auktionsende, unabhängig vom Alter der Quellenbeobachtung; höchstens 5.000 Datensätze |
 
 **Aufbewahrung ist nicht Aktualität.** Bereits gefundene, noch laufende Angebote
 werden über mehrere Teilsuchen hinweg nach Artikel-ID zusammengeführt. Ein
@@ -68,7 +68,7 @@ dem Auktionsende, `freshness.retention_basis` ist `auction_end`. Die GUI prüft
 übrigen Filter auch bei länger geöffneter Seite. Bekannte, später endende Angebote
 können bereits im Bestand liegen; die Anzeige aktiviert sie erst im Zeitfenster.
 Unbekannte oder zukünftige Beobachtungszeiten werden nicht als verlässlich
-angenommen. Die Grenze von 800 Datensätzen gilt zusätzlich. Alte Git-Snapshots
+angenommen. Die Grenze von 5.000 Datensätzen gilt zusätzlich. Alte Git-Snapshots
 werden durch das Entfernen abgelaufener Angebote nicht gelöscht.
 
 Beschreibungstexte haben weiterhin eine **getrennte** Frist von 24 Stunden
@@ -123,7 +123,7 @@ verspricht keine vollständige Abdeckung aller eBay-Auktionen.
 Für den optionalen eBay-Adapter gelten **4.500 Browse-Aufrufe pro UTC-Tag**, höchstens **85 pro
 Lauf**, bis zu **20 Kategorien**, **2 Suchseiten je Kategorie und Suchmodus**
 sowie **35 Detailabrufe**. Das Gesamtbudget begrenzt diese Maxima; es garantiert
-nicht, dass jeder Lauf alle davon ausschöpft. Maximal 800 aktuelle Datensätze
+nicht, dass jeder Lauf alle davon ausschöpft. Maximal 5.000 aufbewahrte Datensätze
 und Seiten mit 50 Kandidaten begrenzen die Datenmenge. Geplant ist ein Lauf alle
 zehn Minuten, auf Minute **03, 13, 23, 33, 43 und 53** jeder Stunde (UTC).
 GitHub kann Läufe verzögern, aufreihen oder auslassen; der Takt ist keine
@@ -290,7 +290,7 @@ Ein expliziter Auftrag kann lauten: **„Lies alle Seiten des aktuellen Snapshot
 bewerte die Kandidaten semantisch und speichere die Bewertungen für die GUI.“**
 Dann entsteht `reviews/ratings.json` mit echten, im Gespräch erarbeiteten
 Einordnungen für genau diesen Snapshot. Der Pack-Helfer bindet sie an Angebots-ID
-und einen Hash aus Titel, Beschreibung und Zustand. Neue Review-Dateien verwenden
+und einen Hash aus Titel, Beschreibung und Zustand. Neue Batch-Eingaben verwenden
 `schema_version: 2` und enthalten beide Achsen, ihre Begründungen und explizite
 Abhängigkeiten. Sie enthalten keine abgeleiteten Score- oder exakten Preisfelder:
 
@@ -305,15 +305,29 @@ Commit der Review-Dateien auf `main` liest der nächste Workflow optional
 `reviews/current.json` ein und berechnet Interest aus beiden Achsen. Die
 Quellenfakten und Eignungsfilter werden unabhängig davon frisch ausgewertet.
 
-Die Bewertung gilt nur bei übereinstimmendem Inhalt und höchstens **48 Stunden**.
-Sie verändert weder Quellenfakten noch `eligibility`; neuere automatische
-API-Bewertungen haben Vorrang. Neue oder inhaltlich veränderte Angebote bleiben
-ohne passende andere Bewertung heuristisch, alte interaktive Reviews verfallen.
-Die Speicherfrist bis zum Auktionsende und das aktive 72-Stunden-Fenster gelten
-unabhängig davon weiter; eine gültige Einordnung verjüngt keine Quellenfakten.
+Der Helfer ergänzt die bereits vorhandene Ausgabedatei standardmäßig
+**inkrementell**. Der dauerhafte Store verwendet `schema_version: 3`: Jede
+Artikelbewertung behält ihren eigenen ursprünglichen Zeitpunkt, Quell-Snapshot,
+Inhalts-Hash und ihre Score-Version. Neue Sichtungen anderer Artikel ändern
+keine alten Scores. Ein neueres Review ersetzt nur dieselbe Artikel-ID;
+gleichzeitige widersprüchliche Versionen werden als Fehler gemeldet. Einträge
+werden nur bei explizit bekanntem Auktionsende bereinigt, nicht weil sie in einem
+Teilabruf fehlen. Alte V1/V2-Dateien werden ohne künstliche Neubewertung migriert.
+
+Die Bewertung hat **keine pauschale Altersfrist**. Sie gilt bei übereinstimmendem
+Inhalt einer noch laufenden Auktion. Sie verändert weder Quellenfakten noch
+`eligibility`; neuere automatische API-Bewertungen haben Vorrang. Neue oder
+inhaltlich veränderte Angebote bleiben ohne passende andere Bewertung
+heuristisch. Dazu zählt gegebenenfalls ein entfallener Beschreibungstext, nicht
+aber allein ein neues Quellen- oder Exportdatum. Die Speicherfrist bis zum
+Auktionsende und das aktive 72-Stunden-Fenster gelten unabhängig davon weiter;
+eine gültige Einordnung verjüngt keine Quellenfakten.
 Im Feed kennzeichnen `assessment_basis: llm`,
 `semantic_review_mode: interactive` und `semantic_assessed_at` die Herkunft;
-`interactive_review` fasst die Anwendung zusammen.
+`interactive_review` fasst die Anwendung zusammen und nennt ältesten/neuesten
+Bewertungszeitpunkt; `reviewed_at` ist nur der kompatible Alias des neuesten
+Zeitpunkts, kein gemeinsames Neusichtungsdatum. Scalp und Useability beziehen
+sich auf einen festen Maßstab, nicht auf einen Rang innerhalb des Bestands.
 
 Alte V1-Reviews bleiben lesbar: Ihr alter Gesamtwert wird als Scalp-Ausgangswert
 geführt, Useability und Interest bleiben unbekannt (`null`). Erst eine echte

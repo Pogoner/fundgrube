@@ -199,7 +199,7 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
-  assert(versions.has("design-v3.2"), "new design cannot reuse an older asset cache key");
+  assert(versions.has("design-v3.3"), "new design cannot reuse an older asset cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {

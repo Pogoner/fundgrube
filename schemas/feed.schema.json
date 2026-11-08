@@ -83,6 +83,7 @@
             "source_total_reported": {"type": ["integer", "null"], "minimum": 0},
             "source_cache_max_age_minutes": {"type": ["number", "null"], "minimum": 0},
             "source_claims_only": {"type": "boolean"},
+            "retention_capacity": {"type": "integer", "minimum": 1, "maximum": 5000, "description": "Effective maximum retained inventory size; not a promise of source coverage."},
             "next_offset": {"type": ["integer", "null"], "minimum": 0},
             "capped": {"type": "boolean"},
             "complete": {"type": "boolean"}
@@ -94,6 +95,10 @@
         "interactive_review": {"type": "object", "properties": {
           "status": {"type": "string"}, "reviewer": {"const": "ChatGPT"},
           "reviewed_at": {"$ref": "#/$defs/nullableTime"},
+          "oldest_reviewed_at": {"$ref": "#/$defs/nullableTime"},
+          "latest_reviewed_at": {"$ref": "#/$defs/nullableTime"},
+          "expires_at": {"$ref": "#/$defs/nullableTime", "description": "Null for content-bound persistent reviews; source facts have independent observation times."},
+          "retention_basis": {"const": "content_and_auction"},
           "applied": {"type": "integer", "minimum": 0},
           "available": {"type": "integer", "minimum": 0},
           "unreviewed": {"type": "integer", "minimum": 0}
@@ -232,7 +237,7 @@
     "dashboard": {
       "allOf": [
         {"$ref": "#/$defs/header"},
-        {"type": "object", "required": ["deals"], "properties": {"kind": {"const": "feed"}, "deals": {"type": "array", "maxItems": 800, "items": {"$ref": "#/$defs/item"}}}}
+        {"type": "object", "required": ["deals"], "properties": {"kind": {"const": "feed"}, "deals": {"type": "array", "maxItems": 5000, "items": {"$ref": "#/$defs/item"}}}}
       ]
     },
     "manifest": {
@@ -246,7 +251,7 @@
               "type": "object", "required": ["protocol", "read_only", "mcp_server", "repository", "branch", "site_url", "consistency"],
               "properties": {"protocol": {"const": "static-json"}, "read_only": {"const": true}, "mcp_server": {"const": false}, "repository": {"type": "string"}, "branch": {"type": "string"}, "site_url": {"type": "string", "format": "uri"}, "consistency": {"type": "string"}}
             },
-            "counts": {"type": "object", "required": ["total", "pages", "page_size"], "properties": {"total": {"type": "integer", "minimum": 0, "maximum": 800}, "pages": {"type": "integer", "minimum": 1}, "page_size": {"type": "integer", "minimum": 1, "maximum": 100}}},
+            "counts": {"type": "object", "required": ["total", "pages", "page_size"], "properties": {"total": {"type": "integer", "minimum": 0, "maximum": 5000}, "pages": {"type": "integer", "minimum": 1}, "page_size": {"type": "integer", "minimum": 1, "maximum": 100}}},
             "pages": {
               "type": "array", "minItems": 1,
               "items": {"type": "object", "required": ["index", "path", "count", "sha256"], "properties": {"index": {"type": "integer", "minimum": 1}, "path": {"type": "string", "pattern": "^api/candidates/page-[0-9]{3,}\\.json$"}, "count": {"type": "integer", "minimum": 0, "maximum": 100}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}

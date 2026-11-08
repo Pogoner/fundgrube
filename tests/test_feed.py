@@ -570,14 +570,31 @@ class FeedTests(unittest.TestCase):
         self.assertSchema(dashboard)
 
     def test_capacity_is_bounded_and_does_not_claim_full_coverage(self):
-        publisher.write_feed(self.site, sample([deal(index) for index in range(801)], coverage={"complete": True}))
+        publisher.write_feed(self.site, sample([deal(index) for index in range(5001)], coverage={"complete": True}))
         manifest = self.read("api/manifest.json")
-        self.assertEqual(manifest["counts"]["total"], 800)
-        self.assertEqual(manifest["stats"]["retained"], 800)
+        self.assertEqual(manifest["counts"]["total"], 5000)
+        self.assertEqual(manifest["counts"]["pages"], 100)
+        self.assertEqual(manifest["stats"]["retained"], 5000)
+        self.assertEqual(manifest["coverage"]["retention_capacity"], 5000)
         self.assertEqual(manifest["stats"]["omitted_by_capacity"], 1)
         self.assertTrue(manifest["coverage"]["export_capped"])
         self.assertFalse(manifest["coverage"]["complete"])
         self.assertSchema(manifest)
+
+    def test_lower_configured_capacity_survives_export_and_is_enforced(self):
+        publisher.write_feed(self.site, sample([deal(index) for index in range(3)],
+                                             coverage={"retention_capacity": 2}))
+        manifest = self.read("api/manifest.json")
+        self.assertEqual(manifest["coverage"]["retention_capacity"], 2)
+        self.assertEqual(manifest["counts"]["total"], 2)
+        self.assertEqual(manifest["stats"]["omitted_by_capacity"], 1)
+
+    def test_invalid_retention_capacity_is_rejected_and_excess_is_bounded(self):
+        for capacity in (True, 0, -1, "5000", None):
+            with self.subTest(capacity=capacity), self.assertRaisesRegex(ValueError, "retention_capacity"):
+                publisher.write_feed(self.site, sample([], coverage={"retention_capacity": capacity}))
+        publisher.write_feed(self.site, sample([], coverage={"retention_capacity": 10000}))
+        self.assertEqual(self.read("api/manifest.json")["coverage"]["retention_capacity"], 5000)
 
     def test_v3_freshness_contract_is_present_in_every_document(self):
         publisher.write_feed(self.site, sample([deal()]))
@@ -658,6 +675,31 @@ class FeedTests(unittest.TestCase):
         self.assertFalse(data["freshness"]["source_currentness_guaranteed"])
         self.assertEqual(data["schema_version"], 3)
         self.assertSchema(data)
+
+    def test_persistent_review_metadata_and_individual_dates_survive_exports(self):
+        review = {
+            "status": "applied", "reviewer": "ChatGPT", "applied": 1,
+            "available": 2, "unreviewed": 0,
+            "oldest_reviewed_at": iso(NOW - timedelta(days=4)),
+            "latest_reviewed_at": iso(NOW - timedelta(hours=1)),
+            "reviewed_at": iso(NOW - timedelta(hours=1)),
+            "expires_at": None, "retention_basis": "content_and_auction",
+        }
+        item = deal(semantic_assessed_at=review["oldest_reviewed_at"],
+                    assessment_basis="llm", semantic_review_mode="interactive")
+        publisher.write_feed(self.site, sample([item], interactive_review=review))
+        manifest = self.read("api/manifest.json")
+        data = self.read("data/deals.json")
+        for document in (manifest, data):
+            self.assertEqual(document["interactive_review"], review)
+            self.assertEqual(document["coverage"]["retention_capacity"], 5000)
+            self.assertSchema(document)
+        page = self.read(manifest["pages"][0]["path"])
+        detail = self.read(data["deals"][0]["detail_path"])
+        for row in (data["deals"][0], page["items"][0], detail["item"]):
+            self.assertEqual(row["semantic_assessed_at"], review["oldest_reviewed_at"])
+        self.assertSchema(page)
+        self.assertSchema(detail)
 
     def test_old_observations_remain_until_end_without_becoming_new_facts(self):
         items = [aggregator_deal(
@@ -886,7 +928,7 @@ class FeedTests(unittest.TestCase):
             "höchstens 24 Stunden", "keine Quellenalter-Ablauffrist",
             "**Aktives Fenster:**", "jetzt + 72 Stunden", "bis zu 15 Minuten",
             "„0 Gebote“ sind nur Angaben vom letzten Quellenstand", "stale", "carried",
-            "eligibility_without_time_window", "Schema-2-Leser", "48-Stunden-Frist",
+            "eligibility_without_time_window", "Schema-2-Leser", "keine pauschale Altersfrist",
         ):
             self.assertIn(phrase, guide)
         self.assertNotIn("sechs Stunden", guide)

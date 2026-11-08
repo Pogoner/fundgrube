@@ -42,13 +42,17 @@ Aktiv ist ein bekanntes Angebot bei `0 < Restlaufzeit < 72 Stunden`, sofern es
 die eingestellte Interest-Schwelle und die übrigen Filter erfüllt. Das Alter
 der Quellenbeobachtung ist **kein Ablaufdatum des Angebots**. Der gespeicherte
 Bestand bleibt bis zum Auktionsende erhalten, begrenzt durch die dokumentierte
-Kapazität von 800 Datensätzen und die tatsächlich erreichte Quellenabdeckung.
+Kapazität von 5.000 Datensätzen und die tatsächlich erreichte Quellenabdeckung.
 Die GUI berechnet den Zeithorizont auch bei einer länger geöffneten Seite neu.
 
 Ältere Quellenstände bleiben als solche markiert. Ein Fund wird durch
 Wiederanzeige oder Neubau nicht erneut verifiziert. „0 Gebote“ und Preise
 bezeichnen den Quellenstand; die 50-km-Abholsuche ist kein bestätigter Standort.
 Scores, LLM-/Heuristik-Herkunft und tatsächliche Eignungsfilter bleiben getrennt.
+Scalp und Useability sind am festen Rubrikmaßstab orientierte Einschätzungen,
+keine relativen Rangplätze: Neue Angebote verändern bestehende Scores nicht.
+Jeder Artikel behält den Zeitpunkt seiner tatsächlichen Bewertung. Die Anzeige
+eines neuen Snapshots ist weder eine neue Bewertung noch eine Quellenprüfung.
 
 ## Bilder, Bewegung und Fehler
 

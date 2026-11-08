@@ -31,7 +31,7 @@ DATA_BRANCH = "data"
 DEFAULT_ACTIVE_WINDOW_HOURS = 72
 MAX_DESCRIPTION_AGE_HOURS = 24
 SOURCE_WARNING_AFTER_HOURS = 2
-MAX_RETAINED_ITEMS = 800
+MAX_RETAINED_ITEMS = 5000
 SUMMARY_DESCRIPTION_CHARS = 600
 MAX_DESCRIPTION_CHARS = 20_000
 AOG_PROVIDER = "auktionen-ohne-gebot"
@@ -445,8 +445,15 @@ def _prepare(feed: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]]
         {"eligible": 0, "review": 1, "excluded": 2}[item["eligibility"]],
         -(item["interest_score"] or 0), item["ends_at"], item["id"],
     ))
-    capacity_omissions = max(0, len(items) - MAX_RETAINED_ITEMS)
-    items = items[:MAX_RETAINED_ITEMS]
+    # Storage capacity is independent of source coverage and does not authorize
+    # additional requests. Preserve a smaller configured pipeline bound.
+    retention_capacity = meta["coverage"].get("retention_capacity", MAX_RETAINED_ITEMS)
+    if type(retention_capacity) is not int or retention_capacity < 1:
+        raise ValueError("retention_capacity must be a positive integer")
+    retention_capacity = min(retention_capacity, MAX_RETAINED_ITEMS)
+    meta["coverage"]["retention_capacity"] = retention_capacity
+    capacity_omissions = max(0, len(items) - retention_capacity)
+    items = items[:retention_capacity]
     if capacity_omissions:
         meta["coverage"].update(export_capped=True, complete=False)
     active_count = sum(_timestamp(item["ends_at"]) < at + active_window for item in items)
@@ -519,7 +526,8 @@ Dies ist eine **statische, nur lesende JSON-Schnittstelle**, kein MCP-Server.
 Einstieg: `{site_url}api/manifest.json`.
 Alternativ GitHub: Repository `{REPOSITORY}`, Branch `{DATA_BRANCH}`, Pfad `api/manifest.json`.
 Feed-Schema **3**: Metadaten bleiben bis Auktionsende erhalten; Scoring-Version 2
-und Review-Envelope-Version 2 sind davon unabhängige Versionsangaben.
+und Batch-Review-Version 2 sind davon unabhängige Versionsangaben. Der dauerhafte
+Review-Store Version 3 speichert Bewertung und ursprünglichen Zeitpunkt pro Artikel.
 
 1. Auf GitHub zuerst den Branch in einen Commit-SHA auflösen. Manifest und alle weiteren Dateien mit demselben `ref` lesen. Bei Pages immer die `snapshot_id` vergleichen und nach einem Wechsel neu beginnen.
 2. `source_status`, `blockers`, `last_successful_scan_at`, Abdeckung und Quellenalter prüfen. Ein erfolgreicher Build beweist keinen erfolgreichen Quellenabruf. `unconfigured` und `disabled` enthalten keine echten Kandidaten; `demo` ist ausdrücklich fiktiv. `partial` und `error` können ältere Beobachtungen noch laufender Auktionen enthalten. Auch `live` bedeutet beim Aggregator keinen direkt bei eBay überprüften Angebotsstand.
@@ -566,8 +574,12 @@ Kandidatenseiten und Details. Unbekannte Faktoren bleiben unbekannt.
   sichtbar, tragen aber `stale` und `carried`. Kein falsches „gerade geprüft“.
 - **Beschreibung:** Eigene Text-TTL von höchstens {MAX_DESCRIPTION_AGE_HOURS} Stunden;
   abgelaufener Text verschwindet, das übrige Angebot nicht.
-- **Review:** Interaktive Einordnungen haben weiterhin ihre separate 48-Stunden-Frist;
-  ihr Ablauf löscht oder verjüngt keine Quellenbeobachtung.
+- **Review:** Inhaltsgebundene Einordnungen haben keine pauschale Altersfrist.
+  Jeder Artikel behält seinen eigenen Bewertungszeitpunkt; neue Sichtungen ergänzen
+  den Bestand. Nur passende Inhalte einer noch laufenden Auktion werden angewendet.
+  Neue Angebote verändern weder die alten absoluten Scores noch deren Zeitstempel.
+  Geänderte Eingaben einschließlich entfallener Beschreibungstexte benötigen eine
+  passende neue Bewertung. Reviews bestätigen keine aktuellen Quellenfakten.
 - **Anbieter-Cache:** Die genannten bis zu 15 Minuten bei AOG sind eine getrennte
   vorgelagerte Cache-Verzögerung laut Anbieter, keine eigene Echtzeitverifikation.
 

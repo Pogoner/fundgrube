@@ -12,7 +12,9 @@ auf ausgeführte Läufe schließen.
 - **Umgebung:** ChatGPT mit autorisierter GitHub-Anbindung für
   `Pogoner/fundgrube`; alle dauerhaft benötigten Informationen liegen im Repo.
 - **Arbeitsweise:** unveränderte gültige Bewertungen wiederverwenden, nur neue,
-  geänderte oder nicht mehr gültig bewertete Angebote neu sichten.
+  geänderte oder nicht mehr gültig bewertete Angebote neu sichten. Scores sind
+  absolute Einordnungen nach festem Maßstab, keine Rangplätze im Bestand;
+  neue Angebote senken keine früheren Scores.
 - **Kontrolle:** zuerst manuell testen, danach die ersten tatsächlichen Läufe
   und Ergebnisse prüfen. Ein neuer Snapshot ist nicht automatisch ein neuer
   Quellenstand. Eine unzuverlässige Sammlerplanung wird durch eine Leseaufgabe
@@ -74,22 +76,25 @@ semantischen Bewertungen nach den Review-Regeln in AGENTS.md über die
 GitHub-Anbindung. Verwende den genau zugehörigen Snapshot und das validierte
 Review-Format; keine Quellenfakten, Konfiguration, Zeitpläne oder fremden
 Änderungen überschreiben. Bewahre gültige bestehende Bewertungen mit ihren
-ursprünglichen Zeitstempeln. Falls das aktuelle Dateiformat eine sichere
-Zusammenführung unterschiedlich alter Bewertungen nicht erlaubt, überschreibe
-oder verjünge sie nicht: berichte diese Grenze und liefere zunächst die Shortlist.
+ursprünglichen Zeitstempeln. Führe die neue Batch-Eingabe mit dem aktuellen
+Review-Store über scripts/pack_reviews.py inkrementell zusammen. Bei einem
+zwischenzeitlich geänderten main zuerst den neuen Store lesen und erneut
+zusammenführen; kein erzwungenes Überschreiben. Gleichzeitige widersprüchliche
+Bewertungen oder Validierungsfehler melden, keine Prüfungen abschalten.
 Bei fehlender Berechtigung oder einem geschützten Workflow stoppen und melden.
 Keine Gebote, Käufe, Nachrichten oder direkten eBay-/Aggregatorabrufe.
 Prüfe nach einem beauftragten Commit,
 ob der Workflow erfolgreich war und die neuen Bewertungen veröffentlicht wurden.
 ```
 
-Das aktuelle interaktive Review-Dokument hat einen gemeinsamen Bewertungszeitpunkt
-und eine eigene 48-Stunden-Frist. Ein inkrementeller Dauerschreiber darf daher
-nicht bloß alte und neue Einträge zusammenkopieren und den Kopfzeitstempel
-erneuern. Die reine Leseaufgabe kann bereits unveränderte Bewertungen nutzen;
-eine dauerhafte inkrementelle GUI-Pflege benötigt zusätzlich eine korrekt
-versionierte Zusammenführung oder eine echte erneute Sichtung der übernommenen
-Bewertungen. Kein zusätzlicher Delta-Endpunkt ist implementiert.
+Der dauerhafte Review-Store Version 3 hat pro Artikel einen eigenen tatsächlichen
+Bewertungszeitpunkt und Quell-Snapshot. Die Batch-Eingaben bleiben Version 2.
+Es gibt keine pauschale 48-Stunden-Frist: Unveränderte gültige Bewertungen werden
+beibehalten, neue ergänzen sie. Der Pack-Helfer übernimmt vorhandene V1/V2-Stores
+ohne künstliche Neubewertung und bereinigt nur explizit bekannte abgelaufene
+Auktionen. Eine fehlende ID in einem Teilabruf ist kein Löschgrund. Die API
+liefert weiterhin den vollständigen gespeicherten Bestand über Manifest und
+Seiten; kein zusätzlicher Delta-Endpunkt ist implementiert.
 
 Referenzen:
 

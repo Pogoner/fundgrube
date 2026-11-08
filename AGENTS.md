@@ -110,8 +110,11 @@ Weitere Schnittstellendetails: [docs/api.md](docs/api.md).
 Für wiederholte Sichtungen nur Angebote ohne gültige semantische Bewertung oder
 mit geändertem Titel/Beschreibung/Zustand erneut ans LLM geben. Unveränderte,
 noch gültige Einordnungen bleiben hashgebunden erhalten, selbst wenn sich Preis
-oder Gebotszahl ändern. Abgelaufene Reviews gelten nicht mehr als gültig; ihre
-Zeitstempel nicht ohne echte neue Sichtung erneuern. Bei hohem Interesse und
+oder Gebotszahl ändern. Scalp und Useability sind absolute, am festen Rubrikmaßstab
+orientierte Einordnungen, keine Perzentile des aktuellen Angebotsbestands.
+Neue gute Funde senken keine alten Scores. Es gibt keine pauschale Altersfrist
+für Reviews; ihre Zeitstempel nie ohne echte neue Sichtung erneuern. Eine
+inhaltlich nicht mehr passende Bewertung nicht anwenden. Bei hohem Interesse und
 nahem Auktionsende gezielt die aktuellen Fakten prüfen, statt den gesamten
 Bestand automatisch neu zu bewerten. Nutze die vorhandenen Manifest-/Seitenpfade;
 es ist kein zusätzlicher Delta-Endpunkt implementiert.
@@ -143,19 +146,36 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
   Urheberschaft. Gekürzte Beschreibungen erst durch vollständige Details
   desselben Snapshots ergänzen, nicht bloß die Kürzungsmarkierung löschen.
 - Nach beauftragtem Commit der Review-Dateien auf `main` wendet der nächste
-  Workflow passende Einordnungen an. Sie dürfen höchstens 48 Stunden alt sein,
-  keine Quellenfakten oder `eligibility` verändern und keine neuere automatische
+  Workflow passende Einordnungen an. Sie dürfen keine Quellenfakten oder
+  `eligibility` verändern und keine neuere automatische
   API-Bewertung verdrängen. Auktionsende und aktives Zeitfenster gelten
   zusätzlich. Eine wiederverwendete
   Einordnung bestätigt keine Aktualität der Quellenfakten. Neue, geänderte oder nicht passend bewertete Angebote bleiben
   ohne andere gültige LLM-Bewertung heuristisch.
+- Der Pack-Helfer führt neue Bewertungen inkrementell mit dem vorhandenen
+  `reviews/current.json` zusammen. Der dauerhafte Store hat `schema_version: 3`
+  und genau die Kopf-Felder `schema_version`, `reviewer`, `reviews`. Jeder Eintrag
+  enthält `id`, `content_fingerprint`, `score_version`, `assessment`, `reviewed_at`,
+  `source_snapshot_id` und den optionalen Lebensdauerhinweis `ends_at` (nullable).
+  Batch-Eingaben bleiben Version 2; Store-Version und Score-Version nicht verwechseln.
+  Alte V1/V2-Dokumente werden ohne Änderung von Bewertung, Datum oder Quell-Snapshot
+  übernommen. Nur eine tatsächlich neuere Sichtung ersetzt dieselbe ID;
+  widersprüchliche gleichzeitige Versionen werden abgewiesen. Einträge fehlen
+  manchmal in Teilabrufen: daraus nie Auktionsende oder Ungültigkeit ableiten.
+  Nur explizit bekannte abgelaufene Endzeiten erlauben eine Bereinigung; der
+  Lebensdauerhinweis im Review ist keine Quelle aktueller Auktionsfakten.
+  Lebensdauerhinweise dürfen die bekannte Aufbewahrungszeit verlängern, nicht
+  verkürzen. Ein älterer Quellenstand darf kein neueres Review über ein bereits
+  vergangenes Ende löschen; im Zweifel den Review-Eintrag erhalten. Anzeige
+  und Anwendung prüfen weiterhin das Auktionsende im aktuellen Datensatz.
+  Höchstens 5.000 Reviews / 16 MiB, bei Überschreitung stoppen statt still kürzen.
 - Erkenne interaktive Einordnungen an `assessment_basis: llm`,
   `semantic_review_mode: interactive` und `semantic_assessed_at`; beachte die
   Snapshot-Metadaten `interactive_review`. Ein fehlender API-Key bedeutet nicht,
   dass eine vorhandene echte interaktive Bewertung zur Heuristik wird.
 - Bezeichne dies als interaktive Chargenbewertung, niemals als automatisch
   fortlaufende unbeaufsichtigte LLM-Sichtung. Die getrennte automatische API
-  benötigt weiterhin Freigabe, Modell und Schlüssel. Ablauf entfernt alte
+  benötigt weiterhin Freigabe, Modell und Schlüssel. Bereinigung entfernt alte
   Reviews nicht aus der öffentlichen Git-Historie.
 
 ## Wenn du Code änderst

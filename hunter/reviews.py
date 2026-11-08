@@ -11,17 +11,19 @@ import copy
 import hashlib
 import json
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from hunter.ranking import apply_semantic
 from hunter.semantic import ANNOTATION_FIELDS, SemanticError, _validate_assessment
 
-MAX_REVIEW_BYTES = 2_000_000
-MAX_REVIEWS = 800
-MAX_REVIEW_AGE = timedelta(hours=48)
+MAX_REVIEW_BYTES = 16 * 1024 * 1024
+MAX_REVIEWS = 5_000
 HEADER_FIELDS = {"schema_version", "source_snapshot_id", "reviewed_at", "reviewer"}
+STORE_FIELDS = {"schema_version", "reviewer", "reviews"}
+LEGACY_ENTRY_FIELDS = {"id", "content_fingerprint", "assessment"}
+ENTRY_FIELDS = LEGACY_ENTRY_FIELDS | {"score_version", "reviewed_at", "source_snapshot_id", "ends_at"}
 HASH_PATTERN = re.compile(r"sha256:[0-9a-f]{64}\Z")
 ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.|:-]{0,199}\Z")
 UNSAFE_TEXT = re.compile(r"https?://|www\.|javascript\s*:|data\s*:|mailto\s*:|<\s*/?\s*[A-Za-z][^>]*>", re.I)
@@ -68,6 +70,12 @@ def _item_id(value: Any) -> str:
     return value
 
 
+def _snapshot_id(value: Any) -> str:
+    if not isinstance(value, str) or not HASH_PATTERN.fullmatch(value):
+        raise ReviewsError("Bewertungsdokument enthält keine gültige Quell-Snapshot-ID.")
+    return value
+
+
 def content_fingerprint(item: dict[str, Any]) -> str:
     """Hash exact normalized text; prices and logistics deliberately do not bind."""
     if not isinstance(item, dict):
@@ -100,9 +108,7 @@ def _header(document: Any, payload_name: str) -> dict[str, Any]:
         raise ReviewsError("Bewertungsdokument enthält fehlende oder unerwartete Felder.")
     if type(document["schema_version"]) is not int or document["schema_version"] not in {1, 2}:
         raise ReviewsError("Unbekannte Bewertungsschema-Version.")
-    snapshot_id = document["source_snapshot_id"]
-    if not isinstance(snapshot_id, str) or not HASH_PATTERN.fullmatch(snapshot_id):
-        raise ReviewsError("Bewertungsdokument enthält keine gültige Quell-Snapshot-ID.")
+    snapshot_id = _snapshot_id(document["source_snapshot_id"])
     reviewed_at = _time(document["reviewed_at"])
     if reviewed_at is None or document["reviewer"] != "ChatGPT":
         raise ReviewsError("Bewertungszeitpunkt oder Urheberangabe ist ungültig.")
@@ -111,15 +117,30 @@ def _header(document: Any, payload_name: str) -> dict[str, Any]:
 
 
 def validate_reviews(document: Any) -> dict[str, Any]:
-    """Validate the complete document before any annotation can be applied."""
-    header = _header(document, "reviews")
+    """Validate a legacy batch or per-item V3 store before applying any entry.
+
+    Store version and score version are separate: V3 can faithfully carry a
+    legacy V1 assessment without inventing its missing Useability score.
+    """
+    _bounded_json(document)
+    if not isinstance(document, dict):
+        raise ReviewsError("Bewertungsdokument enthält fehlende oder unerwartete Felder.")
+    version = document.get("schema_version")
+    if type(version) is not int or version not in {1, 2, 3}:
+        raise ReviewsError("Unbekannte Bewertungsschema-Version.")
+    if version == 3:
+        if set(document) != STORE_FIELDS or document["reviewer"] != "ChatGPT":
+            raise ReviewsError("Bewertungsspeicher enthält fehlende oder unerwartete Felder.")
+        header = {"schema_version": 3, "reviewer": "ChatGPT"}
+    else:
+        header = _header(document, "reviews")
     reviews = document["reviews"]
     if not isinstance(reviews, list) or len(reviews) > MAX_REVIEWS:
         raise ReviewsError("Bewertungsdokument enthält zu viele oder ungültige Einträge.")
     result = []
     ids = set()
     for entry in reviews:
-        if not isinstance(entry, dict) or set(entry) != {"id", "content_fingerprint", "assessment"}:
+        if not isinstance(entry, dict) or set(entry) != (ENTRY_FIELDS if version == 3 else LEGACY_ENTRY_FIELDS):
             raise ReviewsError("Bewertungseintrag enthält fehlende oder unerwartete Felder.")
         item_id = _item_id(entry["id"])
         fingerprint = entry["content_fingerprint"]
@@ -128,9 +149,160 @@ def validate_reviews(document: Any) -> dict[str, Any]:
         if not isinstance(fingerprint, str) or not HASH_PATTERN.fullmatch(fingerprint):
             raise ReviewsError("Bewertungseintrag enthält keinen gültigen Inhaltsfingerprint.")
         ids.add(item_id)
-        result.append({"id": item_id, "content_fingerprint": fingerprint,
-                       "assessment": _assessment(entry["assessment"], header["schema_version"])})
+        score_version = entry["score_version"] if version == 3 else version
+        if type(score_version) is not int or score_version not in {1, 2}:
+            raise ReviewsError("Bewertungseintrag enthält eine unbekannte Score-Version.")
+        normalized = {"id": item_id, "content_fingerprint": fingerprint,
+                      "assessment": _assessment(entry["assessment"], score_version)}
+        if version == 3:
+            reviewed_at = _time(entry["reviewed_at"])
+            end = _time(entry["ends_at"])
+            if reviewed_at is None or (entry["ends_at"] is not None and end is None):
+                raise ReviewsError("Bewertungseintrag enthält einen ungültigen Zeitpunkt.")
+            normalized.update({"score_version": score_version, "reviewed_at": _iso(reviewed_at),
+                               "source_snapshot_id": _snapshot_id(entry["source_snapshot_id"]),
+                               "ends_at": _iso(end) if end is not None else None})
+        result.append(normalized)
     return {**header, "reviews": result}
+
+
+def _feed_end_hints(feed: Any, at: datetime) -> dict[str, tuple[str, datetime]]:
+    """Read bounded ends and conservative observation times, never infer absence."""
+    if not isinstance(feed, dict):
+        raise ReviewsError("Quell-Snapshot enthält keine gültige begrenzte Angebotsliste.")
+    _snapshot_id(feed.get("snapshot_id"))
+    generated = _time(feed.get("generated_at"))
+    if generated is None or generated > at:
+        raise ReviewsError("Quell-Snapshot enthält einen ungültigen oder zukünftigen Zeitpunkt.")
+    items = feed.get("deals")
+    if not isinstance(items, list) or len(items) > 10_000:
+        raise ReviewsError("Quell-Snapshot enthält keine gültige begrenzte Angebotsliste.")
+    result = {}
+    seen_ids = set()
+    for item in items:
+        if not isinstance(item, dict):
+            raise ReviewsError("Quell-Snapshot enthält einen ungültigen Angebotseintrag.")
+        item_id = _item_id(item.get("id"))
+        if item_id in seen_ids:
+            raise ReviewsError("Quell-Snapshot enthält doppelte Angebots-IDs.")
+        seen_ids.add(item_id)
+        seen = _time(item.get("last_seen_at"))
+        observed = _time(item.get("source_observed_at"))
+        end = _time(item.get("ends_at"))
+        if ((item.get("last_seen_at") is not None and seen is None)
+                or (item.get("source_observed_at") is not None and observed is None)
+                or (item.get("ends_at") is not None and end is None)
+                or (seen is not None and seen > at) or (observed is not None and observed > at)):
+            raise ReviewsError("Quell-Snapshot enthält einen ungültigen oder zukünftigen Quellenzeitpunkt.")
+        # Missing source observation time is not evidence for a lifecycle update.
+        if seen is not None and end is not None:
+            # A snapshot cannot establish an observation newer than itself.
+            # If both source times are present, use the older evidence bound.
+            observed_at = min(seen, generated, observed if observed is not None else seen)
+            result[item_id] = (_iso(end), observed_at)
+    return result
+
+
+def _latest_end(first: str | None, second: str | None) -> str | None:
+    """Without per-hint provenance, only extending retention is lossless."""
+    known = [value for value in (first, second) if value is not None]
+    return max(known, key=_time) if known else None
+
+
+def _attach_end_hints(
+    entries: list[dict[str, Any]], hints: dict[str, tuple[str, datetime]], at: datetime,
+) -> None:
+    """Conservatively update lifecycle hints, not source facts or review dates.
+
+    V3 does not record an observation time for an existing end hint, so a
+    later import cannot prove that a shorter end is newer. Never shorten a
+    known end. When no end is known, an already-ended hint may establish a
+    pruning deadline only if its observation does not predate the review.
+    This can retain uncertain legacy residue; it must not erase newer reviews
+    merely because a stale feed says their auctions have already ended.
+    """
+    for entry in entries:
+        hint = hints.get(entry["id"])
+        if hint is None:
+            continue
+        end, observed_at = hint
+        if (entry["ends_at"] is None and _time(end) <= at
+                and observed_at < _time(entry["reviewed_at"])):
+            continue
+        entry["ends_at"] = _latest_end(entry["ends_at"], end)
+
+
+def upgrade_reviews(
+    document: Any, *, feed: dict[str, Any] | None = None, at: datetime | None = None,
+) -> dict[str, Any]:
+    """Migrate to V3 without a new assessment or renewed review timestamps.
+
+    A matching feed may supply auction-end hints for later explicit cleanup.
+    These hints are never used as source facts when applying an assessment.
+    Known ends can only be extended; stale already-ended hints cannot bind
+    an unknown end on a newer review. Uncertain legacy residue is retained.
+    """
+    normalized = validate_reviews(document)
+    if normalized["schema_version"] == 3:
+        result = normalized
+    else:
+        result = {"schema_version": 3, "reviewer": "ChatGPT", "reviews": [
+            {**entry, "score_version": normalized["schema_version"],
+             "reviewed_at": normalized["reviewed_at"],
+             "source_snapshot_id": normalized["source_snapshot_id"], "ends_at": None}
+            for entry in normalized["reviews"]
+        ]}
+    if feed is not None:
+        at = _utc(at if at is not None else datetime.now(timezone.utc))
+        _attach_end_hints(result["reviews"], _feed_end_hints(feed, at), at)
+    return validate_reviews(result)
+
+
+def merge_reviews(
+    existing: Any, incoming: Any, at: datetime, *, feed: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Merge genuine assessments by ID, retaining unrelated original timestamps.
+
+    Older imports cannot displace newer assessments. An ambiguous equal-time
+    assessment conflict is an error, not a reason to pick whichever file was
+    read last. End hints are separate: retain the latest known end, never
+    shorten it without observation provenance. Apply feed hints before pruning;
+    an absent ID alone proves nothing. Stale already-ended hints cannot impose
+    a pruning deadline on a newer review whose end is unknown.
+    """
+    at = _utc(at)
+    old = upgrade_reviews(existing) if existing is not None else {"schema_version": 3, "reviewer": "ChatGPT", "reviews": []}
+    new = upgrade_reviews(incoming)
+    hints = _feed_end_hints(feed, at) if feed is not None else {}
+    entries = {}
+    for document in (old, new):
+        for entry in document["reviews"]:
+            if _time(entry["reviewed_at"]) > at:
+                raise ReviewsError("Bewertungszeitpunkt liegt in der Zukunft; Zusammenführung abgebrochen.")
+            previous = entries.get(entry["id"])
+            if previous is None:
+                entries[entry["id"]] = entry
+                continue
+            if _time(entry["reviewed_at"]) == _time(previous["reviewed_at"]):
+                # A changed lifecycle hint is not a newly authored assessment.
+                compared = ENTRY_FIELDS - {"ends_at"}
+                if any(entry[key] != previous[key] for key in compared):
+                    raise ReviewsError("Gleichzeitige Bewertungen derselben Angebots-ID widersprechen sich.")
+            if _time(entry["reviewed_at"]) > _time(previous["reviewed_at"]):
+                winner, other = entry, previous
+            else:
+                winner, other = previous, entry
+            # Even an older assessment can contribute a later known end, but
+            # its past end must not newly bind a newer, undated lifecycle.
+            if not (winner["ends_at"] is None and other["ends_at"] is not None
+                    and _time(other["ends_at"]) <= at
+                    and _time(other["reviewed_at"]) < _time(winner["reviewed_at"])):
+                winner["ends_at"] = _latest_end(winner["ends_at"], other["ends_at"])
+            entries[entry["id"]] = winner
+    _attach_end_hints(list(entries.values()), hints, at)
+    kept = [entries[item_id] for item_id in sorted(entries)
+            if entries[item_id]["ends_at"] is None or _time(entries[item_id]["ends_at"]) > at]
+    return validate_reviews({"schema_version": 3, "reviewer": "ChatGPT", "reviews": kept})
 
 
 def seal_reviews(feed: dict[str, Any], specification: dict[str, Any]) -> dict[str, Any]:
@@ -193,9 +365,9 @@ def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 
 def read_json_file(path: str | Path, *, max_bytes: int = MAX_REVIEW_BYTES) -> Any:
-    """Bounded local JSON read; never follow a final symbolic link."""
-    target = Path(path)
-    if target.is_symlink() or not target.is_file():
+    """Bounded local JSON read; reject symbolic links in the entire path."""
+    target = Path(path).absolute()
+    if any(part.is_symlink() for part in (target, *target.parents)) or not target.is_file():
         raise ReviewsError("Bewertungsdatei fehlt oder ist keine reguläre Datei.")
     try:
         with target.open("rb") as handle:
@@ -216,30 +388,37 @@ def load_reviews(path: str | Path) -> dict[str, Any]:
 def apply_reviews(
     items: list[dict[str, Any]], review_doc: dict[str, Any] | None, at: datetime,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    """Apply valid content-matched reviews without renewing retained source facts."""
+    """Apply per-item content-matched reviews without renewing source facts.
+
+    Semantic assessments have no wall-clock TTL: the same product text does
+    not become less interesting because another batch was rated. Auction
+    lifetime and current observation validity remain independent checks.
+    """
     at = _utc(at)
     output = [dict(item) for item in items]
     metadata: dict[str, Any] = {
         "status": "absent", "applied": 0, "total": 0, "skipped_changed": 0,
-        "skipped_stale": 0, "skipped_newer": 0, "skipped_missing": 0, "errors": [],
+        "skipped_stale": 0, "skipped_newer": 0, "skipped_missing": 0,
+        "skipped_future": 0, "reviewer": "ChatGPT", "reviewed_at": None,
+        "oldest_reviewed_at": None, "latest_reviewed_at": None,
+        "source_snapshot_id": None, "expires_at": None,
+        "retention_basis": "content_and_auction", "errors": [],
     }
     if review_doc is None:
         return output, metadata
     try:
-        document = validate_reviews(review_doc)
+        document = upgrade_reviews(review_doc)
     except ReviewsError as error:
         metadata.update({"status": "invalid", "errors": [str(error)]})
         return output, metadata
-    reviewed_at = _time(document["reviewed_at"])
-    metadata.update({"total": len(document["reviews"]), "reviewer": "ChatGPT",
-                     "source_snapshot_id": document["source_snapshot_id"],
-                     "reviewed_at": document["reviewed_at"], "expires_at": _iso(reviewed_at + MAX_REVIEW_AGE)})
-    if reviewed_at > at:
-        metadata.update({"status": "future", "errors": ["Bewertungszeitpunkt liegt in der Zukunft."]})
-        return output, metadata
-    if at - reviewed_at > MAX_REVIEW_AGE:
-        metadata.update({"status": "expired", "skipped_stale": metadata["total"]})
-        return output, metadata
+    metadata["total"] = len(document["reviews"])
+    past = [entry for entry in document["reviews"] if _time(entry["reviewed_at"]) <= at]
+    if past:
+        times = [_time(entry["reviewed_at"]) for entry in past]
+        snapshots = {entry["source_snapshot_id"] for entry in past}
+        metadata.update({"reviewed_at": _iso(max(times)), "latest_reviewed_at": _iso(max(times)),
+                         "oldest_reviewed_at": _iso(min(times)),
+                         "source_snapshot_id": next(iter(snapshots)) if len(snapshots) == 1 else None})
     by_id: dict[str, int] = {}
     duplicate_ids = set()
     for index, item in enumerate(output):
@@ -250,6 +429,10 @@ def apply_reviews(
             else:
                 by_id[item_id] = index
     for review in document["reviews"]:
+        reviewed_at = _time(review["reviewed_at"])
+        if reviewed_at > at:
+            metadata["skipped_future"] += 1
+            continue
         item_id = review["id"]
         if item_id not in by_id:
             metadata["skipped_missing"] += 1
@@ -266,18 +449,22 @@ def apply_reviews(
             matching = content_fingerprint(item) == review["content_fingerprint"]
         except ReviewsError:
             matching = False
-        if not matching or item_id in duplicate_ids:
+        if not matching or item_id in duplicate_ids or item.get("description_truncated") is True:
             metadata["skipped_changed"] += 1
             continue
         previous = _time(item.get("semantic_assessed_at"))
         if item.get("assessment_basis") == "llm" and previous is not None and reviewed_at < previous <= at:
             metadata["skipped_newer"] += 1
             continue
-        enriched = apply_semantic(item, review["assessment"], score_version=document["schema_version"])
+        enriched = apply_semantic(item, review["assessment"], score_version=review["score_version"])
         result = dict(item)
         result.update({key: enriched[key] for key in ANNOTATION_FIELDS if key in enriched})
-        result.update({"semantic_review_mode": "interactive", "semantic_assessed_at": document["reviewed_at"]})
+        result.update({"semantic_review_mode": "interactive", "semantic_assessed_at": review["reviewed_at"]})
         output[by_id[item_id]] = result
         metadata["applied"] += 1
     metadata["status"] = "ok" if metadata["applied"] == metadata["total"] else "partial"
+    if metadata["skipped_future"]:
+        metadata["errors"].append("Zukünftig datierte Einzelbewertungen wurden nicht angewendet.")
+        if metadata["skipped_future"] == metadata["total"]:
+            metadata["status"] = "future"
     return output, metadata

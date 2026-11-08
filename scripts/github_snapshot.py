@@ -23,10 +23,13 @@ from typing import Any
 
 DATA_BRANCH = "data"
 MARKER = ".github-snapshot-head.json"
-MAX_FILE_BYTES = 8 * 1024 * 1024
-MAX_TOTAL_BYTES = 16 * 1024 * 1024
-MAX_FILES = 5000
-MAX_RESPONSE_BYTES = 24 * 1024 * 1024
+# Bounded storage for up to 5,000 observed offers, not an increased crawl quota.
+# Every offer has one detail document plus a share of the paginated/full feed.
+MAX_FILE_BYTES = 32 * 1024 * 1024
+MAX_TOTAL_BYTES = 128 * 1024 * 1024
+MAX_FILES = 6000
+# A maximal restored state arrives as base64 (4/3 of its decoded byte size).
+MAX_RESPONSE_BYTES = 48 * 1024 * 1024
 SHA_PATTERN = re.compile(r"[0-9a-f]{40}")
 REPO_PATTERN = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+")
 PATH_PATTERN = re.compile(r"[A-Za-z0-9_-][A-Za-z0-9_./-]*")

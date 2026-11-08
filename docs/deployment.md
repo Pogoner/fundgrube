@@ -64,7 +64,7 @@ keine erfundenen Live-Angebote.
 bei **strikt weniger als 72 Stunden** positiver Restlaufzeit, wenn Interest und
 übrige Filter passen. Angebotsmetadaten bleiben unabhängig von ihrem
 Beobachtungsalter **bis zum Auktionsende** erhalten, auch wenn spätere Teilscans
-das Angebot nicht wieder enthalten. Die zusätzliche Höchstzahl von 800
+das Angebot nicht wieder enthalten. Die zusätzliche Höchstzahl von 5.000
 Datensätzen bleibt bestehen. Bereits früher
 aus dem aktuellen Zustand entfernte Angebote werden nicht aus der Git-Historie
 wiederhergestellt; erst ein neuer zulässiger Quellenfund nimmt sie wieder auf.
@@ -159,11 +159,18 @@ Der lokale Feed muss derselbe sein, den die Bewertungen beschreiben. Der Helfer
 lehnt abweichende Snapshots, unbekannte oder doppelte IDs und exakte Preisfelder
 ab. Erst die im Chat tatsächlich vorgenommenen Einordnungen werden damit an
 Angebots-ID und Inhalts-Hash aus Titel/Beschreibung/Zustand gebunden; das
-Packen selbst ist kein LLM-Aufruf und keine Bewertung.
+Packen selbst ist kein LLM-Aufruf und keine Bewertung. Der Helfer ergänzt die
+vorhandene Ausgabedatei inkrementell zu Store-Version 3. Jede Artikelbewertung
+behält ihre Score-Version, ihren ursprünglichen Zeitpunkt und Quell-Snapshot;
+ein neues Batch-Datum wird niemals auf die alten Bewertungen übertragen.
+Mit `--existing` lässt sich zusätzlich eine andere bestehende Store-Datei
+verlustfrei einbeziehen. Abweichende Bewertungen derselben ID mit demselben
+Zeitpunkt sind ein Fehler; ältere Eingaben überschreiben keine neueren.
 
 Die beauftragten Review-Dateien werden auf `main` gespeichert. Der dadurch
 ausgelöste nächste Workflow lädt `reviews/current.json` optional und übernimmt
-nur inhaltlich passende, höchstens 48 Stunden alte Einordnungen. Quellenfakten
+nur inhaltlich passende Einordnungen laufender Auktionen, ohne pauschale
+Altersfrist. Quellenfakten
 und Eignung bleiben unverändert maßgeblich; Interest wird als
 `(scalp_score * useability_score + 50) // 100` berechnet. Neuere automatische
 API-Bewertungen haben Vorrang. Im Feed erscheinen
@@ -176,12 +183,13 @@ Nur vollständige duale LLM-Bewertungen zählen als vollständig gesichtet. API-
 und Cache sind auf V2 versioniert; alte Ergebnisse werden nicht als neue übernommen.
 
 Neue oder geänderte Angebote bleiben ohne andere gültige Bewertung heuristisch;
-interaktive Reviews verfallen automatisch. Dies ist eine echte interaktive
+unveränderte Reviews bleiben mit ihrem echten Bewertungsdatum erhalten. Dies ist eine echte interaktive
 Chargenbewertung, **kein laufender unbeaufsichtigter LLM-Dienst**. Weitere
 Chat-Sichtungen sind getrennte Aufträge. Die automatische API-Sichtung bleibt
 ohne `HUNTER_LLM_ENABLED=true`, Modell und geheimen Schlüssel aus. Alte
-Review-Dateien und Bewertungen können trotz Ablauf in Git-Historien erhalten
-bleiben; die 48 Stunden sind eine Anwendungsfrist, keine historische Löschung.
+Review-Dateien und Bewertungen können trotz einer Bereinigung nach bekanntem
+Auktionsende in Git-Historien erhalten bleiben. Der Store ist auf 5.000 Einträge
+und 16 MiB begrenzt; Überschreitungen werden gemeldet, nicht still abgeschnitten.
 
 ## Warum Pages einmalig aktiviert werden muss
 

@@ -25,7 +25,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SETTINGS_PATH = ROOT / "config" / "settings.json"
 STATE_VERSION = 2
 FEED_VERSION = 3
-MAX_INPUT_BYTES = 32 * 1024 * 1024
+MAX_INPUT_BYTES = 64 * 1024 * 1024
+MAX_RETAINED_RECORDS = 5000
 MODES = ("delivery", "pickup")
 DEFAULTS = {
     "marketplace": "EBAY_DE", "root_category_id": "12576", "postcode": "69121",
@@ -34,7 +35,7 @@ DEFAULTS = {
     "browse_daily_budget": 4500, "browse_calls_per_run": 85,
     "max_pages_per_category": 2, "categories_per_run": 20,
     "detail_limit_per_run": 35, "description_max_age_hours": 24,
-    "refresh_after_minutes": 90, "max_records": 800,
+    "refresh_after_minutes": 90, "max_records": MAX_RETAINED_RECORDS,
     "max_ai_items_per_run": 20, "api_page_size": 50,
     "schedule_interval_minutes": 10, "aog_max_requests_per_run": 4,
 }
@@ -103,7 +104,7 @@ def validate_settings(settings: Mapping[str, Any]) -> dict[str, Any]:
     for key, bounds in {
         "browse_daily_budget": (1, 5000), "browse_calls_per_run": (1, 5000),
         "categories_per_run": (1, 1000), "max_pages_per_category": (1, 50),
-        "detail_limit_per_run": (0, 1000), "max_records": (1, 800),
+        "detail_limit_per_run": (0, 1000), "max_records": (1, MAX_RETAINED_RECORDS),
         "max_ai_items_per_run": (0, 100), "api_page_size": (1, 100), "max_bids": (0, 1000000),
         "schedule_interval_minutes": (5, 1440), "aog_max_requests_per_run": (1, 6),
     }.items():
@@ -650,6 +651,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                      "cycle_estimate_is_lower_bound": True, "schedule_interval_minutes": settings["schedule_interval_minutes"], "browse_calls_this_run": calls_this_run,
                      "browse_calls_today": state["daily_budget"]["calls_used"], "daily_budget": settings["browse_daily_budget"], "complete": False,
                      "price_filter_applied": False, "cursor": dict(state["cursor"]), "manual_leaf_override": bool(manual_ids),
+                     "retention_capacity": settings["max_records"],
                      "pagination_caveat": "Ergebnisse verändern sich während des Abrufs; Seiten werden nur innerhalb eines Laufs fortgesetzt. Dichte Kategorien können unvollständig bleiben."},
         "ai_enabled": bool(semantic.get("ai_enabled")), "semantic": semantic, "ai_metadata": semantic,
         "interactive_review": interactive_review,

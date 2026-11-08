@@ -12,6 +12,7 @@ import urllib.error
 from pathlib import Path
 from unittest.mock import Mock, patch
 
+from hunter import feed as publisher
 from scripts import github_snapshot as snapshot
 
 OLD = "a" * 40
@@ -211,6 +212,82 @@ class SnapshotTests(unittest.TestCase):
         with patch.object(snapshot, "MAX_FILE_BYTES", 1):
             with self.assertRaisesRegex(snapshot.SnapshotError, "size limit"):
                 snapshot.collect_files(self.site, self.state)
+
+    def test_total_and_file_count_limits_still_apply_before_upload(self):
+        self.prepared()
+        with patch.object(snapshot, "MAX_TOTAL_BYTES", 1):
+            with self.assertRaisesRegex(snapshot.SnapshotError, "total safe size limit"):
+                snapshot.collect_files(self.site, self.state)
+        with patch.object(snapshot, "MAX_FILES", 1):
+            with self.assertRaisesRegex(snapshot.SnapshotError, "too many files"):
+                snapshot.collect_files(self.site, self.state)
+
+    def test_5000_observed_items_and_old_reviews_fit_offline_snapshot_bounds(self):
+        # Representative aggregator records: no full descriptions, but detailed
+        # durable semantic reasons and explicitly unverified source facts.
+        at, observed, reviewed = "2026-11-08T09:00:00Z", "2026-11-08T08:45:00Z", "2026-11-04T09:00:00Z"
+        base = {
+            "description": "", "content_updated_at": None, "image": "",
+            "price_eur": 1, "price_kind": "auction_price", "shipping_eur": 8,
+            "bid_count": 0, "ends_at": "2026-11-09T09:00:00Z", "last_seen_at": observed,
+            "condition": "Als Ersatzteil / defekt", "city": "", "postcode": "",
+            "distance_km": None, "local_pickup_confirmed": False, "pickup_available": False,
+            "is_auction": True, "buying_options": ["AUCTION"], "reserve_status": "unknown",
+            "eligibility": "review", "eligibility_without_time_window": "review",
+            "eligibility_reasons": ["Mindestpreisstatus aus der Quelle nicht belegt."],
+            "score_version": 2, "scalp_score": 80, "useability_score": 90,
+            "interest_score": 72, "score": 72, "semantic_interest": 80,
+            "value_band": "around_500", "product_kind": "apparatus",
+            "assessment_basis": "llm", "assessment_confidence": "low", "semantic_assessed": True,
+            "semantic_review_mode": "interactive", "semantic_assessed_at": reviewed,
+            "value_reason": "Fiktive Testbewertung: vollständige professionelle Laborapparatur mit plausibel hohem wirtschaftlichem Potenzial. Modell, Lieferumfang und tatsächlicher Zustand bleiben ungeprüft; die Einordnung ist keine Wertermittlung oder Funktionsbestätigung.",
+            "useability_reason": "Fiktive Testbewertung: eigenständig mit üblicher Stromversorgung und passenden Verbrauchsmitteln nutzbar. Kein bestimmtes übergeordnetes Anlagensystem vorausgesetzt; ein Funktionstest ist weiterhin erforderlich.",
+            "dependencies": ["Übliche Stromversorgung", "Passende Verbrauchsmittel und sichere Aufstellung"],
+            "reasons": ["Fiktive Testbewertung eines vollständigen Geräts statt einer speziellen Ersatzbaugruppe."],
+            "risks": ["Keine unabhängige Funktionsprüfung; fehlendes Zubehör und konkrete Defekte im Original prüfen.",
+                      "Mindestpreisstatus unbekannt; aus einem Euro darf kein garantierter Endpreis abgeleitet werden."],
+            "next_checks": ["Modell und Lieferumfang im Originalangebot prüfen.",
+                            "Aktuellen Preis, Gebote, Versandbedingungen und Funktionsangaben vor einer Entscheidung prüfen."],
+            "source_provider": publisher.AOG_PROVIDER, "source_url": publisher.AOG_SOURCE_URL,
+            "source_observed_at": observed, "verification_level": "aggregator", "stale": False, "carried": False,
+        }
+        items = [{**base, "id": f"v1|{100000000000 + number}|0",
+                  "title": f"Fiktive eigenständige Laborapparatur {number} mit Zubehör – ungeprüft",
+                  "url": f"https://www.ebay.de/itm/{100000000000 + number}"} for number in range(5000)]
+        feed = {
+            "schema_version": 3, "generated_at": at, "last_successful_scan_at": at,
+            "source_status": "partial", "source": publisher.AOG_PROVIDER, "provider": publisher.AOG_PROVIDER,
+            "criteria": {"lookahead_hours": 72, "description_max_age_hours": 24},
+            "coverage": {"complete": False, "retention_capacity": 5000}, "deals": items,
+        }
+        site, state = self.root / "large-site", self.root / "large-state"
+        state.mkdir()
+        snapshot.atomic_write(state / "state.json", json.dumps({"schema_version": 2, "records": items},
+                                                               ensure_ascii=False, indent=2))
+        with patch.object(snapshot, "GitHub") as github:
+            publisher.write_feed(site, feed)
+            entries = snapshot.collect_files(site, state)
+            github.assert_not_called()
+        manifest = json.loads((site / "api" / "manifest.json").read_text())
+        self.assertEqual(manifest["counts"], {"total": 5000, "pages": 100, "page_size": 50})
+        self.assertEqual(manifest["stats"]["omitted_by_capacity"], 0)
+        self.assertFalse(manifest["coverage"]["complete"])
+        self.assertEqual(len(entries), 5107)
+        sizes = {entry["path"]: len(entry["content"].encode("utf-8")) for entry in entries}
+        self.assertLess(max(sizes.values()), snapshot.MAX_FILE_BYTES)
+        self.assertLess(sum(sizes.values()), snapshot.MAX_TOTAL_BYTES)
+        self.assertLess(len(entries), snapshot.MAX_FILES)
+        self.assertGreater(sum(sizes.values()), 16 * 1024 * 1024)
+        self.assertGreater(sizes["data/deals.json"], 8 * 1024 * 1024)
+        dashboard = json.loads((site / "data" / "deals.json").read_text())
+        for row in (dashboard["deals"][0], dashboard["deals"][-1]):
+            self.assertEqual(row["semantic_assessed_at"], reviewed)
+            self.assertEqual(row["assessment_basis"], "llm")
+            self.assertEqual(row["interest_score"], 72)
+            self.assertEqual(row["source_observed_at"], observed)
+        self.capacity_metrics = {"files": len(entries), "total_bytes": sum(sizes.values()),
+                                 "largest_bytes": max(sizes.values()),
+                                 "dashboard_bytes": sizes["data/deals.json"], "state_bytes": sizes["state.json"]}
 
     def test_validate_is_offline(self):
         self.prepared()

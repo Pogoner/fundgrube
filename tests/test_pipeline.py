@@ -137,7 +137,7 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(result["daily_budget"]["calls_used"], 123)
 
     def test_invalid_configuration_is_not_a_successful_empty_feed(self):
-        for settings in ({"browse_daily_budget": 5001}, {"max_records": 0}, {"max_bids": True},
+        for settings in ({"browse_daily_budget": 5001}, {"max_records": 0}, {"max_records": 5001}, {"max_bids": True},
                          {"max_freshness_hours": 24.01}, {"max_price_eur": float("nan")},
                          {"postcode": "69121,x:y"}, {"marketplace": "EBAY_US"}):
             with self.subTest(settings=settings), self.assertRaises(ConfigurationError):
@@ -148,13 +148,33 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(settings["description_max_age_hours"], 24)
         self.assertEqual(settings["lookahead_hours"], 72)
         self.assertNotIn("max_freshness_hours", settings)
-        self.assertEqual(settings["max_records"], 800)
+        self.assertEqual(settings["max_records"], 5000)
         self.assertEqual(settings["refresh_after_minutes"], 90)
         self.assertEqual(settings["schedule_interval_minutes"], 10)
         self.assertEqual(settings["aog_max_requests_per_run"], 4)
         self.assertEqual(validate_settings({"max_freshness_hours": 24})["description_max_age_hours"], 24)
         self.assertEqual(validate_settings({"max_freshness_hours": 0.5})["description_max_age_hours"], 0.5)
         self.assertEqual(validate_settings({"max_freshness_hours": 1, "description_max_age_hours": 12})["description_max_age_hours"], 12)
+
+    def test_retention_capacity_is_reported_without_increasing_request_budgets(self):
+        for capacity in (5000, 2):
+            with self.subTest(capacity=capacity):
+                feed, _ = run({"max_records": capacity}, source="json", raw_items=[])
+                self.assertEqual(feed["coverage"]["retention_capacity"], capacity)
+                self.assertFalse(feed["coverage"]["complete"])
+        settings = validate_settings({"max_records": 5000})
+        self.assertEqual(settings["aog_max_requests_per_run"], 4)
+        self.assertEqual(settings["schedule_interval_minutes"], 10)
+        self.assertEqual(settings["browse_daily_budget"], 4500)
+
+    def test_pipeline_retains_5000_records_and_reports_the_next_omission(self):
+        items = [raw_item(item_id=f"v1|{100000000000 + index}|0") for index in range(5001)]
+        feed, state = run(source="json", raw_items=items)
+        self.assertEqual(len(feed["deals"]), 5000)
+        self.assertEqual(len(state["records"]), 5000)
+        self.assertEqual(feed["coverage"]["retention_capacity"], 5000)
+        self.assertEqual(feed["stats"]["omitted_records"], 1)
+        self.assertFalse(feed["coverage"]["complete"])
 
     def test_description_age_limit_is_validated_separately(self):
         for value in (0, 24.01, True, float("inf")):
@@ -580,12 +600,25 @@ class TestReviewedCapacity(unittest.TestCase):
         self.assertEqual(feed["semantic"]["calls_used"], 0)
         self.assertEqual(feed["coverage"]["browse_calls_this_run"], 0)
 
-    def test_expired_changed_invalid_or_text_expired_reviews_do_not_win_capacity(self):
-        for mutation in ("expired", "changed", "invalid", "text_expired"):
+    def test_old_unchanged_review_keeps_score_and_original_date_before_capacity(self):
+        state, review, incoming = self.fixture()
+        reviewed_at = iso_time(NOW - timedelta(days=4))
+        review["reviewed_at"] = reviewed_at
+        feed, result = run({"max_records": 2}, source="json", raw_items=[incoming],
+                           state=state, review_doc=review)
+        row = next(row for row in result["records"] if row["id"] == self.valuable_id)
+        self.assertEqual(row["interest_score"], 99)
+        self.assertEqual(row["semantic_assessed_at"], reviewed_at)
+        self.assertEqual(row["last_seen_at"], state["records"][0]["last_seen_at"])
+        self.assertEqual(feed["interactive_review"]["applied"], 1)
+        self.assertIsNone(feed["interactive_review"]["expires_at"])
+
+    def test_future_changed_invalid_or_text_expired_reviews_do_not_win_capacity(self):
+        for mutation in ("future", "changed", "invalid", "text_expired"):
             with self.subTest(mutation=mutation):
                 state, review, incoming = self.fixture()
-                if mutation == "expired":
-                    review["reviewed_at"] = iso_time(NOW - timedelta(hours=48, seconds=1))
+                if mutation == "future":
+                    review["reviewed_at"] = iso_time(NOW + timedelta(seconds=1))
                 elif mutation == "changed":
                     state["records"][0]["description"] = "Inhalt hat sich geändert."
                 elif mutation == "invalid":

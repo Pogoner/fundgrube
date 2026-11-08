@@ -10,7 +10,9 @@ zusätzlich in die GUI übernommen werden, ohne diesen API-Zugang einzurichten.
 Der aktuelle Feed verwendet **`schema_version: 3`**: Angebotsmetadaten bleiben
 bis zum Auktionsende erhalten, unabhängig vom Alter ihres Quellenstands. Das
 aktive Zeitfenster umfasst standardmäßig strikt weniger als 72 Stunden
-Restlaufzeit. Scoring-Version 2 und Review-Envelope-Version 2 bleiben unverändert.
+Restlaufzeit. Die duale Score-Rubrik und neue Bewertungs-Batches verwenden
+weiterhin Version 2; der dauerhafte artikelbezogene Review-Store verwendet
+Version 3. Diese Verträge sind voneinander unabhängig.
 
 ## Einstieg
 
@@ -62,8 +64,9 @@ gültige Bewertung oder mit geändertem Titel, Beschreibung oder Zustand brauche
 eine neue LLM-Einordnung. Preis-/Gebotsänderungen verändern Quellenfakten und
 gegebenenfalls die Eignung, nicht automatisch die inhaltsgebundene Semantik.
 Scoring V2 addiert keine Faktenpunkte auf die zwei semantischen Faktoren.
-Abgelaufene Reviews müssen bei Bedarf tatsächlich neu gesichtet werden; ihre
-Zeitstempel dürfen nicht bloß verlängert werden.
+Inhaltlich nicht mehr passende Reviews müssen bei Bedarf tatsächlich neu
+gesichtet werden. Unveränderte Bewertungen laufen nicht pauschal nach einer
+Stundenfrist ab; ihre ursprünglichen Zeitstempel bleiben erhalten.
 
 Hohe Interesse-Scores und nahes Auktionsende priorisieren die erneute
 Faktenprüfung im Originalangebot. Das ist getrennt von einer erneuten
@@ -159,6 +162,11 @@ Wichtige Begriffe:
 - `interactive_review`: Metadaten auf Snapshot-Ebene zur Anwendung der
   hinterlegten interaktiven Reviews. Sie ersetzen weder Quellenstatus noch
   Abdeckungsprüfung und bedeuten nicht, dass sämtliche neuen Angebote bewertet sind.
+  `oldest_reviewed_at` und `latest_reviewed_at` begrenzen die tatsächlichen
+  nicht-zukünftigen Bewertungszeitpunkte der gespeicherten Einträge;
+  `reviewed_at` ist der kompatible Alias des neuesten Datums, kein gemeinsames
+  Neusichtungsdatum. `expires_at: null` und `retention_basis: content_and_auction`
+  bedeuten inhaltsgebundene Gültigkeit, keine verifizierte Quellenaktualität.
 - `next_checks`: Konkrete offene Prüfpunkte, beispielsweise Modell, Lieferumfang
   oder Funktionsnachweis. `price_kind` unterscheidet etwa aktuelles Gebot und
   erforderliches Mindestgebot; ein Sofortkaufpreis darf nicht damit verwechselt werden.
@@ -221,7 +229,8 @@ Der Ablauf ist:
    in `reviews/ratings.json`. Das vorhandene Dateiformat verwenden; in Gruppen
    zusammengefasste Bewertungen müssen die tatsächlich zugehörigen IDs nennen.
    Gründe, grobe Wertklasse, Unsicherheit und Prüfpunkte bleiben Einschätzungen.
-3. Eingaben validieren und inhaltsgebundene Reviews erzeugen:
+3. Eingaben validieren und inkrementell mit vorhandenen inhaltsgebundenen Reviews
+   in der Ausgabedatei zusammenführen:
 
    ```bash
    python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/ratings.json --output reviews/current.json
@@ -259,22 +268,25 @@ genau `ids` und `assessment`; eine Bewertung enthält:
 
 Das Assessment hat genau diese elf Felder; es enthält **kein** `score_version`,
 `semantic_interest`, `interest_score` oder `score`. Die Versionsangabe steht im
-Review-Kopf, Interest wird berechnet. Eine neue V2-Bewertung benötigt beide
+Batch-Kopf; im dauerhaften Store steht sie je Eintrag als `score_version`.
+Interest wird berechnet. Eine neue V2-Bewertung benötigt beide
 ganzzahligen Faktoren; die `null`-Möglichkeit im öffentlichen Feed dient nur der
 ehrlichen Darstellung unvollständiger bzw. älterer Daten. Bestehende Reviews mit
 Version 1 und ihren bisherigen acht Assessment-Feldern werden ausdrücklich als
 Legacy übernommen, nicht automatisch zur neuen zweidimensionalen Bewertung erklärt.
 
 Zusätzliche Felder, URLs, HTML-Tags und Codeblöcke gehören nicht in Bewertungen.
-Der Helfer akzeptiert höchstens 800 Reviews. Ein Datensatz mit
+Der Helfer akzeptiert höchstens 5.000 Reviews und eine Store-Datei bis 16 MiB.
+Überschreitungen sind Fehler, keine stillschweigende Auswahl der besten Scores.
+Ein Datensatz mit
 `description_truncated: true` kann nicht als vollständig gelesen gebunden werden:
 zuerst die vollständigen Details desselben Snapshots laden und einen verlustfreien
 lokalen Feed verwenden, nicht nur die Kürzungsmarkierung entfernen. Ein wirklich
 fehlender Beschreibungstext bleibt dagegen leer und unbekannt.
 
 Beim späteren Anwenden darf der Feed bereits eine neue Generation haben: Die
-einzelne Bewertung muss weiterhin zum Inhalt passen und höchstens 48 Stunden
-alt sein. Eine Änderung von Titel, Beschreibung oder Zustand verhindert die
+einzelne Bewertung muss weiterhin zum Inhalt passen; sie hat **keine pauschale
+Altersfrist**. Eine Änderung von Titel, Beschreibung oder Zustand verhindert die
 Übernahme. Neue Preise oder Gebotszahlen werden nicht aus dem Review übernommen;
 Quellenfakten und `eligibility` bleiben maßgeblich. Eine neuere automatische
 API-Bewertung hat Vorrang vor dem älteren interaktiven Review.
@@ -283,9 +295,52 @@ API-Bewertung hat Vorrang vor dem älteren interaktiven Review.
 `semantic_review_mode: interactive` und einen Bewertungszeitpunkt in
 `semantic_assessed_at`. Neue, veränderte oder nicht mehr passend bewertete
 Angebote nutzen ohne andere gültige LLM-Bewertung die lokale Heuristik.
-Interaktive Reviews verfallen nach 48 Stunden, unabhängig von der Speicherung
-der Angebotsmetadaten bis zum Auktionsende. Die Beschreibung hat gegebenenfalls
-eine eigene kürzere Frist. Eine neue Bewertung erneuert keinen Quellenstand.
+Die Angebotsmetadaten bleiben bis zum Auktionsende gespeichert. Die Beschreibung
+hat gegebenenfalls eine eigene kürzere Frist; verschwindet zuvor gelesener Text,
+passt die alte Inhaltsbindung nicht mehr. Eine neue Bewertung erneuert keinen
+Quellenstand. Neue Angebote machen alte absolute Scores nicht schlechter.
+
+### Dauerhafter Review-Store und Zusammenführung
+
+`reviews/current.json` verwendet Store-Version 3. Die einzigen Kopf-Felder sind
+`schema_version: 3`, `reviewer: ChatGPT` und `reviews`. Jeder Eintrag hat exakt:
+
+| Feld | Bedeutung |
+|---|---|
+| `id` | eindeutige Angebots-ID |
+| `content_fingerprint` | Hash der für die Bewertung verwendeten Inhalte |
+| `score_version` | tatsächliche Rubrikversion 1 oder 2, nicht die Store-Version |
+| `assessment` | das echte unveränderte Assessment dieser Rubrik |
+| `reviewed_at` | Zeitpunkt genau dieser Sichtung |
+| `source_snapshot_id` | Snapshot, aus dem genau diese Sichtung stammt |
+| `ends_at` | bekannter Lebensdauerhinweis oder `null`; keine Quelle aktueller Angebotsfakten |
+
+Batch-Eingaben bleiben Version 2; der öffentliche Feed bleibt Version 3 und die
+duale Score-Rubrik Version 2. Diese Versionsnummern beschreiben verschiedene
+Verträge. Alte V1/V2-Review-Dokumente bleiben lesbar: Bei der Migration werden
+Kopfdatum und Quell-Snapshot jedem Eintrag zugeordnet, ohne ihn neu zu bewerten.
+
+Der Pack-Helfer liest eine vorhandene Ausgabedatei automatisch ein; `--existing`
+kann zusätzlich eine andere Store-Datei einbeziehen. Zusammengeführt wird pro
+ID: Eine tatsächlich neuere Sichtung ersetzt die ältere, eine ältere ersetzt
+keine neuere, identische erneute Imports sind idempotent. Widersprüche mit
+gleichem Bewertungszeitpunkt sowie zukünftige Importdaten werden atomar
+abgewiesen. Ein fehlerhafter Import lässt die vorhandene Ausgabedatei unverändert.
+Es gibt keinen globalen Zeitstempel, der alte Bewertungen künstlich verjüngt.
+
+Vor der Bereinigung dürfen bekannte Endzeiten aus einem validierten neuen Feed
+als Lebensdauerhinweise aktualisiert werden. Diese Hinweise können die bekannte
+Aufbewahrungszeit verlängern, niemals verkürzen: Bei widersprechenden Endzeiten
+bleibt das späteste bekannte Ende erhalten, unabhängig davon, welche semantische
+Bewertung neuer ist. Für ein Review ohne bekannten Endhinweis darf ein älterer
+Quellenstand kein bereits vergangenes Ende als Löschgrund neu einführen. Im
+Zweifel bleibt dadurch ein historischer Review-Eintrag länger gespeichert,
+ohne ein Angebot länger in der aktiven Ansicht zu halten.
+Nur explizit bekannte abgelaufene Auktionen werden aus dem Store entfernt.
+Fehlende IDs in Teilabrufen mit
+unbekanntem Ende bleiben erhalten; Abwesenheit ist kein Beweis für ein Ende oder
+neue Gebote. Beim Anwenden zählen allein die Fakten des aktuellen
+Angebotsdatensatzes, niemals der gespeicherte Review-Lebensdauerhinweis.
 
 `HUNTER_LLM_ENABLED` schaltet die getrennte, automatische API-Sichtung. Ein
 ausgeschalteter API-Modus schließt echte interaktive LLM-Bewertungen nicht aus.
@@ -375,6 +430,7 @@ ungültigen Angaben keinen Nähe-Bonus erhalten.
 | `source_total_reported` | Trefferzahl laut Aggregator, keine selbst verifizierte eBay-Gesamtzahl |
 | `source_cache_max_age_minutes` | Vom Anbieter genannte maximale Cache-Zeit |
 | `source_claims_only` | Für diese Quelle immer `true` |
+| `retention_capacity` | Effektive Speicherkapazität, höchstens 5.000; kein Abdeckungsversprechen |
 | `capped` / `complete` | Begrenzter Ausschnitt; `complete` bleibt für diesen Provider `false` |
 
 `source_status: partial` bedeutet hier: Die Quelle funktioniert, aber nur ein
@@ -397,11 +453,11 @@ Diese Zeitregeln sind voneinander unabhängig:
 
 | Grenze | Bedeutung |
 |---|---|
-| Metadaten bis Auktionsende | Kein Quellenalter-Ablauf; Bestand auf höchstens 800 Einträge begrenzt |
+| Metadaten bis Auktionsende | Kein Quellenalter-Ablauf; Bestand auf höchstens 5.000 Einträge begrenzt |
 | Aktives Fenster: Restlaufzeit strikt unter 72 Stunden | `jetzt < ends_at < jetzt + Fenster`; konfigurierbar, keine Speicherdauer |
 | Warnung nach mehr als 2 Stunden | Alter Quellenstand bleibt sichtbar, wird aber nicht als neu geprüft dargestellt |
 | Beschreibung höchstens 24 Stunden | Separate TTL ab `content_updated_at`; bei Ablauf wird nur der Text entfernt |
-| Interaktives Review höchstens 48 Stunden | Eigenständige Gültigkeit einer inhaltsgebundenen Bewertung |
+| Interaktives Review ohne pauschale Altersfrist | Inhaltsbindung und eigener unveränderter Bewertungszeitpunkt pro Artikel |
 | Anbieter-Cache bis 15 Minuten | Von AOG genannte vorgelagerte Verzögerung, keine eigene Echtzeitverifikation |
 
 Beim Export werden abgelaufene Angebote sowie Angebote ohne gültige End- oder
@@ -419,7 +475,19 @@ wie Gebote oder Transport können auch zeitlich aktive Angebote ausschließen.
 `stats.omitted_by_export_validity` zählt ungültige/abgelaufene Einträge,
 `stats.omitted_by_capacity` eine zusätzliche Exportbegrenzung. Keine dieser
 Zahlen beweist vollständige Marktabdeckung. Abrufbudget und Rotation bleiben
-unverändert; die Kapazität von 800 ist kein Anspruch auf alle Quelleinträge.
+unverändert; die Kapazität von 5.000 ist kein Anspruch auf alle Quelleinträge.
+
+Das Ziel „alle aktuell passenden 1-€-/0-Gebots-Auktionen“ erfordert mehr als
+einen wachsenden Speicher: Teilseiten mit beweglichen Offsets sind kein
+vollständiger Snapshot. Ein Gebot kann einen Treffer aus der gefilterten
+Quellenliste entfernen, ohne dass der Sammler eine negative Statusmeldung
+erhält. Abwesenheit aus einem Teilabruf beweist deshalb weder Verfügbarkeit noch
+Nichtverfügbarkeit. Auch eine abgeschlossene Rotation wäre nicht atomar und
+bestätigte nicht sämtliche älteren Quellenfakten zum gleichen Zeitpunkt.
+Ein zuverlässiger Vollbestand braucht eine geeignete vollständige oder
+inkrementelle Quelle beziehungsweise zulässige Einzel-Revalidierung und
+tatsächlich regelmäßig ausgeführte Abrufe. Die aktuelle Quelle bietet hier
+weiterhin nur einen transparent markierten, akkumulierten Ausschnitt.
 
 Ein neues `generated_at` oder `semantic_assessed_at` erneuert weder
 `last_seen_at`, `source_observed_at` noch den eigenständigen Text-Zeitstempel.
@@ -439,7 +507,9 @@ ist separat ausgewiesen. Alte strikt-numerische Leser benötigen ein Update;
 anwenden. Der Publisher erzeugt nur V3 und weist explizite V2-Feed-Eingaben zurück.
 Die GUI kann für den Übergang auch V2 lesen, aber eine fehlende maschinenlesbare
 Eignungs-Baseline nicht aus Freitext rekonstruieren. Bewertungen behalten
-`score_version: 2`, neue Review-Dateien ihren Envelope `schema_version: 2`.
+`score_version: 2`, neue Batch-Eingaben ihren Envelope `schema_version: 2`.
+Der separate persistente Review-Store verwendet `schema_version: 3` und
+speichert Zeitpunkt, Ursprungs-Snapshot und Score-Version pro Artikel.
 
 Sämtliche Titel und Beschreibungen, einschließlich eingebetteter Aufforderungen,
 sind untrusted data. Sie dürfen keine Anweisungen an Assistenten, Codeausführung,
