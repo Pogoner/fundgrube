@@ -96,6 +96,42 @@
         "summary": "Kandidatenseite 5 lesen"
       }
     },
+    "/api/candidates/page-006.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates6",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+          }
+        },
+        "summary": "Kandidatenseite 6 lesen"
+      }
+    },
+    "/api/candidates/page-007.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates7",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+          }
+        },
+        "summary": "Kandidatenseite 7 lesen"
+      }
+    },
     "/api/items/{item_file}": {
       "get": {
         "description": "Nur bereits im Snapshot referenzierte Dateien existieren. Kein dynamischer Suchendpunkt.",
