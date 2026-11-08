@@ -4,7 +4,8 @@ Dies ist eine **statische, nur lesende JSON-Schnittstelle**, kein MCP-Server.
 Einstieg: `https://pogoner.github.io/fundgrube/api/manifest.json`.
 Alternativ GitHub: Repository `Pogoner/fundgrube`, Branch `data`, Pfad `api/manifest.json`.
 Feed-Schema **3**: Metadaten bleiben bis Auktionsende erhalten; Scoring-Version 2
-und Review-Envelope-Version 2 sind davon unabhängige Versionsangaben.
+und Batch-Review-Version 2 sind davon unabhängige Versionsangaben. Der dauerhafte
+Review-Store Version 3 speichert Bewertung und ursprünglichen Zeitpunkt pro Artikel.
 
 1. Auf GitHub zuerst den Branch in einen Commit-SHA auflösen. Manifest und alle weiteren Dateien mit demselben `ref` lesen. Bei Pages immer die `snapshot_id` vergleichen und nach einem Wechsel neu beginnen.
 2. `source_status`, `blockers`, `last_successful_scan_at`, Abdeckung und Quellenalter prüfen. Ein erfolgreicher Build beweist keinen erfolgreichen Quellenabruf. `unconfigured` und `disabled` enthalten keine echten Kandidaten; `demo` ist ausdrücklich fiktiv. `partial` und `error` können ältere Beobachtungen noch laufender Auktionen enthalten. Auch `live` bedeutet beim Aggregator keinen direkt bei eBay überprüften Angebotsstand.
@@ -38,7 +39,7 @@ Kandidatenseiten und Details. Unbekannte Faktoren bleiben unbekannt.
 
 - **Bestand:** Bekannte, noch laufende Auktionen bleiben unabhängig vom Alter
   ihrer Quellenbeobachtung bis `ends_at` erhalten, innerhalb der Kapazität von
-  800 Einträgen. `valid_until = ends_at` verspricht keine unveränderten
+  5000 Einträgen. `valid_until = ends_at` verspricht keine unveränderten
   Preise oder Gebote. Neue Builds und Bewertungen erneuern keine Quellenzeitstempel.
 - **Aktives Fenster:** Standardmäßig `jetzt < ends_at < jetzt + 72 Stunden`;
   die konfigurierte `active_window_hours`-Grenze wird exklusiv geprüft. Länger
@@ -51,8 +52,12 @@ Kandidatenseiten und Details. Unbekannte Faktoren bleiben unbekannt.
   sichtbar, tragen aber `stale` und `carried`. Kein falsches „gerade geprüft“.
 - **Beschreibung:** Eigene Text-TTL von höchstens 24 Stunden;
   abgelaufener Text verschwindet, das übrige Angebot nicht.
-- **Review:** Interaktive Einordnungen haben weiterhin ihre separate 48-Stunden-Frist;
-  ihr Ablauf löscht oder verjüngt keine Quellenbeobachtung.
+- **Review:** Inhaltsgebundene Einordnungen haben keine pauschale Altersfrist.
+  Jeder Artikel behält seinen eigenen Bewertungszeitpunkt; neue Sichtungen ergänzen
+  den Bestand. Nur passende Inhalte einer noch laufenden Auktion werden angewendet.
+  Neue Angebote verändern weder die alten absoluten Scores noch deren Zeitstempel.
+  Geänderte Eingaben einschließlich entfallener Beschreibungstexte benötigen eine
+  passende neue Bewertung. Reviews bestätigen keine aktuellen Quellenfakten.
 - **Anbieter-Cache:** Die genannten bis zu 15 Minuten bei AOG sind eine getrennte
   vorgelagerte Cache-Verzögerung laut Anbieter, keine eigene Echtzeitverifikation.
 

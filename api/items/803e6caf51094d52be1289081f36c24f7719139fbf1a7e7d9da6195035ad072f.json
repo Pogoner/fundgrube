@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T09:14:08Z",
+    "evaluated_at": "2026-11-08T10:01:06Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T09:14:08Z",
+  "generated_at": "2026-11-08T10:01:06Z",
   "item": {
     "assessment_basis": "heuristic",
     "assessment_confidence": "low",
@@ -34,6 +34,7 @@
     "eligibility": "excluded",
     "eligibility_reasons": [
       "Versand über dem Limit; keine passende Abholung bestätigt",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
@@ -64,10 +65,13 @@
     "reserve_status": "unknown",
     "risks": [
       "Versand über dem Limit; keine passende Abholung bestätigt",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Defekt, ungeprüft oder unvollständig angegeben; keine Funktion unterstellen",
+      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 78,
@@ -79,7 +83,7 @@
     "source_observed_at": "2026-11-08T07:48:21Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": false,
+    "stale": true,
     "time_window_eligible": true,
     "title": "Hameg Oszilloskop Oscilloscope HM312, ungetestet",
     "total_eur": null,
@@ -135,7 +139,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:0e0abeff25589bdc140c7ad868c7616a061919b60b68b84548d5df5e6bbcc224",
+  "snapshot_id": "sha256:03e6352fbab8965fcbfd7d2d6b8ad071b4855be07dba84f9de5db4dce3835361",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",

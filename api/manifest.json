@@ -42,8 +42,8 @@
   ],
   "counts": {
     "page_size": 50,
-    "pages": 15,
-    "total": 730
+    "pages": 17,
+    "total": 803
   },
   "coverage": {
     "api_requests_this_run": 4,
@@ -66,20 +66,21 @@
     "debounce_seconds": 540,
     "local_active_window_hours": 72,
     "manual_leaf_override": false,
-    "next_offset": 816,
+    "next_offset": 912,
     "page_size": 48,
     "pages_fetched": 4,
     "pagination_caveat": "Begrenzter Ausschnitt aus einer veränderlichen, zwischengespeicherten Ergebnisliste. Die Trefferzahl der Quelle ist keine garantierte vollständige Abdeckung.",
     "pagination_is_stable": false,
     "pickup_search_count": 1,
-    "pickup_total_reported": 255,
+    "pickup_total_reported": 258,
     "planned_interval_minutes": 10,
     "price_filter_applied": true,
     "requests_this_run": 5,
+    "retention_capacity": 5000,
     "schedule_interval_minutes": 10,
     "source_cache_max_age_minutes": 15,
     "source_claims_only": true,
-    "source_total_reported": 4174,
+    "source_total_reported": 4177,
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "upstream_end_filter": "alle"
   },
@@ -95,7 +96,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T09:14:08Z",
+    "evaluated_at": "2026-11-08T10:01:06Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -105,22 +106,26 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T09:14:08Z",
+  "generated_at": "2026-11-08T10:01:06Z",
   "interactive_review": {
-    "applied": 361,
+    "applied": 338,
     "available": 408,
     "errors": [],
-    "expires_at": "2026-11-10T07:08:35Z",
+    "expires_at": null,
+    "latest_reviewed_at": "2026-11-08T07:08:35Z",
+    "oldest_reviewed_at": "2026-11-08T07:08:35Z",
+    "retention_basis": "content_and_auction",
     "reviewed_at": "2026-11-08T07:08:35Z",
     "reviewer": "ChatGPT",
     "skipped_changed": 0,
-    "skipped_missing": 47,
+    "skipped_future": 0,
+    "skipped_missing": 70,
     "skipped_newer": 0,
     "skipped_stale": 0,
     "source_snapshot_id": "sha256:3f45858a4d149bab9de8b1d95f705d81753a0ab744bd617b29ef889da1de7184",
     "status": "applied",
     "total": 408,
-    "unreviewed": 369,
+    "unreviewed": 465,
     "validation_status": "partial"
   },
   "interface": {
@@ -133,7 +138,7 @@
     "site_url": "https://pogoner.github.io/fundgrube/"
   },
   "kind": "manifest",
-  "last_successful_scan_at": "2026-11-08T09:14:08Z",
+  "last_successful_scan_at": "2026-11-08T10:01:06Z",
   "location": {
     "city": "Heidelberg",
     "country": "DE",
@@ -145,91 +150,103 @@
       "count": 50,
       "index": 1,
       "path": "api/candidates/page-001.json",
-      "sha256": "d7176eb6271082cfe8af052d8aec5c1990cf76e777102757b008be496529cccb"
+      "sha256": "d42b22545f87b64dd7c747e12cf1750e0b721948af67158ead2363c24904be02"
     },
     {
       "count": 50,
       "index": 2,
       "path": "api/candidates/page-002.json",
-      "sha256": "51cb7fcea911c3ebb282b819ff9b486cd50e02d4fa8f23e626b5ca281e8a035f"
+      "sha256": "a0bf2d5d0a0d435750232a022f1a0ea3fb2dcac2a327736c603c10ee4b834d75"
     },
     {
       "count": 50,
       "index": 3,
       "path": "api/candidates/page-003.json",
-      "sha256": "3312865829da8bf69b990dc461aeda363d6bd9e0aa8372e86da48292bc56d623"
+      "sha256": "5e100467606dc99d25dba9770d8ed96a190c2ac43056d0cad717972963864802"
     },
     {
       "count": 50,
       "index": 4,
       "path": "api/candidates/page-004.json",
-      "sha256": "6a07250359f7fe831a4657b9b395772bd58de59e0d3c06819afb3f5d02fd9964"
+      "sha256": "7b30cf4f5eca1a5f04c6fadf3263aa3de18f1cca77201c7a8439144926a65b2d"
     },
     {
       "count": 50,
       "index": 5,
       "path": "api/candidates/page-005.json",
-      "sha256": "8d1f458104ae8d31f5792dc84119288bd1802573b86108a9f4f98f8c2484c084"
+      "sha256": "3fbfa041c210b5248dde90b1768df0d2fba13145374b2771a93b1550f0592fc9"
     },
     {
       "count": 50,
       "index": 6,
       "path": "api/candidates/page-006.json",
-      "sha256": "34b26d7ae3c52f3752eb93f3cbdf6a7dde14a6e78ba15d3b6072a511aea79dab"
+      "sha256": "14f7ceb8edd1ac2ad6f5200d73cae698e18c31a24939cb821a43c01d152c1d9f"
     },
     {
       "count": 50,
       "index": 7,
       "path": "api/candidates/page-007.json",
-      "sha256": "de21fbdec6faa43fff102642b272046680a3edcc78d53c1b484cae60fbf99b09"
+      "sha256": "b3e5bcd511842d60bff675ffe6a14372a95242bff07c21cdd06c717febe98296"
     },
     {
       "count": 50,
       "index": 8,
       "path": "api/candidates/page-008.json",
-      "sha256": "cedbc299363112df5e30d1e2a92a9b0483f8dd8af3209fc45ccaf9b6723c6985"
+      "sha256": "8fa8a6d6c5d00de9a02e4cc04b933ac510843c4dc4ad3ebe0e1bbe46b67ef72d"
     },
     {
       "count": 50,
       "index": 9,
       "path": "api/candidates/page-009.json",
-      "sha256": "45c71ccee5d79ad8ac027fc6866abd71625ade4c59b87b267b14d544f8ac50ea"
+      "sha256": "cf5e606c39838b99693f72f8113a0abf27eee8deb219a442d44b96963c293c09"
     },
     {
       "count": 50,
       "index": 10,
       "path": "api/candidates/page-010.json",
-      "sha256": "8fe17de6784dd99d7935f32240f286286b1608efbf52a6e03181e372f664b240"
+      "sha256": "e9fe31fbd2b402b33367f5472ad68cc6fa3a5fb361ff5c0bc4c657cc97e63574"
     },
     {
       "count": 50,
       "index": 11,
       "path": "api/candidates/page-011.json",
-      "sha256": "a3bfebbf65fafd5f3b0e28db5c6d6b99f07e9eb9ab53dfce0cfb70e1271bbf5a"
+      "sha256": "814325fb2de618c7cafa76e7004c1f2fe5ccfd838ab1b5c9dd6d2ae327141927"
     },
     {
       "count": 50,
       "index": 12,
       "path": "api/candidates/page-012.json",
-      "sha256": "c1cff1c9d278168316de288c01946449498d35c78fc89b86c963f05e3473cd61"
+      "sha256": "00c88d0cdec10bb2bbf4eeae3543a3104d0c40e33ab36ed06fe47526df4ed702"
     },
     {
       "count": 50,
       "index": 13,
       "path": "api/candidates/page-013.json",
-      "sha256": "ef47eb9e21b50b63ff4add551129878ab67a1b00a98da0a33a6875c76139b27f"
+      "sha256": "3253e60440d639dff8b30d58fe707c9cf3c8d884877a4c6ca5eaafe654e07ea7"
     },
     {
       "count": 50,
       "index": 14,
       "path": "api/candidates/page-014.json",
-      "sha256": "c19e8c6072e795f87c95274114803bc73540ad4bc85033aaa77102117bdec61b"
+      "sha256": "7ec5fd9f6f44a9466c58e95552f4605d5ae4152ac4c8d696df8a1c87383e8d7c"
     },
     {
-      "count": 30,
+      "count": 50,
       "index": 15,
       "path": "api/candidates/page-015.json",
-      "sha256": "58d622265b787640dae51c58137a1245b3beafe644e3dbd06185ac02ca5a1257"
+      "sha256": "9a1c3e6ac8bc2a23af110ed455afc66bf32eeb723cc85097bab09076e00861f8"
+    },
+    {
+      "count": 50,
+      "index": 16,
+      "path": "api/candidates/page-016.json",
+      "sha256": "51ecd5cbdf4171c42680c6f57db0b33c147bc648af21a134dac37ef2616d3b43"
+    },
+    {
+      "count": 3,
+      "index": 17,
+      "path": "api/candidates/page-017.json",
+      "sha256": "5dd13eb8ba5c128d7e92eacf9fed8942eb113c0f42b6eca0d51f5ae9918e4787"
     }
   ],
   "paths": {
@@ -280,15 +297,15 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:0e0abeff25589bdc140c7ad868c7616a061919b60b68b84548d5df5e6bbcc224",
+  "snapshot_id": "sha256:03e6352fbab8965fcbfd7d2d6b8ad071b4855be07dba84f9de5db4dce3835361",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "stats": {
-    "active": 730,
+    "active": 803,
     "budget_limited": false,
-    "carried": 581,
+    "carried": 654,
     "categories_completed": 0,
     "categories_planned": 1,
     "categories_scanned": 1,
@@ -305,12 +322,12 @@
     "pages_omitted": 0,
     "received": 149,
     "refreshed": 0,
-    "retained": 730,
-    "review": 718,
+    "retained": 803,
+    "review": 791,
     "searches_failed": 0,
     "searches_succeeded": 4,
-    "shortlisted": 718,
-    "stale": 402
+    "shortlisted": 791,
+    "stale": 558
   },
   "status_message": "Öffentliche Quelle aktiv: begrenzter Ausschnitt mit zwischengespeicherten Angaben von auktionen-ohne-gebot.de.",
   "untrusted_listing_text": true,

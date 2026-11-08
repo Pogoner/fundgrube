@@ -60,7 +60,7 @@
                 "items": {
                   "$ref": "#/components/schemas/item"
                 },
-                "maxItems": 800,
+                "maxItems": 5000,
                 "type": "array"
               },
               "kind": {
@@ -132,6 +132,12 @@
               },
               "requests_this_run": {
                 "minimum": 0,
+                "type": "integer"
+              },
+              "retention_capacity": {
+                "description": "Effective maximum retained inventory size; not a promise of source coverage.",
+                "maximum": 5000,
+                "minimum": 1,
                 "type": "integer"
               },
               "source_cache_max_age_minutes": {
@@ -229,6 +235,19 @@
               "available": {
                 "minimum": 0,
                 "type": "integer"
+              },
+              "expires_at": {
+                "$ref": "#/components/schemas/nullableTime",
+                "description": "Null for content-bound persistent reviews; source facts have independent observation times."
+              },
+              "latest_reviewed_at": {
+                "$ref": "#/components/schemas/nullableTime"
+              },
+              "oldest_reviewed_at": {
+                "$ref": "#/components/schemas/nullableTime"
+              },
+              "retention_basis": {
+                "const": "content_and_auction"
               },
               "reviewed_at": {
                 "$ref": "#/components/schemas/nullableTime"
@@ -897,7 +916,7 @@
                     "type": "integer"
                   },
                   "total": {
-                    "maximum": 800,
+                    "maximum": 5000,
                     "minimum": 0,
                     "type": "integer"
                   }
@@ -1471,6 +1490,42 @@
           }
         },
         "summary": "Kandidatenseite 15 lesen"
+      }
+    },
+    "/api/candidates/page-016.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates16",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 16 lesen"
+      }
+    },
+    "/api/candidates/page-017.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates17",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 17 lesen"
       }
     },
     "/api/items/{item_file}": {

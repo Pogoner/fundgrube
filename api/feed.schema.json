@@ -59,7 +59,7 @@
               "items": {
                 "$ref": "#/$defs/item"
               },
-              "maxItems": 800,
+              "maxItems": 5000,
               "type": "array"
             },
             "kind": {
@@ -131,6 +131,12 @@
             },
             "requests_this_run": {
               "minimum": 0,
+              "type": "integer"
+            },
+            "retention_capacity": {
+              "description": "Effective maximum retained inventory size; not a promise of source coverage.",
+              "maximum": 5000,
+              "minimum": 1,
               "type": "integer"
             },
             "source_cache_max_age_minutes": {
@@ -228,6 +234,19 @@
             "available": {
               "minimum": 0,
               "type": "integer"
+            },
+            "expires_at": {
+              "$ref": "#/$defs/nullableTime",
+              "description": "Null for content-bound persistent reviews; source facts have independent observation times."
+            },
+            "latest_reviewed_at": {
+              "$ref": "#/$defs/nullableTime"
+            },
+            "oldest_reviewed_at": {
+              "$ref": "#/$defs/nullableTime"
+            },
+            "retention_basis": {
+              "const": "content_and_auction"
             },
             "reviewed_at": {
               "$ref": "#/$defs/nullableTime"
@@ -896,7 +915,7 @@
                   "type": "integer"
                 },
                 "total": {
-                  "maximum": 800,
+                  "maximum": 5000,
                   "minimum": 0,
                   "type": "integer"
                 }
