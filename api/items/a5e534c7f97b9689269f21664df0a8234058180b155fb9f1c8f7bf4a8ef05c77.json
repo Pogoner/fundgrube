@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T21:05:02Z",
+    "evaluated_at": "2026-11-08T21:06:59Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,21 +13,21 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T21:05:02Z",
+  "generated_at": "2026-11-08T21:06:59Z",
   "item": {
     "assessment_basis": "llm",
-    "assessment_confidence": "low",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Neu",
     "content_updated_at": "2026-11-08T20:36:18Z",
     "country": "",
     "dependencies": [
-      "Kabel",
-      "Crimpzange",
-      "Flachsteckgegenstücke"
+      "Passende Leiter",
+      "Geeignetes Crimpwerkzeug",
+      "Passende Flachsteckgegenstücke"
     ],
     "description": "",
     "description_status": "missing",
@@ -50,7 +50,7 @@
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Leiterquerschnitt und Verbinderart prüfen."
+      "Verbinderart, zulässigen Leiterquerschnitt, Material und tatsächliche Stückzahl prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -65,21 +65,21 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Einordnung anhand des vollständig vorliegenden Titels und Zustandslabels."
+      "Angeboten werden 100 Flachsteckverbinder 6,3 x 0,8 mm, keine vollständige elektrische Baugruppe."
     ],
     "reserve_status": "unknown",
     "risks": [
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-      "Kein Verkäufer-Volltext; Lieferumfang und Zustand im Detail unbelegt.",
+      "Nur Titel und Zustandsangabe liegen vor; genaue Verbinderbauform und Material sind nicht unabhängig geprüft.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 17,
     "score": 10,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_assessed_at": "2026-11-08T20:11:25.293856Z",
+    "semantic_assessed_at": "2026-11-08T20:51:13.627179Z",
     "semantic_interest": 17,
     "semantic_review_mode": "interactive",
     "shipping_eur": 7.0,
@@ -92,11 +92,11 @@
     "total_eur": null,
     "total_known_eur": 8.0,
     "url": "https://www.ebay.de/itm/336872066936?hash=item4e6f23cf78%3Ag%3A-6MAAeSwcUtq5cgz&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Universell verdrahtbar mit passendem Kabel und Crimpwerkzeug.",
+    "useability_reason": "Mit passenden Leitern, Crimpwerkzeug und Gegenkontakten für gewöhnliche Verdrahtungsaufgaben nutzbar.",
     "useability_score": 61,
     "valid_until": "2026-11-09T19:17:01Z",
     "value_band": "around_50",
-    "value_reason": "Hundert Klauke-Flachstecker bilden einen brauchbaren Normteilvorrat.",
+    "value_reason": "Hundert Flachsteckverbinder der genannten Größe bilden einen brauchbaren Normteilvorrat. Der Titel nennt Merschjohann; ein anderer Hersteller ist nicht belegt.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -153,10 +153,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:418f8f314f215a9acbda9c36cbed96bf0925576a4d66680dbff4e31d6bcdee8f",
+  "snapshot_id": "sha256:713fe12ed99a481364f62d673eb136fcb9d398755188723a5d7b0bd0e6d60938",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
