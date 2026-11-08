@@ -3013,42 +3013,6 @@
         "summary": "Kandidatenseite 85 lesen"
       }
     },
-    "/api/candidates/page-086.json": {
-      "get": {
-        "operationId": "readFundgrubeCandidates86",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/candidatePage"
-                }
-              }
-            },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
-          }
-        },
-        "summary": "Kandidatenseite 86 lesen"
-      }
-    },
-    "/api/candidates/page-087.json": {
-      "get": {
-        "operationId": "readFundgrubeCandidates87",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/candidatePage"
-                }
-              }
-            },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
-          }
-        },
-        "summary": "Kandidatenseite 87 lesen"
-      }
-    },
     "/api/items/{item_file}": {
       "get": {
         "description": "Nur bereits im Snapshot referenzierte Dateien existieren. Kein dynamischer Suchendpunkt.",

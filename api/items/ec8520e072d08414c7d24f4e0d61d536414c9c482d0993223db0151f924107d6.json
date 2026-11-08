@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T21:06:59Z",
+    "evaluated_at": "2026-11-08T21:35:55Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T21:06:59Z",
+  "generated_at": "2026-11-08T21:35:55Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-08T20:40:09Z",
+    "content_updated_at": "2026-11-08T21:10:52Z",
     "country": "",
     "dependencies": [
       "Strom",
@@ -34,13 +34,11 @@
     "detail_path": "api/items/ec8520e072d08414c7d24f4e0d61d536414c9c482d0993223db0151f924107d6.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Weder Versandkosten noch passende Abholung bestätigt",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-11T21:31:57Z",
@@ -48,7 +46,7 @@
     "image": "https://i.ebayimg.com/images/g/iKoAAeSw9-xq66TV/s-l1600.jpg",
     "interest_score": 65,
     "is_auction": true,
-    "last_seen_at": "2026-11-08T20:40:09Z",
+    "last_seen_at": "2026-11-08T21:10:52Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -70,7 +68,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Weder Versandkosten noch passende Abholung bestätigt",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
@@ -86,11 +83,11 @@
     "semantic_interest": 69,
     "semantic_review_mode": "interactive",
     "shipping_eur": null,
-    "source_observed_at": "2026-11-08T20:40:09Z",
+    "source_observed_at": "2026-11-08T21:10:52Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Dampfsterilitator KSG-116-2 mit Mikroprozessorsteuerung",
     "total_eur": null,
     "total_known_eur": null,
@@ -156,10 +153,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:713fe12ed99a481364f62d673eb136fcb9d398755188723a5d7b0bd0e6d60938",
+  "snapshot_id": "sha256:574bdb5b26117338bc39bfe1dbcf2fc658dd908660a4facf05ccdac7e6cb9545",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
