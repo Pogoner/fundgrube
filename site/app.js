@@ -344,7 +344,8 @@
     const state = eligibility(item);
     const rating = scores(item);
     const symbol = String(item.title || "FG").trim().slice(0, 2).toUpperCase();
-    const preview = typeof item.description === "string" && item.description.trim() ? item.description : array(item.reasons).length ? `Einordnung: ${item.reasons[0]}` : "Keine Beschreibung verfügbar; Details im Original prüfen.";
+    const rationale = typeof item.value_reason === "string" && item.value_reason.trim() ? item.value_reason : array(item.reasons)[0];
+    const preview = typeof item.description === "string" && item.description.trim() ? item.description : rationale ? `Einordnung: ${rationale}` : "Keine Beschreibung verfügbar; Details im Original prüfen.";
     const risks = array(item.risks).slice(0, 2);
     return `<article class="deal-card${expired(item) ? " expired" : ""}" data-id="${esc(item.id)}">
       <div class="card-top"><div class="card-visual">${picture && !isDemo ? `<img alt="Foto zum Angebot" loading="lazy" referrerpolicy="no-referrer" src="${esc(picture)}" />` : `<span class="shape" aria-hidden="true">${esc(symbol)}</span>`}</div><div class="card-info">

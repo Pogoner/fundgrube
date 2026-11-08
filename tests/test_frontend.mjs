@@ -165,6 +165,16 @@ test("both pages use one shared asset version and reference existing local CSS a
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
 });
 
+test("cards without seller text show the semantic rationale before generic price reasons", async () => {
+  const h = harness(fixture({deals: [offer({description: "", value_reason: "Vollständiges eigenständiges Laborgerät.", reasons: ["Aktueller Auktionspreis höchstens 1 Euro"]})]}));
+  await flush();
+  const preview = h.nodes.get("cards").innerHTML.match(/<p class="card-descr">([^<]*)<\/p>/)?.[1];
+  assert.equal(preview, "Einordnung: Vollständiges eigenständiges Laborgerät.");
+  const withText = harness(fixture({deals: [offer({description: "Tatsächlicher Verkäufertext.", value_reason: "Semantische Einordnung."})]}));
+  await flush();
+  assert.match(withText.nodes.get("cards").innerHTML, /<p class="card-descr">Tatsächlicher Verkäufertext\.<\/p>/);
+});
+
 test("loading, missing source, blockers and refresh failure remain visible on the lean home", async () => {
   let release; const waiting = new Promise(resolve => { release = resolve; });
   const data = fixture({source_status: "unconfigured", last_successful_scan_at: null, blockers: [{message: "<script>Not configured</script>", action: "Add credentials"}]});
