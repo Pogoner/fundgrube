@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-08T05:58:11Z",
+  "generated_at": "2026-11-08T07:16:47Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "low",
@@ -8,8 +8,13 @@
     "carried": false,
     "city": "",
     "condition": "Neu",
-    "content_updated_at": "2026-11-08T05:43:11Z",
+    "content_updated_at": "2026-11-08T07:01:47Z",
     "country": "",
+    "dependencies": [
+      "Passendes Ausbauprojekt",
+      "Befestigung und gegebenenfalls Eckstücke",
+      "Transportmöglichkeit für drei Meter lange Stücke"
+    ],
     "description": "",
     "description_status": "missing",
     "description_truncated": false,
@@ -25,14 +30,14 @@
     "ends_at": "2026-11-08T12:54:55Z",
     "id": "v1|377612761360|0",
     "image": "https://i.ebayimg.com/images/g/JP8AAeSwptdqhZKe/s-l1600.jpg",
-    "interest_score": 70,
+    "interest_score": 37,
     "is_auction": true,
-    "last_seen_at": "2026-11-08T05:43:11Z",
+    "last_seen_at": "2026-11-08T07:01:47Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Querschnitt, Oberfläche und Stückzahl bestätigen",
-      "Transportsituation separat prüfen"
+      "Profil und Gesamtmenge ansehen.",
+      "Abholort und Transportlänge vor Gebot klären."
     ],
     "pickup_available": true,
     "pickup_radius_km": 50,
@@ -42,13 +47,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "accessory",
+    "product_kind": "consumable",
     "reasons": [
       "Aktueller Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Nähe laut Umkreissuche der Quelle",
-      "Deutliche Menge statt einzelner Restleiste",
-      "Neu laut Quelle"
+      "48 laufende Meter neues Ausbau-Material statt Kleinstmenge."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -56,17 +60,18 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-      "Keine Maschine und nur bei passendem Bauprojekt nutzbar",
-      "Profil, Oberflächenzustand und vollständige Menge ungeprüft",
+      "Profil, Endstücke und tatsächliche Anzahl unbestätigt.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "score": 70,
+    "scalp_score": 70,
+    "score": 37,
+    "score_version": 2,
     "semantic_assessed": true,
-    "semantic_assessed_at": "2026-11-07T22:40:01Z",
-    "semantic_interest": 65,
+    "semantic_assessed_at": "2026-11-08T07:08:35Z",
+    "semantic_interest": 70,
     "semantic_review_mode": "interactive",
     "shipping_eur": null,
-    "source_observed_at": "2026-11-08T05:43:11Z",
+    "source_observed_at": "2026-11-08T07:01:47Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
@@ -74,15 +79,57 @@
     "total_eur": null,
     "total_known_eur": null,
     "url": "https://www.ebay.de/itm/377612761360?hash=item57eb797910%3Ag%3AJP8AAeSwptdqhZKe&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
+    "useability_reason": "Keine proprietäre Maschine nötig, aber ein passendes Ausbauvorhaben, Montagezubehör und Platz für lange Stücke. Ohne konkretes Projekt bleibt der Eigenbedarf unsicher.",
+    "useability_score": 53,
     "valid_until": "2026-11-08T12:54:55Z",
     "value_band": "around_500",
-    "value_reason": "Sechzehn neue drei Meter lange Alusockelleisten sind ein größerer Materialposten; eine höhere Gesamt-Größenordnung ist plausibel, hängt aber stark von Profil und Verwendbarkeit ab.",
+    "value_reason": "16 Alusockelleisten zu je drei Metern sind ein substanzieller Materialposten; Profil, Oberflächenzustand und Vollständigkeit sind noch zu prüfen.",
     "verification_level": "aggregator"
   },
   "kind": "item",
   "provider": "auktionen-ohne-gebot",
   "schema_version": 2,
-  "snapshot_id": "sha256:3f45858a4d149bab9de8b1d95f705d81753a0ab744bd617b29ef889da1de7184",
+  "scoring": {
+    "additional_fact_bonus": 0,
+    "category_caps": false,
+    "condition_verified": false,
+    "eligibility_is_separate": true,
+    "fields": {
+      "interest_score": {
+        "alias": "score",
+        "label": "Interest",
+        "meaning": "Aus beiden Faktoren abgeleitete Sichtungspriorität; null solange ein Faktor fehlt."
+      },
+      "scalp_score": {
+        "label": "Scalp",
+        "maximum": 100,
+        "meaning": "Semantisches wirtschaftliches Interesse; keine konkrete Wertermittlung.",
+        "minimum": 0,
+        "reason_field": "value_reason"
+      },
+      "semantic_interest": {
+        "alias": "scalp_score",
+        "deprecated": true,
+        "label": "Legacy alias"
+      },
+      "useability_score": {
+        "dependencies_field": "dependencies",
+        "label": "Useability",
+        "maximum": 100,
+        "meaning": "Praktische Eigenständigkeit und Abhängigkeit von zusätzlicher Anlage, Software, Zubehör oder Infrastruktur.",
+        "minimum": 0,
+        "reason_field": "useability_reason"
+      }
+    },
+    "formula": "round_half_up(scalp_score * useability_score / 100)",
+    "interest_score_is_derived": true,
+    "is_appraisal": false,
+    "legacy_policy": "Items with score_version 1 retain a known old overall score as Scalp; Useability and Interest stay null until reassessed. No missing factor is invented.",
+    "rounding": "half_up",
+    "score_version": 2,
+    "useability_is_condition_probability": false
+  },
+  "snapshot_id": "sha256:7e893b21bc9eb2b3bd38fb353f7707c4798275428482acf89ff39eb92cea5061",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",

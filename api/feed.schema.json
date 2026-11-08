@@ -243,6 +243,9 @@
         "schema_version": {
           "const": 2
         },
+        "scoring": {
+          "$ref": "#/$defs/scoring"
+        },
         "snapshot_id": {
           "pattern": "^sha256:[0-9a-f]{64}$",
           "type": "string"
@@ -294,6 +297,129 @@
     },
     "item": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "score_version": {
+                "const": 1
+              }
+            },
+            "required": [
+              "score_version"
+            ]
+          },
+          "then": {
+            "properties": {
+              "dependencies": {
+                "maxItems": 0
+              },
+              "interest_score": {
+                "const": null
+              },
+              "score": {
+                "const": null
+              },
+              "useability_score": {
+                "const": null
+              }
+            },
+            "required": [
+              "scalp_score",
+              "useability_score",
+              "useability_reason",
+              "dependencies"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "score_version": {
+                "const": 2
+              }
+            },
+            "required": [
+              "score_version"
+            ]
+          },
+          "then": {
+            "properties": {
+              "interest_score": {
+                "$ref": "#/$defs/nullableScore"
+              },
+              "score": {
+                "$ref": "#/$defs/nullableScore"
+              },
+              "value_reason": {
+                "maxLength": 500,
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "scalp_score",
+              "useability_score",
+              "useability_reason",
+              "dependencies"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "scalp_score": {
+                "const": null
+              },
+              "score_version": {
+                "const": 2
+              }
+            },
+            "required": [
+              "score_version",
+              "scalp_score"
+            ]
+          },
+          "then": {
+            "properties": {
+              "interest_score": {
+                "const": null
+              },
+              "score": {
+                "const": null
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "score_version": {
+                "const": 2
+              },
+              "useability_score": {
+                "const": null
+              }
+            },
+            "required": [
+              "score_version",
+              "useability_score"
+            ]
+          },
+          "then": {
+            "properties": {
+              "interest_score": {
+                "const": null
+              },
+              "score": {
+                "const": null
+              }
+            }
+          }
+        }
+      ],
       "properties": {
         "assessment_at": {
           "$ref": "#/$defs/nullableTime"
@@ -356,6 +482,16 @@
         },
         "currency": {
           "$ref": "#/$defs/nullableText"
+        },
+        "dependencies": {
+          "description": "Untrusted assessment text listing practical dependencies; empty does not certify independence.",
+          "items": {
+            "maxLength": 240,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 5,
+          "type": "array"
         },
         "description": {
           "maxLength": 20000,
@@ -483,6 +619,7 @@
           "enum": [
             "apparatus",
             "tool",
+            "component",
             "accessory",
             "media",
             "consumable",
@@ -519,6 +656,10 @@
           "maxItems": 20,
           "type": "array"
         },
+        "scalp_score": {
+          "$ref": "#/$defs/nullableScore",
+          "description": "Semantic economic-interest factor, not a price appraisal; version 1 preserves a known old overall score only as a legacy cue."
+        },
         "score": {
           "maximum": 100,
           "minimum": 0,
@@ -527,6 +668,14 @@
             "null"
           ]
         },
+        "score_version": {
+          "description": "Per-item assessment version. Version 1 has no assessed Useability or new Interest; the snapshot schema remains version 2.",
+          "enum": [
+            1,
+            2
+          ],
+          "type": "integer"
+        },
         "semantic_assessed": {
           "type": "boolean"
         },
@@ -534,9 +683,9 @@
           "$ref": "#/$defs/nullableTime"
         },
         "semantic_interest": {
-          "maximum": 100,
-          "minimum": 0,
-          "type": "integer"
+          "$ref": "#/$defs/nullableScore",
+          "deprecated": true,
+          "description": "Deprecated alias of exported scalp_score, never the derived V2 Interest."
         },
         "semantic_review_mode": {
           "enum": [
@@ -578,6 +727,14 @@
         },
         "url": {
           "$ref": "#/$defs/nullableText"
+        },
+        "useability_reason": {
+          "maxLength": 500,
+          "type": "string"
+        },
+        "useability_score": {
+          "$ref": "#/$defs/nullableScore",
+          "description": "Practical independence from additional equipment, software, accessories or infrastructure; not probability of working condition. Null means not assessed."
         },
         "valid_until": {
           "format": "date-time",
@@ -659,6 +816,9 @@
                 "condition_verified": {
                   "const": false
                 },
+                "interest_formula": {
+                  "const": "round_half_up(scalp_score * useability_score / 100)"
+                },
                 "is_appraisal": {
                   "const": false
                 },
@@ -667,6 +827,15 @@
                 },
                 "purpose": {
                   "const": "personal_attention_priority"
+                },
+                "score_version": {
+                  "const": 2
+                },
+                "useability_focus": {
+                  "const": "dependencies_and_practical_independence"
+                },
+                "useability_is_condition_probability": {
+                  "const": false
                 }
               },
               "required": [
@@ -802,6 +971,14 @@
         "null"
       ]
     },
+    "nullableScore": {
+      "maximum": 100,
+      "minimum": 0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
     "nullableText": {
       "type": [
         "string",
@@ -814,6 +991,145 @@
         "string",
         "null"
       ]
+    },
+    "scoring": {
+      "properties": {
+        "additional_fact_bonus": {
+          "const": 0
+        },
+        "category_caps": {
+          "const": false
+        },
+        "condition_verified": {
+          "const": false
+        },
+        "eligibility_is_separate": {
+          "const": true
+        },
+        "fields": {
+          "properties": {
+            "interest_score": {
+              "properties": {
+                "alias": {
+                  "const": "score"
+                },
+                "label": {
+                  "const": "Interest"
+                },
+                "meaning": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "meaning",
+                "alias"
+              ],
+              "type": "object"
+            },
+            "scalp_score": {
+              "properties": {
+                "label": {
+                  "const": "Scalp"
+                },
+                "meaning": {
+                  "type": "string"
+                },
+                "reason_field": {
+                  "const": "value_reason"
+                }
+              },
+              "required": [
+                "label",
+                "meaning",
+                "reason_field"
+              ],
+              "type": "object"
+            },
+            "semantic_interest": {
+              "properties": {
+                "alias": {
+                  "const": "scalp_score"
+                },
+                "deprecated": {
+                  "const": true
+                }
+              },
+              "required": [
+                "alias",
+                "deprecated"
+              ],
+              "type": "object"
+            },
+            "useability_score": {
+              "properties": {
+                "dependencies_field": {
+                  "const": "dependencies"
+                },
+                "label": {
+                  "const": "Useability"
+                },
+                "meaning": {
+                  "type": "string"
+                },
+                "reason_field": {
+                  "const": "useability_reason"
+                }
+              },
+              "required": [
+                "label",
+                "meaning",
+                "reason_field",
+                "dependencies_field"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "scalp_score",
+            "useability_score",
+            "interest_score",
+            "semantic_interest"
+          ],
+          "type": "object"
+        },
+        "formula": {
+          "const": "round_half_up(scalp_score * useability_score / 100)"
+        },
+        "interest_score_is_derived": {
+          "const": true
+        },
+        "is_appraisal": {
+          "const": false
+        },
+        "legacy_policy": {
+          "type": "string"
+        },
+        "rounding": {
+          "const": "half_up"
+        },
+        "score_version": {
+          "const": 2
+        },
+        "useability_is_condition_probability": {
+          "const": false
+        }
+      },
+      "required": [
+        "score_version",
+        "formula",
+        "rounding",
+        "interest_score_is_derived",
+        "additional_fact_bonus",
+        "category_caps",
+        "fields",
+        "legacy_policy",
+        "eligibility_is_separate",
+        "is_appraisal",
+        "condition_verified",
+        "useability_is_condition_probability"
+      ],
+      "type": "object"
     },
     "sourceProvider": {
       "maxLength": 80,
