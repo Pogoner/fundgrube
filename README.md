@@ -50,7 +50,26 @@ Die Vorgaben stehen in [config/settings.json](config/settings.json):
 | Gebote | 0 zum letzten Abrufzeitpunkt |
 | Transport | Versand höchstens 15 € **oder** bestätigte Abholung innerhalb 50 km um 69121 Heidelberg |
 | Auktionsende | innerhalb der nächsten 24 Stunden |
-| Quellenalter im aktuellen Export | höchstens 6 Stunden, zusätzlich noch nicht abgelaufen |
+| Speicherpuffer im aktuellen Export | bis zu 24 Stunden seit der letzten Quellenbeobachtung, längstens bis zum Auktionsende |
+
+**Pufferdauer ist nicht Aktualität.** Bereits gefundene, noch laufende Angebote
+werden über mehrere Teilsuchen hinweg nach Artikel-ID zusammengeführt. Ein
+erneuter Export oder ein ausgebliebener Treffer setzt ihren Quellenzeitstempel
+nicht zurück. Ältere Angaben bleiben mit ihrem tatsächlichen Alter und den
+vorhandenen Aktualitätswarnungen sichtbar; Preis und null Gebote sind weiterhin
+nur Angaben zum Beobachtungszeitpunkt. `max_freshness_hours` bezeichnet aus
+Kompatibilitätsgründen diese Aufbewahrungs-/Exportgrenze und ist standardmäßig
+24, nicht eine Zusage 24 Stunden lang aktueller Fakten. Die Grenze von 800
+Datensätzen gilt zusätzlich; genau 24 Stunden alte oder abgelaufene Angebote
+fallen aus dem aktuellen Export. Alte Git-Snapshots werden dadurch nicht gelöscht.
+
+Die Quelle unterscheidet davon zwei andere Zeiträume: Ihre
+[Standardsuche](https://auktionen-ohne-gebot.de/suche/) sucht Auktionen, die in
+den **nächsten 24 Stunden enden**; unter den erweiterten Filtern gibt es auch
+„auch später endende Auktionen“. Laut
+[Hilfe](https://auktionen-ohne-gebot.de/hilfe/) werden Ergebnisse höchstens
+**15 Minuten zwischengespeichert**. Unser Suchhorizont bleibt bei 24 Stunden;
+der eigene 24-Stunden-Puffer erweitert ihn nicht und ist kein Quellenarchiv.
 
 Unbekannt bleibt unbekannt: Fehlende Versandkosten sind nicht kostenloser
 Versand, fehlende Gebotszahlen nicht null Gebote, und fehlender Mindestpreisstatus

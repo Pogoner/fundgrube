@@ -9,7 +9,7 @@ from hunter.ranking import apply_semantic, assess_item
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 SETTINGS = {"max_price_eur": 10, "max_shipping_eur": 15, "max_bids": 0,
             "postcode": "69121", "pickup_radius_km": 50,
-            "lookahead_hours": 24, "max_freshness_hours": 6}
+            "lookahead_hours": 24, "max_freshness_hours": 24}
 
 
 def raw(**overrides):
@@ -131,8 +131,30 @@ class RankingTests(unittest.TestCase):
         result = self.rank()
         self.assertTrue(any("Verkäuferangabe" in v for v in result["risks"]))
 
-    def test_stale_is_excluded(self):
-        self.assertEqual(self.rank(raw(itemEndDate=iso_time(NOW + timedelta(hours=20))), NOW + timedelta(hours=7))["eligibility"], "excluded")
+    def test_seven_and_twenty_three_hour_source_is_retained_with_age_warning(self):
+        for age in (timedelta(hours=7), timedelta(hours=23), timedelta(hours=24, seconds=-1)):
+            with self.subTest(age=age):
+                at = NOW + age
+                result = self.rank(raw(itemEndDate=iso_time(at + timedelta(hours=1))), at)
+                self.assertNotEqual(result["eligibility"], "excluded")
+                self.assertEqual(result["last_seen_at"], iso_time(NOW))
+                self.assertTrue(any("älter als zwei Stunden" in risk for risk in result["risks"]))
+
+    def test_retention_boundary_excluded_with_default_or_capped_settings(self):
+        for age in (timedelta(hours=24), timedelta(hours=24, seconds=1)):
+            for retention in (None, 24, 48):
+                with self.subTest(age=age, retention=retention):
+                    at = NOW + age
+                    settings = {key: value for key, value in SETTINGS.items() if key != "max_freshness_hours"}
+                    if retention is not None:
+                        settings["max_freshness_hours"] = retention
+                    source = normalize_item(raw(itemEndDate=iso_time(at + timedelta(hours=1))), NOW)
+                    result = assess_item(source, settings, at)
+                    self.assertEqual(result["eligibility"], "excluded")
+                    self.assertTrue(any("Aufbewahrungsfenster" in risk for risk in result["risks"]))
+
+    def test_auction_ending_exactly_now_is_excluded_despite_buffer(self):
+        self.assertEqual(self.rank(raw(itemEndDate=iso_time(NOW)))["eligibility"], "excluded")
 
     def test_model_cannot_change_observed_facts(self):
         item = self.rank(raw(bidCount=2))

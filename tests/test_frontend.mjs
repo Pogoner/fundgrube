@@ -239,12 +239,12 @@ test("mixed snapshots and wrong item IDs are rejected without losing the summary
   }
 });
 
-test("six-hour cutoff includes missing/future timestamps; minute timer updates and expires data", async () => {
+test("24-hour cutoff includes missing/future timestamps; minute timer updates and expires data", async () => {
   const h = harness(fixture({deals: [
     offer({id: "fresh", ends_at: iso(4 * hour)}),
-    offer({id: "aging", last_seen_at: iso(-6 * hour + 60000), ends_at: iso(4 * hour)}),
+    offer({id: "aging", last_seen_at: iso(-24 * hour + 60000), ends_at: iso(4 * hour)}),
     offer({id: "ending", ends_at: iso(60000)}),
-    offer({id: "old", last_seen_at: iso(-7 * hour)}),
+    offer({id: "old", last_seen_at: iso(-25 * hour)}),
     offer({id: "undated", last_seen_at: null}),
     offer({id: "future", last_seen_at: iso(hour)})
   ]})); await flush();
@@ -256,7 +256,7 @@ test("six-hour cutoff includes missing/future timestamps; minute timer updates a
   assert.equal(h.nodes.get("result-count").textContent, "(1)");
   assert.doesNotMatch(h.nodes.get("cards").innerHTML, /data-id="aging"|data-id="ending"/);
   h.tick(60000);
-  assert(h.nodes.get("cards").querySelectorAll("[data-last-seen]").some(node => node.textContent === "Stand: vor 3 Min."));
+  assert(h.nodes.get("cards").querySelectorAll("[data-last-seen]").some(node => node.textContent === "Quellenstand: vor 3 Min."));
   await h.check("show-stale", true);
   assert.equal(h.nodes.get("result-count").textContent, "(5)");
   assert.match(h.nodes.get("cards").innerHTML, /Datenalter unbekannt/);
@@ -316,7 +316,7 @@ test("aggregator attribution, bounded coverage and unknown transport remain expl
   assert.match(cards, /Quelle liefert keinen Beschreibungstext/);
   assert.match(cards, /Aggregator-Cache · nicht direkt verifiziert/);
   assert.match(cards, /QUELLE · 0 GEBOTE/);
-  assert.match(cards, /Stand: vor 15 Min\./);
+  assert.match(cards, /Quellenstand: vor 15 Min\./);
   assert.match(cards, /Versand ungeklärt/);
   assert.match(cards, /Abholung möglich · Nähe ungeklärt/);
   assert.match(cards, /Mindestpreis ungeklärt/);
@@ -345,9 +345,9 @@ test("aggregator age uses source observation, never a newer import timestamp", a
     ends_at: iso(4 * hour), local_pickup_confirmed: false, ...overrides
   });
   const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [
-    aggregate({id: "recent", source_observed_at: iso(-hour), last_seen_at: iso(-7 * hour)}),
-    aggregate({id: "aging", source_observed_at: iso(-6 * hour + 60000), last_seen_at: iso(0)}),
-    aggregate({id: "old", source_observed_at: iso(-7 * hour), last_seen_at: iso(0)}),
+    aggregate({id: "recent", source_observed_at: iso(-hour), last_seen_at: iso(-25 * hour)}),
+    aggregate({id: "aging", source_observed_at: iso(-24 * hour + 60000), last_seen_at: iso(0)}),
+    aggregate({id: "old", source_observed_at: iso(-25 * hour), last_seen_at: iso(0)}),
     aggregate({id: "undated", source_observed_at: null, last_seen_at: iso(0)})
   ]})); await flush();
   assert.equal(h.nodes.get("result-count").textContent, "(2)");
@@ -403,7 +403,7 @@ test("matching pickup searches are provisional local evidence, not confirmed loc
 test("old or undated pickup-search claims do not qualify even with stale items visible", async () => {
   const item = overrides => offer({
     source_provider: "auktionen-ohne-gebot", verification_level: "aggregator",
-    source_observed_at: iso(-7 * hour), pickup_available: true, local_pickup_confirmed: false,
+    source_observed_at: iso(-25 * hour), pickup_available: true, local_pickup_confirmed: false,
     distance_km: null, city: "", postcode: "", shipping_eur: null,
     pickup_search_confirmed: true, pickup_search_postcode: "69121", pickup_search_radius_km: 50,
     ...overrides
@@ -422,7 +422,7 @@ test("old or undated pickup-search claims do not qualify even with stale items v
 test("pickup-search label expires on the timer while old offers stay explicitly visible", async () => {
   const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [offer({
     source_provider: "auktionen-ohne-gebot", verification_level: "aggregator",
-    source_observed_at: iso(-6 * hour + 60000), pickup_available: true,
+    source_observed_at: iso(-24 * hour + 60000), pickup_available: true,
     local_pickup_confirmed: false, distance_km: null, city: "", postcode: "",
     pickup_search_confirmed: true, pickup_search_postcode: "69121", pickup_search_radius_km: 50
   })]})); await flush();
@@ -482,4 +482,100 @@ test("none, expired and invalid interactive reviews are not reported as applied"
     assert.match(h.nodes.get("cards").innerHTML, /Heuristik · Konfidenz niedrig/);
     assert.doesNotMatch(h.nodes.get("cards").innerHTML, /ChatGPT · Konfidenz/);
   }
+});
+
+test("7-hour and 23-hour observations remain buffered with warnings, never refreshed by a new import", async () => {
+  const aggregate = (id, sourceObserved) => offer({
+    id, source_provider: "auktionen-ohne-gebot", verification_level: "aggregator",
+    source_observed_at: sourceObserved, last_seen_at: iso(0), ends_at: iso(2 * hour),
+    valid_until: iso(6 * hour), detail_path: null
+  });
+  const rows = [
+    aggregate("seven-hours", iso(-7 * hour)), aggregate("twenty-three-hours", iso(-23 * hour)),
+    aggregate("exactly-24-hours", iso(-24 * hour)), aggregate("too-old", iso(-25 * hour)),
+    aggregate("undated", null), aggregate("invalid-date", "not-a-date"),
+    aggregate("near-future", iso(1))
+  ];
+  const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: rows})); await flush();
+  assert.equal(h.nodes.get("result-count").textContent, "(2)");
+  const cards = h.nodes.get("cards").innerHTML;
+  assert.match(cards, /Quellenstand: vor 7 Std\. · ältere Beobachtung, nicht aktuell bestätigt/);
+  assert.match(cards, /Quellenstand: vor 23 Std\. · ältere Beobachtung, nicht aktuell bestätigt/);
+  assert.equal(h.nodes.get("cards").querySelectorAll("[data-last-seen]").filter(node => node.classList.contains("freshness-warning")).length, 2);
+  assert.doesNotMatch(cards, /data-id="exactly-24-hours"|data-id="too-old"|data-id="undated"|data-id="invalid-date"|data-id="near-future"/);
+  assert.match(h.nodes.get("metric-candidate-note").textContent, /24-Stunden-Puffer/);
+  assert.match(h.nodes.get("retention-note").textContent, /Puffer aktualisiert keine Fakten/);
+  assert.match(h.nodes.get("coverage-content").innerHTML, /Aufbewahrungsfenster, keine Aktualitätszusage/);
+  await h.detail("twenty-three-hours");
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Ältere Quellenbeobachtung.*nicht aktuell bestätigt/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Puffer höchstens bis \(Berlin\)/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /14:00/); // Earlier than both ends_at and valid_until.
+  h.tick(hour);
+  assert.equal(h.nodes.get("result-count").textContent, "(2)"); // near-future is now a legitimate earlier observation.
+  assert.doesNotMatch(h.nodes.get("cards").innerHTML, /data-id="twenty-three-hours"/);
+  h.setFetch(async () => ({ok: true, json: async () => fixture({
+    provider: "auktionen-ohne-gebot", generated_at: iso(hour), last_successful_scan_at: iso(hour),
+    deals: rows.map(item => ({...item, last_seen_at: iso(hour)}))
+  })}));
+  await h.click("refresh-button");
+  assert.equal(h.nodes.get("result-count").textContent, "(2)");
+  assert.match(h.nodes.get("cards").innerHTML, /Quellenstand: vor 8 Std\. · ältere Beobachtung, nicht aktuell bestätigt/);
+  assert.doesNotMatch(h.nodes.get("cards").innerHTML, /data-id="twenty-three-hours"|data-id="exactly-24-hours"/);
+});
+
+test("a lower configured retention limit is honored and no configuration exceeds 24 hours", async () => {
+  for (const [criteriaLimit, freshnessLimit, expected] of [[8, undefined, 8], [24, 12, 12], [6, 4, 4], [99, 99, 24], [0, -1, 24], [undefined, undefined, 24]]) {
+    const h = harness(fixture({
+      criteria: {...demo.criteria, max_freshness_hours: criteriaLimit},
+      freshness: {maximum_source_age_hours: freshnessLimit},
+      deals: [
+        offer({id: "inside", last_seen_at: iso(-(expected - 1) * hour), ends_at: iso(5 * hour), valid_until: iso(5 * hour)}),
+        offer({id: "at-limit", last_seen_at: iso(-expected * hour), ends_at: iso(5 * hour), valid_until: iso(5 * hour)})
+      ]
+    })); await flush();
+    const label = `${expected}-Stunden-Puffer`;
+    assert.equal(h.nodes.get("result-count").textContent, "(1)");
+    assert(h.nodes.get("show-stale-label").textContent.includes(label));
+    assert(h.nodes.get("metric-candidate-note").textContent.includes(label));
+    assert(h.nodes.get("retention-note").textContent.includes(label));
+    assert(h.nodes.get("coverage-note").textContent.includes(label));
+    await h.click("copy-instructions");
+    assert(h.copied.includes(label));
+    assert.match(h.copied, /niemals mehr als 24 Stunden/);
+    assert.match(h.copied, /ends_at, valid_until/);
+    assert.match(h.copied, /Quellenzeitstempel nicht zurücksetzen/);
+    await h.value("search", "not-present-in-the-title");
+    assert(h.nodes.get("empty-description").textContent.includes(label));
+  }
+});
+
+test("ends_at and valid_until independently expire on the timer before the retention limit", async () => {
+  const old = overrides => offer({last_seen_at: iso(-7 * hour), ends_at: iso(4 * hour), valid_until: iso(4 * hour), ...overrides});
+  const h = harness(fixture({deals: [
+    old({id: "valid-until-soon", valid_until: iso(60000)}),
+    old({id: "auction-soon", ends_at: iso(60000)}),
+    old({id: "later", valid_until: iso(2 * hour)}),
+    old({id: "valid-until-now", valid_until: iso(0)}),
+    old({id: "auction-now", ends_at: iso(0)}),
+    old({id: "invalid-validity", valid_until: "invalid"}),
+    old({id: "unknown-validity", valid_until: null})
+  ]})); await flush();
+  assert.equal(h.nodes.get("result-count").textContent, "(3)");
+  h.tick(30000);
+  assert.equal(h.nodes.get("result-count").textContent, "(3)");
+  h.tick(30000);
+  assert.equal(h.nodes.get("result-count").textContent, "(1)");
+  assert.equal(h.nodes.get("metric-candidates").textContent, "1");
+  assert.match(h.nodes.get("cards").innerHTML, /data-id="later"/);
+  await h.check("show-expired", true);
+  assert.equal(h.nodes.get("result-count").textContent, "(5)");
+  assert.match(h.nodes.get("cards").innerHTML, /Pufferfrist abgelaufen/);
+  assert.match(h.nodes.get("cards").innerHTML, /Auktion abgelaufen/);
+  await h.check("show-stale", true);
+  assert.equal(h.nodes.get("result-count").textContent, "(7)");
+  assert.match(h.nodes.get("cards").innerHTML, /Pufferfrist ungeklärt/);
+  h.tick(2 * hour - 60000);
+  await h.click("reset-filters");
+  assert.equal(h.nodes.get("result-count").textContent, "(0)");
+  assert.match(h.nodes.get("empty-description").textContent, /24-Stunden-Puffers/);
 });

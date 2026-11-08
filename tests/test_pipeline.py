@@ -137,10 +137,21 @@ class TestConfiguration(unittest.TestCase):
 
     def test_invalid_configuration_is_not_a_successful_empty_feed(self):
         for settings in ({"browse_daily_budget": 5001}, {"max_records": 0}, {"max_bids": True},
-                         {"max_freshness_hours": 24}, {"max_price_eur": float("nan")},
+                         {"max_freshness_hours": 24.01}, {"max_price_eur": float("nan")},
                          {"postcode": "69121,x:y"}, {"marketplace": "EBAY_US"}):
             with self.subTest(settings=settings), self.assertRaises(ConfigurationError):
                 run(settings)
+
+    def test_retention_defaults_to_twenty_four_hours_without_changing_other_limits(self):
+        settings = validate_settings({})
+        self.assertEqual(settings["max_freshness_hours"], 24)
+        self.assertEqual(settings["lookahead_hours"], 24)
+        self.assertEqual(settings["max_records"], 800)
+        self.assertEqual(settings["refresh_after_minutes"], 90)
+        self.assertEqual(settings["schedule_interval_minutes"], 10)
+        self.assertEqual(settings["aog_max_requests_per_run"], 4)
+        self.assertEqual(validate_settings({"max_freshness_hours": 24})["max_freshness_hours"], 24)
+        self.assertEqual(validate_settings({"max_freshness_hours": 0.5})["max_freshness_hours"], 0.5)
 
     def test_invalid_state_does_not_reset_quota(self):
         for state in ({}, {"schema_version": 1}, {"schema_version": 2, "daily_budget": {}},
@@ -353,7 +364,7 @@ class TestRefreshAndState(unittest.TestCase):
         self.assertEqual(feed["stats"]["carried"], 1)
 
     def test_old_expired_or_future_records_removed_without_refresh(self):
-        state = cached_state(timedelta(hours=7))
+        state = cached_state(timedelta(hours=25))
         expired = normalize_item(raw_item("v1|2|0", itemEndDate=iso_time(NOW - timedelta(seconds=1))), NOW)
         future = normalize_item(raw_item("v1|3|0"), NOW + timedelta(minutes=1))
         state["records"].extend([expired, future])
@@ -362,6 +373,35 @@ class TestRefreshAndState(unittest.TestCase):
         self.assertEqual(feed["deals"], [])
         self.assertEqual(result["records"], [])
         self.assertEqual(clients[0].detail_ids, [])
+
+    def test_seven_and_twenty_three_hour_cache_survives_failed_refresh_without_new_timestamp(self):
+        for age in (timedelta(hours=7), timedelta(hours=23), timedelta(hours=24, seconds=-1)):
+            with self.subTest(age=age):
+                state = cached_state(age)
+                previous_seen = state["records"][0]["last_seen_at"]
+                previous_content = state["records"][0]["content_updated_at"]
+                create, clients = factory(details={ID: ApiError(status_code=500)})
+                feed, result = run(state=state, client_factory=create)
+                self.assertEqual(clients[0].detail_ids, [ID])
+                self.assertEqual(feed["source_status"], "partial")
+                row = result["records"][0]
+                self.assertEqual(row["last_seen_at"], previous_seen)
+                self.assertEqual(row["content_updated_at"], previous_content)
+                self.assertTrue(row["stale"])
+                self.assertTrue(row["carried"])
+                self.assertTrue(any("älter als zwei Stunden" in risk for risk in row["risks"]))
+
+    def test_retention_boundary_and_auction_end_are_exclusive(self):
+        for age, end in ((timedelta(hours=24), NOW + timedelta(hours=12)),
+                         (timedelta(hours=24, seconds=1), NOW + timedelta(hours=12)),
+                         (timedelta(hours=7), NOW), (timedelta(hours=23), NOW - timedelta(seconds=1))):
+            with self.subTest(age=age, end=end):
+                state = cached_state(age, raw=raw_item(itemEndDate=iso_time(end)))
+                create, clients = factory()
+                feed, result = run(state=state, client_factory=create)
+                self.assertEqual(feed["deals"], [])
+                self.assertEqual(result["records"], [])
+                self.assertEqual(clients[0].detail_ids, [])
 
     def test_failed_refresh_carries_fresh_old_data_with_stale_marker(self):
         state = cached_state()
@@ -411,7 +451,7 @@ class TestRefreshAndState(unittest.TestCase):
     def test_old_full_description_is_not_rejuvenated_by_fresh_summary(self):
         state = cached_state(timedelta(minutes=5))
         state["records"][0].update(description="Old full description", details_fetched=True,
-                                   content_updated_at=iso_time(NOW - timedelta(hours=7)))
+                                   content_updated_at=iso_time(NOW - timedelta(hours=24)))
         create, _ = factory(results=[page([raw_item(description="", shortDescription="Fresh short text")]), page()])
         feed, _ = run({"detail_limit_per_run": 0}, state=state, client_factory=create)
         self.assertEqual(feed["deals"][0]["description"], "Fresh short text")
@@ -419,13 +459,27 @@ class TestRefreshAndState(unittest.TestCase):
 
     def test_stale_carried_description_removed_before_semantic_processing(self):
         state = cached_state(timedelta(minutes=5))
-        state["records"][0].update(description="Old full description", content_updated_at=iso_time(NOW - timedelta(hours=7)))
+        state["records"][0].update(description="Old full description", content_updated_at=iso_time(NOW - timedelta(hours=24)))
         observed = []
         def enrich(items, *args, **kwargs):
             observed.extend(copy.deepcopy(items))
             return no_semantics(items, *args, **kwargs)
         run(state=state, enrich=enrich)
         self.assertEqual(observed[0]["description"], "")
+
+    def test_retained_full_description_keeps_its_own_age_when_summary_is_refreshed(self):
+        for age in (timedelta(hours=7), timedelta(hours=23)):
+            with self.subTest(age=age):
+                state = cached_state(timedelta(minutes=5))
+                content_time = iso_time(NOW - age)
+                state["records"][0].update(description="Retained full description", details_fetched=True,
+                                           content_updated_at=content_time)
+                create, _ = factory(results=[page([raw_item(description="", shortDescription="Fresh short text")]), page()])
+                feed, _ = run({"detail_limit_per_run": 0}, state=state, client_factory=create)
+                row = feed["deals"][0]
+                self.assertEqual(row["description"], "Retained full description")
+                self.assertEqual(row["content_updated_at"], content_time)
+                self.assertEqual(row["last_seen_at"], iso_time(NOW))
 
 
 class TestSemanticAndJson(unittest.TestCase):
@@ -478,7 +532,7 @@ class TestCommandLine(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             config = root / "config.json"
-            config.write_text('{"max_freshness_hours":24}')
+            config.write_text('{"max_freshness_hours":25}')
             self.assertEqual(main(["--config", str(config), "--state-dir", str(root / "runtime"), "--site-dir", str(root / "site")]), 1)
             self.assertFalse((root / "site/api/manifest.json").exists())
 

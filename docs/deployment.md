@@ -58,6 +58,23 @@ führen nicht zu aggressiven Ersatzabfragen; Quellenstatus und Abdeckung bleiben
 sichtbar. Ohne nutzbare Quelle veröffentlicht der Build Statusinformationen,
 keine erfundenen Live-Angebote.
 
+### Speicherpuffer und Aktualität
+
+`config/settings.json` setzt `max_freshness_hours=24`. Der historisch benannte
+Wert begrenzt den rollenden Speicher-/Exportpuffer: noch laufende Angebote
+bleiben bis zu 24 Stunden seit der letzten tatsächlichen Quellenbeobachtung
+erhalten, auch wenn ein späterer Teilscan sie nicht erneut enthält. Bei Erreichen
+dieser Grenze oder des Auktionsendes werden sie nicht mehr aktuell exportiert.
+Die zusätzliche Höchstzahl von 800 Datensätzen bleibt bestehen. Bereits früher
+aus dem aktuellen Zustand entfernte Angebote werden nicht aus der Git-Historie
+wiederhergestellt; erst ein neuer zulässiger Quellenfund nimmt sie wieder auf.
+
+Der Puffer ist kein Aktualitätsversprechen: alte Preise und Gebotszahlen behalten
+ihre ursprünglichen Zeitstempel und Warnungen. Ein neuer Build verjüngt sie nicht.
+Die Quelle sucht im Standard nach Auktionsenden innerhalb der nächsten 24 Stunden
+und nennt unabhängig davon einen Cache von bis zu 15 Minuten. Ein längerer
+eigener Puffer repariert keine fehlenden Workflow-Ausführungen.
+
 ### Was die Standardquelle belegt
 
 Die öffentliche Schnittstelle von

@@ -121,14 +121,52 @@ class PublicSourcePipelineTests(unittest.TestCase):
                 self.assertEqual(feed["deals"], [])
 
     def test_old_observations_expire_despite_fresh_request(self):
-        feed, _ = run(response([item(source_observed_at=iso_time(NOW - timedelta(hours=7)))]))
-        self.assertEqual(feed["deals"], [])
+        for age in (timedelta(hours=24), timedelta(hours=24, seconds=1), timedelta(hours=25)):
+            with self.subTest(age=age):
+                feed, _ = run(response([item(source_observed_at=iso_time(NOW - age))]))
+                self.assertEqual(feed["deals"], [])
+
+    def test_seven_and_twenty_three_hour_source_observations_are_retained_but_stale(self):
+        for age in (timedelta(hours=7), timedelta(hours=23), timedelta(hours=24, seconds=-1)):
+            with self.subTest(age=age):
+                observed = iso_time(NOW - age)
+                feed, state = run(response([item(source_observed_at=observed)]))
+                row = feed["deals"][0]
+                self.assertEqual(row["last_seen_at"], observed)
+                self.assertEqual(row["source_observed_at"], observed)
+                self.assertEqual(row["content_updated_at"], observed)
+                self.assertTrue(row["stale"])
+                self.assertEqual(row["eligibility"], "review")
+                self.assertEqual(feed["stats"]["stale"], 1)
+                self.assertEqual(feed["criteria"]["max_freshness_hours"], 24)
+                self.assertEqual(state["records"][0], row)
+                self.assertTrue(any("älter als zwei Stunden" in risk for risk in row["risks"]))
+
+    def test_longer_buffer_never_preserves_ended_auctions(self):
+        for age in (timedelta(hours=7), timedelta(hours=23)):
+            for end in (NOW, NOW - timedelta(seconds=1)):
+                with self.subTest(age=age, end=end):
+                    feed, state = run(response([item(source_observed_at=iso_time(NOW - age), ends_at=iso_time(end))]))
+                    self.assertEqual(feed["deals"], [])
+                    self.assertEqual(state["records"], [])
 
     def test_cooldown_keeps_fresh_cache_without_updating_observation(self):
         _, previous = run()
         feed, _ = run(response([], status="cooldown", pages=0), state=previous, at=NOW + timedelta(minutes=10))
         self.assertEqual(feed["source_status"], "partial")
         self.assertEqual(feed["deals"][0]["last_seen_at"], iso_time(OBSERVED))
+        self.assertEqual(feed["last_successful_scan_at"], iso_time(NOW))
+
+    def test_cooldown_keeps_twenty_three_hour_cache_without_refreshing_observation(self):
+        observed = iso_time(NOW - timedelta(hours=23))
+        _, previous = run(response([item(source_observed_at=observed)]))
+        feed, _ = run(response([], status="cooldown", pages=0), state=previous, at=NOW + timedelta(minutes=10))
+        row = feed["deals"][0]
+        self.assertEqual(feed["source_status"], "partial")
+        self.assertEqual(row["last_seen_at"], observed)
+        self.assertEqual(row["source_observed_at"], observed)
+        self.assertTrue(row["stale"])
+        self.assertTrue(row["carried"])
         self.assertEqual(feed["last_successful_scan_at"], iso_time(NOW))
 
     def test_error_without_cache_is_not_successful_empty_scan(self):
@@ -215,6 +253,32 @@ class PublicSourcePipelineTests(unittest.TestCase):
         self.assertEqual(feed["source_status"], "partial")
         self.assertEqual(feed["interactive_review"]["status"], "invalid")
         self.assertEqual(feed["deals"][0]["assessment_basis"], "heuristic")
+
+    def test_valid_interactive_review_stays_on_retained_seven_and_twenty_three_hour_source(self):
+        reviewed = iso_time(NOW - timedelta(hours=2))
+        for age in (timedelta(hours=7), timedelta(hours=23)):
+            with self.subTest(age=age):
+                source = item(source_observed_at=iso_time(NOW - age))
+                normalized = normalize_item(source, NOW)
+                document = {
+                    "schema_version": 1, "source_snapshot_id": "sha256:" + "a" * 64,
+                    "reviewed_at": reviewed, "reviewer": "ChatGPT",
+                    "reviews": [{"id": normalized["id"], "content_fingerprint": content_fingerprint(normalized),
+                        "assessment": {"semantic_interest": 86, "value_band": "around_500",
+                            "assessment_confidence": "low", "product_kind": "apparatus",
+                            "value_reason": "Laborgeräteklasse; Modell und Zustand unbekannt.",
+                            "reasons": [], "risks": [], "next_checks": []}}],
+                }
+                feed, state = run(response([source]), review_doc=document)
+                row = feed["deals"][0]
+                self.assertEqual(feed["interactive_review"]["applied"], 1)
+                self.assertEqual(row["last_seen_at"], source["source_observed_at"])
+                self.assertEqual(row["source_observed_at"], source["source_observed_at"])
+                self.assertEqual(row["semantic_assessed_at"], reviewed)
+                self.assertEqual(row["assessment_basis"], "llm")
+                self.assertTrue(row["stale"])
+                self.assertFalse(feed["ai_enabled"])
+                self.assertEqual(row, state["records"][0])
 
     def test_published_schedule_metadata_matches_ten_minute_config(self):
         feed, _ = run()

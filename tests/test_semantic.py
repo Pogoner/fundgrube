@@ -191,17 +191,60 @@ class SemanticTests(unittest.TestCase):
 
     def test_stale_expired_excluded_and_unknown_timestamps_are_not_sent(self):
         inputs = [
-            item(1, last_seen_at=(NOW - timedelta(hours=6, seconds=1)).isoformat()),
+            item(1, last_seen_at=(NOW - timedelta(hours=24, seconds=1)).isoformat()),
             item(2, ends_at=NOW.isoformat()), item(3, eligibility="excluded"),
             item(4, last_seen_at=None), item(5, ends_at=None),
-            item(6, last_seen_at=(NOW + timedelta(minutes=6)).isoformat()),
+            item(6, last_seen_at=(NOW + timedelta(seconds=1)).isoformat()),
             item(7, last_seen_at="2026-11-07T12:00:00"),
+            item(8, last_seen_at=(NOW - timedelta(hours=24)).isoformat()),
         ]
         result, metadata, state, transport = self.run_screening(items=inputs)
         self.assertEqual(result, inputs)
         self.assertEqual(metadata["llm_status"], "ok")
         self.assertEqual(state["semantic_cache"], {})
         self.assertEqual(transport.calls, [])
+
+    def test_seven_and_twenty_three_hour_content_keeps_cached_semantics_without_freshening_facts(self):
+        for age in (timedelta(hours=7), timedelta(hours=23)):
+            with self.subTest(age=age):
+                observed = NOW - age
+                source = item(last_seen_at=observed.isoformat(), ends_at=(NOW + timedelta(minutes=30)).isoformat())
+                _, _, state, _ = self.run_screening(items=[source], at=observed)
+                cached_at = state["semantic_cache"][source["id"]]["assessed_at"]
+                carried = {**source, "stale": True, "carried": True}
+                result, metadata, _, transport = self.run_screening(items=[carried], state=state)
+                self.assertEqual(transport.calls, [])
+                self.assertEqual(metadata["cache_hits"], 1)
+                self.assertEqual(result[0]["last_seen_at"], observed.isoformat())
+                self.assertEqual(result[0]["semantic_assessed_at"], cached_at)
+                self.assertTrue(result[0]["stale"])
+                self.assertTrue(result[0]["carried"])
+
+    def test_retention_upper_bound_and_fractional_config_match_exclusive_boundary(self):
+        cases = [
+            ({}, timedelta(hours=24, seconds=-1), True),
+            ({}, timedelta(hours=24), False),
+            ({"max_freshness_hours": 48}, timedelta(hours=25), False),
+            ({"max_freshness_hours": 0.5}, timedelta(minutes=30, seconds=-1), True),
+            ({"max_freshness_hours": 0.5}, timedelta(minutes=30), False),
+        ]
+        for settings, age, retained in cases:
+            with self.subTest(settings=settings, age=age):
+                source = item(last_seen_at=(NOW - age).isoformat(), stale=True)
+                result, metadata, _, transport = self.run_screening(items=[source], settings=settings)
+                self.assertEqual(metadata["assessed"], int(retained))
+                self.assertEqual(len(transport.calls), int(retained))
+                self.assertEqual(result[0]["last_seen_at"], source["last_seen_at"])
+                self.assertTrue(result[0]["stale"])
+
+    def test_cache_pruned_at_exact_source_retention_boundary(self):
+        observed = NOW - timedelta(hours=24)
+        source = item(last_seen_at=observed.isoformat(), ends_at=(NOW + timedelta(minutes=30)).isoformat())
+        _, _, state, _ = self.run_screening(items=[source], at=observed)
+        _, metadata, state, transport = self.run_screening(items=[source], state=state)
+        self.assertEqual(transport.calls, [])
+        self.assertEqual(metadata["cache_hits"], 0)
+        self.assertEqual(state["semantic_cache"], {})
 
     def test_duplicate_source_ids_are_never_duplicated_in_a_batch(self):
         result, metadata, _, transport = self.run_screening(items=[item(), item()])

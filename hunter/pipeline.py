@@ -32,7 +32,7 @@ DEFAULTS = {
     "max_bids": 0, "lookahead_hours": 24,
     "browse_daily_budget": 4500, "browse_calls_per_run": 85,
     "max_pages_per_category": 2, "categories_per_run": 20,
-    "detail_limit_per_run": 35, "max_freshness_hours": 6,
+    "detail_limit_per_run": 35, "max_freshness_hours": 24,
     "refresh_after_minutes": 90, "max_records": 800,
     "max_ai_items_per_run": 20, "api_page_size": 50,
     "schedule_interval_minutes": 10, "aog_max_requests_per_run": 4,
@@ -102,7 +102,7 @@ def validate_settings(settings: Mapping[str, Any]) -> dict[str, Any]:
     for key, bounds in {
         "max_price_eur": (0, 1000000000), "max_shipping_eur": (0, 1000000),
         "pickup_radius_km": (0.01, 1000), "lookahead_hours": (0.01, 744),
-        "max_freshness_hours": (0.01, 6), "refresh_after_minutes": (1, 180),
+        "max_freshness_hours": (0.01, 24), "refresh_after_minutes": (1, 180),
     }.items():
         _finite(result[key], key, *bounds)
     return result
@@ -161,10 +161,11 @@ def _public_record(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _fresh(item: Any, at: datetime, settings: Mapping[str, Any]) -> bool:
+    """Within the retention window, not a claim of newly verified facts."""
     if not isinstance(item, dict) or not isinstance(item.get("id"), str) or not item["id"]:
         return False
     end, seen = parse_time(item.get("ends_at")), parse_time(item.get("last_seen_at"))
-    return bool(end and seen and at < end and seen <= at and at - seen <= timedelta(hours=settings["max_freshness_hours"]))
+    return bool(end and seen and at < end and seen <= at and at - seen < timedelta(hours=settings["max_freshness_hours"]))
 
 
 def _sort_key(item: Mapping[str, Any]) -> tuple[Any, ...]:
@@ -176,7 +177,7 @@ def _sort_key(item: Mapping[str, Any]) -> tuple[Any, ...]:
 
 def _clear_stale_description(item: dict, at: datetime, settings: Mapping) -> dict:
     updated = parse_time(item.get("content_updated_at"))
-    if not updated or updated > at or at - updated > timedelta(hours=settings["max_freshness_hours"]):
+    if not updated or updated > at or at - updated >= timedelta(hours=settings["max_freshness_hours"]):
         item["description"] = ""
     return item
 
@@ -210,7 +211,7 @@ def _upsert(records: dict, item: dict, at: datetime, settings: Mapping, assess: 
             item = current
         elif (not item.get("details_fetched") and old.get("description") and old.get("details_fetched")
               and parse_time(old.get("content_updated_at"))
-              and timedelta(0) <= at - parse_time(old["content_updated_at"]) <= timedelta(hours=settings["max_freshness_hours"])):
+              and timedelta(0) <= at - parse_time(old["content_updated_at"]) < timedelta(hours=settings["max_freshness_hours"])):
             item = dict(item)
             item["description"] = old["description"]
             item["content_updated_at"] = old.get("content_updated_at", old.get("last_seen_at"))
@@ -318,7 +319,8 @@ def _discover(client: Any, state: dict, records: dict, settings: dict, at: datet
                 stats["budget_limited"] = isinstance(error, BudgetExceeded)
                 return
     if len(due) > detail_limit:
-        _block(blockers, "refresh_pending", "Nicht alle fälligen Detailprüfungen passen in diesen Lauf.", "Ältere Daten sind markiert und werden spätestens nach sechs Stunden entfernt.")
+        _block(blockers, "refresh_pending", "Nicht alle fälligen Detailprüfungen passen in diesen Lauf.",
+               f"Ältere Daten bleiben als prüfbedürftig markiert und werden spätestens nach {settings['max_freshness_hours']:g} Stunden oder bei Auktionsende entfernt.")
     leaves = _taxonomy(client, state, settings, at, manual_ids)
     ids, cursor = [row["id"] for row in leaves], state["cursor"]
     stats["categories_total"] = len(ids)

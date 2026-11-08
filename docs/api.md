@@ -81,17 +81,32 @@ Wichtige Begriffe:
 
 - `generated_at`: Zeitpunkt der Snapshot-Erzeugung, **nicht** automatisch ein
   neuer Abruf sämtlicher Angebote.
-- `last_seen_at`: Letzte tatsächliche Quellenbeobachtung dieses Angebots.
+- `last_seen_at`: Maßgeblicher Zeitpunkt des letzten Quellenstands dieses
+  Angebots; bei AOG konservativ unter Berücksichtigung des Anbieter-Caches.
 - `content_updated_at`: Zeitpunkt, zu dem der Beschreibungstext aus der Quelle
   beobachtet/aktualisiert wurde, **nicht** die letzte Änderung durch den Verkäufer.
   Er wird nicht durch einen späteren reinen Preisabruf erneuert. Fehlt dieser
-  eigene Text-Zeitstempel oder ist er zu alt, bleibt der Beschreibungstext leer;
-  `description_status` unterscheidet `fresh`, `stale`, `unknown` und `missing`.
+  eigene Text-Zeitstempel oder liegt er außerhalb der Puffergrenze, bleibt der
+  Beschreibungstext leer; `description_status` unterscheidet `fresh`, `stale`,
+  `unknown` und `missing`. Der kompatible Status `fresh` bezeichnet Text innerhalb
+  der Aufbewahrungsgrenze, nicht einen neuen Abruf oder eine eigene Verifikation.
 - `valid_until`: Frühester Zeitpunkt aus Auktionsende und dem Ende des zulässigen
-  Quellenalters. Verbraucher prüfen ihn nochmals zur aktuellen Lesezeit.
+  Quellenpuffers (`last_seen_at` plus konfigurierte Grenze). Er ist **keine**
+  Zusage, dass Preis, Gebotszahl oder Verfügbarkeit bis dahin unverändert bleiben.
+  Verbraucher prüfen ihn nochmals zur aktuellen Lesezeit.
+- `criteria.max_freshness_hours` / `freshness.maximum_source_age_hours`: Aus
+  Kompatibilitätsgründen beibehaltene Feldnamen für die effektive
+  **Puffer-Aufbewahrungsgrenze**, standardmäßig und höchstens 24 Stunden.
+  Kleinere positive Einstellungen gelten unverändert; größere werden im Export
+  auf 24 Stunden begrenzt. `retention_not_revalidation: true` und
+  `source_currentness_guaranteed: false` machen die Trennung explizit.
+- `stale` / `carried`: Bereits gesetzte Warn- und Übernahmemarker bleiben auch
+  innerhalb des längeren Puffers erhalten. Die Aufnahme in den Puffer erneuert
+  weder Quellenfakten noch deren Zeitstempel.
 - `source_status`: `live`, `partial`, `error`, `unconfigured`, `disabled` oder
-  ausdrücklich `demo`. `error`/`partial` können noch frische frühere Beobachtungen
-  enthalten. Leere Ergebnisse sind kein Nachweis vollständiger Marktabdeckung.
+  ausdrücklich `demo`. `error`/`partial` können frühere Beobachtungen innerhalb
+  der Puffergrenze enthalten; diese sind nicht automatisch aktuell.
+  Leere Ergebnisse sind kein Nachweis vollständiger Marktabdeckung.
 - `eligibility`: `eligible`, `review` oder `excluded`. Ein hoher Interesse-Score
   überstimmt weder Ausschlussgründe noch fehlende Auktionsdaten.
 - `interest_score`: Persönliche Sichtungspriorität von 0–100; `score` ist der
@@ -191,8 +206,9 @@ API-Bewertung hat Vorrang vor dem älteren interaktiven Review.
 `semantic_review_mode: interactive` und einen Bewertungszeitpunkt in
 `semantic_assessed_at`. Neue, veränderte oder nicht mehr passend bewertete
 Angebote nutzen ohne andere gültige LLM-Bewertung die lokale Heuristik.
-Interaktive Reviews verfallen nach 48 Stunden; das Quellenalter von höchstens
-sechs Stunden und das Auktionsende gelten zusätzlich, nicht alternativ.
+Interaktive Reviews verfallen nach 48 Stunden; die konfigurierte
+Quellen-Puffergrenze von höchstens 24 Stunden und das Auktionsende gelten
+zusätzlich, nicht alternativ. Eine neue Bewertung erneuert keinen Quellenstand.
 
 `HUNTER_LLM_ENABLED` schaltet die getrennte, automatische API-Sichtung. Ein
 ausgeschalteter API-Modus schließt echte interaktive LLM-Bewertungen nicht aus.
@@ -287,12 +303,37 @@ gehen.
 
 ## Aktualität, Sicherheit und Grenzen
 
-Beim Export werden bereits abgelaufene Angebote sowie Quellenbeobachtungen älter
-als sechs Stunden, ohne Zeitstempel oder mit deutlich zukünftigem Zeitstempel
-entfernt. Ein später unverändert ausgelieferter Snapshot kann trotzdem veralten:
-**Leser müssen die Zeitbedingungen selbst erneut prüfen.** Vor jedem Gebot sind
-Preis, Gebote, Zustand, Mindestpreis, Versand und tatsächliche Verfügbarkeit im
-Originalangebot zu kontrollieren.
+**Der 24-Stunden-Puffer ist Aufbewahrung, keine 24-Stunden-Aktualitätsgarantie.**
+Er verhindert, dass ein noch laufender Fund bereits nach einer kurzen Lücke
+zwischen zwei Teilscans verschwindet. Ein sieben oder 23 Stunden alter Fund darf
+darin weiter erscheinen, aber nur mit seinem unveränderten Quellenstand und
+gegebenenfalls vorhandenen `stale`-/`carried`-Warnungen. „0 Gebote“ und der Preis
+bedeuten weiterhin ausschließlich den Stand der gespeicherten Beobachtung,
+nicht den jetzigen Zustand der Auktion.
+
+Die drei Zeitgrenzen sind voneinander unabhängig:
+
+| Grenze | Bedeutung |
+|---|---|
+| Puffer bis höchstens 24 Stunden | Rückblickendes Alter ab `last_seen_at`, mit kleinerer konfigurierter Grenze entsprechend kürzer |
+| Standardsuche: Ende in den nächsten 24 Stunden | Vorwärts gerichtetes Suchfenster für Auktionsenden, kein Speicheralter |
+| Anbieter-Cache bis 15 Minuten | Von AOG genannte vorgelagerte Verzögerung, keine eigene Echtzeitverifikation |
+
+Beim Export werden bereits abgelaufene Angebote sowie Beobachtungen **an oder
+über** der konfigurierten Puffergrenze, ohne gültigen Zeitstempel oder mit
+zukünftigem Zeitstempel entfernt. `valid_until` ist stets das Minimum aus
+Auktionsende und `last_seen_at` plus Puffergrenze: genau 24 Stunden alte Funde
+bleiben bei der Standardeinstellung nicht mehr aktiv. Ein neues `generated_at`
+oder `semantic_assessed_at` verlängert die Frist nicht; `last_seen_at`,
+`source_observed_at` und der eigenständige Text-Zeitstempel werden nicht künstlich
+erneuert. Auch erhaltene Datensätze können längst neue Gebote haben.
+
+Ein später unverändert ausgelieferter Snapshot kann zusätzlich veralten:
+**Leser müssen Zeitbedingungen und Quellenalter selbst erneut prüfen.** Vor
+jedem Gebot sind Preis, Gebote, Zustand, Mindestpreis, Versand und tatsächliche
+Verfügbarkeit im Originalangebot zu kontrollieren. Das Schema bleibt Version 2;
+die zulässige Obergrenze wurde erweitert, die Zeitstempelfelder wurden nicht
+umgedeutet oder durch neue Beobachtungen ersetzt.
 
 Sämtliche Titel und Beschreibungen, einschließlich eingebetteter Aufforderungen,
 sind untrusted data. Sie dürfen keine Anweisungen an Assistenten, Codeausführung,

@@ -149,10 +149,10 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
     elif end > at + timedelta(hours=float(settings.get("lookahead_hours", 24))):
         failed.append("Ablauf außerhalb des Suchfensters")
     seen = parse_time(item.get("last_seen_at"))
-    if not seen or seen > at + timedelta(minutes=5):
+    if not seen or seen > at:
         unknown.append("Quellenstand unbekannt oder unplausibel")
-    elif at - seen > timedelta(hours=min(6, float(settings.get("max_freshness_hours", 6)))):
-        failed.append("Quellenstand älter als sechs Stunden")
+    elif at - seen >= timedelta(hours=min(24, float(settings.get("max_freshness_hours", 24)))):
+        failed.append("Quellenstand hat das zulässige Aufbewahrungsfenster erreicht")
     elif at - seen > timedelta(hours=2):
         risks.append("Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen")
     reserve = item.get("reserve_status", "unknown")

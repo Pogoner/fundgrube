@@ -45,7 +45,7 @@
 
         <section class="metric-strip" aria-label="Übersicht">
           <div class="metric"><p>ANGEBOTE GESICHTET</p><strong id="metric-scanned">—</strong><span id="metric-scanned-note">im letzten Quellenabruf</span></div>
-          <div class="metric"><p>AKTIVE KANDIDATEN</p><strong id="metric-candidates">—</strong><span id="metric-candidate-note">nach dem Vorfilter</span></div>
+          <div class="metric"><p>KANDIDATEN IM PUFFER</p><strong id="metric-candidates">—</strong><span id="metric-candidate-note">nach dem Vorfilter</span></div>
           <div class="metric"><p id="metric-highvalue-label">HÖHERWERTIG MÖGLICH</p><strong id="metric-highvalue">—</strong><span>Grobe Klasse, kein Marktwert</span></div>
           <div class="metric metric-last"><p>SNAPSHOT ERSTELLT</p><strong id="metric-updated" class="metric-date">—</strong><span id="metric-source">Warte auf Datenquelle</span></div>
         </section>
@@ -53,7 +53,7 @@
         <details id="coverage-details" class="coverage-details" hidden>
           <summary><span id="coverage-summary">Scan-Abdeckung und Datenalter</span><span class="coverage-chevron" aria-hidden="true">⌄</span></summary>
           <div id="coverage-content" class="coverage-content"></div>
-          <p id="coverage-note" class="coverage-note">Die Abdeckung hängt von der ausgewählten Quelle ab. Dieser Snapshot ist keine vollständige oder sekundengenaue Abbildung aller eBay-Auktionen. Quellenangaben älter als sechs Stunden oder ohne Zeitstempel bleiben standardmäßig ausgeblendet.</p>
+          <p id="coverage-note" class="coverage-note">Die Abdeckung hängt von der ausgewählten Quelle ab. Der 24-Stunden-Puffer bewahrt Beobachtungen, aktualisiert aber keine Fakten. Ein niedrigeres konfiguriertes Limit, Auktionsende oder Daten-Gültigkeitsfrist begrenzen die Anzeige zusätzlich; unbekannte oder unplausible Quellenzeitstempel bleiben standardmäßig ausgeblendet.</p>
         </details>
 
         <section class="results" aria-label="Angebote">
@@ -73,7 +73,7 @@
               <select id="transport"><option value="all">Alle Optionen</option><option value="shipping">Günstiger Versand</option><option value="pickup">Abholung nah</option></select>
             </label>
             <label class="filter-select">Sortierung
-              <select id="sort"><option value="score">Interesse zuerst</option><option value="ending">Endet zuerst</option><option value="price">Niedrigster Preis</option><option value="total">Preis + Versand</option><option value="freshness">Frischeste Daten</option></select>
+              <select id="sort"><option value="score">Interesse zuerst</option><option value="ending">Endet zuerst</option><option value="price">Niedrigster Preis</option><option value="total">Preis + Versand</option><option value="freshness">Neuester Quellenstand</option></select>
             </label>
           </div>
 
@@ -84,11 +84,12 @@
             <label class="compact-select">Größenordnung
               <select id="value-filter"><option value="all">Alle Größenordnungen</option><option value="plausible">Höherwertig möglich</option><option value="unknown">Unklar / noch nicht eingeordnet</option><option value="unlikely">Eher kleinwertig</option></select>
             </label>
-            <label class="checkbox-label"><input id="show-expired" type="checkbox" /> Abgelaufene anzeigen</label>
-            <label class="checkbox-label"><input id="show-stale" type="checkbox" /> Älter als 6 Std. / undatiert</label>
+            <label class="checkbox-label"><input id="show-expired" type="checkbox" /> Abgelaufene Auktionen / Fristen</label>
+            <label class="checkbox-label"><input id="show-stale" type="checkbox" /> <span id="show-stale-label">Außerhalb des 24-Stunden-Puffers / undatiert</span></label>
             <button id="reset-filters" class="text-button" type="button">Filter zurücksetzen</button>
           </div>
           <p class="ranking-note">Interesse 0–100 priorisiert, was sich anzusehen lohnt. Eher 5 / 50 / 500 € / unklar: grobe Größenordnung, keine Wertermittlung. Zustand und Funktionsfähigkeit werden dadurch nicht bestätigt.</p>
+          <p id="retention-note" class="ranking-note">24-Stunden-Puffer: Ältere Beobachtungen bleiben bis zur frühesten Auktions-, Daten- oder Altersfrist sichtbar. Der Puffer aktualisiert keine Fakten und bestätigt keinen aktuellen Angebotsstand.</p>
           <p id="result-summary" class="result-summary" role="status" aria-live="polite"></p>
 
           <div id="cards" class="cards" aria-busy="true"></div>

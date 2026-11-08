@@ -7,7 +7,7 @@
   "blockers": [],
   "ai_enabled": true,
   "location": {"city":"Heidelberg", "postcode": "69121", "pickup_radius_km": 50},
-  "criteria": {"max_price_eur": 1, "max_bids": 0, "max_shipping_eur": 15, "lookahead_hours": 24},
+  "criteria": {"max_price_eur": 1, "max_bids": 0, "max_shipping_eur": 15, "lookahead_hours": 24, "max_freshness_hours": 24},
   "stats": {"received": 7, "shortlisted": 6, "active": 4, "excluded": 1, "review": 2, "stale": 2, "carried": 0},
   "coverage": {},
   "deals": [
@@ -77,14 +77,14 @@
       "reasons":["Abholung im Suchradius"], "risks":["Angebot ist bereits abgelaufen","Kein Zuschlags- oder Verkaufspreis bekannt"]
     },
     {
-      "id":"demo-007", "title":"Industrielle Waage – Quellenstand zu alt", "description":"Fiktives Beispiel mit mehr als sechs Stunden alten Quelldaten. Standardmäßig ausgeblendet, obwohl die gespeicherte Endzeit noch nicht erreicht ist.",
+      "id":"demo-007", "title":"Industrielle Waage – Quellenstand zu alt", "description":"Fiktives Beispiel außerhalb des 24-Stunden-Puffers. Standardmäßig ausgeblendet, obwohl die gespeicherte Endzeit noch nicht erreicht ist.",
       "url":"", "image":"", "price_eur":1, "shipping_eur":10, "bid_count":0, "demo_hours_remaining":4,
-      "demo_last_seen_hours":9.2, "eligibility":"eligible", "reserve_status":"unknown", "local_pickup_confirmed":false, "pickup_radius_km":50, "detail_path":null,
+      "demo_last_seen_hours":25.2, "eligibility":"eligible", "reserve_status":"unknown", "local_pickup_confirmed":false, "pickup_radius_km":50, "detail_path":null,
       "city":"", "postcode":"", "distance_km":null, "condition":"Gebraucht", "score":84, "interest_score":84,
       "semantic_assessed":true, "assessment_basis":"llm", "assessment_confidence":"low", "value_band":"around_500",
-      "value_reason":"Industrielles Messgerät könnte interessant sein; grob eher 500-Euro-Klasse. Die Quelldaten sind zu alt für eine aktuelle Kandidatenliste.",
+      "value_reason":"Industrielles Messgerät könnte interessant sein; grob eher 500-Euro-Klasse. Die Quelldaten liegen außerhalb des Speicherpuffers und belegen keinen aktuellen Angebotsstand.",
       "comparison_links":[], "reasons":["Spezialgerät mit niedrigem gespeicherten Gebotspreis"],
-      "risks":["Quellenstand älter als sechs Stunden","Gebote, Preis und Verfügbarkeit können sich geändert haben","Zustand und Funktionsfähigkeit nicht belegt"]
+      "risks":["Quellenstand älter als 24 Stunden","Gebote, Preis und Verfügbarkeit können sich geändert haben","Zustand und Funktionsfähigkeit nicht belegt"]
     }
   ]
 }

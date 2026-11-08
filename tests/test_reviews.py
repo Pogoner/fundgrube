@@ -215,7 +215,8 @@ class ApplyReviewsTests(unittest.TestCase):
         self.assertEqual(metadata["applied"], 1)
 
     def test_stale_future_unknown_and_expired_source_skipped(self):
-        for change in ({"last_seen_at": stamp(NOW - timedelta(hours=6, seconds=1))},
+        for change in ({"last_seen_at": stamp(NOW - timedelta(hours=24, seconds=1))},
+                       {"last_seen_at": stamp(NOW - timedelta(hours=24))},
                        {"last_seen_at": stamp(NOW + timedelta(seconds=1))}, {"last_seen_at": None},
                        {"ends_at": stamp(NOW)}, {"ends_at": None}):
             with self.subTest(change=change):
@@ -223,6 +224,33 @@ class ApplyReviewsTests(unittest.TestCase):
                 result, metadata = apply_reviews([source], sealed(), NOW)
                 self.assertEqual(result, [source])
                 self.assertEqual(metadata["skipped_stale"], 1)
+
+    def test_seven_and_twenty_three_hour_observations_keep_valid_review_without_revalidation(self):
+        reviewed = NOW - timedelta(hours=2)
+        for age in (timedelta(hours=7), timedelta(hours=23), timedelta(hours=24, seconds=-1)):
+            with self.subTest(age=age):
+                source = item(last_seen_at=stamp(NOW - age), stale=True, carried=True)
+                snapshot = feed([source])
+                snapshot["generated_at"] = stamp(reviewed - timedelta(minutes=5))
+                document = seal_reviews(snapshot, specification(reviewed_at=stamp(reviewed)))
+                result, metadata = apply_reviews([source], document, NOW)
+                self.assertEqual(metadata["applied"], 1)
+                self.assertEqual(result[0]["last_seen_at"], source["last_seen_at"])
+                self.assertEqual(result[0]["semantic_assessed_at"], stamp(reviewed))
+                self.assertTrue(result[0]["stale"])
+                self.assertTrue(result[0]["carried"])
+                self.assertEqual(result[0]["eligibility"], source["eligibility"])
+
+    def test_source_retention_and_review_lifetime_are_independent(self):
+        document = sealed()
+        later = NOW + timedelta(hours=47)
+        source = item(last_seen_at=stamp(later - timedelta(hours=23)),
+                      ends_at=stamp(later + timedelta(hours=1)), stale=True)
+        result, metadata = apply_reviews([source], document, later)
+        self.assertEqual(metadata["applied"], 1)
+        self.assertEqual(result[0]["semantic_assessed_at"], stamp(NOW))
+        self.assertEqual(result[0]["last_seen_at"], source["last_seen_at"])
+        self.assertTrue(result[0]["stale"])
 
     def test_newer_api_llm_is_preserved(self):
         source = item(assessment_basis="llm", value_band="around_50", semantic_interest=55,

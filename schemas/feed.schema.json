@@ -73,10 +73,12 @@
           "type": "object",
           "required": ["maximum_source_age_hours", "evaluated_at", "recheck_at_read_time"],
           "properties": {
-            "maximum_source_age_hours": {"type": "number", "exclusiveMinimum": 0, "maximum": 6},
+            "maximum_source_age_hours": {"type": "number", "exclusiveMinimum": 0, "maximum": 24, "description": "Configured source-buffer retention limit; not a guarantee of current price, bids or availability."},
             "evaluated_at": {"type": "string", "format": "date-time"},
             "recheck_at_read_time": {"const": true},
             "observation_is_not_condition_verification": {"const": true},
+            "retention_not_revalidation": {"const": true},
+            "source_currentness_guaranteed": {"const": false},
             "direct_ebay_verification": {"type": "boolean"},
             "upstream_cache_age_is_provider_claim": {"type": "boolean"}
           }
