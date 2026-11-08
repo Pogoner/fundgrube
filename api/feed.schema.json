@@ -165,8 +165,9 @@
               "type": "string"
             },
             "maximum_source_age_hours": {
+              "description": "Configured source-buffer retention limit; not a guarantee of current price, bids or availability.",
               "exclusiveMinimum": 0,
-              "maximum": 6,
+              "maximum": 24,
               "type": "number"
             },
             "observation_is_not_condition_verification": {
@@ -174,6 +175,12 @@
             },
             "recheck_at_read_time": {
               "const": true
+            },
+            "retention_not_revalidation": {
+              "const": true
+            },
+            "source_currentness_guaranteed": {
+              "const": false
             },
             "upstream_cache_age_is_provider_claim": {
               "type": "boolean"

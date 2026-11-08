@@ -38,8 +38,8 @@
   ],
   "counts": {
     "page_size": 50,
-    "pages": 7,
-    "total": 318
+    "pages": 9,
+    "total": 408
   },
   "coverage": {
     "api_requests_this_run": 4,
@@ -61,7 +61,7 @@
     "daily_request_budget": 750,
     "debounce_seconds": 540,
     "manual_leaf_override": false,
-    "next_offset": 336,
+    "next_offset": 432,
     "page_size": 48,
     "pages_fetched": 4,
     "pagination_caveat": "Begrenzter Ausschnitt aus einer veränderlichen, zwischengespeicherten Ergebnisliste. Die Trefferzahl der Quelle ist keine garantierte vollständige Abdeckung.",
@@ -74,41 +74,43 @@
     "schedule_interval_minutes": 10,
     "source_cache_max_age_minutes": 15,
     "source_claims_only": true,
-    "source_total_reported": 1127,
+    "source_total_reported": 1123,
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/"
   },
   "criteria": {
     "lookahead_hours": 24,
     "max_bids": 0,
-    "max_freshness_hours": 6,
+    "max_freshness_hours": 24,
     "max_price_eur": 1,
     "max_shipping_eur": 15,
     "refresh_after_minutes": 90
   },
   "freshness": {
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T02:18:34Z",
-    "maximum_source_age_hours": 6,
+    "evaluated_at": "2026-11-08T05:58:11Z",
+    "maximum_source_age_hours": 24,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
+    "retention_not_revalidation": true,
+    "source_currentness_guaranteed": false,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T02:18:34Z",
+  "generated_at": "2026-11-08T05:58:11Z",
   "interactive_review": {
-    "applied": 220,
+    "applied": 214,
     "available": 238,
     "errors": [],
     "expires_at": "2026-11-09T22:40:01Z",
     "reviewed_at": "2026-11-07T22:40:01Z",
     "reviewer": "ChatGPT",
     "skipped_changed": 0,
-    "skipped_missing": 18,
+    "skipped_missing": 24,
     "skipped_newer": 0,
     "skipped_stale": 0,
     "source_snapshot_id": "sha256:a4653a80aec09f51bd60d54624d06840d079a546372ec432a57d099576f90157",
     "status": "applied",
     "total": 238,
-    "unreviewed": 98,
+    "unreviewed": 194,
     "validation_status": "partial"
   },
   "interface": {
@@ -121,7 +123,7 @@
     "site_url": "https://pogoner.github.io/fundgrube/"
   },
   "kind": "manifest",
-  "last_successful_scan_at": "2026-11-08T02:18:34Z",
+  "last_successful_scan_at": "2026-11-08T05:58:11Z",
   "location": {
     "city": "Heidelberg",
     "country": "DE",
@@ -133,43 +135,55 @@
       "count": 50,
       "index": 1,
       "path": "api/candidates/page-001.json",
-      "sha256": "ad6b3bd1f5066a43a02933c77f4f1bdf1649c0dc5d6b1df42861d2b27e2f6a06"
+      "sha256": "b34159abb668099539a1558b927e7130d250df21027708209bbb2cf8261becc7"
     },
     {
       "count": 50,
       "index": 2,
       "path": "api/candidates/page-002.json",
-      "sha256": "15a0cc1861305eed0f1cc1fff873a03dba010790315d7a70fa9f824697a11017"
+      "sha256": "7452e3f3b7d2fbae8d122d3371db74b9d466d6633aa204c08b9cf1f3b278df2a"
     },
     {
       "count": 50,
       "index": 3,
       "path": "api/candidates/page-003.json",
-      "sha256": "129f8f58b2fb8b533ca9a35d1f1f88a93ba102d491abebbe03f39aba5dd5e496"
+      "sha256": "f80d203f68edc4021bad323b061c90581babfeb8a8fb3b5a1b9845d765e68ace"
     },
     {
       "count": 50,
       "index": 4,
       "path": "api/candidates/page-004.json",
-      "sha256": "c2f41652b3b07572de1b992deb2e8ed02a88fb41e9ffef65ba77d0c0f94e0de3"
+      "sha256": "8a532da3b731280921cd8e94222e304614da1b826d3a540206afd12423673081"
     },
     {
       "count": 50,
       "index": 5,
       "path": "api/candidates/page-005.json",
-      "sha256": "6aaf94fa0c68d7790f802eb8c4caf2ef19de5a2e9425f9c15fc1584fd81f3c05"
+      "sha256": "71061caff7a4f83dbc9925ed23912d7ef10cb5692623d5b1560584df78a3e571"
     },
     {
       "count": 50,
       "index": 6,
       "path": "api/candidates/page-006.json",
-      "sha256": "d3cc10610d3710bd59f553be759740ac2e27e54929018905b94f7417ddbe9cf3"
+      "sha256": "cb444eea6e7d8a3a8089ac8e471cdc10e3f88f5028b1c22b3f0da487cc8a8f26"
     },
     {
-      "count": 18,
+      "count": 50,
       "index": 7,
       "path": "api/candidates/page-007.json",
-      "sha256": "7a5e8a0bc8fe7ec4dd2516db08241249138f3dc32421be939842b7eb75a439d8"
+      "sha256": "259ae841aadeacdb045d4b426df2336d40026ac84b310a89f3d80b610b24636f"
+    },
+    {
+      "count": 50,
+      "index": 8,
+      "path": "api/candidates/page-008.json",
+      "sha256": "728c6e94e93b834037a147e70b1e2e2fe2a40ef4e0de1f090e2e67775c28cbd6"
+    },
+    {
+      "count": 8,
+      "index": 9,
+      "path": "api/candidates/page-009.json",
+      "sha256": "2632bc8adca4657bc067aad3c7192fc9300c278c4728a39b3b4dfa6963087709"
     }
   ],
   "paths": {
@@ -180,15 +194,15 @@
   },
   "provider": "auktionen-ohne-gebot",
   "schema_version": 2,
-  "snapshot_id": "sha256:6d192f0277fa2c42404a0af96388bd0a8b16d274828a6f301a712b4d116705d5",
+  "snapshot_id": "sha256:3f45858a4d149bab9de8b1d95f705d81753a0ab744bd617b29ef889da1de7184",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "stats": {
-    "active": 318,
+    "active": 408,
     "budget_limited": false,
-    "carried": 173,
+    "carried": 261,
     "categories_completed": 0,
     "categories_planned": 1,
     "categories_scanned": 1,
@@ -201,13 +215,13 @@
     "omitted_by_source_status": 0,
     "omitted_records": 0,
     "pages_omitted": 0,
-    "received": 145,
+    "received": 147,
     "refreshed": 0,
-    "review": 313,
+    "review": 403,
     "searches_failed": 0,
     "searches_succeeded": 4,
-    "shortlisted": 313,
-    "stale": 173
+    "shortlisted": 403,
+    "stale": 261
   },
   "status_message": "Öffentliche Quelle aktiv: begrenzter Ausschnitt mit zwischengespeicherten Angaben von auktionen-ohne-gebot.de.",
   "untrusted_listing_text": true,

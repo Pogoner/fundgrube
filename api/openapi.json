@@ -18,7 +18,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
           }
         },
         "summary": "Kandidatenseite 1 lesen"
@@ -36,7 +36,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
           }
         },
         "summary": "Kandidatenseite 2 lesen"
@@ -54,7 +54,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
           }
         },
         "summary": "Kandidatenseite 3 lesen"
@@ -72,7 +72,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
           }
         },
         "summary": "Kandidatenseite 4 lesen"
@@ -90,7 +90,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
           }
         },
         "summary": "Kandidatenseite 5 lesen"
@@ -108,7 +108,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
           }
         },
         "summary": "Kandidatenseite 6 lesen"
@@ -126,10 +126,46 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
           }
         },
         "summary": "Kandidatenseite 7 lesen"
+      }
+    },
+    "/api/candidates/page-008.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates8",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
+          }
+        },
+        "summary": "Kandidatenseite 8 lesen"
+      }
+    },
+    "/api/candidates/page-009.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates9",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
+          }
+        },
+        "summary": "Kandidatenseite 9 lesen"
       }
     },
     "/api/items/{item_file}": {
@@ -156,7 +192,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
           },
           "404": {
             "description": "Diese statische Datei existiert nicht (mehr)."
@@ -177,7 +213,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen."
+            "description": "Statischer JSON-Snapshot; Zeitstempel und snapshot_id prüfen. Die Puffergrenze ist keine Zusage aktueller Preise oder Gebote."
           }
         },
         "summary": "Status und alle Kandidatenseiten lesen"
