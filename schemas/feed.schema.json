@@ -13,6 +13,34 @@
     "nullableNumber": {"type": ["number", "null"], "minimum": 0},
     "nullableText": {"type": ["string", "null"]},
     "nullableTime": {"type": ["string", "null"], "format": "date-time"},
+    "nullableScore": {"type": ["integer", "null"], "minimum": 0, "maximum": 100},
+    "scoring": {
+      "type": "object",
+      "required": ["score_version", "formula", "rounding", "interest_score_is_derived", "additional_fact_bonus", "category_caps", "fields", "legacy_policy", "eligibility_is_separate", "is_appraisal", "condition_verified", "useability_is_condition_probability"],
+      "properties": {
+        "score_version": {"const": 2},
+        "formula": {"const": "round_half_up(scalp_score * useability_score / 100)"},
+        "rounding": {"const": "half_up"},
+        "interest_score_is_derived": {"const": true},
+        "additional_fact_bonus": {"const": 0},
+        "category_caps": {"const": false},
+        "fields": {
+          "type": "object",
+          "required": ["scalp_score", "useability_score", "interest_score", "semantic_interest"],
+          "properties": {
+            "scalp_score": {"type": "object", "required": ["label", "meaning", "reason_field"], "properties": {"label": {"const": "Scalp"}, "meaning": {"type": "string"}, "reason_field": {"const": "value_reason"}}},
+            "useability_score": {"type": "object", "required": ["label", "meaning", "reason_field", "dependencies_field"], "properties": {"label": {"const": "Useability"}, "meaning": {"type": "string"}, "reason_field": {"const": "useability_reason"}, "dependencies_field": {"const": "dependencies"}}},
+            "interest_score": {"type": "object", "required": ["label", "meaning", "alias"], "properties": {"label": {"const": "Interest"}, "meaning": {"type": "string"}, "alias": {"const": "score"}}},
+            "semantic_interest": {"type": "object", "required": ["alias", "deprecated"], "properties": {"alias": {"const": "scalp_score"}, "deprecated": {"const": true}}}
+          }
+        },
+        "legacy_policy": {"type": "string"},
+        "eligibility_is_separate": {"const": true},
+        "is_appraisal": {"const": false},
+        "condition_verified": {"const": false},
+        "useability_is_condition_probability": {"const": false}
+      }
+    },
     "sourceProvider": {"type": ["string", "null"], "minLength": 1, "maxLength": 80},
     "sourceUrl": {"enum": ["https://auktionen-ohne-gebot.de/business-industrie/", null]},
     "verificationLevel": {"enum": ["aggregator", "direct_api", "user_supplied", "unknown", null]},
@@ -62,6 +90,7 @@
         },
         "ai_enabled": {"type": "boolean"},
         "ai_metadata": {"type": "object"},
+        "scoring": {"$ref": "#/$defs/scoring"},
         "interactive_review": {"type": "object", "properties": {
           "status": {"type": "string"}, "reviewer": {"const": "ChatGPT"},
           "reviewed_at": {"$ref": "#/$defs/nullableTime"},
@@ -93,6 +122,30 @@
         "score", "interest_score", "value_band", "assessment_confidence", "assessment_basis", "semantic_assessed", "reasons", "risks"
       ],
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"required": ["score_version"], "properties": {"score_version": {"const": 1}}},
+          "then": {
+            "required": ["scalp_score", "useability_score", "useability_reason", "dependencies"],
+            "properties": {"useability_score": {"const": null}, "interest_score": {"const": null}, "score": {"const": null}, "dependencies": {"maxItems": 0}}
+          }
+        },
+        {
+          "if": {"required": ["score_version"], "properties": {"score_version": {"const": 2}}},
+          "then": {
+            "required": ["scalp_score", "useability_score", "useability_reason", "dependencies"],
+            "properties": {"interest_score": {"$ref": "#/$defs/nullableScore"}, "score": {"$ref": "#/$defs/nullableScore"}, "value_reason": {"type": ["string", "null"], "maxLength": 500}}
+          }
+        },
+        {
+          "if": {"required": ["score_version", "scalp_score"], "properties": {"score_version": {"const": 2}, "scalp_score": {"const": null}}},
+          "then": {"properties": {"interest_score": {"const": null}, "score": {"const": null}}}
+        },
+        {
+          "if": {"required": ["score_version", "useability_score"], "properties": {"score_version": {"const": 2}, "useability_score": {"const": null}}},
+          "then": {"properties": {"interest_score": {"const": null}, "score": {"const": null}}}
+        }
+      ],
       "properties": {
         "id": {"type": "string", "minLength": 1, "maxLength": 512},
         "title": {"type": "string", "minLength": 1, "maxLength": 500},
@@ -127,6 +180,11 @@
         "pickup_radius_km": {"$ref": "#/$defs/nullableNumber"},
         "score": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
         "interest_score": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+        "score_version": {"type": "integer", "enum": [1, 2], "description": "Per-item assessment version. Version 1 has no assessed Useability or new Interest; the snapshot schema remains version 2."},
+        "scalp_score": {"$ref": "#/$defs/nullableScore", "description": "Semantic economic-interest factor, not a price appraisal; version 1 preserves a known old overall score only as a legacy cue."},
+        "useability_score": {"$ref": "#/$defs/nullableScore", "description": "Practical independence from additional equipment, software, accessories or infrastructure; not probability of working condition. Null means not assessed."},
+        "useability_reason": {"type": "string", "maxLength": 500},
+        "dependencies": {"type": "array", "maxItems": 5, "items": {"type": "string", "minLength": 1, "maxLength": 240}, "description": "Untrusted assessment text listing practical dependencies; empty does not certify independence."},
         "value_band": {"enum": ["around_5", "around_50", "around_500", "unknown"]},
         "assessment_confidence": {"enum": ["low", "medium", "high"]},
         "assessment_basis": {"enum": ["heuristic", "llm"]},
@@ -139,8 +197,8 @@
         "semantic_assessed_at": {"$ref": "#/$defs/nullableTime"},
         "semantic_review_mode": {"enum": ["interactive", "api"]},
         "classification": {"$ref": "#/$defs/nullableText"},
-        "product_kind": {"enum": ["apparatus", "tool", "accessory", "media", "consumable", "unknown"]},
-        "semantic_interest": {"type": "integer", "minimum": 0, "maximum": 100},
+        "product_kind": {"enum": ["apparatus", "tool", "component", "accessory", "media", "consumable", "unknown"]},
+        "semantic_interest": {"$ref": "#/$defs/nullableScore", "deprecated": true, "description": "Deprecated alias of exported scalp_score, never the derived V2 Interest."},
         "price_kind": {"$ref": "#/$defs/nullableText"},
         "price_basis": {"$ref": "#/$defs/nullableText"},
         "minimum_bid_eur": {"$ref": "#/$defs/nullableNumber"},
@@ -188,7 +246,7 @@
               "items": {"type": "object", "required": ["index", "path", "count", "sha256"], "properties": {"index": {"type": "integer", "minimum": 1}, "path": {"type": "string", "pattern": "^api/candidates/page-[0-9]{3,}\\.json$"}, "count": {"type": "integer", "minimum": 0, "maximum": 100}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}
             },
             "paths": {"type": "object", "required": ["dashboard", "openapi", "schema", "guide"], "additionalProperties": {"type": "string"}},
-            "assessment": {"type": "object", "required": ["purpose", "is_appraisal", "condition_verified", "must_recheck_original_before_bidding"], "properties": {"purpose": {"const": "personal_attention_priority"}, "is_appraisal": {"const": false}, "condition_verified": {"const": false}, "must_recheck_original_before_bidding": {"const": true}}}
+            "assessment": {"type": "object", "required": ["purpose", "is_appraisal", "condition_verified", "must_recheck_original_before_bidding"], "properties": {"purpose": {"const": "personal_attention_priority"}, "score_version": {"const": 2}, "interest_formula": {"const": "round_half_up(scalp_score * useability_score / 100)"}, "useability_focus": {"const": "dependencies_and_practical_independence"}, "useability_is_condition_probability": {"const": false}, "is_appraisal": {"const": false}, "condition_verified": {"const": false}, "must_recheck_original_before_bidding": {"const": true}}}
           }
         }
       ]

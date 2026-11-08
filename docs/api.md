@@ -55,7 +55,8 @@ Manifest einmal lesen, den Daten-SHA festhalten, alle Kandidatenseiten parallel
 abrufen und lokal mit den gültigen Einordnungen abgleichen. Nur Angebote ohne
 gültige Bewertung oder mit geändertem Titel, Beschreibung oder Zustand brauchen
 eine neue LLM-Einordnung. Preis-/Gebotsänderungen verändern Quellenfakten und
-gegebenenfalls die Faktenpunkte, nicht automatisch die inhaltsgebundene Semantik.
+gegebenenfalls die Eignung, nicht automatisch die inhaltsgebundene Semantik.
+Scoring V2 addiert keine Faktenpunkte auf die zwei semantischen Faktoren.
 Abgelaufene Reviews müssen bei Bedarf tatsächlich neu gesichtet werden; ihre
 Zeitstempel dürfen nicht bloß verlängert werden.
 
@@ -109,8 +110,24 @@ Wichtige Begriffe:
   Leere Ergebnisse sind kein Nachweis vollständiger Marktabdeckung.
 - `eligibility`: `eligible`, `review` oder `excluded`. Ein hoher Interesse-Score
   überstimmt weder Ausschlussgründe noch fehlende Auktionsdaten.
-- `interest_score`: Persönliche Sichtungspriorität von 0–100; `score` ist der
-  kompatible Alias. Kein garantierter Gewinn oder Preisvorschlag.
+- `score_version`: Version der Bewertung **dieses Angebots**; unabhängig von der
+  weiterhin gültigen öffentlichen `schema_version: 2`. Der Snapshot kann neben
+  vollständigen V2-Bewertungen ausdrücklich unvollständige Altbewertungen enthalten.
+- `scalp_score`: Semantisches wirtschaftliches Interesse von 0–100;
+  `value_reason` begründet diesen Faktor. Kein konkreter Marktwert oder Preisvorschlag.
+- `useability_score`: Praktische Eigenständigkeit von 0–100: Wie stark hängt
+  sinnvolle Nutzung von einer zusätzlichen Anlage, Software, passendem Zubehör
+  oder Infrastruktur ab? **Keine Wahrscheinlichkeit, dass das Gerät funktioniert.**
+  `useability_reason` begründet den Faktor; `dependencies` nennt höchstens fünf
+  konkrete oder noch ungeklärte Abhängigkeiten. Eine leere Liste beweist keine
+  vollständige Eigenständigkeit. Beide Gründe sind auf 500 Zeichen, einzelne
+  Abhängigkeiten auf 240 Zeichen begrenzt.
+- `interest_score`: Aus den beiden Faktoren abgeleitete Sichtungspriorität;
+  `score` ist der kompatible Alias. Formel: **Scalp × Useability / 100**, auf die
+  nächste ganze Zahl gerundet, halbe Werte aufwärts. Keine zusätzlichen Faktenpunkte,
+  Kategorie-Abschläge oder Funktionswahrscheinlichkeiten. Fehlt einer der Faktoren,
+  bleiben Interest und `score` `null`, nicht 0. Kein garantierter Gewinn.
+- `semantic_interest`: Veralteter Alias von `scalp_score`, **nicht** von Interest.
 - `value_band`: `around_5`, `around_50`, `around_500` oder `unknown`. Bewusst grobe,
   unsichere Größenordnung, keine Wertermittlung und kein konkret belegter Marktpreis.
 - `assessment_basis`: `heuristic` oder `llm`; `assessment_confidence` bezeichnet
@@ -136,6 +153,35 @@ Unbekannte Angaben bleiben `null`. Das bedeutet insbesondere **nicht** „0 Gebo
 „kostenloser Versand“ oder „kein Mindestpreis“. `reserve_status: met` bedeutet nur,
 dass ein Mindestpreis erreicht wurde. Ein bestätigter Abhol-Suchradius ist keine
 gemessene Entfernung und keine Fahrzeit.
+
+### Scoring V2 und Altbestände
+
+Beispiel: Scalp 85 und Useability 60 ergeben Interest 51; Scalp 1 und Useability 50
+ergeben gerundet Interest 1. Diese Rundung ist eine technische Sortierregel,
+kein Ausdruck von Messgenauigkeit. Der Export berechnet einen vollständigen
+V2-Interest immer aus den Faktoren neu, auch wenn ein älterer abgeleiteter Wert
+mitgegeben wurde. Er verändert dabei weder Angebotsfakten noch `eligibility`,
+`assessment_basis`, `assessment_confidence` oder Quellenzeitstempel. Ungültige
+Faktoren wie Booleans, Fließkommazahlen oder Werte außerhalb 0–100 werden
+zurückgewiesen, nicht auf plausible Werte zurechtgebogen.
+
+Bei `score_version: 1` oder bislang unversionierten Bewertungen bleibt höchstens
+der **alte kombinierte Gesamtscore** als historischer Scalp-Anhaltspunkt erhalten.
+Ein schon migrierter `scalp_score` hat Vorrang vor dem alten `interest_score`,
+danach `score`. Das frühere rohe `semantic_interest` wird nicht ungeprüft zum
+Scalp gemacht. Ist kein alter Gesamtwert bekannt, bleibt auch Scalp unbekannt.
+Useability und neuer Interest bleiben `null`; der Hinweis lautet, dass Useability
+noch nicht beurteilt wurde. Die fehlende Dimension wird weder als 0 noch 100
+erfunden. Erst eine tatsächliche neue Bewertung liefert beide V2-Faktoren.
+
+`scoring` beschreibt auf Manifest, Dashboard, Kandidatenseiten und Detaildateien
+die V2-Formel, Feldnamen, Legacy-Regel und Grenzen. Dass der Snapshot Scoring V2
+unterstützt, behauptet **nicht**, jedes enthaltene Angebot sei bereits neu bewertet.
+Das OpenAPI-Dokument enthält dafür die vollständigen Schema-Komponenten; die
+öffentliche Feed-Version bleibt 2. `product_kind: component` unterscheidet ein
+Bauteil von einem eigenständig nutzbaren Gerät, ohne selbst eine numerische
+Kategorie-Obergrenze einzuführen. Funktion, Zustand und Vollständigkeit bleiben
+Behauptungen bzw. offene Prüfpunkte, keine vom Score bestätigten Fakten.
 
 ## Interaktive ChatGPT-Bewertungen zurück in die GUI
 
@@ -172,7 +218,7 @@ eigene Modellbewertung und beglaubigt keine Verkäuferangaben. Der Hash ist eine
 Inhaltsbindung, keine kryptografische Signatur der Urheberschaft; die regulären
 Repository-Schreibrechte sichern den Eintragspfad.
 
-`ratings.json` verwendet Version 1 mit genau den Kopf-Feldern `schema_version`,
+Neue `ratings.json`-Dateien verwenden Version 2 mit genau den Kopf-Feldern `schema_version`,
 `source_snapshot_id`, `reviewed_at`, `reviewer` und `groups`. `reviewer` ist
 `ChatGPT`; die Quell-Snapshot-ID muss dem Feed entsprechen, der Zeitpunkt eine
 Zeitzone enthalten und darf nicht vor der Feed-Erzeugung liegen. Ein zukünftiger
@@ -181,12 +227,23 @@ genau `ids` und `assessment`; eine Bewertung enthält:
 
 | Feld | Zulässiger Inhalt |
 |---|---|
-| `semantic_interest` | ganze Zahl 0–100, keine Erfolgswahrscheinlichkeit |
+| `scalp_score` | ganze Zahl 0–100; semantisches wirtschaftliches Interesse |
+| `useability_score` | ganze Zahl 0–100; praktische Eigenständigkeit, keine Funktionswahrscheinlichkeit |
+| `useability_reason` | begründete Einschätzung, höchstens 500 Zeichen |
+| `dependencies` | höchstens fünf Abhängigkeiten bzw. Unsicherheiten, jeweils höchstens 240 Zeichen |
 | `value_band` | `around_5`, `around_50`, `around_500`, `unknown` |
 | `assessment_confidence` | `low`, `medium`, `high` |
-| `product_kind` | `apparatus`, `tool`, `accessory`, `media`, `consumable`, `unknown` |
-| `value_reason` | kurze begründete Einschätzung |
+| `product_kind` | `apparatus`, `tool`, `component`, `accessory`, `media`, `consumable`, `unknown` |
+| `value_reason` | Scalp-Begründung, höchstens 500 Zeichen |
 | `reasons`, `risks`, `next_checks` | begrenzte Listen kurzer Hinweise |
+
+Das Assessment hat genau diese elf Felder; es enthält **kein** `score_version`,
+`semantic_interest`, `interest_score` oder `score`. Die Versionsangabe steht im
+Review-Kopf, Interest wird berechnet. Eine neue V2-Bewertung benötigt beide
+ganzzahligen Faktoren; die `null`-Möglichkeit im öffentlichen Feed dient nur der
+ehrlichen Darstellung unvollständiger bzw. älterer Daten. Bestehende Reviews mit
+Version 1 und ihren bisherigen acht Assessment-Feldern werden ausdrücklich als
+Legacy übernommen, nicht automatisch zur neuen zweidimensionalen Bewertung erklärt.
 
 Zusätzliche Felder, URLs, HTML-Tags und Codeblöcke gehören nicht in Bewertungen.
 Der Helfer akzeptiert höchstens 800 Reviews. Ein Datensatz mit

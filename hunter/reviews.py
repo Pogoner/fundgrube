@@ -82,12 +82,14 @@ def content_fingerprint(item: dict[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(_bounded_json(data)).hexdigest()
 
 
-def _assessment(value: Any) -> dict[str, Any]:
+def _assessment(value: Any, score_version: int) -> dict[str, Any]:
     try:
-        result = _validate_assessment(value)
+        result = _validate_assessment(value, score_version=score_version)
     except (SemanticError, TypeError):
         raise ReviewsError("Bewertung entspricht nicht dem begrenzten semantischen Schema.") from None
     texts = [result["value_reason"], *result["reasons"], *result["risks"], *result["next_checks"]]
+    if score_version == 2:
+        texts.extend([result["useability_reason"], *result["dependencies"]])
     if any(UNSAFE_TEXT.search(text) or "```" in text for text in texts):
         raise ReviewsError("Bewertungen dürfen keine URLs, HTML-Tags oder Codeblöcke enthalten.")
     return result
@@ -97,7 +99,7 @@ def _header(document: Any, payload_name: str) -> dict[str, Any]:
     _bounded_json(document)
     if not isinstance(document, dict) or set(document) != HEADER_FIELDS | {payload_name}:
         raise ReviewsError("Bewertungsdokument enthält fehlende oder unerwartete Felder.")
-    if type(document["schema_version"]) is not int or document["schema_version"] != 1:
+    if type(document["schema_version"]) is not int or document["schema_version"] not in {1, 2}:
         raise ReviewsError("Unbekannte Bewertungsschema-Version.")
     snapshot_id = document["source_snapshot_id"]
     if not isinstance(snapshot_id, str) or not HASH_PATTERN.fullmatch(snapshot_id):
@@ -105,7 +107,7 @@ def _header(document: Any, payload_name: str) -> dict[str, Any]:
     reviewed_at = _time(document["reviewed_at"])
     if reviewed_at is None or document["reviewer"] != "ChatGPT":
         raise ReviewsError("Bewertungszeitpunkt oder Urheberangabe ist ungültig.")
-    return {"schema_version": 1, "source_snapshot_id": snapshot_id,
+    return {"schema_version": document["schema_version"], "source_snapshot_id": snapshot_id,
             "reviewed_at": _iso(reviewed_at), "reviewer": "ChatGPT"}
 
 
@@ -128,7 +130,7 @@ def validate_reviews(document: Any) -> dict[str, Any]:
             raise ReviewsError("Bewertungseintrag enthält keinen gültigen Inhaltsfingerprint.")
         ids.add(item_id)
         result.append({"id": item_id, "content_fingerprint": fingerprint,
-                       "assessment": _assessment(entry["assessment"])})
+                       "assessment": _assessment(entry["assessment"], header["schema_version"])})
     return {**header, "reviews": result}
 
 
@@ -164,7 +166,7 @@ def seal_reviews(feed: dict[str, Any], specification: dict[str, Any]) -> dict[st
     for group in groups:
         if not isinstance(group, dict) or set(group) != {"assessment", "ids"}:
             raise ReviewsError("Bewertungsgruppe enthält fehlende oder unerwartete Felder.")
-        answer = _assessment(group["assessment"])
+        answer = _assessment(group["assessment"], header["schema_version"])
         ids = group["ids"]
         if not isinstance(ids, list) or not ids or len(ids) + len(reviews) > MAX_REVIEWS:
             raise ReviewsError("Bewertungsgruppe enthält keine oder zu viele Angebots-IDs.")
@@ -270,7 +272,7 @@ def apply_reviews(
         if item.get("assessment_basis") == "llm" and previous is not None and reviewed_at < previous <= at:
             metadata["skipped_newer"] += 1
             continue
-        enriched = apply_semantic(item, review["assessment"])
+        enriched = apply_semantic(item, review["assessment"], score_version=document["schema_version"])
         result = dict(item)
         result.update({key: enriched[key] for key in ANNOTATION_FIELDS if key in enriched})
         result.update({"semantic_review_mode": "interactive", "semantic_assessed_at": document["reviewed_at"]})

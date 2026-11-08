@@ -22,6 +22,15 @@ def raw(**overrides):
     return data
 
 
+def assessment(**updates):
+    result = {"scalp_score": 85, "useability_score": 90, "useability_reason": "Eigenständiges Gerät mit üblicher Versorgung.",
+              "dependencies": [], "value_band": "around_500", "assessment_confidence": "low",
+              "product_kind": "apparatus", "value_reason": "Spezialgerät mit plausiblem Potenzial.",
+              "reasons": [], "risks": [], "next_checks": []}
+    result.update(updates)
+    return result
+
+
 class ModelsTests(unittest.TestCase):
     def test_missing_and_foreign_money_not_euros(self):
         self.assertIsNone(euro({"value": "1"}))
@@ -83,13 +92,16 @@ class RankingTests(unittest.TestCase):
     def test_autoclave_ranks_above_bmw_magazine(self):
         apparatus = self.rank()
         magazine = self.rank(raw(title="Altes BMW Heft 1998"))
-        self.assertGreater(apparatus["interest_score"], 75)
+        self.assertGreater(apparatus["scalp_score"], 70)
+        self.assertGreater(apparatus["interest_score"], 50)
         self.assertLess(magazine["interest_score"], 30)
         self.assertEqual(apparatus["value_band"], "around_500")
         self.assertEqual(magazine["value_band"], "around_5")
         self.assertEqual(apparatus["assessment_confidence"], "low")
         self.assertTrue(apparatus["semantic_assessed"])
         self.assertEqual(apparatus["assessment_basis"], "heuristic")
+        self.assertEqual(apparatus["score_version"], 2)
+        self.assertEqual(apparatus["semantic_interest"], apparatus["scalp_score"])
 
     def test_device_manual_not_device(self):
         manual = self.rank(raw(title="Tisch-Autoklav Bedienungsanleitung"))
@@ -159,19 +171,98 @@ class RankingTests(unittest.TestCase):
     def test_model_cannot_change_observed_facts(self):
         item = self.rank(raw(bidCount=2))
         original = copy.deepcopy(item)
-        assessment = {"semantic_interest": 100, "value_band": "around_500", "assessment_confidence": "low",
-                      "product_kind": "apparatus", "value_reason": "Unklar", "reasons": [], "risks": [],
-                      "bid_count": 0, "eligibility": "eligible", "price_eur": 0}
-        result = apply_semantic(item, assessment)
+        answer = assessment(scalp_score=100, useability_score=100,
+                            bid_count=0, eligibility="eligible", price_eur=0)
+        result = apply_semantic(item, answer)
         self.assertEqual(result["eligibility"], "excluded")
         self.assertEqual(result["bid_count"], 2)
         self.assertEqual(result["price_eur"], 1)
         self.assertEqual(item, original)
-        self.assertLessEqual(result["score"], 15)
+        self.assertEqual(result["score"], 100)  # Eligibility is separate, not a score cap.
 
     def test_invalid_llm_fields_rejected(self):
+        for change in ({"scalp_score": 101}, {"scalp_score": True}, {"scalp_score": None},
+                       {"useability_score": -1}, {"useability_score": 42.0}, {"useability_score": None},
+                       {"useability_reason": ""}, {"useability_reason": "x" * 501},
+                       {"dependencies": ["x"] * 6}, {"dependencies": ["x" * 241]}):
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                apply_semantic(self.rank(), assessment(**change))
+
+    def test_interest_is_exact_half_up_product_without_fact_or_category_caps(self):
+        for scalp, useability, expected in ((1, 50, 1), (3, 50, 2), (51, 50, 26), (85, 90, 77),
+                                            (100, 100, 100), (0, 100, 0), (100, 0, 0), (90, 5, 5), (5, 95, 5)):
+            for kind in ("apparatus", "media", "consumable", "component"):
+                with self.subTest(scalp=scalp, useability=useability, kind=kind):
+                    source = {**self.rank(raw(bidCount=2)), "fact_score": 0}
+                    result = apply_semantic(source, assessment(scalp_score=scalp, useability_score=useability, product_kind=kind))
+                    self.assertEqual(result["interest_score"], expected)
+                    self.assertEqual(result["score"], expected)
+                    self.assertEqual(result["scalp_score"], scalp)
+                    self.assertEqual(result["semantic_interest"], scalp)
+                    self.assertEqual(result["useability_score"], useability)
+                    self.assertEqual(result["score_version"], 2)
+                    self.assertEqual(result["eligibility"], "excluded")
+
+    def test_heuristic_autonomy_does_not_treat_condition_as_missing_structure(self):
+        baseline = self.rank(raw(title="Tisch-Autoklav"))
+        for suffix in ("defekt", "ungeprüft", "Bastlergerät", "als Ersatzteil", "Ersatzteilträger", "als Ersatzteil für Bastler"):
+            with self.subTest(suffix=suffix):
+                result = self.rank(raw(title="Tisch-Autoklav " + suffix, condition="Als Ersatzteil / defekt"))
+                self.assertEqual(result["product_kind"], "apparatus")
+                self.assertEqual(result["useability_score"], baseline["useability_score"])
+                self.assertEqual(result["scalp_score"], baseline["scalp_score"])
+                self.assertEqual(result["assessment_basis"], "heuristic")
+                self.assertTrue(any("keine Funktion unterstellen" in risk for risk in result["risks"]))
+
+    def test_explicitly_missing_core_assembly_is_an_integration_dependency(self):
+        complete = self.rank(raw(title="Tisch-Autoklav"))
+        incomplete = self.rank(raw(title="Tisch-Autoklav ohne Steuerung"))
+        self.assertLess(incomplete["useability_score"], complete["useability_score"])
+        self.assertTrue(any("steuerung" in value for value in incomplete["dependencies"]))
+        self.assertEqual(incomplete["scalp_score"], complete["scalp_score"])
+        self.assertEqual(self.rank(raw(title="Tisch-Autoklav ohne Anleitung"))["useability_score"], complete["useability_score"])
+
+    def test_rma42_is_universal_transmitter_but_not_a_standalone_system(self):
+        result = self.rank(raw(title="RMA42 Universaltransmitter"))
+        self.assertEqual(result["product_kind"], "component")
+        self.assertLessEqual(result["useability_score"], 34)
+        self.assertIn("Sensortransmitter", result["useability_reason"])
+        self.assertIn("Externe Sensoren", result["dependencies"])
+        self.assertNotIn("Motor", result["useability_reason"])
+        self.assertEqual(result["assessment_basis"], "heuristic")
+
+    def test_quantity_can_change_scalp_without_changing_consumer_autonomy(self):
+        small = self.rank(raw(title="Packung Handschuhe"))
+        pallet = self.rank(raw(title="Palette 2000 Paar Handschuhe"))
+        self.assertGreater(pallet["scalp_score"], small["scalp_score"])
+        self.assertEqual(pallet["useability_score"], small["useability_score"])
+        self.assertGreater(pallet["interest_score"], 25)  # No old consumable cap.
+
+    def test_legacy_review_migrates_old_total_without_inventing_useability(self):
+        old = {key: value for key, value in assessment().items()
+               if key not in {"scalp_score", "useability_score", "useability_reason", "dependencies"}}
+        old["semantic_interest"] = 82
+        for changes, expected in (({}, 85), ({"product_kind": "media"}, 25)):
+            with self.subTest(changes=changes):
+                result = apply_semantic(self.rank(), {**old, **changes}, score_version=1)
+                self.assertEqual(result["scalp_score"], expected)  # round(82*.7+28), then V1 cap.
+                self.assertEqual(result["semantic_interest"], expected)
+                self.assertIsNone(result["useability_score"])
+                self.assertIsNone(result["interest_score"])
+                self.assertIsNone(result["score"])
+                self.assertEqual(result["score_version"], 1)
+                self.assertEqual(result["dependencies"], [])
+                self.assertIn("noch nicht beurteilt", result["useability_reason"])
+                self.assertEqual(result["assessment_basis"], "llm")
+        excluded = apply_semantic(self.rank(raw(bidCount=2)), old, score_version=1)
+        self.assertEqual(excluded["scalp_score"], 15)
+
+    def test_legacy_shape_is_not_an_implicit_modern_assessment(self):
         with self.assertRaises(ValueError):
-            apply_semantic(self.rank(), {"semantic_interest": 101})
+            apply_semantic(self.rank(), {"semantic_interest": 85})
+        for version in (True, 0, 3, None):
+            with self.subTest(version=version), self.assertRaises(ValueError):
+                apply_semantic(self.rank(), assessment(), score_version=version)
 
 
 class AggregatorPickupRankingTests(unittest.TestCase):
@@ -204,6 +295,7 @@ class AggregatorPickupRankingTests(unittest.TestCase):
         no_claim = self.rank(self.candidate(pickup_search_confirmed=False))
         self.assertEqual(candidate, before)
         self.assertEqual(matched["fact_score"] - no_claim["fact_score"], 8)
+        self.assertEqual(matched["interest_score"], no_claim["interest_score"])
         self.assertEqual(matched["eligibility"], "review")
         self.assertFalse(matched["local_pickup_confirmed"])
         self.assertEqual(matched["city"], "")
@@ -220,7 +312,8 @@ class AggregatorPickupRankingTests(unittest.TestCase):
     def test_synthetic_autoclave_remains_more_interesting_than_bmw_magazine(self):
         apparatus = self.rank(self.candidate(title="Tisch-Autoklav voll funktionsfähig"))
         magazine = self.rank(self.candidate(title="Altes BMW Heft 1998"))
-        self.assertGreater(apparatus["interest_score"], 75)
+        self.assertGreater(apparatus["scalp_score"], 70)
+        self.assertGreater(apparatus["interest_score"], 50)
         self.assertLess(magazine["interest_score"], 30)
         self.assertGreater(apparatus["interest_score"], magazine["interest_score"])
         self.assertEqual(apparatus["value_band"], "around_500")

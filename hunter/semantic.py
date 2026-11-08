@@ -19,7 +19,8 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 
 ENDPOINT = "https://api.openai.com/v1/responses"
-PROMPT_VERSION = "fundgrube-semantic-v1"
+PROMPT_VERSION = "fundgrube-semantic-v2"
+CACHE_VERSION = 2
 PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "semantic-screening.md"
 DOCUMENTATION_MARKER = "<!-- Betriebshinweis:"
 MAX_RESPONSE_BYTES = 1_000_000
@@ -29,13 +30,16 @@ MAX_ITEMS_PER_RUN = 20
 MAX_CACHE_ITEMS = 800
 VALUE_BANDS = {"around_5", "around_50", "around_500", "unknown"}
 CONFIDENCES = {"low", "medium", "high"}
-PRODUCT_KINDS = {"apparatus", "tool", "accessory", "media", "consumable", "unknown"}
-ASSESSMENT_FIELDS = {
+PRODUCT_KINDS = {"apparatus", "tool", "component", "accessory", "media", "consumable", "unknown"}
+LEGACY_ASSESSMENT_FIELDS = {
     "value_band", "semantic_interest", "assessment_confidence", "value_reason",
     "reasons", "risks", "next_checks", "product_kind",
 }
+ASSESSMENT_FIELDS = (LEGACY_ASSESSMENT_FIELDS - {"semantic_interest"}) | {
+    "scalp_score", "useability_score", "useability_reason", "dependencies",
+}
 ANNOTATION_FIELDS = ASSESSMENT_FIELDS | {
-    "interest_score", "score", "semantic_assessed", "assessment_basis",
+    "interest_score", "score", "score_version", "semantic_interest", "semantic_assessed", "assessment_basis",
 }
 Transport = Callable[[urllib.request.Request, float], dict[str, Any]]
 
@@ -102,7 +106,8 @@ def _input_item(item: dict[str, Any]) -> dict[str, str]:
 
 
 def _fingerprint(item: dict[str, Any], model: str, prompt: str) -> str:
-    data = {"input": _input_item(item), "model": model, "prompt": prompt, "version": PROMPT_VERSION}
+    data = {"input": _input_item(item), "model": model, "prompt": prompt,
+            "version": PROMPT_VERSION, "cache_version": CACHE_VERSION}
     encoded = json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
 
@@ -114,7 +119,12 @@ def _schema(ids: list[str]) -> dict[str, Any]:
     properties = {
         "id": {"type": "string", "enum": ids},
         "value_band": {"type": "string", "enum": sorted(VALUE_BANDS)},
-        "semantic_interest": {"type": "integer", "minimum": 0, "maximum": 100},
+        "scalp_score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "useability_score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "useability_reason": {"type": "string", "maxLength": 500},
+        "dependencies": {
+            "type": "array", "items": {"type": "string", "maxLength": 240}, "maxItems": 5,
+        },
         "assessment_confidence": {"type": "string", "enum": sorted(CONFIDENCES)},
         "product_kind": {"type": "string", "enum": sorted(PRODUCT_KINDS)},
         "value_reason": {"type": "string", "maxLength": 500},
@@ -147,7 +157,7 @@ def _payload(items: list[dict[str, Any]], model: str, prompt: str, max_output_to
         "tools": [],
         "max_output_tokens": max_output_tokens,
         "text": {"format": {
-            "type": "json_schema", "name": "fundgrube_semantic_screening", "strict": True,
+            "type": "json_schema", "name": "fundgrube_semantic_screening_v2", "strict": True,
             "schema": _schema([item["id"] for item in items]),
         }},
     }
@@ -187,25 +197,34 @@ def _request(payload: dict[str, Any], api_key: str, timeout: float, transport: T
     return result
 
 
-def _validate_assessment(value: Any) -> dict[str, Any]:
-    if not isinstance(value, dict) or set(value) != ASSESSMENT_FIELDS:
+def _validate_assessment(value: Any, *, score_version: int = 2) -> dict[str, Any]:
+    """Strict modern output; V1 is accepted only by an explicit legacy import."""
+    if type(score_version) is not int or score_version not in {1, 2}:
+        raise SemanticError("Unbekannte semantische Bewertungsversion.")
+    fields = ASSESSMENT_FIELDS if score_version == 2 else LEGACY_ASSESSMENT_FIELDS
+    if not isinstance(value, dict) or set(value) != fields:
         raise SemanticError("Modellbewertung enthält fehlende oder unerwartete Felder.")
-    score = value.get("semantic_interest")
-    if isinstance(score, bool) or not isinstance(score, int) or not 0 <= score <= 100:
-        raise SemanticError("Modellbewertung enthält einen ungültigen Interesse-Score.")
+    for key in ("scalp_score", "useability_score") if score_version == 2 else ("semantic_interest",):
+        if type(value.get(key)) is not int or not 0 <= value[key] <= 100:
+            raise SemanticError("Modellbewertung enthält einen ungültigen Score.")
+    kinds = PRODUCT_KINDS if score_version == 2 else PRODUCT_KINDS - {"component"}
     if (not isinstance(value.get("value_band"), str) or value["value_band"] not in VALUE_BANDS
             or not isinstance(value.get("assessment_confidence"), str) or value["assessment_confidence"] not in CONFIDENCES
-            or not isinstance(value.get("product_kind"), str) or value["product_kind"] not in PRODUCT_KINDS):
+            or not isinstance(value.get("product_kind"), str) or value["product_kind"] not in kinds):
         raise SemanticError("Modellbewertung enthält eine unbekannte Klasse.")
-    reason = value.get("value_reason")
-    if not isinstance(reason, str) or not reason.strip() or len(reason) > 500:
-        raise SemanticError("Modellbewertung enthält keine gültige Kurzbegründung.")
-    result = {key: value[key] for key in ASSESSMENT_FIELDS - {"reasons", "risks", "next_checks"}}
-    result["value_reason"] = _bounded_text(reason, 500)
-    for key, maximum in (("reasons", 4), ("risks", 4), ("next_checks", 5)):
+    result = {key: value[key] for key in fields - {"reasons", "risks", "next_checks", "dependencies"}}
+    for key in ("value_reason", "useability_reason") if score_version == 2 else ("value_reason",):
+        reason = value.get(key)
+        if not isinstance(reason, str) or not _bounded_text(reason, 500).strip() or len(reason) > 500:
+            raise SemanticError("Modellbewertung enthält keine gültige Kurzbegründung.")
+        result[key] = _bounded_text(reason, 500)
+    list_fields = (("reasons", 4), ("risks", 4), ("next_checks", 5))
+    if score_version == 2:
+        list_fields += (("dependencies", 5),)
+    for key, maximum in list_fields:
         entries = value.get(key)
         if (not isinstance(entries, list) or len(entries) > maximum
-                or any(not isinstance(entry, str) or not entry.strip() or len(entry) > 240 for entry in entries)):
+                or any(not isinstance(entry, str) or not _bounded_text(entry, 240).strip() or len(entry) > 240 for entry in entries)):
             raise SemanticError("Modellbewertung enthält eine ungültige Begründungsliste.")
         result[key] = [_bounded_text(entry, 240) for entry in entries]
     return result
@@ -286,6 +305,7 @@ def _apply(item: dict[str, Any], assessment: dict[str, Any], assessed_at: str) -
     # Belt and suspenders: scoring cannot overwrite facts even if its helper
     # accidentally starts returning altered source fields in a future change.
     result.update({key: enriched[key] for key in ANNOTATION_FIELDS if key in enriched})
+    result.pop("semantic_review_mode", None)
     result["semantic_assessed_at"] = assessed_at
     return result
 
@@ -341,10 +361,11 @@ def enrich_semantics(
             if (stamp is None or stamp > at + timedelta(minutes=5)
                     or not isinstance(fingerprint, str) or not re.fullmatch(r"[0-9a-f]{64}", fingerprint)
                     or not isinstance(cached_model, str) or len(cached_model) > 200
-                    or value.get("prompt_version") != PROMPT_VERSION):
+                    or value.get("prompt_version") != PROMPT_VERSION
+                    or type(value.get("cache_version")) is not int or value["cache_version"] != CACHE_VERSION):
                 continue
             previous_cache[key] = {"fingerprint": fingerprint, "model": cached_model,
-                                   "prompt_version": PROMPT_VERSION, "assessment": assessment,
+                                   "prompt_version": PROMPT_VERSION, "cache_version": CACHE_VERSION, "assessment": assessment,
                                    "assessed_at": _iso(stamp)}
         except (SemanticError, TypeError):
             continue
@@ -383,7 +404,8 @@ def enrich_semantics(
         cached = previous_cache.get(item["id"])
         try:
             if (not isinstance(cached, dict) or cached.get("fingerprint") != fingerprint
-                    or cached.get("model") != model or cached.get("prompt_version") != PROMPT_VERSION):
+                    or cached.get("model") != model or cached.get("prompt_version") != PROMPT_VERSION
+                    or cached.get("cache_version") != CACHE_VERSION):
                 raise SemanticError("Cache miss")
             assessed_at = _parse_time(cached.get("assessed_at"))
             if assessed_at is None or assessed_at > at + timedelta(minutes=5):
@@ -393,7 +415,7 @@ def enrich_semantics(
             pending.append((index, item, fingerprint))
             continue
         cache[item["id"]] = {"fingerprint": fingerprint, "model": model,
-                             "prompt_version": PROMPT_VERSION, "assessment": assessment,
+                             "prompt_version": PROMPT_VERSION, "cache_version": CACHE_VERSION, "assessment": assessment,
                              "assessed_at": _iso(assessed_at)}
         output[index] = _apply(item, assessment, _iso(assessed_at))
         metadata["cache_hits"] += 1
@@ -433,7 +455,7 @@ def enrich_semantics(
                 stamp = _iso(at)
                 output[index] = _apply(item, assessment, stamp)
                 cache[item["id"]] = {"fingerprint": fingerprint, "model": model,
-                                     "prompt_version": PROMPT_VERSION, "assessment": assessment,
+                                     "prompt_version": PROMPT_VERSION, "cache_version": CACHE_VERSION, "assessment": assessment,
                                      "assessed_at": stamp}
                 completed_ids.add(item["id"])
                 metadata["assessed"] += 1

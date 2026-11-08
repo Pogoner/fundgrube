@@ -226,10 +226,11 @@ class PublicSourcePipelineTests(unittest.TestCase):
     def test_interactive_reviews_are_applied_and_reported_separately_from_api(self):
         normalized = normalize_item(item(), NOW)
         document = {
-            "schema_version": 1, "source_snapshot_id": "sha256:" + "a" * 64,
+            "schema_version": 2, "source_snapshot_id": "sha256:" + "a" * 64,
             "reviewed_at": iso_time(NOW), "reviewer": "ChatGPT",
             "reviews": [{"id": normalized["id"], "content_fingerprint": content_fingerprint(normalized),
-                "assessment": {"semantic_interest": 86, "value_band": "around_500",
+                "assessment": {"scalp_score": 86, "useability_score": 80, "value_band": "around_500",
+                    "useability_reason": "Eigenständiges Gerät mit üblichen Betriebsmitteln.", "dependencies": ["Betriebsmittel"],
                     "assessment_confidence": "low", "product_kind": "apparatus",
                     "value_reason": "Eigenständiges Laborgerät; genauer Typ und Zustand unbekannt.",
                     "reasons": ["Vollständiges Spezialgerät möglich"], "risks": ["Funktion nicht geprüft"],
@@ -243,9 +244,39 @@ class PublicSourcePipelineTests(unittest.TestCase):
         row = feed["deals"][0]
         self.assertEqual(row["assessment_basis"], "llm")
         self.assertEqual(row["semantic_review_mode"], "interactive")
+        self.assertEqual(row["score_version"], 2)
+        self.assertEqual(row["scalp_score"], 86)
+        self.assertEqual(row["useability_score"], 80)
+        self.assertEqual(row["interest_score"], 69)
+        self.assertEqual(row["score"], 69)
+        self.assertEqual(row["dependencies"], ["Betriebsmittel"])
         self.assertEqual(row["eligibility"], "review")
         self.assertEqual(row["price_eur"], 1)
         self.assertFalse(row["local_pickup_confirmed"])
+        self.assertEqual(row, state["records"][0])
+
+    def test_legacy_interactive_review_remains_pending_for_useability(self):
+        normalized = normalize_item(item(), NOW)
+        document = {
+            "schema_version": 1, "source_snapshot_id": "sha256:" + "a" * 64,
+            "reviewed_at": iso_time(NOW), "reviewer": "ChatGPT",
+            "reviews": [{"id": normalized["id"], "content_fingerprint": content_fingerprint(normalized),
+                "assessment": {"semantic_interest": 60, "value_band": "around_500",
+                    "assessment_confidence": "low", "product_kind": "apparatus",
+                    "value_reason": "Plausible Geräteklasse, ungeprüfter Zustand.",
+                    "reasons": [], "risks": [], "next_checks": []}}],
+        }
+        feed, state = run(review_doc=document)
+        row = feed["deals"][0]
+        self.assertEqual(feed["interactive_review"]["applied"], 1)
+        self.assertEqual(feed["interactive_review"]["unreviewed"], 1)
+        self.assertEqual(row["assessment_basis"], "llm")
+        self.assertEqual(row["score_version"], 1)
+        self.assertEqual(row["scalp_score"], round(60 * .7 + row["fact_score"]))
+        self.assertIsNone(row["useability_score"])
+        self.assertIsNone(row["interest_score"])
+        self.assertIsNone(row["score"])
+        self.assertEqual(row["dependencies"], [])
         self.assertEqual(row, state["records"][0])
 
     def test_invalid_interactive_review_does_not_stop_the_public_feed(self):
@@ -261,10 +292,11 @@ class PublicSourcePipelineTests(unittest.TestCase):
                 source = item(source_observed_at=iso_time(NOW - age))
                 normalized = normalize_item(source, NOW)
                 document = {
-                    "schema_version": 1, "source_snapshot_id": "sha256:" + "a" * 64,
+                    "schema_version": 2, "source_snapshot_id": "sha256:" + "a" * 64,
                     "reviewed_at": reviewed, "reviewer": "ChatGPT",
                     "reviews": [{"id": normalized["id"], "content_fingerprint": content_fingerprint(normalized),
-                        "assessment": {"semantic_interest": 86, "value_band": "around_500",
+                        "assessment": {"scalp_score": 86, "useability_score": 80, "value_band": "around_500",
+                            "useability_reason": "Eigenständiges Gerät mit üblichen Betriebsmitteln.", "dependencies": ["Betriebsmittel"],
                             "assessment_confidence": "low", "product_kind": "apparatus",
                             "value_reason": "Laborgeräteklasse; Modell und Zustand unbekannt.",
                             "reasons": [], "risks": [], "next_checks": []}}],

@@ -41,11 +41,21 @@ def item(number=1, **updates):
 
 def assessment(**updates):
     result = {
-        "semantic_interest": 82, "value_band": "around_500", "assessment_confidence": "low",
+        "scalp_score": 82, "useability_score": 80, "value_band": "around_500", "assessment_confidence": "low",
+        "useability_reason": "Eigenständiger Gerätetyp mit üblichen Betriebsmitteln.",
+        "dependencies": ["Passende Betriebsmittel und Anschlüsse"],
         "product_kind": "apparatus", "value_reason": "Eigenständiges Spezialgerät denkbar; Modell und Zustand sind offen.",
         "reasons": ["Geräteklasse passt zum Interesseprofil"], "risks": ["Nur Titel, keine Beschreibung"],
         "next_checks": ["Modell und Lieferumfang prüfen"],
     }
+    result.update(updates)
+    return result
+
+
+def legacy_assessment(**updates):
+    result = {key: value for key, value in assessment().items()
+              if key not in {"scalp_score", "useability_score", "useability_reason", "dependencies"}}
+    result["semantic_interest"] = 60
     result.update(updates)
     return result
 
@@ -56,7 +66,7 @@ def feed(items=None):
 
 
 def specification(ids=None, **updates):
-    result = {"schema_version": 1, "source_snapshot_id": SNAPSHOT, "reviewed_at": stamp(NOW),
+    result = {"schema_version": 2, "source_snapshot_id": SNAPSHOT, "reviewed_at": stamp(NOW),
               "reviewer": "ChatGPT", "groups": [{"ids": [item()["id"]] if ids is None else ids,
                                                     "assessment": assessment()}]}
     result.update(updates)
@@ -73,6 +83,7 @@ class SealReviewsTests(unittest.TestCase):
         inputs = [item(1), item(2)]
         document = sealed(inputs)
         self.assertEqual(document["source_snapshot_id"], SNAPSHOT)
+        self.assertEqual(document["schema_version"], 2)
         self.assertEqual(len(document["reviews"]), 2)
         self.assertEqual(document["reviews"][0]["content_fingerprint"], content_fingerprint(inputs[0]))
         self.assertEqual(set(document["reviews"][0]), {"id", "content_fingerprint", "assessment"})
@@ -100,7 +111,7 @@ class SealReviewsTests(unittest.TestCase):
             seal_reviews(feed([item(), item()]), specification())
 
     def test_malformed_header_rejected(self):
-        for change in ({"schema_version": True}, {"schema_version": 2}, {"source_snapshot_id": "fake"},
+        for change in ({"schema_version": True}, {"schema_version": 3}, {"source_snapshot_id": "fake"},
                        {"reviewer": "heuristic"}, {"reviewed_at": "2026-11-07T22:20:00"},
                        {"reviewed_at": stamp(NOW - timedelta(hours=1))}):
             with self.subTest(change=change), self.assertRaises(ReviewsError):
@@ -118,15 +129,36 @@ class SealReviewsTests(unittest.TestCase):
 
     def test_fake_prices_and_additional_fields_rejected(self):
         for change in ({"price_eur": 0}, {"eligibility": "eligible"}, {"action": "buy"},
-                       {"semantic_interest": 101}, {"value_band": "exactly500"}, {"semantic_interest": True}):
+                       {"scalp_score": 101}, {"value_band": "exactly500"}, {"scalp_score": True},
+                       {"useability_score": None}, {"useability_score": True}, {"useability_score": -1},
+                       {"useability_reason": ""}, {"useability_reason": "x" * 501},
+                       {"dependencies": ["x"] * 6}, {"dependencies": ["x" * 241]},
+                       {"semantic_interest": 80}, {"score_version": 2}):
             with self.subTest(change=change), self.assertRaises(ReviewsError):
                 seal_reviews(feed(), specification(groups=[{"ids": [item()["id"]], "assessment": assessment(**change)}]))
 
     def test_urls_html_and_code_blocks_rejected(self):
         for value in ("https://example.invalid", "www.example.invalid", "<script>doSomething()</script>",
                       "```python\nrun()\n```", "javascript:alert(1)"):
-            with self.subTest(value=value), self.assertRaises(ReviewsError):
-                seal_reviews(feed(), specification(groups=[{"ids": [item()["id"]], "assessment": assessment(value_reason=value)}]))
+            for field in ("value_reason", "useability_reason", "dependencies"):
+                change = {field: [value] if field == "dependencies" else value}
+                with self.subTest(value=value, field=field), self.assertRaises(ReviewsError):
+                    seal_reviews(feed(), specification(groups=[{"ids": [item()["id"]], "assessment": assessment(**change)}]))
+
+    def test_legacy_and_modern_envelopes_require_their_exact_assessment_shape(self):
+        old_groups = [{"ids": [item()["id"]], "assessment": legacy_assessment()}]
+        old = sealed(schema_version=1, groups=old_groups)
+        self.assertEqual(old["schema_version"], 1)
+        self.assertEqual(old["reviews"][0]["assessment"], legacy_assessment())
+        for spec in (specification(schema_version=1), specification(groups=old_groups)):
+            with self.subTest(spec=spec), self.assertRaises(ReviewsError):
+                seal_reviews(feed(), spec)
+
+    def test_component_kind_is_supported_only_in_modern_review_schema(self):
+        new = sealed(groups=[{"ids": [item()["id"]], "assessment": assessment(product_kind="component")}])
+        self.assertEqual(new["reviews"][0]["assessment"]["product_kind"], "component")
+        with self.assertRaises(ReviewsError):
+            sealed(schema_version=1, groups=[{"ids": [item()["id"]], "assessment": legacy_assessment(product_kind="component")}])
 
     def test_more_than_eight_hundred_reviews_rejected(self):
         inputs = [item(number) for number in range(801)]
@@ -158,6 +190,14 @@ class ApplyReviewsTests(unittest.TestCase):
         self.assertEqual(result[0]["semantic_review_mode"], "interactive")
         self.assertEqual(result[0]["semantic_assessed_at"], stamp(NOW))
         self.assertEqual(result[0]["value_band"], "around_500")
+        self.assertEqual(result[0]["score_version"], 2)
+        self.assertEqual(result[0]["scalp_score"], 82)
+        self.assertEqual(result[0]["semantic_interest"], 82)
+        self.assertEqual(result[0]["useability_score"], 80)
+        self.assertEqual(result[0]["interest_score"], 66)
+        self.assertEqual(result[0]["score"], 66)
+        self.assertEqual(result[0]["useability_reason"], assessment()["useability_reason"])
+        self.assertEqual(result[0]["dependencies"], assessment()["dependencies"])
         self.assertEqual(result[0]["eligibility"], "review")
         self.assertIn("Reserve unbekannt", result[0]["risks"])
 
@@ -169,7 +209,7 @@ class ApplyReviewsTests(unittest.TestCase):
                       "eligibility", "eligibility_reasons", "reserve_status", "last_seen_at", "ends_at",
                       "local_pickup_confirmed", "pickup_search_radius_km", "fact_score"):
             self.assertEqual(result[0][field], source[field], field)
-        self.assertLessEqual(result[0]["interest_score"], 15)
+        self.assertEqual(result[0]["interest_score"], 66)
 
     def test_helper_regression_cannot_overwrite_facts(self):
         source = item()
@@ -254,8 +294,36 @@ class ApplyReviewsTests(unittest.TestCase):
 
     def test_newer_api_llm_is_preserved(self):
         source = item(assessment_basis="llm", value_band="around_50", semantic_interest=55,
+                      score_version=2, scalp_score=55, useability_score=90,
                       semantic_assessed_at=stamp(NOW + timedelta(minutes=1)))
         result, metadata = apply_reviews([source], sealed(), NOW + timedelta(minutes=2))
+        self.assertEqual(result, [source])
+        self.assertEqual(metadata["skipped_newer"], 1)
+
+    def test_legacy_review_preserves_old_scalp_but_does_not_claim_dual_review(self):
+        document = sealed(schema_version=1, groups=[{"ids": [item()["id"]], "assessment": legacy_assessment()}])
+        source = item(score_version=2, scalp_score=78, useability_score=80,
+                      useability_reason="Heuristische Eigenständigkeit", dependencies=["Betriebsmittel"])
+        result, metadata = apply_reviews([source], document, NOW)
+        row = result[0]
+        self.assertEqual(metadata["applied"], 1)
+        self.assertEqual(row["score_version"], 1)
+        self.assertEqual(row["scalp_score"], 67)  # Old 60*.7 + 25 facts, not raw 60.
+        self.assertEqual(row["semantic_interest"], 67)
+        self.assertIsNone(row["useability_score"])
+        self.assertIsNone(row["interest_score"])
+        self.assertIsNone(row["score"])
+        self.assertEqual(row["dependencies"], [])
+        self.assertIn("noch nicht beurteilt", row["useability_reason"])
+        self.assertEqual(row["semantic_assessed_at"], stamp(NOW))
+        self.assertEqual(row["assessment_basis"], "llm")
+        self.assertEqual(row["price_eur"], source["price_eur"])
+
+    def test_legacy_review_cannot_displace_newer_dual_api_review(self):
+        document = sealed(schema_version=1, groups=[{"ids": [item()["id"]], "assessment": legacy_assessment()}])
+        source = item(score_version=2, scalp_score=80, useability_score=75, assessment_basis="llm",
+                      semantic_assessed_at=stamp(NOW + timedelta(minutes=1)))
+        result, metadata = apply_reviews([source], document, NOW + timedelta(minutes=2))
         self.assertEqual(result, [source])
         self.assertEqual(metadata["skipped_newer"], 1)
 

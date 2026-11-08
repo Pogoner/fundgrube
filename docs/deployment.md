@@ -110,9 +110,11 @@ JSON-Quellpfad. Öffentlicher Export ist weiterhin durch
 Weiterverwendung, Aufbewahrung und gegebenenfalls KI-Verarbeitung zu prüfen.
 Die übrigen Such- und Bewertungsparameter stehen in `config/settings.json`.
 
-Die LLM-Vorsortierung erkennt grobe Wertklassen und interessante vollständige
-Geräte: beispielsweise eher **5, 50 oder 500 Euro** als eine vermeintlich genaue
-Bewertung. Das sind unsichere Suchsignale, keine recherchierten Marktpreise
+Die LLM-Vorsortierung bewertet **Scalp** (wirtschaftliches Potenzial) und
+**Useability** (Eigenständigkeit und Systemabhängigkeiten) getrennt von 0 bis 100.
+Der Interest-Score ist ihr gerundetes Produkt geteilt durch 100, ohne Faktenboni.
+Die ergänzenden Wertklassen bedeuten eher **5, 50 oder 500 Euro** als eine vermeintlich
+genaue Bewertung. Das sind unsichere Suchsignale, keine recherchierten Marktpreise
 oder garantierten Schnäppchen. Die Freigabe kann kostenpflichtige API-Aufrufe
 und die Übermittlung von Angebotstexten an den konfigurierten Anbieter
 auslösen. Der Betreiber muss vor Aktivierung auch hierfür die anwendbaren
@@ -126,7 +128,12 @@ Repository hinterlegt wird.
 
 Bei einem ausdrücklichen Auftrag, ChatGPT-Bewertungen in der GUI zu speichern,
 liest der Assistent alle Seiten eines einzigen Daten-Commit-SHAs und erstellt
-`reviews/ratings.json` für genau diesen Snapshot. Zum Binden und Prüfen dient:
+`reviews/ratings.json` mit `schema_version: 2` für genau diesen Snapshot.
+Die elf Assessment-Felder sind `scalp_score`, `useability_score`,
+`useability_reason`, `dependencies`, `value_band`, `assessment_confidence`,
+`product_kind`, `value_reason`, `reasons`, `risks` und `next_checks`.
+Interest und die Versionsnummer pro Artikel werden ausschließlich vom Programm
+abgeleitet, nicht vom LLM geliefert. Zum Binden und Prüfen dient:
 
 ```bash
 python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/ratings.json --output reviews/current.json
@@ -141,10 +148,16 @@ Packen selbst ist kein LLM-Aufruf und keine Bewertung.
 Die beauftragten Review-Dateien werden auf `main` gespeichert. Der dadurch
 ausgelöste nächste Workflow lädt `reviews/current.json` optional und übernimmt
 nur inhaltlich passende, höchstens 48 Stunden alte Einordnungen. Quellenfakten
-und Eignung bleiben unverändert maßgeblich; aktuelle Faktenpunkte werden neu
-berechnet. Neuere automatische API-Bewertungen haben Vorrang. Im Feed erscheinen
+und Eignung bleiben unverändert maßgeblich; Interest wird als
+`(scalp_score * useability_score + 50) // 100` berechnet. Neuere automatische
+API-Bewertungen haben Vorrang. Im Feed erscheinen
 `assessment_basis: llm`, `semantic_review_mode: interactive`,
 `semantic_assessed_at` und die Zusammenfassung `interactive_review`.
+
+Legacy-Envelope 1 bleibt unterstützt, erhält aber keine erfundene Useability:
+alter Gesamtwert als Scalp, Useability/Interest `null`, `score_version: 1`.
+Nur vollständige duale LLM-Bewertungen zählen als vollständig gesichtet. API-Prompt
+und Cache sind auf V2 versioniert; alte Ergebnisse werden nicht als neue übernommen.
 
 Neue oder geänderte Angebote bleiben ohne andere gültige Bewertung heuristisch;
 interaktive Reviews verfallen automatisch. Dies ist eine echte interaktive
@@ -192,7 +205,7 @@ Bei wiederholten Sichtungen genügt ein Manifestabruf pro Durchgang. Alle Seiten
 an denselben SHA binden und danach nur unbewertete, abgelaufene oder inhaltlich
 geänderte Einordnungen erneut ans LLM geben. Unveränderte gültige Reviews bleiben
 über ihren Inhalts-Hash erhalten, auch wenn neue Preise oder Gebotszahlen die
-Faktenpunkte verändern. Für besonders interessante, bald endende Angebote
+Eignungsprüfung verändern. Für besonders interessante, bald endende Angebote
 gezielt die aktuellen Fakten prüfen; keine pauschale Neubeurteilung des ganzen
 Bestands alle zehn Minuten. Hierfür wird kein zusätzlicher Delta-Endpunkt betrieben.
 

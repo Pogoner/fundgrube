@@ -12,7 +12,7 @@ from unittest.mock import patch
 from hunter.ebay import ApiError, BudgetExceeded, RateLimitError
 from hunter.models import iso_time, normalize_item
 from hunter.pipeline import ConfigurationError, main, new_state, prepare_state, run_pipeline, validate_settings
-from hunter.ranking import assess_item
+from hunter.ranking import apply_semantic, assess_item
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 ENV = {"HUNTER_PUBLISH_LIVE_DATA": "true", "EBAY_CLIENT_ID": "fake-id", "EBAY_CLIENT_SECRET": "fake-secret"}
@@ -483,6 +483,43 @@ class TestRefreshAndState(unittest.TestCase):
 
 
 class TestSemanticAndJson(unittest.TestCase):
+    def test_dual_scores_are_persisted_and_api_review_counts_without_interactive_document(self):
+        answer = {"scalp_score": 85, "useability_score": 90, "useability_reason": "Eigenständiges Messgerät.",
+                  "dependencies": ["Übliche Netzversorgung"], "value_band": "around_500", "assessment_confidence": "low",
+                  "product_kind": "apparatus", "value_reason": "Plausibles Spezialgerät.", "reasons": [], "risks": [], "next_checks": []}
+
+        def enrich(items, settings, state, at, **kwargs):
+            return [apply_semantic(row, answer) for row in items], {"ai_enabled": True, "llm_status": "ok"}
+
+        feed, state = run(source="json", raw_items=[raw_item()], enrich=enrich)
+        self.assertEqual(feed["schema_version"], 2)
+        self.assertEqual(state["schema_version"], 2)
+        self.assertEqual(feed["interactive_review"]["unreviewed"], 0)
+        self.assertEqual(feed["interactive_review"]["status"], "none")
+        self.assertEqual(feed["deals"], state["records"])
+        row = feed["deals"][0]
+        for key in ("scalp_score", "useability_score", "useability_reason", "dependencies"):
+            self.assertEqual(row[key], answer[key])
+        self.assertEqual(row["score_version"], 2)
+        self.assertEqual(row["score"], 77)
+        self.assertEqual(row["interest_score"], 77)
+        self.assertEqual(row["price_eur"], 1)
+        self.assertEqual(row["last_seen_at"], iso_time(NOW))
+
+    def test_unreviewed_counts_dual_pending_and_heuristics_not_just_llm_basis(self):
+        def enrich(items, settings, state, at, **kwargs):
+            output = [dict(row) for row in items]
+            output[0].update(assessment_basis="llm", score_version=2, scalp_score=85, useability_score=90)
+            output[1].update(assessment_basis="llm", score_version=1, scalp_score=85, useability_score=None, interest_score=None, score=None)
+            output[2].update(assessment_basis="llm", score_version=2, scalp_score=85, useability_score=None, interest_score=None, score=None)
+            output[3].update(assessment_basis="heuristic", score_version=2, scalp_score=85, useability_score=90)
+            return output, {"ai_enabled": True, "llm_status": "partial"}
+
+        source = [raw_item(f"v1|12345678901{index}|0") for index in range(4)]
+        feed, _ = run(source="json", raw_items=source, enrich=enrich)
+        self.assertEqual(feed["interactive_review"]["unreviewed"], 3)
+        self.assertEqual(sum(row["assessment_basis"] == "llm" for row in feed["deals"]), 3)
+
     def test_optional_semantics_failure_preserves_factual_feed(self):
         def fail(*args, **kwargs):
             raise RuntimeError("secret api-key")
@@ -516,6 +553,7 @@ class TestSemanticAndJson(unittest.TestCase):
         feed, _ = run_pipeline(SETTINGS, source="json", raw_items=[raw_item()], environ=ENV, at=NOW)
         self.assertFalse(feed["ai_enabled"])
         self.assertEqual(feed["semantic"]["llm_status"], "disabled")
+        self.assertEqual(feed["interactive_review"]["unreviewed"], 1)
 
 
 class TestCommandLine(unittest.TestCase):

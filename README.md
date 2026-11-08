@@ -120,10 +120,37 @@ Anbieterquoten und ein separat eingerichtetes API-Ausgabenlimit gelten zusätzli
 
 ## Wie das Ranking zu lesen ist
 
-Der Interesse-Score ist im Kern `0,7 × semantisches Interesse + 0…30 Faktenpunkte`,
-begrenzt auf 0–100. Preis, Gebote und belegter Transport liefern die Faktenpunkte;
-unpassende Artikel werden zusätzlich abgewertet. Der Score ist **keine
+Das Ranking trennt zwei Bewertungen auf der ganzen Skala von 0 bis 100:
+
+- **Scalp-Score:** plausibles wirtschaftliches Potenzial des tatsächlichen
+  Artikels beziehungsweise Loses. Menge, Qualität, Geräteklasse und erkennbare
+  Substanz zählen; eine bekannte Marke oder ein niedriger Startpreis allein nicht.
+- **Useability-Score:** wie eigenständig der Artikel nutzbar ist und welche
+  anderen Geräte, Systeme oder speziellen Voraussetzungen er benötigt.
+- **Interest-Score:** `Scalp × Useability ÷ 100`, auf die nächste Ganzzahl
+  gerundet (halbe Werte aufwärts). Ein wertiges Spezialmodul bleibt dadurch
+  niedriger priorisiert als ein wertiges eigenständig verwendbares Gerät.
+
+Es gibt keine zusätzlichen Preis-, Gebots- oder Transportpunkte mehr. Diese
+Fakten bleiben gesonderte Eignungsfilter. Der Interest-Score ist **keine
 Schnäppchenwahrscheinlichkeit** und keine Gewinn- oder Funktionsgarantie.
+Die Startseite zeigt standardmäßig Interest ab **40**; der Grenzwert ist
+änderbar, **0** zeigt auch noch unvollständig bewertete Einträge. Sortiert
+werden kann getrennt nach Interest, Scalp und Useability. Ausführliche Regeln,
+Quellenstatus und die LLM-Schnittstelle stehen auf der [Info-Unterseite](https://pogoner.github.io/fundgrube/info.html).
+
+Scalp ist feiner als die ergänzenden Wertklassen: 0–9 minimal, 10–24 klein,
+25–44 mittel, 45–64 substanziell, 65–79 professionelles Potenzial,
+80–89 hoch und 90–100 außergewöhnlich. Auch alle Zwischenwerte sind zulässig;
+das ist eine Priorisierung, keine genaue Preisermittlung.
+
+Useability beurteilt **Abhängigkeiten, nicht einen bestandenen Funktionstest**.
+Ein vollständiges Schmelzpunktgerät kann auch als ungeprüft/defekt eigenständig
+nutzbar gebaut sein. Konkrete Defekte bleiben Risiko und können das wirtschaftliche
+Potenzial senken; fehlende wesentliche Teile können zusätzlich die Eigenständigkeit
+senken. Ein Prozessmessumformer braucht dagegen Sensorik, Verdrahtung und einen
+Anwendungsfall. Ein einzelner Handschuh oder Prospekt ist zwar eigenständig
+verwendbar, hat aber einen sehr niedrigen Scalp-Score.
 
 `value_band` bedeutet nur **eher um 5, 50, 500 Euro oder unbekannt**. Diese groben
 Größenordnungen helfen, vollständige interessante Geräte von Zubehör,
@@ -199,7 +226,7 @@ Nutzung und gegebenenfalls nötige Zustimmung müssen geklärt sein.
 Kurzmetadaten, generierte Einschätzungen und die Such-PLZ 69121. Beim Wechsel auf
 eine andere Quelle können zusätzliche Daten hinzukommen. Alte Commits bleiben
 erhalten; das kann mit Lösch- oder Aufbewahrungspflichten kollidieren.
-Die Sechs-Stunden-Grenze bereinigt nur den aktuellen
+Der 24-Stunden-Quellenpuffer bereinigt nur den aktuellen
 Export, **nicht die Git-Historie**. Auch das spätere Ausschalten des Exports
 löscht frühere Veröffentlichungen nicht. Ohne passende Rechte zur öffentlichen
 Archivierung ist `HUNTER_PUBLISH_LIVE_DATA=false` zu setzen; die Anwendung wird dann
@@ -245,7 +272,9 @@ Ein expliziter Auftrag kann lauten: **„Lies alle Seiten des aktuellen Snapshot
 bewerte die Kandidaten semantisch und speichere die Bewertungen für die GUI.“**
 Dann entsteht `reviews/ratings.json` mit echten, im Gespräch erarbeiteten
 Einordnungen für genau diesen Snapshot. Der Pack-Helfer bindet sie an Angebots-ID
-und einen Hash aus Titel, Beschreibung und Zustand:
+und einen Hash aus Titel, Beschreibung und Zustand. Neue Review-Dateien verwenden
+`schema_version: 2` und enthalten beide Achsen, ihre Begründungen und explizite
+Abhängigkeiten. Sie enthalten keine abgeleiteten Score- oder exakten Preisfelder:
 
 ```bash
 python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/ratings.json --output reviews/current.json
@@ -255,16 +284,23 @@ Die Eingabedatei muss zum angegebenen lokalen Feed gehören. Der Helfer lehnt
 Snapshot-Abweichungen, doppelte oder unbekannte IDs und exakte Preisfelder ab;
 er erzeugt selbst keine LLM-Bewertungen. Nach dem ausdrücklich beauftragten
 Commit der Review-Dateien auf `main` liest der nächste Workflow optional
-`reviews/current.json` ein und berechnet die aktuellen Faktenpunkte erneut.
+`reviews/current.json` ein und berechnet Interest aus beiden Achsen. Die
+Quellenfakten und Eignungsfilter werden unabhängig davon frisch ausgewertet.
 
 Die Bewertung gilt nur bei übereinstimmendem Inhalt und höchstens **48 Stunden**.
 Sie verändert weder Quellenfakten noch `eligibility`; neuere automatische
 API-Bewertungen haben Vorrang. Neue oder inhaltlich veränderte Angebote bleiben
 ohne passende andere Bewertung heuristisch, alte interaktive Reviews verfallen.
-Die Sechs-Stunden-Grenze für Angebotsdaten und das Auktionsende gelten unabhängig
+Der 24-Stunden-Quellenpuffer für Angebotsdaten und das Auktionsende gelten unabhängig
 davon weiter. Im Feed kennzeichnen `assessment_basis: llm`,
 `semantic_review_mode: interactive` und `semantic_assessed_at` die Herkunft;
 `interactive_review` fasst die Anwendung zusammen.
+
+Alte V1-Reviews bleiben lesbar: Ihr alter Gesamtwert wird als Scalp-Ausgangswert
+geführt, Useability und Interest bleiben unbekannt (`null`). Erst eine echte
+neue Sichtung liefert die zweite Achse; eine automatische Umetikettierung zur
+modernen LLM-Bewertung findet nicht statt. Der optionale API-Cache ist entsprechend
+versioniert, damit alte Ein-Achsen-Ergebnisse nicht als V2 wiederverwendet werden.
 
 Das ist eine **echte interaktive Chargenbewertung**, kein unbemerkt dauerhaft
 laufendes LLM. Neue Chat-Bewertungen brauchen eine neue Sichtung. Die automatische
@@ -299,7 +335,7 @@ externen JSON-Feed.
 | `hunter/aog.py` | öffentlicher AOG-Metadatenabruf mit Robots-Prüfung und konservativen Grenzen |
 | `hunter/ebay.py` | OAuth, Taxonomie, Such- und Detailabfragen, Fehler und Anfragebudget |
 | `hunter/models.py` | Normalisierung, sichere Texte und unbekannte Werte |
-| `hunter/ranking.py` | Eignung, Faktenpunkte und transparente lokale Heuristik |
+| `hunter/ranking.py` | Eignung, getrennte Scalp-/Useability-Einordnung und abgeleiteter Interest |
 | `hunter/semantic.py` | optionale KI-Einordnung, striktes Schema, Cache und Tagesbudgets |
 | `hunter/reviews.py` | interaktive Einordnungen an Inhalt binden und befristet anwenden |
 | `hunter/pipeline.py` | Quellenfreigabe, rotierender Scan, Zustand und Ablauf |

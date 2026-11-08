@@ -47,6 +47,7 @@ RECORD_FIELDS = frozenset({
     "reasons", "risks", "value_band", "assessment_confidence", "assessment_basis",
     "semantic_assessed", "semantic_assessed_at", "value_reason", "fact_score", "fact_reasons", "fact_risks",
     "product_kind", "semantic_interest", "next_checks", "total_known_eur",
+    "score_version", "scalp_score", "useability_score", "useability_reason", "dependencies",
     "stale", "carried", "pickup_verified_at",
     "source_provider", "source_url", "source_observed_at", "verification_level", "pickup_available",
     "pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km",
@@ -579,10 +580,19 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         interactive_review["status"] = {"ok": "applied", "partial": "applied", "absent": "none",
                                         "future": "invalid"}.get(review_meta.get("status"), review_meta.get("status", "invalid"))
         interactive_review["available"] = review_meta.get("total", 0)
-        interactive_review["unreviewed"] = sum(row.get("assessment_basis") != "llm" for row in rows)
     rows = sorted((_public_record(row) for row in rows if _fresh(row, at, settings)), key=_sort_key)
     state["records"], state["updated_at"] = rows[:settings["max_records"]], iso_time(at)
     rows = state["records"]
+    # V1 can contain an authentic LLM review without an independent Useability
+    # assessment. Neither that nor the two-dimensional heuristic is a complete
+    # V2 LLM review, including when no interactive document was supplied.
+    interactive_review["unreviewed"] = sum(
+        not (row.get("assessment_basis") == "llm" and type(row.get("score_version")) is int
+             and row["score_version"] == 2
+             and all(type(row.get(key)) is int and 0 <= row[key] <= 100
+                     for key in ("scalp_score", "useability_score")))
+        for row in rows
+    )
     leaves = state.get("taxonomy", {}).get("leaves", [])
     categories_total = scan["categories_total"] or (len(manual_ids) if manual_ids else len(leaves) if isinstance(leaves, list) else 0)
     counts = {name: sum(row.get("eligibility") == name for row in rows) for name in ("eligible", "review", "excluded")}

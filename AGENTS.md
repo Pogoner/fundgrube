@@ -46,12 +46,21 @@
    tatsächliche Nähe oder genaue Entfernung behaupten. Den Kandidaten weiter
    als prüfbedürftig behandeln; Abholort/-bedingungen im Original verifizieren.
    Quellenangaben und Originalverweise beibehalten.
-7. Der Score priorisiert Aufmerksamkeit: 70 % semantisches Interesse plus bis
-   zu 30 Faktenpunkte, mit Begrenzungen für unpassende Einträge. Er ist keine
-   Erfolgswahrscheinlichkeit. `around_5`, `around_50`, `around_500` und `unknown`
-   sind grobe, unsichere Wertklassen; daraus keine exakten Marktwerte, Ersparnisse
-   oder Wiederverkaufserlöse ableiten. `assessment_basis` (Heuristik oder LLM)
-   und die Unsicherheit der Einschätzung berücksichtigen.
+7. Bewerte zwei unabhängige Achsen auf der ganzen ganzzahligen Skala 0–100:
+   **Scalp** (`scalp_score`) steht für das plausible wirtschaftliche Potenzial
+   des tatsächlichen Lieferumfangs, **Useability** (`useability_score`) für
+   eigenständige Nutzbarkeit und Abhängigkeiten von anderen Geräten/Systemen.
+   Der **Interest-Score** ist ausschließlich
+   `(scalp_score * useability_score + 50) // 100` (kaufmännisch gerundet).
+   `score` und `interest_score` sind dieselbe kombinierte Kennzahl;
+   `semantic_interest` ist nur noch ein veralteter Alias für Scalp.
+   Keine zusätzlichen Preis-, Gebots- oder Transportboni vergeben; diese Fakten
+   bleiben separate Eignungsfilter. Ein hoher Scalp-Wert darf geringe
+   Eigenständigkeit nicht verdecken. Die Kennzahlen sind keine Erfolgs-, Gewinn-
+   oder Funktionswahrscheinlichkeiten. `around_5`, `around_50`, `around_500`
+   und `unknown` sind ergänzende grobe Wertklassen, keine exakten Marktwerte.
+   Aus ihnen keine konkrete Ersparnis oder Wiederverkaufserlöse ableiten.
+   `assessment_basis` (Heuristik oder LLM), `score_version` und Unsicherheit beachten.
 8. Priorisiere vollständige interessante Geräte/Werkzeuge, nicht triviales
    Zubehör, Handschuhe, Zeitschriften oder beliebige 1-Euro-Artikel. Standard:
    0 Gebote, bis 1 Euro, Ende innerhalb 24 Stunden; Versand bis 15 Euro oder
@@ -63,6 +72,35 @@
    Repository-Änderungen oder sonstigen externen Schreibaktionen.
 
 Weitere Schnittstellendetails: [docs/api.md](docs/api.md).
+
+### Bewertungsmaßstab V2
+
+- Scalp nutzt alle Zwischenwerte, nicht nur drei aus der Wertklasse abgeleitete
+  Stufen: 0–9 minimal, 10–24 klein, 25–44 mittel, 45–64 substanziell,
+  65–79 professionelles Potenzial, 80–89 hoch, 90–100 außergewöhnlich und nur
+  bei entsprechendem Anhalt. Art, Menge, Qualität, tatsächlicher Lieferumfang
+  und wirtschaftliche Plausibilität zählen; eine Marke oder ein 1-Euro-Gebot
+  allein rechtfertigt keinen hohen Wert. Keine genaue Preisbewertung modellieren.
+- Useability: 90–100 eigenständig mit üblicher Versorgung/Verbrauchsmitteln;
+  65–85 mit verbreitetem Hilfsgerät; 35–64 allgemeiner Einbau oder konkretes
+  Projekt; 10–34 Systemkomponente; 0–9 eng passendes Spezialersatzteil.
+  Die Abhängigkeiten in `dependencies`, den Grund in `useability_reason` nennen.
+- Zustand und Eigenständigkeit sind verschieden: Ein vollständiges ungeprüftes
+  Schmelzpunktgerät kann hohe Useability haben, ohne dass seine Funktion
+  bestätigt wäre. Die Kennzeichnung „defekt/als Ersatzteil“ allein ist kein
+  Beweis einer bestimmten defekten Baugruppe. Konkrete Fehler getrennt als
+  Risiko und gegebenenfalls beim Scalp-Potenzial berücksichtigen; tatsächlich
+  fehlende wesentliche Baugruppen sind dagegen zusätzliche Abhängigkeiten.
+- Ein RMA42 ist ein universeller Sensor-/Prozessmessumformer, keine
+  Ersatzsteuerung für einen bestimmten Motor. Sensorik, Verdrahtung und ein
+  Anwendungsfall machen ihn trotzdem zu einer Integrationskomponente. Ein
+  Buch oder einfacher Schlüssel kann hohe Useability und sehr niedrigen Scalp
+  haben; nicht beide Achsen pauschal wegen geringer persönlicher Relevanz senken.
+- Nur vollständige V2-LLM-Bewertungen gelten als dual semantisch gesichtet.
+  Bei Legacy V1 bleibt der alte kombinierte Score als Scalp-Ausgangswert
+  erhalten, Useability und Interest bleiben `null`, bis eine echte neue
+  Bewertung vorliegt. Alte Reviews nicht durch erfundene LLM-Autonomiewerte
+  ergänzen. Die GUI startet bei Mindest-Interest 40; 0 zeigt auch offene Fälle.
 
 Für wiederholte Sichtungen nur Angebote ohne gültige semantische Bewertung oder
 mit geändertem Titel/Beschreibung/Zustand erneut ans LLM geben. Unveränderte,
@@ -81,7 +119,11 @@ es ist kein zusätzlicher Delta-Endpunkt implementiert.
   zusätzlicher OpenAI-API-Key nötig.
 - Lies zuerst alle Seiten eines konsistenten Daten-Snapshots. Verwende beim
   Packen den genau zugehörigen lokalen Feed und erstelle `reviews/ratings.json`
-  im vorhandenen Format. Gruppen dürfen nur tatsächlich zugehörige Angebots-IDs
+  mit Review-Envelope `schema_version: 2`. Jede Bewertung enthält exakt
+  `scalp_score`, `useability_score`, `useability_reason`, `dependencies`,
+  `value_band`, `assessment_confidence`, `product_kind`, `value_reason`,
+  `reasons`, `risks` und `next_checks`. Abgeleitete Scores nicht eingeben.
+  Gruppen dürfen nur tatsächlich zugehörige Angebots-IDs
   enthalten. Erfinde keine Bewertungen oder überspringe unbemerkt ungelesene Seiten.
 - Erzeuge die inhaltsgebundene Fassung mit:
 
@@ -169,6 +211,8 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
 ```bash
 python -m unittest discover -s tests -v
 node --check site/app.js
+node --check site/info.js
+node tests/test_frontend.mjs
 python -m hunter.pipeline --source disabled --state-dir runtime --site-dir site
 python scripts/github_snapshot.py validate --state-dir runtime --site-dir site
 ```

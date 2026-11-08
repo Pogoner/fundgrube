@@ -9,11 +9,15 @@ from typing import Any
 from hunter.models import finite_number, parse_time, plain_text
 
 MEDIA = r"\b(zeitschrift\w*|prospekt\w*|katalog\w*|bedienungsanleitung\w*|handbuch\w*|magazine?|heft|hefte|aufkleber|sticker)\b"
-CONSUMABLE = r"\b(handschuh\w*|transistoren?|schraubensortiment\w*|dioden?|widerstände|widerstaende)\b"
-ACCESSORY = r"\b(nur\s+gehäuse|nur\s+koffer|leerverpackung|leerkoffer|ersatzkabel|bedienknopf|abdeckung|ersatzteil|für\s+(?:einen\s+)?autoklav)\b"
-DEVICE = r"(autoklav|oszilloskop|mikroskop|spektrumanalysator|funktionsgenerator|labornetzteil|schweißgerät|schweissgerät|drehmaschine|fräsmaschine|fraesmaschine|tischbohrmaschine|frequenzumrichter|werkstattpresse|laborzentrifuge|stereo\s*mikroskop|industrielle\s+waage)"
-TOOL = r"(messgerät|messgeraet|steuergerät|steuergeraet|sps\b|akkuschrauber|stichsäge|stichsaege|bohrhammer|kompressor|drehmomentschlüssel|drehmomentschluessel)"
+CONSUMABLE = r"\b(handschuh\w*|schraubensortiment\w*)\b"
+SMALL_COMPONENT = r"\b(transistoren?|dioden?|widerstände|widerstaende)\b"
+ACCESSORY = r"(?:^\s*(?:\d+\s+)?ersatzteile?\s+für\b|\b(nur\s+gehäuse|nur\s+koffer|leerverpackung|leerkoffer|ersatzkabel|bedienknopf|abdeckung|für\s+(?:einen\s+)?autoklav)\b)"
+COMPONENT = r"\b(frequenzumrichter|steuergerät\w*|steuergeraet\w*|steuerplatine\w*|sps|sensortransmitter|messumformer|rma\s*42)\b"
+DEVICE = r"(autoklav|oszilloskop|mikroskop|spektrumanalysator|funktionsgenerator|labornetzteil|schweißgerät|schweissgerät|drehmaschine|fräsmaschine|fraesmaschine|tischbohrmaschine|werkstattpresse|laborzentrifuge|stereo\s*mikroskop|industrielle\s+waage)"
+TOOL = r"(messgerät|messgeraet|akkuschrauber|stichsäge|stichsaege|bohrhammer|kompressor|drehmomentschlüssel|drehmomentschluessel)"
+MATERIAL = r"\b(sockelleisten?|aluprofile?|aluminiumprofile?|stahlprofile?|rohre|bleche)\b"
 DAMAGE = r"\b(defekt\w*|ungeprüft|ungeprueft|bastler\w*|unvollständig|unvollstaendig|ersatzteil\w*)\b"
+LEGACY_USEABILITY_REASON = "Useability wurde in dieser älteren Bewertung noch nicht beurteilt."
 
 
 def _unique(values: list[str]) -> list[str]:
@@ -21,48 +25,113 @@ def _unique(values: list[str]) -> list[str]:
 
 
 def heuristic_assessment(item: dict[str, Any]) -> dict[str, Any]:
+    """Illustrative keyword fallback, not a substitute for semantic LLM review.
+
+    Autonomy describes the object's role and dependencies, not whether this
+    specimen works. A defective complete device keeps its structural autonomy;
+    an explicitly missing assembly is a different, integration-dependent item.
+    """
     title = str(item.get("title", "")).casefold()
+    dependencies: list[str] = []
     if re.search(MEDIA, title):
-        kind, interest, band, confidence = "media", 4, "around_5", "medium"
+        kind, scalp, useability, band, confidence = "media", 4, 95, "around_5", "medium"
         reason = "Drucksache oder Begleitmaterial, kein eigenständiges Gerät; seltene Sammlerausnahmen nicht geprüft."
+        use_reason = "Als Lektüre eigenständig nutzbar; diese Unabhängigkeit macht gewöhnliche Drucksachen nicht wirtschaftlich interessant."
     elif re.search(ACCESSORY, title):
-        kind, interest, band, confidence = "accessory", 20, "unknown", "low"
+        kind, scalp, useability, band, confidence = "accessory", 20, 10, "unknown", "low"
         reason = "Möglicherweise nur Zubehör oder Ersatzteil statt des genannten Geräts; Ausführung und Vollständigkeit prüfen."
+        use_reason = "Der benannte Gegenstand braucht voraussichtlich ein passendes Hauptgerät; dessen Kompatibilität ist nicht belegt."
+        dependencies = ["Passendes Hauptgerät und kompatible Ausführung"]
     elif re.search(CONSUMABLE, title) and not re.search(r"tester|prüfgerät|pruefgeraet|messgerät|messgeraet", title):
-        kind, interest, band, confidence = "consumable", 6, "around_5", "medium"
+        kind, scalp, useability, band, confidence = "consumable", 6, 95, "around_5", "medium"
         reason = "Kleinteile oder gewöhnliches Verbrauchsmaterial passen kaum zum Interesseprofil; Menge kann die Größenordnung ändern."
+        use_reason = "Gewöhnliches Verbrauchsmaterial braucht typischerweise keine spezielle Maschine; Eignung für den Zweck bleibt zu prüfen."
         if re.search(r"palette|großposten|grossposten|konvolut|\b[1-9]\d{2,}\b", title):
-            band, confidence = "unknown", "low"
+            scalp, band, confidence = 30, "unknown", "low"
+        if "schraubensortiment" in title:
+            useability = 55
+            use_reason = "Allgemeines Befestigungsmaterial braucht eine konkrete Montageaufgabe mit passenden Gewinden und Maßen."
+            dependencies = ["Passende Montageaufgabe, Gewinde und Maße"]
+    elif re.search(SMALL_COMPONENT, title) and not re.search(r"tester|prüfgerät|pruefgeraet|messgerät|messgeraet", title):
+        kind, scalp, useability, band, confidence = "component", 7, 40, "around_5", "medium"
+        reason = "Gewöhnliche kleine Elektronikbauteile sind einzeln wenig interessant; Stückzahl und genaue Ausführung können das ändern."
+        use_reason = "Das Bauteil erfüllt seinen Zweck erst in einer passenden Schaltung; kein eigenständiges Gerät."
+        dependencies = ["Passende Schaltung, Beschaltung und Integrationsprojekt"]
+        if re.search(r"palette|großposten|grossposten|konvolut|\b[1-9]\d{2,}\b", title):
+            scalp, band, confidence = 25, "unknown", "low"
+    elif re.search(COMPONENT, title):
+        kind, scalp, useability, band, confidence = "component", 58, 22, "unknown", "low"
+        reason = "Technische Systembaugruppe mit möglicher substanzieller Bedeutung; Modell, Umfang und Nachfrage sind ungeklärt."
+        use_reason = "Die Baugruppe benötigt externe Komponenten, Verdrahtung und eine passende Anwendung; sie erledigt allein noch keine vollständige Aufgabe."
+        dependencies = ["Passende externe Komponenten", "Versorgung und Verdrahtung", "Konkrete Integrationsaufgabe"]
+        if re.search(r"\brma\s*42\b", title):
+            use_reason = "Universeller Sensortransmitter: benötigt externe Sensoren, Verdrahtung und eine passende Messaufgabe; kein eigenständiges Messsystem."
+            dependencies = ["Externe Sensoren", "Passende Versorgung und Verdrahtung", "Mess- oder Steueranwendung"]
     elif re.search(DEVICE, title):
-        kind, interest, band, confidence = "apparatus", 80, "around_500", "low"
+        kind, scalp, useability, band, confidence = "apparatus", 78, 90, "around_500", "low"
         reason = "Der Titel deutet auf ein eigenständiges Spezialgerät hin; grobe Geräteklasse, kein belegter Gebrauchtwert."
+        use_reason = "Der Gerätetyp hat einen eigenen Anwendungszweck und benötigt voraussichtlich keine übergeordnete Maschine; konkrete Anschlüsse sind offen."
+        if "autoklav" in title or re.search(r"schweißgerät|schweissgerät", title):
+            useability = 80
+            use_reason = "Eigenständiger Gerätetyp, jedoch mit üblichen Betriebsmitteln und modellabhängigen Anschlüssen; keine passende übergeordnete Maschine nötig."
+            dependencies = ["Betriebsmittel und Anschlüsse nach Modellvorgaben"]
     elif re.search(TOOL, title):
-        kind, interest, band, confidence = "tool", 57, "around_50", "low"
-        reason = "Nutzbares Werkzeug oder technische Baugruppe denkbar; Modell und Zustand können die Größenordnung stark ändern."
+        kind, scalp, useability, band, confidence = "tool", 50, 90, "around_50", "low"
+        reason = "Nennenswertes Werkzeug denkbar; Modell, Qualität und Umfang können die Größenordnung stark ändern."
+        use_reason = "Werkzeugtyp mit eigenem unmittelbarem Anwendungszweck; konkrete Versorgung und Lieferumfang sind noch zu klären."
+        if "akku" in title:
+            useability = 75
+            dependencies = ["Kompatibler Akku und Ladegerät, falls nicht enthalten"]
+            use_reason = "Das Werkzeug hat einen eigenen Anwendungszweck, braucht aber einen passenden Akku und eine Lademöglichkeit."
+    elif re.search(MATERIAL, title):
+        kind, scalp, useability, band, confidence = "consumable", 40, 45, "unknown", "low"
+        reason = "Nutzbares Material oder Bauprofil; Menge, Ausführung und passender Bedarf entscheiden über das Interesse."
+        use_reason = "Material wird erst mit einem passenden Bauprojekt, passenden Maßen und Befestigung nutzbar; keine seltene Spezialmaschine erforderlich."
+        dependencies = ["Konkretes Bauprojekt", "Passende Maße und Befestigung"]
     else:
-        kind, interest, band, confidence = "unknown", 35, "unknown", "low"
+        kind, scalp, useability, band, confidence = "unknown", 35, 50, "unknown", "low"
         reason = "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+        use_reason = "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage."
+        dependencies = ["Benötigtes Umfeld und Lieferumfang noch unbekannt"]
     risks = []
     text = title + " " + str(item.get("condition", "")).casefold()
     if re.search(DAMAGE, text):
-        interest = max(0, interest - 20)
         confidence = "low"
         risks.append("Defekt, ungeprüft oder unvollständig angegeben; keine Funktion unterstellen")
+    structural_text = title + " " + str(item.get("description", "")).casefold()
+    if kind in {"apparatus", "tool"}:
+        missing = re.search(r"\bohne\s+(?:den\s+|die\s+|das\s+)?(motor|antrieb|steuerung|steuerelektronik|messkopf|aggregat)\b", structural_text)
+        if missing:
+            useability = 22
+            use_reason = "Eine wesentliche Baugruppe fehlt ausdrücklich; erst deren Beschaffung und Integration ergibt ein vollständiges Gerät."
+            dependencies = ["Fehlende Baugruppe: " + missing.group(1), "Kompatible Ergänzung und Integration"]
+            risks.append("Ausdrücklich fehlende Baugruppe; Vollständigkeit und Ergänzbarkeit prüfen")
+        elif re.search(r"\bohne\s+(?:das\s+)?netzteil\b", structural_text):
+            useability = min(useability, 70)
+            use_reason = "Eigener Anwendungszweck, aber eine passende externe Stromversorgung fehlt; deren Verfügbarkeit und Anschlüsse sind zu klären."
+            dependencies = list(dict.fromkeys(dependencies + ["Passendes externes Netzteil"]))[:5]
     if "autoklav" in title:
         risks.append("Zustands-, Wartungs- und Prüfunterlagen klären; Verkäuferangabe ist keine Funktions- oder Sicherheitsprüfung")
-    return {"product_kind": kind, "semantic_interest": interest, "value_band": band,
+    return {"product_kind": kind, "scalp_score": scalp, "useability_score": useability,
+            "useability_reason": use_reason, "dependencies": dependencies, "value_band": band,
             "assessment_confidence": confidence, "value_reason": reason,
             "reasons": [reason], "risks": risks,
             "next_checks": ["Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"]}
 
 
-def _score(semantic_interest: int, fact_points: int, eligibility: str, kind: str) -> int:
+def _legacy_score(semantic_interest: int, fact_points: int, eligibility: str, kind: str) -> int:
+    """Reconstruct a V1 review's old total only; never score a V2 candidate."""
     score = min(100, max(0, round(semantic_interest * 0.7 + fact_points)))
     if kind in {"media", "consumable"}:
         score = min(score, 25)
     if eligibility == "excluded":
         score = min(score, 15)
     return score
+
+
+def _score(scalp_score: int, useability_score: int) -> int:
+    """Independent dimensions combined with exact integer half-up rounding."""
+    return (scalp_score * useability_score + 50) // 100
 
 
 def _provisional_pickup_match(item: dict[str, Any], settings: dict[str, Any]) -> bool:
@@ -169,6 +238,8 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
         risks.append("Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen")
     eligibility = "excluded" if failed else ("review" if unknown else "eligible")
     assessment = heuristic_assessment(item)
+    # Keep the historical fact tally only for audit and explicit V1 review
+    # migration. It never contributes to either V2 factor or derived Interest.
     fact_points = max(0, points - (3 if unknown else 0))
     result.update(assessment)
     result.update({
@@ -180,15 +251,32 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
         "risks": _unique(failed + unknown + risks + assessment["risks"]),
         "total_known_eur": round(price + shipping, 2) if price is not None and shipping is not None else None,
     })
-    result["score"] = result["interest_score"] = _score(assessment["semantic_interest"], fact_points, eligibility, assessment["product_kind"])
+    result["score_version"] = 2
+    result["semantic_interest"] = assessment["scalp_score"]  # Deprecated alias.
+    result["score"] = result["interest_score"] = _score(assessment["scalp_score"], assessment["useability_score"])
     return result
 
 
-def apply_semantic(item: dict[str, Any], assessment: dict[str, Any]) -> dict[str, Any]:
+def apply_semantic(item: dict[str, Any], assessment: dict[str, Any], *, score_version: int = 2) -> dict[str, Any]:
     """Model output can annotate/reorder a candidate, never change source facts."""
-    score = assessment.get("semantic_interest")
-    if isinstance(score, bool) or not isinstance(score, int) or not 0 <= score <= 100:
-        raise ValueError("Invalid semantic interest")
+    if type(score_version) is not int or score_version not in {1, 2}:
+        raise ValueError("Invalid score version")
+    scalp = assessment.get("scalp_score" if score_version == 2 else "semantic_interest")
+    if type(scalp) is not int or not 0 <= scalp <= 100:
+        raise ValueError("Invalid Scalp score")
+    if score_version == 2:
+        useability = assessment.get("useability_score")
+        if type(useability) is not int or not 0 <= useability <= 100:
+            raise ValueError("Invalid Useability score")
+        use_reason = assessment.get("useability_reason")
+        dependencies = assessment.get("dependencies")
+        if not isinstance(use_reason, str) or not use_reason.strip() or len(use_reason) > 500:
+            raise ValueError("Invalid Useability reason")
+        if (not isinstance(dependencies, list) or len(dependencies) > 5
+                or any(not isinstance(value, str) or not value.strip() or len(value) > 240 for value in dependencies)):
+            raise ValueError("Invalid dependencies")
+    else:
+        useability, use_reason, dependencies = None, LEGACY_USEABILITY_REASON, []
     band = assessment.get("value_band")
     confidence = assessment.get("assessment_confidence")
     kind = assessment.get("product_kind", "unknown")
@@ -196,12 +284,16 @@ def apply_semantic(item: dict[str, Any], assessment: dict[str, Any]) -> dict[str
         raise ValueError("Invalid value band")
     if confidence not in {"low", "medium", "high"}:
         raise ValueError("Invalid confidence")
-    if kind not in {"apparatus", "tool", "accessory", "media", "consumable", "unknown"}:
+    if kind not in {"apparatus", "tool", "component", "accessory", "media", "consumable", "unknown"}:
         kind = "unknown"
+    if score_version == 1:
+        scalp = _legacy_score(scalp, int(item.get("fact_score", 0)), item.get("eligibility", "review"), kind)
     result = dict(item)
-    result.update({"semantic_interest": score, "value_band": band,
+    result.update({"score_version": score_version, "scalp_score": scalp, "semantic_interest": scalp,
+                   "useability_score": useability, "useability_reason": plain_text(use_reason, 500),
+                   "dependencies": [plain_text(value, 240) for value in dependencies], "value_band": band,
                    "assessment_confidence": confidence, "product_kind": kind,
-                   "value_reason": plain_text(assessment.get("value_reason"), 600),
+                   "value_reason": plain_text(assessment.get("value_reason"), 500),
                    "semantic_assessed": True, "assessment_basis": "llm"})
     for field in ("reasons", "risks", "next_checks"):
         values = assessment.get(field)
@@ -209,5 +301,5 @@ def apply_semantic(item: dict[str, Any], assessment: dict[str, Any]) -> dict[str
         # New semantic evidence replaces the old heuristic, not source facts.
         factual = item.get("fact_" + field, []) if field in {"reasons", "risks"} else []
         result[field] = _unique(list(factual) + values)
-    result["score"] = result["interest_score"] = _score(score, int(item.get("fact_score", 0)), item.get("eligibility", "review"), kind)
+    result["score"] = result["interest_score"] = _score(scalp, useability) if score_version == 2 else None
     return result
