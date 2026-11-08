@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T20:33:21Z",
+    "evaluated_at": "2026-11-08T20:35:32Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,21 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T20:33:21Z",
+  "generated_at": "2026-11-08T20:35:32Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Gebraucht",
     "content_updated_at": "2026-11-08T20:08:18Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Kompatible Sender/Empfänger",
+      "Maschinensteuerung",
+      "Montage und Parametrierung"
     ],
     "description": "",
     "description_status": "missing",
@@ -51,7 +53,7 @@
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,11 +63,10 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "component",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
-      "Zum Abrufzeitpunkt keine Gebote",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Zum Abrufzeitpunkt keine Gebote"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -74,13 +75,17 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
+      "Funktion, Paarigkeit und Sicherheitsfreigaben ungeprüft.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
+    "scalp_score": 82,
     "score": 18,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-08T20:18:43.932038Z",
+    "semantic_interest": 82,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 247.95,
     "source_observed_at": "2026-11-08T20:08:18Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -91,11 +96,11 @@
     "total_eur": null,
     "total_known_eur": 248.95,
     "url": "https://www.ebay.de/itm/920107305821?hash=itemd63aab4b5d%3Ag%3AsHEAAeSwmP5qu2FJ&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Benötigen passende Paare, Steuerungsanschlüsse und eine Maschinenanwendung.",
+    "useability_score": 22,
     "valid_until": "2026-11-12T07:29:44Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_500",
+    "value_reason": "31 SICK-Lichtschrankenteile einschließlich genannter Sender/Empfänger bieten hohes industrielles Los-Potenzial.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -152,10 +157,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:959743482d616d5223cca003f83099ae77f94279e2f57200fcc197352a7c2826",
+  "snapshot_id": "sha256:3e2b2cab7551e5decb3d1d704cbbc0bd171f3980670071e64b6b988b717048cb",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"

@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T20:33:21Z",
+    "evaluated_at": "2026-11-08T20:35:32Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,9 +13,9 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T20:33:21Z",
+  "generated_at": "2026-11-08T20:35:32Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
@@ -25,7 +25,7 @@
     "content_updated_at": "2026-11-08T19:40:37Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Kompatibler HD/HDS-Reiniger"
     ],
     "description": "",
     "description_status": "missing",
@@ -44,13 +44,13 @@
     "ends_at": "2026-11-13T18:43:48Z",
     "id": "v1|257832715870|0",
     "image": "https://i.ebayimg.com/images/g/RQwAAeSwTRhqwo~8/s-l1600.jpg",
-    "interest_score": 18,
+    "interest_score": 4,
     "is_auction": true,
     "last_seen_at": "2026-11-08T19:40:37Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Gewinde, Druckbereich und Rotormechanik prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -60,12 +60,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "accessory",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Semantische Einordnung des vorliegenden Titels und Zustandslabels."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -73,13 +73,16 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 18,
+    "score": 4,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-08T20:25:34.224129Z",
+    "semantic_interest": 18,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.19,
     "source_observed_at": "2026-11-08T19:40:37Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -90,11 +93,11 @@
     "total_eur": null,
     "total_known_eur": 6.19,
     "url": "https://www.ebay.de/itm/257832715870?hash=item3c0807065e%3Ag%3ARQwAAeSwTRhqwo%7E8&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Benötigt Kompatibler HD/HDS-Reiniger.",
+    "useability_score": 22,
     "valid_until": "2026-11-13T18:43:48Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "Kärcher-Rotordüse als spezifisches Hochdruckreinigerzubehör.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -151,10 +154,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:959743482d616d5223cca003f83099ae77f94279e2f57200fcc197352a7c2826",
+  "snapshot_id": "sha256:3e2b2cab7551e5decb3d1d704cbbc0bd171f3980670071e64b6b988b717048cb",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"

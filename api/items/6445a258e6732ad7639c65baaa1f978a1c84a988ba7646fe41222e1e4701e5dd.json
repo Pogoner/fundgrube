@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T20:33:21Z",
+    "evaluated_at": "2026-11-08T20:35:32Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,9 +13,9 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T20:33:21Z",
+  "generated_at": "2026-11-08T20:35:32Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
@@ -40,13 +40,13 @@
     "ends_at": "2026-11-11T12:34:31Z",
     "id": "v1|198771462063|0",
     "image": "https://i.ebayimg.com/images/g/w~sAAeSwzZpqwjla/s-l1600.jpg",
-    "interest_score": 6,
+    "interest_score": 5,
     "is_auction": true,
     "last_seen_at": "2026-11-08T19:37:08Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Menge und Haltbarkeit prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,20 +61,23 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Kleinteile oder gewöhnliches Verbrauchsmaterial passen kaum zum Interesseprofil; Menge kann die Größenordnung ändern."
+      "Einfacher neuer Handschuhposten ohne Stückzahl."
     ],
     "reserve_status": "unknown",
     "risks": [
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 6,
-    "score": 6,
+    "scalp_score": 5,
+    "score": 5,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 6,
+    "semantic_assessed_at": "2026-11-08T20:18:48Z",
+    "semantic_interest": 5,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.3,
     "source_observed_at": "2026-11-08T19:37:08Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -85,11 +88,11 @@
     "total_eur": null,
     "total_known_eur": 6.3,
     "url": "https://www.ebay.de/itm/198771462063?hash=item2e47b3cfaf%3Ag%3Aw%7EsAAeSwzZpqwjla&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Gewöhnliches Verbrauchsmaterial braucht typischerweise keine spezielle Maschine; Eignung für den Zweck bleibt zu prüfen.",
-    "useability_score": 95,
+    "useability_reason": "Latexhandschuhe sind in Größe M direkt tragbar.",
+    "useability_score": 99,
     "valid_until": "2026-11-11T12:34:31Z",
     "value_band": "around_5",
-    "value_reason": "Kleinteile oder gewöhnliches Verbrauchsmaterial passen kaum zum Interesseprofil; Menge kann die Größenordnung ändern.",
+    "value_reason": "Einfacher neuer Handschuhposten ohne Stückzahl.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -146,10 +149,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:959743482d616d5223cca003f83099ae77f94279e2f57200fcc197352a7c2826",
+  "snapshot_id": "sha256:3e2b2cab7551e5decb3d1d704cbbc0bd171f3980670071e64b6b988b717048cb",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
