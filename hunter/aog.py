@@ -3,7 +3,9 @@
 This is an aggregator, not a direct eBay verification. No outgoing item/image
 link is requested. Each scan checks robots.txt, refreshes general page zero,
 rotates bounded general tail pages, and optionally reads pickup page zero.
-The public search UI uses pages of 48 and the query parameters below.
+The public search UI uses pages of 48 and the query parameters below. Its
+"Auch später endende Auktionen anzeigen" option sends ``endet=alle``; there is
+no three-day server filter. The strict active window is evaluated locally.
 
 Publication is planned every ten minutes. The nine-minute safety debounce
 allows modest scheduler jitter; it is not the requested schedule. Existing
@@ -322,9 +324,10 @@ def _parse_page(response: HttpResponse, at: datetime, *, page_size: int, offset:
     return items, total, observed
 
 
-def _query(*, offset: int, page_size: int, maximum: float, pickup: bool, postcode: str, radius: float) -> str:
+def _query(*, offset: int, page_size: int, maximum: float, pickup: bool, postcode: str, radius: float,
+           end_filter: str) -> str:
     query = {"q": "", "kat": "12576", "max": format(maximum, "g"), "anzahl": str(page_size),
-             "ab": str(offset), "ref": "suche", "typ": "ohne", "sort": "ende", "endet": "24h"}
+             "ab": str(offset), "ref": "suche", "typ": "ohne", "sort": "ende", "endet": end_filter}
     if pickup:
         query.update(abholung="1", plz=postcode, km=format(radius, "g"), ort="DE")
     else:
@@ -371,7 +374,8 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
 
     transport receives keyword url/headers/timeout and returns HttpResponse.
     settings accepts aog_page_size (12 or 48), aog_max_requests_per_run (1..6, default 4),
-    aog_pickup_enabled (boolean), max_price_eur, postcode, pickup_radius_km.
+    aog_pickup_enabled (boolean), max_price_eur, postcode, pickup_radius_km,
+    lookahead_hours (default72, filtered locally rather than invented upstream).
     The internal API cap excludes the robots request; coverage counts both.
     Planned cadence is ten minutes, with a nine-minute duplicate-run debounce.
     The 750-request daily cap includes robots (144 default runs use 720 requests).
@@ -383,6 +387,7 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
     limit = settings.get("aog_max_requests_per_run", DEFAULT_API_REQUESTS)
     pickup_enabled = settings.get("aog_pickup_enabled", True)
     maximum, radius = settings.get("max_price_eur", 1), settings.get("pickup_radius_km", 50)
+    lookahead = settings.get("lookahead_hours", 72)
     postcode = settings.get("postcode", "69121")
     if type(page_size) is not int or page_size not in (12, 48) or type(limit) is not int or not 1 <= limit <= MAX_API_REQUESTS:
         raise ValueError("unsupported AOG page/request limit")
@@ -392,6 +397,9 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
             or not 0 <= maximum <= 1000000 or not 0 < radius <= 1000
             or any(not math.isfinite(value) for value in (maximum, radius))):
         raise ValueError("invalid AOG price/radius")
+    if type(lookahead) not in (int, float) or not 0 < lookahead <= 744 or not math.isfinite(lookahead):
+        raise ValueError("invalid AOG lookahead")
+    end_filter = "alle" if lookahead > 24 else "24h"
     state = _source_state(source_state, at, page_size)
     send, pause = transport or _transport, sleep or time.sleep
     started, waited_seconds = time.monotonic(), 0.0
@@ -400,6 +408,7 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
                 "source_total_reported": None, "source_cache_max_age_minutes": 15, "complete": False,
                 "next_offset": state["general_next_offset"], "source_claims_only": True,
                 "pickup_search_count": 0, "pickup_total_reported": None, "pagination_is_stable": False,
+                "upstream_end_filter": end_filter, "local_active_window_hours": lookahead,
                 "planned_interval_minutes": PLANNED_SCAN_INTERVAL // 60,
                 "debounce_seconds": MIN_SCAN_INTERVAL, "daily_request_budget": MAX_DAILY_REQUESTS}
     def warning(code: str, message: str):
@@ -477,7 +486,8 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
                 offsets.append(offset)
             else:
                 offset = 0
-            url = _query(offset=offset, page_size=page_size, maximum=maximum, pickup=False, postcode=postcode, radius=radius)
+            url = _query(offset=offset, page_size=page_size, maximum=maximum, pickup=False, postcode=postcode, radius=radius,
+                         end_filter=end_filter)
             if not policy.allowed(url):
                 raise SourceError("robots_disallowed", "robots.txt erlaubt den vorgesehenen API-Pfad nicht.")
             response = request(url)
@@ -494,7 +504,8 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
                 state["general_next_offset"] = page_size
                 break
         if pickup_enabled and coverage["api_requests_this_run"] < limit:
-            url = _query(offset=0, page_size=page_size, maximum=maximum, pickup=True, postcode=postcode, radius=radius)
+            url = _query(offset=0, page_size=page_size, maximum=maximum, pickup=True, postcode=postcode, radius=radius,
+                         end_filter=end_filter)
             if not policy.allowed(url):
                 raise SourceError("robots_disallowed", "robots.txt erlaubt die ergänzende Abholsuche nicht.")
             response = request(url)

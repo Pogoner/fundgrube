@@ -58,22 +58,38 @@ führen nicht zu aggressiven Ersatzabfragen; Quellenstatus und Abdeckung bleiben
 sichtbar. Ohne nutzbare Quelle veröffentlicht der Build Statusinformationen,
 keine erfundenen Live-Angebote.
 
-### Speicherpuffer und Aktualität
+### Auktionsfenster, Speicherfrist und Aktualität
 
-`config/settings.json` setzt `max_freshness_hours=24`. Der historisch benannte
-Wert begrenzt den rollenden Speicher-/Exportpuffer: noch laufende Angebote
-bleiben bis zu 24 Stunden seit der letzten tatsächlichen Quellenbeobachtung
-erhalten, auch wenn ein späterer Teilscan sie nicht erneut enthält. Bei Erreichen
-dieser Grenze oder des Auktionsendes werden sie nicht mehr aktuell exportiert.
-Die zusätzliche Höchstzahl von 800 Datensätzen bleibt bestehen. Bereits früher
+`config/settings.json` setzt `lookahead_hours=72`. Aktiv ist ein bekanntes Angebot
+bei **strikt weniger als 72 Stunden** positiver Restlaufzeit, wenn Interest und
+übrige Filter passen. Angebotsmetadaten bleiben unabhängig von ihrem
+Beobachtungsalter **bis zum Auktionsende** erhalten, auch wenn spätere Teilscans
+das Angebot nicht wieder enthalten. Die zusätzliche Höchstzahl von 800
+Datensätzen bleibt bestehen. Bereits früher
 aus dem aktuellen Zustand entfernte Angebote werden nicht aus der Git-Historie
 wiederhergestellt; erst ein neuer zulässiger Quellenfund nimmt sie wieder auf.
 
-Der Puffer ist kein Aktualitätsversprechen: alte Preise und Gebotszahlen behalten
+Die Aufbewahrung ist kein Aktualitätsversprechen: alte Preise und Gebotszahlen behalten
 ihre ursprünglichen Zeitstempel und Warnungen. Ein neuer Build verjüngt sie nicht.
-Die Quelle sucht im Standard nach Auktionsenden innerhalb der nächsten 24 Stunden
-und nennt unabhängig davon einen Cache von bis zu 15 Minuten. Ein längerer
-eigener Puffer repariert keine fehlenden Workflow-Ausführungen.
+Die öffentliche Quelle sucht standardmäßig nach Enden innerhalb der nächsten
+24 Stunden. Ihr Filter für spätere Enden wird öffentlich als `endet=alle` an
+die Daten-API übergeben; diesen nutzt Fundgrube für den erweiterten Horizont
+und wendet die 72-Stunden-Grenze lokal an. Das Abrufbudget bleibt unverändert,
+die Abdeckung entsprechend begrenzt. Der Anbieter nennt unabhängig davon einen
+Cache von bis zu 15 Minuten. Eine längere eigene Aufbewahrung repariert keine
+fehlenden Workflow-Ausführungen.
+
+Feed-Version 3 kennzeichnet diesen Vertragswechsel mit
+`freshness.retention_basis=auction_end`, `maximum_source_age_hours=null` und
+`valid_until=ends_at`. Eine vom Zeitfenster getrennte Eignungsbasis
+(`eligibility_without_time_window`) lässt die GUI einen gespeicherten Treffer
+beim Unterschreiten der 72-Stunden-Grenze aktivieren, ohne echte Preis-, Gebots-
+oder Transportausschlüsse aufzuheben. Alte Clients müssen den V3-Vertrag lesen;
+Review-Envelope und Score bleiben unabhängig davon Version 2.
+
+`description_max_age_hours=24` gilt ausschließlich für Beschreibungstexte.
+Der frühere Name `max_freshness_hours` wird nur als Migrationsalias dafür
+akzeptiert. Inhalts- und Quellenzeitstempel werden dabei nicht verlängert.
 
 ### Was die Standardquelle belegt
 

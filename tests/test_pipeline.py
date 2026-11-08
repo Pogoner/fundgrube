@@ -13,6 +13,7 @@ from hunter.ebay import ApiError, BudgetExceeded, RateLimitError
 from hunter.models import iso_time, normalize_item
 from hunter.pipeline import ConfigurationError, main, new_state, prepare_state, run_pipeline, validate_settings
 from hunter.ranking import apply_semantic, assess_item
+from hunter.reviews import seal_reviews
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 ENV = {"HUNTER_PUBLISH_LIVE_DATA": "true", "EBAY_CLIENT_ID": "fake-id", "EBAY_CLIENT_SECRET": "fake-secret"}
@@ -142,16 +143,23 @@ class TestConfiguration(unittest.TestCase):
             with self.subTest(settings=settings), self.assertRaises(ConfigurationError):
                 run(settings)
 
-    def test_retention_defaults_to_twenty_four_hours_without_changing_other_limits(self):
+    def test_three_day_window_is_separate_from_description_ttl_and_other_limits(self):
         settings = validate_settings({})
-        self.assertEqual(settings["max_freshness_hours"], 24)
-        self.assertEqual(settings["lookahead_hours"], 24)
+        self.assertEqual(settings["description_max_age_hours"], 24)
+        self.assertEqual(settings["lookahead_hours"], 72)
+        self.assertNotIn("max_freshness_hours", settings)
         self.assertEqual(settings["max_records"], 800)
         self.assertEqual(settings["refresh_after_minutes"], 90)
         self.assertEqual(settings["schedule_interval_minutes"], 10)
         self.assertEqual(settings["aog_max_requests_per_run"], 4)
-        self.assertEqual(validate_settings({"max_freshness_hours": 24})["max_freshness_hours"], 24)
-        self.assertEqual(validate_settings({"max_freshness_hours": 0.5})["max_freshness_hours"], 0.5)
+        self.assertEqual(validate_settings({"max_freshness_hours": 24})["description_max_age_hours"], 24)
+        self.assertEqual(validate_settings({"max_freshness_hours": 0.5})["description_max_age_hours"], 0.5)
+        self.assertEqual(validate_settings({"max_freshness_hours": 1, "description_max_age_hours": 12})["description_max_age_hours"], 12)
+
+    def test_description_age_limit_is_validated_separately(self):
+        for value in (0, 24.01, True, float("inf")):
+            with self.subTest(value=value), self.assertRaises(ConfigurationError):
+                validate_settings({"description_max_age_hours": value})
 
     def test_invalid_state_does_not_reset_quota(self):
         for state in ({}, {"schema_version": 1}, {"schema_version": 2, "daily_budget": {}},
@@ -363,19 +371,21 @@ class TestRefreshAndState(unittest.TestCase):
         self.assertEqual(result["records"][0]["last_seen_at"], old_seen)
         self.assertEqual(feed["stats"]["carried"], 1)
 
-    def test_old_expired_or_future_records_removed_without_refresh(self):
-        state = cached_state(timedelta(hours=25))
+    def test_expired_future_or_unknown_records_removed_without_refresh(self):
+        state = new_state(NOW)
         expired = normalize_item(raw_item("v1|2|0", itemEndDate=iso_time(NOW - timedelta(seconds=1))), NOW)
         future = normalize_item(raw_item("v1|3|0"), NOW + timedelta(minutes=1))
-        state["records"].extend([expired, future])
+        unknown = normalize_item(raw_item("v1|4|0"), NOW)
+        unknown["last_seen_at"] = None
+        state["records"].extend([expired, future, unknown])
         create, clients = factory()
         feed, result = run(state=state, client_factory=create)
         self.assertEqual(feed["deals"], [])
         self.assertEqual(result["records"], [])
         self.assertEqual(clients[0].detail_ids, [])
 
-    def test_seven_and_twenty_three_hour_cache_survives_failed_refresh_without_new_timestamp(self):
-        for age in (timedelta(hours=7), timedelta(hours=23), timedelta(hours=24, seconds=-1)):
+    def test_old_cache_survives_failed_refresh_until_auction_end_without_new_timestamp(self):
+        for age in (timedelta(hours=7), timedelta(hours=23), timedelta(hours=24), timedelta(days=4), timedelta(days=9)):
             with self.subTest(age=age):
                 state = cached_state(age)
                 previous_seen = state["records"][0]["last_seen_at"]
@@ -389,12 +399,14 @@ class TestRefreshAndState(unittest.TestCase):
                 self.assertEqual(row["content_updated_at"], previous_content)
                 self.assertTrue(row["stale"])
                 self.assertTrue(row["carried"])
+                self.assertEqual(row["eligibility"], "review")
                 self.assertTrue(any("älter als zwei Stunden" in risk for risk in row["risks"]))
+                if age >= timedelta(hours=24):
+                    self.assertEqual(row["description"], "")
 
-    def test_retention_boundary_and_auction_end_are_exclusive(self):
-        for age, end in ((timedelta(hours=24), NOW + timedelta(hours=12)),
-                         (timedelta(hours=24, seconds=1), NOW + timedelta(hours=12)),
-                         (timedelta(hours=7), NOW), (timedelta(hours=23), NOW - timedelta(seconds=1))):
+    def test_auction_end_is_exclusive_regardless_observation_age(self):
+        for age, end in ((timedelta(hours=7), NOW), (timedelta(hours=23), NOW - timedelta(seconds=1)),
+                         (timedelta(days=5), NOW), (timedelta(days=5), NOW - timedelta(seconds=1))):
             with self.subTest(age=age, end=end):
                 state = cached_state(age, raw=raw_item(itemEndDate=iso_time(end)))
                 create, clients = factory()
@@ -402,6 +414,38 @@ class TestRefreshAndState(unittest.TestCase):
                 self.assertEqual(feed["deals"], [])
                 self.assertEqual(result["records"], [])
                 self.assertEqual(clients[0].detail_ids, [])
+
+    def test_legacy_source_age_limit_only_affects_description_not_record_lifetime(self):
+        state = cached_state(timedelta(days=5))
+        old_seen = state["records"][0]["last_seen_at"]
+        create, _ = factory(details={ID: ApiError(status_code=500)})
+        feed, _ = run({"max_freshness_hours": 0.5}, state=state, client_factory=create)
+        self.assertEqual(feed["criteria"]["description_max_age_hours"], 0.5)
+        self.assertNotIn("max_freshness_hours", feed["criteria"])
+        self.assertEqual(feed["deals"][0]["last_seen_at"], old_seen)
+        self.assertEqual(feed["deals"][0]["description"], "")
+
+    def test_retained_record_enters_strict_active_window_without_source_refresh(self):
+        end = iso_time(NOW + timedelta(hours=72))
+        state = cached_state(timedelta(days=5), raw=raw_item(itemEndDate=end))
+        state["records"][0].update(eligibility="excluded", eligibility_reasons=["Quellenstand hat das zulässige Aufbewahrungsfenster erreicht"])
+        create, clients = factory()
+        feed, state = run({"detail_limit_per_run": 0}, state=state, client_factory=create)
+        self.assertEqual(len(feed["deals"]), 1)
+        self.assertEqual(feed["deals"][0]["eligibility"], "excluded")
+        self.assertEqual(feed["deals"][0]["eligibility_without_time_window"], "review")
+        self.assertEqual(feed["stats"]["retained"], 1)
+        self.assertEqual(feed["stats"]["active"], 0)
+        self.assertEqual(feed["stats"]["outside_active_window"], 1)
+        observed = feed["deals"][0]["last_seen_at"]
+        later, state = run({"detail_limit_per_run": 0}, state=state, client_factory=create, at=NOW + timedelta(seconds=1))
+        self.assertEqual(later["deals"][0]["eligibility"], "review")
+        self.assertEqual(later["deals"][0]["eligibility_without_time_window"], "review")
+        self.assertEqual(later["deals"][0]["last_seen_at"], observed)
+        self.assertEqual(later["stats"]["active"], 1)
+        self.assertEqual(later["stats"]["outside_active_window"], 0)
+        self.assertEqual([item for client in clients for item in client.detail_ids], [])
+        self.assertTrue(all(query["lookahead_hours"] == 72 for client in clients for query in client.queries))
 
     def test_failed_refresh_carries_fresh_old_data_with_stale_marker(self):
         state = cached_state()
@@ -482,6 +526,132 @@ class TestRefreshAndState(unittest.TestCase):
                 self.assertEqual(row["last_seen_at"], iso_time(NOW))
 
 
+class TestReviewedCapacity(unittest.TestCase):
+    """A low keyword match must not evict a still-valid genuine review."""
+
+    valuable_id = "v1|700000000001|0"
+    competitor_id = "v1|700000000002|0"
+    incoming_id = "v1|700000000003|0"
+
+    def fixture(self):
+        seen = NOW - timedelta(minutes=15)
+        settings = validate_settings(SETTINGS)
+        valuable = assess_item(normalize_item(raw_item(self.valuable_id, title="Analysegerät Modell Z9"), seen), settings, NOW)
+        competitor = assess_item(normalize_item(raw_item(self.competitor_id, title="Autoklav"), seen), settings, NOW)
+        answer = {
+            "scalp_score": 99, "useability_score": 100, "useability_reason": "Eigenständige Apparatur.",
+            "dependencies": [], "value_band": "around_500", "assessment_confidence": "medium",
+            "product_kind": "apparatus", "value_reason": "Begründete hohe Priorität aus gelesenen Angaben.",
+            "reasons": [], "risks": [], "next_checks": [],
+        }
+        reviewed_at = iso_time(NOW - timedelta(minutes=5))
+        snapshot = "sha256:" + "a" * 64
+        review = seal_reviews(
+            {"snapshot_id": snapshot, "generated_at": iso_time(seen), "deals": [valuable, competitor]},
+            {"schema_version": 2, "source_snapshot_id": snapshot, "reviewed_at": reviewed_at,
+             "reviewer": "ChatGPT", "groups": [{"ids": [self.valuable_id], "assessment": answer}]},
+        )
+        valuable = apply_semantic(valuable, answer)
+        valuable.update(semantic_review_mode="interactive", semantic_assessed_at=reviewed_at)
+        state = new_state(NOW)
+        state["records"] = [valuable, competitor]
+        return state, review, raw_item(self.incoming_id, title="Labor Oszilloskop")
+
+    def test_valid_review_is_restored_before_cap_and_optional_enrichment(self):
+        state, review, incoming = self.fixture()
+        original = copy.deepcopy(state)
+        selected = []
+
+        def enrich(items, *args, **kwargs):
+            selected.extend(copy.deepcopy(items))
+            return no_semantics(items, *args, **kwargs)
+
+        feed, result = run({"max_records": 2}, source="json", raw_items=[incoming],
+                           state=state, review_doc=review, enrich=enrich)
+        self.assertEqual(state, original)
+        self.assertEqual([row["id"] for row in selected], [self.valuable_id, self.incoming_id])
+        self.assertEqual(selected[0]["interest_score"], 99)
+        self.assertEqual(selected[0]["assessment_basis"], "llm")
+        self.assertEqual([row["id"] for row in result["records"]], [self.valuable_id, self.incoming_id])
+        self.assertEqual(result["records"][0]["last_seen_at"], original["records"][0]["last_seen_at"])
+        self.assertEqual(feed["stats"]["omitted_records"], 1)
+        self.assertEqual(feed["interactive_review"]["applied"], 1)
+        self.assertEqual(feed["interactive_review"]["unreviewed"], 1)
+        self.assertEqual(feed["semantic"]["calls_used"], 0)
+        self.assertEqual(feed["coverage"]["browse_calls_this_run"], 0)
+
+    def test_expired_changed_invalid_or_text_expired_reviews_do_not_win_capacity(self):
+        for mutation in ("expired", "changed", "invalid", "text_expired"):
+            with self.subTest(mutation=mutation):
+                state, review, incoming = self.fixture()
+                if mutation == "expired":
+                    review["reviewed_at"] = iso_time(NOW - timedelta(hours=48, seconds=1))
+                elif mutation == "changed":
+                    state["records"][0]["description"] = "Inhalt hat sich geändert."
+                elif mutation == "invalid":
+                    review["reviews"][0]["assessment"]["useability_score"] = True
+                else:
+                    state["records"][0]["content_updated_at"] = iso_time(NOW - timedelta(hours=24))
+                feed, result = run({"max_records": 2}, source="json", raw_items=[incoming],
+                                   state=state, review_doc=review)
+                self.assertNotIn(self.valuable_id, [row["id"] for row in result["records"]])
+                self.assertEqual(len(result["records"]), 2)
+                self.assertTrue(all(row["assessment_basis"] == "heuristic" for row in result["records"]))
+                self.assertEqual(feed["interactive_review"]["applied"], 0)
+
+    def test_review_priority_cannot_override_price_bids_or_transport_exclusions(self):
+        for field, value in (("price_eur", 100), ("bid_count", 2), ("shipping_eur", 100)):
+            for capacity in (2, 3):
+                with self.subTest(field=field, capacity=capacity):
+                    state, review, incoming = self.fixture()
+                    state["records"][0][field] = value
+                    feed, _ = run({"max_records": capacity}, source="json", raw_items=[incoming],
+                                  state=state, review_doc=review)
+                    kept = {row["id"]: row for row in feed["deals"]}
+                    if capacity == 2:
+                        self.assertNotIn(self.valuable_id, kept)
+                    else:
+                        row = kept[self.valuable_id]
+                        self.assertEqual(row["interest_score"], 99)
+                        self.assertEqual(row["eligibility"], "excluded")
+                        self.assertEqual(row["eligibility_without_time_window"], "excluded")
+                        self.assertEqual(row[field], value)
+
+    def test_newer_api_assessment_still_wins_after_preselection(self):
+        state, review, incoming = self.fixture()
+        answer = {**review["reviews"][0]["assessment"], "scalp_score": 10}
+
+        def enrich(items, *args, **kwargs):
+            output = copy.deepcopy(items)
+            target = next(index for index, row in enumerate(output) if row["id"] == self.valuable_id)
+            output[target] = apply_semantic(output[target], answer)
+            output[target].pop("semantic_review_mode", None)
+            output[target]["semantic_assessed_at"] = iso_time(NOW)
+            return output, {"ai_enabled": True, "llm_status": "ok", "calls_used": 0}
+
+        feed, _ = run({"max_records": 2}, source="json", raw_items=[incoming],
+                      state=state, review_doc=review, enrich=enrich)
+        row = next(row for row in feed["deals"] if row["id"] == self.valuable_id)
+        self.assertEqual(row["interest_score"], 10)
+        self.assertNotIn("semantic_review_mode", row)
+        self.assertEqual(feed["interactive_review"]["applied"], 0)
+        self.assertEqual(feed["interactive_review"]["skipped_newer"], 1)
+
+    def test_budget_checkpoint_uses_same_review_aware_capacity_order(self):
+        state, review, incoming = self.fixture()
+        checkpoints = []
+        create, clients = factory(results=[page([incoming]), page()])
+        feed, _ = run({"max_records": 2, "detail_limit_per_run": 0}, state=state,
+                      review_doc=review, client_factory=create,
+                      checkpoint=lambda value: checkpoints.append(copy.deepcopy(value)))
+        self.assertTrue(checkpoints)
+        self.assertEqual([row["id"] for row in checkpoints[-1]["records"]], [self.valuable_id, self.incoming_id])
+        self.assertEqual(checkpoints[-1]["records"][0]["interest_score"], 99)
+        self.assertEqual(len(clients[0].queries), 2)
+        self.assertEqual(clients[0].detail_ids, [])
+        self.assertEqual(feed["semantic"]["calls_used"], 0)
+
+
 class TestSemanticAndJson(unittest.TestCase):
     def test_dual_scores_are_persisted_and_api_review_counts_without_interactive_document(self):
         answer = {"scalp_score": 85, "useability_score": 90, "useability_reason": "Eigenständiges Messgerät.",
@@ -492,7 +662,7 @@ class TestSemanticAndJson(unittest.TestCase):
             return [apply_semantic(row, answer) for row in items], {"ai_enabled": True, "llm_status": "ok"}
 
         feed, state = run(source="json", raw_items=[raw_item()], enrich=enrich)
-        self.assertEqual(feed["schema_version"], 2)
+        self.assertEqual(feed["schema_version"], 3)
         self.assertEqual(state["schema_version"], 2)
         self.assertEqual(feed["interactive_review"]["unreviewed"], 0)
         self.assertEqual(feed["interactive_review"]["status"], "none")

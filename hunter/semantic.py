@@ -314,7 +314,7 @@ def enrich_semantics(
     items: list[dict[str, Any]], settings: dict[str, Any], state: dict[str, Any], at: datetime,
     *, transport: Transport | None = None, environ: Mapping[str, str] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    """Annotate candidates within retention, preserving old source timestamps.
+    """Annotate ongoing candidates, preserving their source timestamps.
 
     Only ``state['semantic_budget']`` and ``state['semantic_cache']`` are changed.
     A transport receives a fixed-origin Request and timeout, making tests fully
@@ -331,17 +331,17 @@ def enrich_semantics(
     }
     active: list[tuple[int, dict[str, Any]]] = []
     seen_ids = set()
-    retention = settings.get("max_freshness_hours", 24)
-    if type(retention) not in (int, float) or not math.isfinite(retention):
-        retention = 24
-    freshness = min(24, max(0.01, retention))
+    lookahead = settings.get("lookahead_hours", 72)
+    if type(lookahead) not in (int, float) or not math.isfinite(lookahead):
+        lookahead = 72
+    window = timedelta(hours=min(744, max(0.01, lookahead)))
     for index, item in enumerate(output):
         item_id = item.get("id")
         seen = _parse_time(item.get("last_seen_at"))
         end = _parse_time(item.get("ends_at"))
         if (not isinstance(item_id, str) or not item_id or len(item_id) > 200 or item_id in seen_ids
                 or item.get("eligibility") == "excluded" or seen is None or end is None
-                or end <= at or seen > at or at - seen >= timedelta(hours=freshness)):
+                or end <= at or end >= at + window or seen > at):
             continue
         seen_ids.add(item_id)
         active.append((index, item))

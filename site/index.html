@@ -3,44 +3,44 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#101c25" />
+    <meta name="theme-color" content="#060b10" />
     <meta name="description" content="Fundgrube: interessante eBay-Auktionen nach Scalp, Useability und Interest sortieren." />
     <title>Fundgrube — Auktionsradar</title>
-    <link rel="stylesheet" href="./styles.css?v=score-v2.1" />
-    <script src="./app.js?v=score-v2.1" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=design-v3" />
+    <script src="./app.js?v=design-v3" defer></script>
   </head>
   <body class="dashboard-page">
     <a class="skip-link" href="#results-heading">Direkt zu den Angeboten</a>
     <div class="shell">
       <header class="topbar">
-        <a href="./" class="brand" aria-label="Fundgrube Startseite"><span class="brand-symbol" aria-hidden="true"><span class="radar-dot"></span></span><span>FUND<span class="brand-accent">GRUBE</span></span></a>
+        <a href="./" class="brand" aria-label="Fundgrube Startseite"><span class="brand-symbol" aria-hidden="true">f.</span><span>fund<span class="brand-accent">grube</span></span></a>
         <div class="topbar-right">
           <span id="location-label" class="location-pill">Suchprofil wird geladen</span>
-          <span id="sync-status" class="sync-status"><span class="sync-light" aria-hidden="true"></span><span id="sync-label">Lade Daten</span></span>
           <a id="info-link" class="nav-info" href="./info.html">Info <span aria-hidden="true">↗</span></a>
         </div>
       </header>
 
       <main>
         <div class="dashboard-heading">
-          <h1>Auktionsradar</h1>
+          <div><p class="eyebrow">GEWERBE &amp; INDUSTRIE</p><h1>Auktionsradar<span class="heading-dot" aria-hidden="true">.</span></h1></div>
           <div class="actions"><button id="demo-button" class="secondary-button" type="button">Demo</button><button id="refresh-button" class="secondary-button" type="button" title="Veröffentlichten Snapshot neu laden, keinen neuen eBay-Scan starten">↻ Neu laden</button></div>
         </div>
         <section id="notice" class="notice compact-notice" role="status" aria-live="polite" hidden></section>
         <noscript><p class="notice">Für die Angebotsfilter wird JavaScript benötigt. <a href="./info.html">Info und Schnittstelle öffnen</a>.</p></noscript>
-        <div id="criteria" class="criteria compact-criteria" aria-label="Aktuelle Suchkriterien"><span>Suchkriterien werden geladen</span></div>
-        <div class="source-summary"><span id="source-attribution"></span><span id="retention-note"></span></div>
-
-        <section class="metric-strip compact-metrics" aria-label="Snapshot-Übersicht">
-          <div class="metric"><p>LETZTER ABRUF</p><strong id="metric-scanned">—</strong><span id="metric-scanned-note">Angebote eingelesen</span></div>
-          <div class="metric"><p>IM PUFFER</p><strong id="metric-candidates">—</strong><span id="metric-candidate-note">Kandidaten &amp; Prüffälle</span></div>
-          <div class="metric"><p id="metric-highvalue-label">INTEREST ≥ 40</p><strong id="metric-highvalue">—</strong><span>vor weiteren Filtern</span></div>
-          <div class="metric metric-last"><p>SNAPSHOT</p><strong id="metric-updated" class="metric-date">—</strong><span id="metric-source">Warte auf Datenquelle</span></div>
+        <section class="status-band" aria-label="Snapshot und Suchprofil">
+          <div class="metric-strip">
+            <div class="metric"><p>Letzter Abruf</p><strong id="metric-scanned">—</strong><span id="metric-scanned-note">Angebote eingelesen</span></div>
+            <div class="metric"><p>Im Zeitfenster</p><strong id="metric-candidates">—</strong><span id="metric-candidate-note">Kandidaten &amp; Prüffälle</span></div>
+            <div class="metric metric-interest"><p id="metric-highvalue-label">Interest ≥ 40</p><strong id="metric-highvalue">—</strong><span>vor weiteren Filtern</span></div>
+            <div class="metric metric-last"><p><span id="sync-status" class="sync-status"><span class="sync-light" aria-hidden="true"></span><span id="sync-label">Lade Daten</span></span></p><strong id="metric-updated" class="metric-date">—</strong><span id="metric-source">Warte auf Datenquelle</span></div>
+          </div>
+          <div class="status-band-foot"><div id="criteria" class="criteria" aria-label="Aktuelle Suchkriterien"><span>Suchkriterien werden geladen</span></div><div class="source-summary"><span id="source-attribution"></span><span id="retention-note"></span></div></div>
         </section>
 
         <section class="results" aria-label="Angebote">
+          <div class="filter-panel">
           <div class="filters">
-            <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Titel, Gerät, Marke …" autocomplete="off" aria-label="Angebote durchsuchen" /></label>
+            <label class="search-wrap"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.5"/></svg><input id="search" type="search" placeholder="Titel, Gerät oder Marke suchen" autocomplete="off" aria-label="Angebote durchsuchen" /></label>
             <label class="filter-select">Transport<select id="transport"><option value="all">Alle Optionen</option><option value="shipping">Günstiger Versand</option><option value="pickup">Abholung / Quellsuche</option></select></label>
             <label class="filter-select">Sortierung<select id="sort"><option value="score">Interest zuerst</option><option value="scalp">Scalp zuerst</option><option value="useability">Useability zuerst</option><option value="ending">Endet zuerst</option><option value="price">Niedrigster Preis</option><option value="total">Preis + Versand</option><option value="freshness">Neuester Quellenstand</option></select></label>
           </div>
@@ -55,18 +55,19 @@
             <div class="filter-secondary">
               <label class="compact-select">Prüfstatus<select id="eligibility"><option value="active">Kandidaten &amp; Prüffälle</option><option value="eligible">Nur Kandidaten</option><option value="review">Noch zu prüfen</option><option value="excluded">Ausgeschlossen</option></select></label>
               <label class="compact-select">Größenordnung<select id="value-filter"><option value="all">Alle Größenordnungen</option><option value="plausible">Höherwertig möglich</option><option value="unknown">Unklar / ungeprüft</option><option value="unlikely">Eher kleinwertig</option></select></label>
-              <label class="checkbox-label"><input id="show-expired" type="checkbox" /> Abgelaufene Auktionen / Fristen</label>
-              <label class="checkbox-label"><input id="show-stale" type="checkbox" /> <span id="show-stale-label">Außerhalb des 24-Stunden-Puffers / undatiert</span></label>
+              <label class="checkbox-label"><input id="show-expired" type="checkbox" /> Außerhalb Zeitfenster anzeigen</label>
+              <label class="checkbox-label"><input id="show-stale" type="checkbox" /> <span id="show-stale-label">Unklare Zeitstempel anzeigen</span></label>
               <button id="reset-filters" class="text-button" type="button">Filter zurücksetzen</button>
             </div>
           </details>
-          <div class="results-caption"><h2 id="results-heading" tabindex="-1">Fundstücke <span id="result-count">(0 / 0)</span></h2><a href="./info.html#scores">Wie werden die Scores berechnet?</a></div>
+          </div>
+          <div class="results-caption"><h2 id="results-heading" tabindex="-1">Deine Fundstücke <span id="result-count">(0 / 0)</span></h2><a href="./info.html#scores">Die Scores verstehen ↗</a></div>
           <p id="result-summary" class="result-summary" role="status" aria-live="polite"></p>
           <div id="cards" class="cards" aria-busy="true"></div>
           <div id="empty" class="empty-state" hidden><span class="empty-icon" aria-hidden="true">⌁</span><h3>Keine passenden Fundstücke.</h3><p id="empty-description">Suche oder Filter anpassen.</p><button id="empty-show-all-interest" class="secondary-button" type="button">Interest-Schwelle auf 0 setzen</button></div>
         </section>
       </main>
-      <footer><span>FUNDGRUBE</span><a href="./info.html">Info · Quellen · Scores · ChatGPT-Schnittstelle</a></footer>
+      <footer><span>Fundgrube · Sichten. Einordnen. Selbst prüfen.</span><a href="./info.html">Quellen, Scores &amp; Schnittstelle ↗</a></footer>
     </div>
     <dialog id="detail-dialog" class="detail-dialog" aria-labelledby="dialog-title"><div class="dialog-inner"><button id="close-dialog" class="dialog-close" type="button" aria-label="Schließen">✕</button><p class="eyebrow">ANGEBOT &amp; EINORDNUNG</p><h2 id="dialog-title"></h2><div id="dialog-content"></div></div></dialog>
   </body>

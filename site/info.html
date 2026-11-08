@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#101c25" />
+    <meta name="theme-color" content="#060b10" />
     <meta name="description" content="Quellen, Scores, Datenalter und die direkte ChatGPT-Schnittstelle von Fundgrube." />
     <title>Info &amp; Schnittstelle — Fundgrube</title>
-    <link rel="stylesheet" href="./styles.css?v=score-v2.1" />
-    <script src="./info.js?v=score-v2.1" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=design-v3" />
+    <script src="./info.js?v=design-v3" defer></script>
   </head>
   <body class="info-page">
     <a class="skip-link" href="#info-title">Zum Inhalt</a>
     <div class="shell">
       <header class="topbar">
-        <a href="./" class="brand" aria-label="Zurück zum Auktionsradar"><span class="brand-symbol" aria-hidden="true"><span class="radar-dot"></span></span><span>FUND<span class="brand-accent">GRUBE</span></span></a>
+        <a href="./" class="brand" aria-label="Zurück zum Auktionsradar"><span class="brand-symbol" aria-hidden="true">f.</span><span>fund<span class="brand-accent">grube</span></span></a>
         <a id="home-link" class="nav-info" href="./">← Zum Radar</a>
       </header>
       <main class="info-main">
@@ -42,8 +42,9 @@
           <div id="info-source" class="info-dynamic"></div>
           <p>Der reguläre Feed kann Kurzmetadaten von <a href="https://auktionen-ohne-gebot.de/business-industrie/" target="_blank" rel="noopener noreferrer">Auktionen ohne Gebot</a> enthalten. Das sind zwischengespeicherte Angaben einer Drittquelle, keine direkte Verifikation bei eBay. Verkäufer-Volltexte, tatsächliche Standorte und Mindestpreisbelege fehlen dort.</p>
           <p>Unbekannt bleibt unbekannt: kein Versandpreis ist nicht kostenloser Versand; eine fehlende Gebotszahl ist nicht null Gebote. Eine angebotene Abholung belegt keine Nähe. Eine passende Abholsuche ist nur ein vorläufiger Quellenhinweis für die angegebene PLZ und den Suchradius. Den tatsächlichen Abholort im Original prüfen.</p>
-          <div id="info-retention" class="info-callout">Der Speicherpuffer beträgt standardmäßig höchstens 24 Stunden seit der Quellenbeobachtung, längstens bis zum Auktionsende oder einer früheren Datenfrist. Ein kleineres konfiguriertes Limit hat Vorrang. Der Puffer aktualisiert keine Fakten.</div>
-          <p>Suchhorizont, Speicherpuffer und Quellcache sind verschieden: Der Suchhorizont begrenzt die Auktionsenden, der Puffer die Aufbewahrung beobachteter Datensätze. Die Quelle nennt einen Cache von bis zu 15 Minuten; das ist eine Anbieterangabe. Quellenstände über zwei Stunden bleiben in der Oberfläche als ältere Beobachtung markiert. Ein neuer Import setzt ihre Zeitstempel nicht zurück.</p>
+          <div id="info-retention" class="info-callout">Aktiv sind noch laufende Auktionen, die in weniger als 72 Stunden enden. Metadaten bleiben bis zum Auktionsende erhalten. Ein alter Quellenstand allein versteckt kein Angebot und wird weiterhin ausdrücklich angezeigt — Aufbewahrung ist keine erneute Prüfung.</div>
+          <p>Suchfenster, Aufbewahrung und Quellcache sind verschieden: Das aktive Fenster begrenzt die Auktionsenden strikt auf jetzt &lt; Ende &lt; jetzt + 72 Stunden. Ein bereits beobachteter Datensatz darf bis zu seinem Auktionsende erhalten bleiben, auch wenn die Quelle ihn nicht erneut liefert. Die Quelle nennt einen Cache von bis zu 15 Minuten; das ist eine Anbieterangabe. Quellenstände über zwei Stunden bleiben als ältere Beobachtung markiert. Ein neuer Import setzt ihre Zeitstempel nicht zurück.</p>
+          <p>Beschreibungstexte haben eine getrennte, standardmäßig 24-stündige Beobachtungsfrist. Das ist kein Ablaufdatum der übrigen Angebotsmetadaten. Fehlende oder abgelaufene Texte bleiben unbekannt. Feed-Version 3 trennt diese Regeln; frühere Feed-Versionen verwendeten noch einen altersbasierten Metadatenpuffer.</p>
           <p>GitHub kann geplante Läufe verzögern. „Neu laden“ lädt nur den veröffentlichten Snapshot und startet keinen neuen eBay- oder Aggregator-Abruf. Vor dem Bieten sind Preis, Mitbieter, Zustand, Transport und Mindestpreis erneut im Original zu prüfen.</p>
           <div id="info-review" class="info-dynamic"></div>
           <noscript><p class="notice">Dynamischer Status benötigt JavaScript. Die statischen Erklärungen und die unten verlinkten JSON-Dateien bleiben zugänglich.</p></noscript>
@@ -62,7 +63,7 @@ Start: api/manifest.json
 Alle Seiten und Details unter demselben SHA lesen.
 Scalp und Useability getrennt prüfen; Interest daraus berechnen.
 Quellenalter und Risiken erhalten. Keine Gebote oder Käufe.</pre></div><button id="copy-instructions" class="secondary-button" type="button">Leseauftrag kopieren</button></div><p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
-          <h3>Bewertungen speichern</h3><p>Eine interaktive ChatGPT-Sichtung benötigt keinen zusätzlichen API-Key. Das Einlesen allein speichert aber noch keine Bewertung. Nur bei einem ausdrücklichen Speicherauftrag werden im Gespräch tatsächlich erarbeitete Bewertungen über die GitHub-Anbindung im dokumentierten Review-Format hinterlegt und durch einen nachfolgenden Workflow übernommen. Eine Hashbindung ist kein Nachweis der Urheberschaft.</p><p>Interaktive Einordnungen sind keine unbeaufsichtigte Daueranalyse. Automatische LLM-API-Aufrufe benötigen weiterhin eigene Freigabe, Modell und Schlüssel. Unveränderte passende Bewertungen können wiederverwendet werden; ihre Zeitstempel dürfen ohne neue Sichtung nicht erneuert werden. Der Quellenpuffer gilt zusätzlich, und alte Git-Commits können in der öffentlichen Historie erhalten bleiben.</p>
+          <h3>Bewertungen speichern</h3><p>Eine interaktive ChatGPT-Sichtung benötigt keinen zusätzlichen API-Key. Das Einlesen allein speichert aber noch keine Bewertung. Nur bei einem ausdrücklichen Speicherauftrag werden im Gespräch tatsächlich erarbeitete Bewertungen über die GitHub-Anbindung im dokumentierten Review-Format hinterlegt und durch einen nachfolgenden Workflow übernommen. Eine Hashbindung ist kein Nachweis der Urheberschaft.</p><p>Interaktive Einordnungen sind keine unbeaufsichtigte Daueranalyse. Automatische LLM-API-Aufrufe benötigen weiterhin eigene Freigabe, Modell und Schlüssel. Unveränderte passende Bewertungen können wiederverwendet werden; ihre Zeitstempel dürfen ohne neue Sichtung nicht erneuert werden. Die Bewertungsfrist ist von der Aufbewahrung der Angebotsmetadaten getrennt. Auktionsende und aktives Zeitfenster gelten zusätzlich; alte Git-Commits können in der öffentlichen Historie erhalten bleiben.</p>
         </section>
       </main>
       <footer><span>FUNDGRUBE · KEINE VERBINDUNG ZU EBAY INC.</span><a href="./">Zurück zu den Angeboten</a></footer>

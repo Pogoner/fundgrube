@@ -21,7 +21,6 @@ from hunter.semantic import ANNOTATION_FIELDS, SemanticError, _validate_assessme
 MAX_REVIEW_BYTES = 2_000_000
 MAX_REVIEWS = 800
 MAX_REVIEW_AGE = timedelta(hours=48)
-MAX_SOURCE_AGE = timedelta(hours=24)
 HEADER_FIELDS = {"schema_version", "source_snapshot_id", "reviewed_at", "reviewer"}
 HASH_PATTERN = re.compile(r"sha256:[0-9a-f]{64}\Z")
 ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.|:-]{0,199}\Z")
@@ -258,7 +257,9 @@ def apply_reviews(
         item = output[by_id[item_id]]
         seen = _time(item.get("last_seen_at"))
         end = _time(item.get("ends_at"))
-        if seen is None or seen > at or at - seen >= MAX_SOURCE_AGE or end is None or end <= at:
+        # Semantic content age and auction lifetime are independent from the
+        # observation age of price/bids. A matching review never renews facts.
+        if seen is None or seen > at or end is None or end <= at:
             metadata["skipped_stale"] += 1
             continue
         try:

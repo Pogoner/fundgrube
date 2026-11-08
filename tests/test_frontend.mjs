@@ -11,6 +11,7 @@ const pages = Object.fromEntries(["index", "info"].map(name => [name, {
   script: readFileSync(new URL(name === "index" ? "app.js" : "info.js", site), "utf8")
 }]));
 const demo = JSON.parse(readFileSync(new URL("data/demo.json", site), "utf8"));
+const styles = readFileSync(new URL("styles.css", site), "utf8");
 const NOW = Date.parse("2030-01-02T12:00:00Z");
 const hour = 3600000;
 const iso = offset => new Date(NOW + offset).toISOString();
@@ -28,7 +29,7 @@ class Element {
     this.value = attrs.value || "";
     this.textContent = "";
     this.checked = this.hidden = this.disabled = this.open = false;
-    this.attributes = new Map();
+    this.attributes = new Map(Object.entries(attrs));
     this.listeners = new Map();
     this.classList = {
       contains: value => this.className.split(/\s+/).includes(value),
@@ -56,8 +57,38 @@ class Element {
   focus() { this.document.activeElement = this; }
   closest(selector) { return selector.startsWith(".") && this.classList.contains(selector.slice(1)) ? this : null; }
   contains(element) { return element === this || element.parent === this; }
+  querySelector(selector) { return this.querySelectorAll(selector)[0] || null; }
   querySelectorAll(selector) {
     if (this.childQueries.has(selector)) return this.childQueries.get(selector);
+    if (selector === ".offer-image") {
+      const images = [];
+      for (const match of this.markup.matchAll(/<div class="(card-visual[^"]*)">([\s\S]*?)<\/div>/g)) {
+        const imageTag = match[2].match(/<img\b[^>]*>/)?.[0];
+        if (!imageTag) continue;
+        const frame = new Element(this.document, {class: match[1]});
+        frame.innerHTML = match[2];
+        const image = new Element(this.document, attributes(imageTag));
+        image.parentElement = frame;
+        image.complete = this.document.imageDefaults?.complete || false;
+        image.naturalWidth = this.document.imageDefaults?.naturalWidth || 0;
+        images.push(image);
+      }
+      this.childQueries.set(selector, images);
+      return images;
+    }
+    if ([".image-fallback", ".image-state", ".image-source-link"].includes(selector)) {
+      const matches = [];
+      for (const match of this.markup.matchAll(/<([a-z]+)\b([^>]*)>([^<]*)/g)) {
+        const attrs = attributes(match[2]);
+        if (!attrs.class?.split(/\s+/).includes(selector.slice(1))) continue;
+        const node = new Element(this.document, attrs);
+        node.hidden = /\bhidden\b/.test(match[2]);
+        node.textContent = decode(match[3]);
+        matches.push(node);
+      }
+      this.childQueries.set(selector, matches);
+      return matches;
+    }
     const attribute = selector === "[data-ends-at]" ? "data-ends-at" : selector === "[data-last-seen]" ? "data-last-seen" : null;
     assert(attribute || selector === ".detail-open", `Unsupported test selector: ${selector}`);
     const matches = [];
@@ -75,7 +106,7 @@ class Element {
 }
 
 function fixture(overrides = {}) {
-  return {schema_version: 2, snapshot_id: "snapshot-a", generated_at: iso(0), last_successful_scan_at: iso(0), source_status: "live", blockers: [], location: demo.location, criteria: demo.criteria, ai_enabled: false, stats: {received: 0}, coverage: {}, deals: [], ...overrides};
+  return {schema_version: 3, snapshot_id: "snapshot-a", generated_at: iso(0), last_successful_scan_at: iso(0), source_status: "live", blockers: [], location: demo.location, criteria: {...demo.criteria, lookahead_hours: 72}, freshness: {retention_basis: "auction_end", maximum_source_age_hours: null, active_window_hours: 72, source_warning_after_hours: 2}, ai_enabled: false, stats: {received: 0}, coverage: {}, deals: [], ...overrides};
 }
 function offer(overrides = {}) {
   return {...structuredClone(demo.deals[0]), id: "offer-a", last_seen_at: iso(0), ends_at: iso(4 * hour), title: "Eigenständiges Messgerät", description: "Gespeicherter Kurztext.", url: "https://www.ebay.de/itm/123456789012", detail_path: "api/items/offer-a.json", score_version: 2, scalp_score: 80, useability_score: 80, interest_score: 64, score: 64, assessment_basis: "heuristic", semantic_assessed: true, assessment_confidence: "low", ...overrides};
@@ -87,7 +118,7 @@ function aggregate(overrides = {}) {
 function harness(data = fixture(), options = {}) {
   const page = options.page || "index";
   const nodes = new Map();
-  const document = {activeElement: null, hidden: false, listeners: new Map(),
+  const document = {activeElement: null, hidden: false, listeners: new Map(), imageDefaults: options.imageDefaults,
     querySelector(selector) { assert(nodes.has(selector.slice(1)), `${page} HTML element exists: ${selector}`); return nodes.get(selector.slice(1)); },
     addEventListener(type, callback) { this.listeners.set(type, callback); }
   };
@@ -163,16 +194,91 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
+  assert(versions.has("design-v3"), "new design cannot reuse the incompatible score-v2 cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {
   const h = harness(fixture({deals: [offer({description: "", value_reason: "Vollständiges eigenständiges Laborgerät.", reasons: ["Aktueller Auktionspreis höchstens 1 Euro"]})]}));
   await flush();
-  const preview = h.nodes.get("cards").innerHTML.match(/<p class="card-descr">([^<]*)<\/p>/)?.[1];
-  assert.equal(preview, "Einordnung: Vollständiges eigenständiges Laborgerät.");
-  const withText = harness(fixture({deals: [offer({description: "Tatsächlicher Verkäufertext.", value_reason: "Semantische Einordnung."})]}));
+  assert.match(h.nodes.get("cards").innerHTML, /<span class="reason-label">Einordnung<\/span>Vollständiges eigenständiges Laborgerät\./);
+  const withText = harness(fixture({deals: [offer({description: "Tatsächlicher Verkäufertext.", value_reason: "Semantische Einordnung.", detail_path: null})]}));
   await flush();
-  assert.match(withText.nodes.get("cards").innerHTML, /<p class="card-descr">Tatsächlicher Verkäufertext\.<\/p>/);
+  assert.match(withText.nodes.get("cards").innerHTML, /<span class="reason-label">Einordnung<\/span>Semantische Einordnung\./);
+  await withText.detail("offer-a");
+  assert.match(withText.nodes.get("dialog-content").innerHTML, /Tatsächlicher Verkäufertext\./);
+});
+
+test("image loading is early for visible cards, dimensioned and has a safe recoverable error state", async () => {
+  const image = "https://i.ebayimg.com/images/g/test/s-l1600.jpg";
+  const h = harness(fixture({deals: Array.from({length: 5}, (_, index) => offer({id: `image-${index}`, image, title: `Gerät ${index} <img onerror="injected">`}))}));
+  await flush();
+  const images = h.nodes.get("cards").querySelectorAll(".offer-image");
+  assert.equal(images.length, 5);
+  assert.deepEqual(images.map(node => node.attributes.get("loading")), ["eager", "eager", "eager", "lazy", "lazy"]);
+  assert.equal(images[0].attributes.get("fetchpriority"), "high");
+  for (const node of images) {
+    assert.equal(node.attributes.get("width"), "720");
+    assert.equal(node.attributes.get("height"), "450");
+    assert.equal(node.attributes.get("src"), image);
+  }
+  assert.doesNotMatch(h.nodes.get("cards").innerHTML, /onerror="injected"|onload="/);
+  const first = images[0];
+  await first.dispatch("error");
+  assert(first.parentElement.classList.contains("image-failed"));
+  assert.equal(first.hidden, true);
+  assert.equal(first.parentElement.querySelector(".image-fallback").hidden, false);
+  assert.equal(first.parentElement.querySelector(".image-state").textContent, "Bild konnte nicht geladen werden");
+  const original = first.parentElement.querySelector(".image-source-link");
+  assert.equal(original.hidden, false);
+  assert.equal(original.attributes.get("href"), image);
+  assert.equal(original.attributes.get("rel"), "noopener noreferrer");
+  await first.dispatch("load");
+  assert(first.parentElement.classList.contains("image-loaded"));
+  assert.equal(first.hidden, false);
+  assert.equal(first.parentElement.querySelector(".image-fallback").hidden, true);
+  assert.equal(original.hidden, true);
+  assert.equal(h.requests.length, 1, "No image proxy, image prefetch or unexpected API call is introduced");
+});
+
+test("cached, missing and unsafe pictures use honest fallbacks without fabricated photos", async () => {
+  for (const [naturalWidth, expected] of [[900, "image-loaded"], [0, "image-failed"]]) {
+    const cached = harness(fixture({deals: [offer({image: "https://i.ebayimg.com/images/test.jpg"})]}), {imageDefaults: {complete: true, naturalWidth}});
+    await flush();
+    assert(cached.nodes.get("cards").querySelectorAll(".offer-image")[0].parentElement.classList.contains(expected));
+  }
+  const missing = harness(fixture({deals: [offer({id: "missing", image: null}), offer({id: "unsafe", image: "https://ebayimg.com.evil.example/image.jpg"}), offer({id: "script", image: "javascript:alert(1)"})]}));
+  await flush();
+  assert.equal(missing.nodes.get("cards").querySelectorAll(".offer-image").length, 0);
+  assert.match(missing.nodes.get("cards").innerHTML, /Kein Bild in der Quelle/);
+  assert.doesNotMatch(missing.nodes.get("cards").innerHTML, /src="https:\/\/ebayimg\.com\.evil|href="javascript/);
+});
+
+test("design tokens meet text contrast and preserve responsive, keyboard and reduced-motion treatment", () => {
+  const tokens = Object.fromEntries([...styles.matchAll(/--([a-z-]+):(#[0-9a-f]{6})/g)].map(match => [match[1], match[2]]));
+  const luminance = color => {
+    const channels = [1, 3, 5].map(offset => parseInt(color.slice(offset, offset + 2), 16) / 255).map(channel => channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4);
+    return channels[0] * .2126 + channels[1] * .7152 + channels[2] * .0722;
+  };
+  const contrast = (a, b) => (Math.max(luminance(a), luminance(b)) + .05) / (Math.min(luminance(a), luminance(b)) + .05);
+  for (const foreground of ["ink", "muted", "quiet", "accent", "warning", "error"]) for (const background of ["bg", "panel", "panel-raised"]) assert(contrast(tokens[foreground], tokens[background]) >= 4.5, `${foreground} on ${background} is at least 4.5:1`);
+  assert(contrast(tokens["accent-ink"], tokens.accent) >= 4.5);
+  assert(contrast(tokens.focus, tokens.panel) >= 3);
+  assert.match(styles, /aspect-ratio:16 \/ 10/);
+  assert.match(styles, /object-fit:contain/);
+  assert.match(styles, /\.filter-select select,\.compact-select select\{[^}]*min-height:44px/);
+  assert.match(styles, /font-variant-numeric:tabular-nums/);
+  assert.match(styles, /:focus-visible\{outline:2px solid var\(--focus\)/);
+  assert.match(styles, /@media\(max-width:760px\)[\s\S]*\.cards\{grid-template-columns:minmax\(0,1fr\)/);
+  assert.match(styles, /@media\(prefers-reduced-motion:reduce\)/);
+  assert.doesNotMatch(styles, /@import|@font-face|url\(["']?https?:/);
+});
+
+test("dialog close returns keyboard focus, even after the selected auction expires", async () => {
+  const h = harness(fixture({deals: [offer({ends_at: iso(60000), detail_path: null})]})); await flush();
+  await h.detail("offer-a"); h.nodes.get("detail-dialog").close();
+  assert.equal(h.document.activeElement.dataset.id, "offer-a");
+  await h.detail("offer-a"); h.tick(60000); h.nodes.get("detail-dialog").close();
+  assert.equal(h.document.activeElement, h.nodes.get("search"));
 });
 
 test("loading, missing source, blockers and refresh failure remain visible on the lean home", async () => {
@@ -199,23 +305,23 @@ test("actual seven-item demo is fictitious and starts at Interest 40", async () 
   assert.equal(demo.deals[0].interest_score, 86);
   assert.equal(demo.deals[3].interest_score, 18);
   const h = harness(undefined, {demo: true}); await flush();
-  assert.equal(h.nodes.get("minimum-interest").value, "40"); assert.equal(h.count, 3);
-  assert.equal(h.nodes.get("result-count").textContent, "(3 / 7)");
-  assert.deepEqual(h.ids, ["demo-001", "demo-002", "demo-003"]);
-  assert.equal(h.nodes.get("metric-candidates").textContent, "4");
-  assert.equal(h.nodes.get("metric-highvalue").textContent, "3");
+  assert.equal(h.nodes.get("minimum-interest").value, "40"); assert.equal(h.count, 4);
+  assert.equal(h.nodes.get("result-count").textContent, "(4 / 7)");
+  assert.deepEqual(h.ids, ["demo-001", "demo-002", "demo-007", "demo-003"]);
+  assert.equal(h.nodes.get("metric-candidates").textContent, "5");
+  assert.equal(h.nodes.get("metric-highvalue").textContent, "4");
   assert.equal(h.nodes.get("info-link").href, "./info.html?demo=1");
   assert.match(h.nodes.get("notice").innerHTML, /Keine echten Angebote/);
   assert.doesNotMatch(h.nodes.get("cards").innerHTML, /href="https:/);
-  await h.click("show-all-interest"); assert.equal(h.count, 4);
+  await h.click("show-all-interest"); assert.equal(h.count, 5);
   assert(h.ids.includes("demo-004"));
-  await h.value("transport", "shipping"); assert.equal(h.count, 3);
+  await h.value("transport", "shipping"); assert.equal(h.count, 4);
   await h.value("transport", "pickup"); assert.equal(h.count, 2);
-  await h.click("reset-filters"); assert.equal(h.count, 3);
+  await h.click("reset-filters"); assert.equal(h.count, 4);
   await h.value("search", "not-in-demo"); assert.equal(h.count, 0);
   assert.equal(h.nodes.get("empty-show-all-interest").hidden, false);
-  await h.value("search", ""); await h.click("empty-show-all-interest"); assert.equal(h.count, 4);
-  await h.check("show-expired", true); assert.equal(h.count, 5);
+  await h.value("search", ""); await h.click("empty-show-all-interest"); assert.equal(h.count, 5);
+  await h.check("show-expired", true); assert.equal(h.count, 6);
   await h.check("show-stale", true); assert.equal(h.count, 6);
   assert.match(h.nodes.get("result-summary").textContent, /ACHTUNG/);
 });
@@ -322,59 +428,103 @@ test("mixed snapshot IDs and wrong item IDs cannot leak new description text", a
   }
 });
 
-test("24-hour buffer retains 7/23-hour observations, marks age, rejects exact boundary and future", async () => {
-  const rows = [aggregate({id: "seven", source_observed_at: iso(-7 * hour)}), aggregate({id: "twenty-three", source_observed_at: iso(-23 * hour)}), aggregate({id: "at-24", source_observed_at: iso(-24 * hour)}), aggregate({id: "unknown", source_observed_at: null}), aggregate({id: "future", source_observed_at: iso(1)})];
+test("observations older than three days remain visible, marked and never rejuvenated by import", async () => {
+  const rows = [aggregate({id: "seven", source_observed_at: iso(-7 * hour)}), aggregate({id: "twenty-three", source_observed_at: iso(-23 * hour)}), aggregate({id: "four-days", source_observed_at: iso(-96 * hour), valid_until: iso(-72 * hour)}), aggregate({id: "unknown", source_observed_at: null}), aggregate({id: "future", source_observed_at: iso(2 * hour)})];
   const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: rows})); await flush();
-  assert.equal(h.count, 2);
+  assert.equal(h.count, 3);
   assert.match(h.nodes.get("cards").innerHTML, /Quellenstand: vor 7 Std\. · ältere Beobachtung, nicht aktuell bestätigt/);
   assert.match(h.nodes.get("cards").innerHTML, /Quellenstand: vor 23 Std\. · ältere Beobachtung, nicht aktuell bestätigt/);
-  assert.equal(h.nodes.get("cards").querySelectorAll("[data-last-seen]").filter(node => node.classList.contains("freshness-warning")).length, 2);
-  assert.match(h.nodes.get("retention-note").textContent, /24-Stunden-Puffer/);
+  assert.match(h.nodes.get("cards").innerHTML, /Quellenstand: vor 4 Tagen · ältere Beobachtung, nicht aktuell bestätigt/);
+  assert.equal(h.nodes.get("cards").querySelectorAll("[data-last-seen]").filter(node => node.classList.contains("freshness-warning")).length, 3);
+  assert.match(h.nodes.get("retention-note").textContent, /weniger als 72 Stunden/);
   h.tick(hour);
-  assert(!h.ids.includes("twenty-three"));
+  assert(h.ids.includes("twenty-three")); assert(h.ids.includes("four-days"));
   h.setFetch(async () => ({ok: true, json: async () => fixture({provider: "auktionen-ohne-gebot", generated_at: iso(hour), deals: rows.map(item => ({...item, last_seen_at: iso(hour)}))})}));
   await h.click("refresh-button");
-  assert(!h.ids.includes("twenty-three"));
+  assert(h.ids.includes("twenty-three")); assert(h.ids.includes("four-days"));
   assert.match(h.nodes.get("cards").innerHTML, /Quellenstand: vor 8 Std\./);
+  assert.match(h.nodes.get("cards").innerHTML, /Quellenstand: vor 4 Tagen/);
 });
 
-test("smaller configured retention is honored; no configured value extends beyond 24 hours", async () => {
-  for (const [criteria, metadata, expected] of [[8, undefined, 8], [24, 12, 12], [6, 4, 4], [99, 99, 24], [0, -1, 24]]) {
-    const h = harness(fixture({criteria: {...demo.criteria, max_freshness_hours: criteria}, freshness: {maximum_source_age_hours: metadata}, deals: [offer({id: "inside", last_seen_at: iso(-(expected - 1) * hour)}), offer({id: "limit", last_seen_at: iso(-expected * hour)})]})); await flush();
-    assert.deepEqual(h.ids, ["inside"]);
-    assert(h.nodes.get("show-stale-label").textContent.includes(`${expected}-Stunden-Puffer`));
-    assert(h.nodes.get("retention-note").textContent.includes(`${expected}-Stunden-Puffer`));
+test("active window is strict at both boundaries and unknown or future observation times stay hidden", async () => {
+  const rows = [offer({id: "just-started", ends_at: iso(1)}), offer({id: "almost-72", ends_at: iso(72 * hour - 1)}), offer({id: "at-72", ends_at: iso(72 * hour)}), offer({id: "over-72", ends_at: iso(72 * hour + 1)}), offer({id: "just-ended", ends_at: iso(0)}), offer({id: "unknown-end", ends_at: null}), offer({id: "future-source", last_seen_at: iso(1)}), offer({id: "unknown-source", last_seen_at: null})];
+  const h = harness(fixture({deals: rows})); await flush();
+  assert.deepEqual(h.ids, ["almost-72", "just-started"]);
+  assert.match(h.nodes.get("criteria").innerHTML, /Ende &lt; 72 Std\./);
+  assert.match(h.nodes.get("result-summary").textContent, /3 außerhalb Zeitfenster.*3 Zeitstempel ungeklärt/);
+  await h.check("show-expired", true); assert.equal(h.count, 5);
+  await h.check("show-stale", true); assert.equal(h.count, 8);
+  assert.match(h.nodes.get("cards").innerHTML, /Nur durch Debug-Filter sichtbar/);
+});
+
+test("V1/V2 migration ignores legacy age limits and valid_until but keeps auction expiry", async () => {
+  for (const schema_version of [1, 2, 3]) {
+    const h = harness(fixture({schema_version, criteria: {...demo.criteria, lookahead_hours: schema_version < 3 ? 24 : 72, max_freshness_hours: 6}, freshness: {maximum_source_age_hours: schema_version < 3 ? 6 : null}, deals: [offer({id: "old", last_seen_at: iso(-120 * hour), ends_at: iso(70 * hour), valid_until: iso(-96 * hour)}), offer({id: "null-validity", valid_until: null}), offer({id: "expired", ends_at: iso(0), valid_until: iso(hour)})]})); await flush();
+    assert.deepEqual(h.ids, ["null-validity", "old"]);
+    assert.match(h.nodes.get("retention-note").textContent, /72 Stunden/);
+    assert.doesNotMatch(h.nodes.get("cards").innerHTML, /Pufferfrist/);
   }
 });
 
-test("timer enforces ends_at, valid_until and source age without another request", async () => {
-  const h = harness(fixture({deals: [offer({id: "validity", valid_until: iso(60000)}), offer({id: "ending", ends_at: iso(60000)}), offer({id: "aging", last_seen_at: iso(-24 * hour + 60000)}), offer({id: "remaining"}), offer({id: "bad-validity", valid_until: null})]})); await flush();
-  assert.equal(h.count, 4); assert.deepEqual(h.intervals.map(item => item.delay), [60000]);
-  h.tick(30000); assert.equal(h.count, 4);
-  h.tick(30000); assert.deepEqual(h.ids, ["remaining"]);
+test("valid V3 configured horizons override the 72-hour default consistently on both pages", async () => {
+  for (const freshness of [{active_window_hours: 96, maximum_source_age_hours: null}, {maximum_source_age_hours: null}]) {
+    const data = fixture({criteria: {...demo.criteria, lookahead_hours: 96}, freshness, deals: [offer({id: "inside-96", ends_at: iso(80 * hour), last_seen_at: iso(-120 * hour)}), offer({id: "at-96", ends_at: iso(96 * hour)})]});
+    const h = harness(data); await flush();
+    assert.deepEqual(h.ids, ["inside-96"]);
+    assert.match(h.nodes.get("retention-note").textContent, /weniger als 96 Stunden/);
+    const info = harness(data, {page: "info"}); await flush(); await info.click("copy-instructions");
+    assert.match(info.nodes.get("info-retention").textContent, /jetzt \+ 96 Stunden/);
+    assert.match(info.copied, /jetzt < ends_at < jetzt \+ 96 Stunden/);
+  }
+});
+
+test("timer admits retained future items only with explicit factual baseline and removes ended auctions", async () => {
+  const h = harness(fixture({deals: [
+    offer({id: "enters", ends_at: iso(73 * hour), eligibility: "excluded", eligibility_without_time_window: "review", time_window_eligible: false}),
+    offer({id: "price-excluded", ends_at: iso(73 * hour), eligibility: "excluded", eligibility_without_time_window: "excluded", price_eur: 50}),
+    offer({id: "legacy-excluded", ends_at: iso(73 * hour), eligibility: "excluded", reasons: ["Nur zeitbedingt ausgeschlossen"]}),
+    offer({id: "ending", ends_at: iso(60000)}),
+    offer({id: "old-validity", valid_until: iso(60000), last_seen_at: iso(-150 * hour)}),
+    offer({id: "remaining"})
+  ]})); await flush();
+  assert.equal(h.count, 3); assert.deepEqual(h.intervals.map(item => item.delay), [60000]);
+  h.tick(60000); assert.deepEqual(h.ids, ["old-validity", "remaining"]);
+  h.tick(hour - 60000); assert.deepEqual(h.ids, ["old-validity", "remaining"]);
+  h.tick(1); assert.deepEqual(h.ids, ["enters", "old-validity", "remaining"]);
   assert.equal(h.requests.length, 1);
-  h.tick(120000);
-  assert(h.nodes.get("cards").querySelectorAll("[data-last-seen]").some(node => node.textContent === "Quellenstand: vor 3 Min."));
-  await h.check("show-expired", true); assert.equal(h.count, 3);
-  assert.match(h.nodes.get("cards").innerHTML, /Pufferfrist abgelaufen|Auktion abgelaufen/);
-  await h.check("show-stale", true); assert.equal(h.count, 5);
-  assert.match(h.nodes.get("cards").innerHTML, /Pufferfrist ungeklärt/);
+  assert(h.nodes.get("cards").querySelectorAll("[data-last-seen]").some(node => node.textContent === "Quellenstand: vor 1 Std."));
+  await h.check("show-expired", true); assert.equal(h.count, 4);
+  assert.match(h.nodes.get("cards").innerHTML, /Auktion abgelaufen/);
 });
 
 test("aggregator pickup claims are provisional, scoped and independently aged", async () => {
   const pickup = overrides => aggregate({pickup_available: true, pickup_search_confirmed: true, pickup_search_postcode: "69121", pickup_search_radius_km: 50, shipping_eur: null, eligibility: "review", ...overrides});
   const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [pickup({id: "matching"}), pickup({id: "smaller", pickup_search_radius_km: 25}), pickup({id: "wrong-postcode", pickup_search_postcode: "69115"}), pickup({id: "wide", pickup_search_radius_km: 51}), pickup({id: "only-available", pickup_search_confirmed: false}), pickup({id: "old", source_observed_at: iso(-25 * hour)}), pickup({id: "unknown", source_observed_at: null})]})); await flush();
-  await h.value("transport", "pickup"); assert.deepEqual(h.ids, ["matching", "smaller"]);
+  await h.value("transport", "pickup"); assert.deepEqual(h.ids, ["matching", "old", "smaller"]);
   const markup = h.nodes.get("cards").innerHTML;
   assert.match(markup, /Abholsuche · 50 km/); assert.match(markup, /Abholsuche · 25 km/);
   assert.match(markup, /Nähe laut Quelle; Standort im Original prüfen/);
   assert.doesNotMatch(markup, /Abholung ca\.|Abholung im 50-km/);
-  await h.check("show-stale", true); assert.equal(h.count, 2);
+  await h.check("show-stale", true); assert.equal(h.count, 3);
   await h.value("transport", "shipping"); assert.equal(h.count, 0);
   const aging = harness(fixture({provider: "auktionen-ohne-gebot", deals: [pickup({source_observed_at: iso(-24 * hour + 60000)})]})); await flush();
   await aging.check("show-stale", true); assert.match(aging.nodes.get("cards").innerHTML, /Abholsuche/);
-  aging.tick(120000); assert.doesNotMatch(aging.nodes.get("cards").innerHTML, /Abholsuche · 50 km/);
-  assert.match(aging.nodes.get("cards").innerHTML, /Abholung möglich · Nähe ungeklärt/);
+  aging.tick(120000); assert.match(aging.nodes.get("cards").innerHTML, /Abholsuche · 50 km/);
+  assert(aging.nodes.get("cards").querySelectorAll("[data-last-seen]").some(node => /ältere Beobachtung, nicht aktuell bestätigt/.test(node.textContent)));
+  aging.tick(4 * hour); assert.equal(aging.count, 0);
+});
+
+test("crossing two hours changes a candidate to review without hiding it from the normal list", async () => {
+  const h = harness(fixture({deals: [aggregate({source_observed_at: iso(-2 * hour + 60000), eligibility: "eligible", eligibility_without_time_window: "eligible"})]}));
+  await flush();
+  assert.match(h.nodes.get("cards").innerHTML, /KANDIDAT/);
+  h.tick(60000); assert.match(h.nodes.get("cards").innerHTML, /KANDIDAT/);
+  h.tick(1); assert.equal(h.count, 1);
+  assert.match(h.nodes.get("cards").innerHTML, /PRÜFFALL/);
+  assert.match(h.nodes.get("cards").innerHTML, /ältere Beobachtung, nicht aktuell bestätigt/);
+  await h.value("eligibility", "eligible"); assert.equal(h.count, 0);
+  await h.value("eligibility", "review"); assert.equal(h.count, 1);
+  assert.equal(h.requests.length, 1);
 });
 
 test("ChatGPT, API LLM and heuristic bases remain separate on cards and details", async () => {
@@ -396,7 +546,7 @@ test("Info fetches relative data, preserves provenance, explains bounded coverag
   assert.doesNotMatch(h.nodes.get("info-coverage").innerHTML, /4321|Unterkategorien/);
   assert.match(h.nodes.get("info-review").innerHTML, /ChatGPT-Sichtung: 2 Angebote/);
   assert.match(h.nodes.get("info-review").innerHTML, /Automatische LLM-Aufrufe aus/);
-  assert.match(h.nodes.get("info-retention").textContent, /24-Stunden-Puffer.*keine erneute Prüfung/);
+  assert.match(h.nodes.get("info-retention").textContent, /jetzt \+ 72 Stunden.*unabhängig vom Quellenalter.*keine erneute Prüfung/);
   h.setFetch(async () => { throw Error("Offline"); }); await h.click("info-refresh");
   assert.match(h.nodes.get("info-status").innerHTML, /Abruf fehlgeschlagen/);
   assert.match(h.nodes.get("info-status").innerHTML, /zuletzt geladene Snapshot bleibt unverändert sichtbar/);
@@ -405,7 +555,7 @@ test("Info fetches relative data, preserves provenance, explains bounded coverag
 
 test("Info copy handoff is pinned, dual-score aware, read-only; demo/back navigation and fallback work", async () => {
   const h = harness(fixture({criteria: {...demo.criteria, max_freshness_hours: 12}}), {page: "info"}); await flush(); await h.click("copy-instructions");
-  for (const phrase of ["demselben Commit-SHA", "alle paginierten Angebotsseiten", "counts.total", "12-Stunden-Puffer", "ends_at und valid_until", "floor((Scalp * Useability + 50) / 100)", "Useability", "Keine Gebote", "ausdrücklichen Speicherauftrag"]) assert(h.copied.includes(phrase), phrase);
+  for (const phrase of ["demselben Commit-SHA", "alle paginierten Angebotsseiten", "counts.total", "jetzt < ends_at < jetzt + 72 Stunden", "ends_at und valid_until", "eligibility_without_time_window", "floor((Scalp * Useability + 50) / 100)", "Useability", "Keine Gebote", "ausdrücklichen Speicherauftrag"]) assert(h.copied.includes(phrase), phrase);
   assert.match(h.copied, /Fehlende Useability bleibt null/);
   const fallback = harness(undefined, {page: "info", demo: true, clipboardFailure: true}); await flush();
   assert.equal(fallback.requests[0].url, "./data/demo.json");

@@ -51,9 +51,9 @@ def legacy_deal(number: int = 1, **changes):
 
 def sample(items=None, **changes):
     result = {
-        "schema_version": 2, "generated_at": iso(NOW), "last_successful_scan_at": iso(NOW),
+        "schema_version": 3, "generated_at": iso(NOW), "last_successful_scan_at": iso(NOW),
         "source_status": "live", "status_message": "Nur eine Test-Fixture.", "blockers": [],
-        "location": {"postcode": "69121"}, "criteria": {"max_freshness_hours": 24},
+        "location": {"postcode": "69121"}, "criteria": {"lookahead_hours": 72, "description_max_age_hours": 24},
         "stats": {"received": len(items or [])}, "coverage": {"categories_scanned": 1},
         "ai_enabled": False, "deals": items or [],
     }
@@ -235,7 +235,7 @@ class FeedTests(unittest.TestCase):
         detail = self.read(dashboard["deals"][0]["detail_path"])
         for document in (dashboard, manifest, page, detail):
             self.assertSchema(document)
-            self.assertEqual(document["schema_version"], 2)
+            self.assertEqual(document["schema_version"], 3)
             self.assertEqual(document["scoring"], publisher._scoring_contract())
             self.assertEqual(document["snapshot_id"], manifest["snapshot_id"])
         for item in (dashboard["deals"][0], page["items"][0], detail["item"]):
@@ -393,7 +393,7 @@ class FeedTests(unittest.TestCase):
                 invalid["deals"][0].update(fields)
                 self.assertTrue(schema_errors(invalid, self.schema, self.schema))
 
-    def test_schema_still_accepts_unversioned_schema2_legacy_documents(self):
+    def test_feed_v3_schema_accepts_unversioned_legacy_scoring(self):
         publisher.write_feed(self.site, sample([deal()]))
         document = self.read("data/deals.json")
         document.pop("scoring")
@@ -436,7 +436,7 @@ class FeedTests(unittest.TestCase):
         publisher.write_feed(self.site, sample([deal(content_updated_at=changed)]))
         self.assertEqual(self.read("data/deals.json")["deals"][0]["content_updated_at"], changed)
 
-    def test_expired_out_of_buffer_undated_future_items_never_become_active(self):
+    def test_expired_undated_future_items_are_omitted_but_old_observations_remain(self):
         items = [
             deal(1, ends_at=iso(NOW)),
             deal(2, last_seen_at=iso(NOW - timedelta(hours=24, seconds=1))),
@@ -447,14 +447,156 @@ class FeedTests(unittest.TestCase):
         ]
         publisher.write_feed(self.site, sample(items))
         data = self.read("data/deals.json")
-        self.assertEqual([item["id"] for item in data["deals"]], [deal(6)["id"]])
-        self.assertEqual(data["stats"]["active"], 1)
-        self.assertEqual(data["stats"]["omitted_by_export_freshness"], 5)
+        self.assertEqual({item["id"] for item in data["deals"]}, {deal(2)["id"], deal(6)["id"]})
+        self.assertEqual(data["stats"]["active"], 2)
+        self.assertEqual(data["stats"]["retained"], 2)
+        self.assertEqual(data["stats"]["omitted_by_export_validity"], 4)
 
-    def test_exact_24_hour_boundary_is_not_promoted_as_active(self):
+    def test_exact_24_hour_source_age_no_longer_expires_metadata(self):
         publisher.write_feed(self.site, sample([deal(last_seen_at=iso(NOW - timedelta(hours=24)))]))
         data = self.read("data/deals.json")
-        self.assertEqual(data["deals"], [])
+        self.assertEqual(len(data["deals"]), 1)
+        self.assertEqual(data["deals"][0]["last_seen_at"], iso(NOW - timedelta(hours=24)))
+        self.assertTrue(data["deals"][0]["stale"])
+        self.assertTrue(data["deals"][0]["carried"])
+
+    def test_strict_active_window_keeps_later_auctions_as_excluded_inventory(self):
+        items = [
+            deal(1, ends_at=iso(NOW)),
+            deal(2, ends_at=iso(NOW + timedelta(seconds=1)), eligibility="eligible"),
+            deal(3, ends_at=iso(NOW + timedelta(hours=72, seconds=-1)), eligibility="eligible"),
+            deal(4, ends_at=iso(NOW + timedelta(hours=72)), eligibility="eligible"),
+            deal(5, ends_at=iso(NOW + timedelta(hours=100)), eligibility="eligible"),
+        ]
+        publisher.write_feed(self.site, sample(items))
+        data = self.read("data/deals.json")
+        by_id = {item["id"]: item for item in data["deals"]}
+        self.assertNotIn(deal(1)["id"], by_id)
+        for number in (2, 3):
+            self.assertTrue(by_id[deal(number)["id"]]["time_window_eligible"])
+            self.assertEqual(by_id[deal(number)["id"]]["eligibility"], "eligible")
+        for number in (4, 5):
+            self.assertFalse(by_id[deal(number)["id"]]["time_window_eligible"])
+            self.assertEqual(by_id[deal(number)["id"]]["eligibility"], "excluded")
+            self.assertEqual(by_id[deal(number)["id"]]["valid_until"], items[number - 1]["ends_at"])
+        self.assertEqual(data["stats"]["retained"], 4)
+        self.assertEqual(data["stats"]["active"], 2)
+        self.assertEqual(data["stats"]["outside_active_window"], 2)
+        self.assertEqual(self.read("api/manifest.json")["counts"]["total"], 4)
+        self.assertSchema(data)
+
+    def test_configured_window_is_separate_from_description_ttl_and_age(self):
+        publisher.write_feed(self.site, sample([
+            deal(1, ends_at=iso(NOW + timedelta(hours=12, seconds=-1)), last_seen_at=iso(NOW - timedelta(days=3))),
+            deal(2, ends_at=iso(NOW + timedelta(hours=12))),
+        ], criteria={"lookahead_hours": 12, "description_max_age_hours": 1}))
+        data = self.read("data/deals.json")
+        by_id = {item["id"]: item for item in data["deals"]}
+        self.assertTrue(by_id[deal(1)["id"]]["time_window_eligible"])
+        self.assertFalse(by_id[deal(2)["id"]]["time_window_eligible"])
+        self.assertEqual(data["freshness"]["active_window_hours"], 12)
+        self.assertEqual(data["freshness"]["description_maximum_age_hours"], 1)
+        self.assertIsNone(data["freshness"]["maximum_source_age_hours"])
+
+    def test_invalid_active_windows_fail_without_publishing(self):
+        for invalid in (0, -1, True, "72", None, 745):
+            with self.subTest(invalid=invalid), self.assertRaisesRegex(ValueError, "lookahead_hours"):
+                publisher.write_feed(self.site, sample([deal()], criteria={"lookahead_hours": invalid}))
+        self.assertFalse((self.site / "api/manifest.json").exists())
+
+    def test_source_warning_is_strictly_older_than_two_hours(self):
+        for age, warn in ((timedelta(hours=2), False), (timedelta(hours=2, seconds=1), True), (timedelta(days=5), True)):
+            with self.subTest(age=age):
+                stamp = iso(NOW - age)
+                candidate = deal(last_seen_at=stamp, eligibility="eligible", eligibility_without_time_window="eligible", stale=False, carried=False)
+                publisher.write_feed(self.site, sample([candidate]))
+                item = self.read("data/deals.json")["deals"][0]
+                self.assertEqual(item["stale"], warn)
+                self.assertEqual(item["carried"], warn)
+                self.assertEqual(item["eligibility"], "review" if warn else "eligible")
+                self.assertEqual(item["eligibility_without_time_window"], "review" if warn else "eligible")
+                self.assertEqual(item["last_seen_at"], stamp)
+                self.assertEqual(item["price_eur"], candidate["price_eur"])
+                self.assertEqual(item["bid_count"], candidate["bid_count"])
+                self.assertEqual(item["score"], candidate["score"])
+
+    def test_all_generated_source_warnings_survive_full_risk_list(self):
+        old = iso(NOW - timedelta(hours=25))
+        publisher.write_feed(self.site, sample([aggregator_deal(last_seen_at=old, source_observed_at=old, description="Old text", content_updated_at=old, risks=[f"Risk {index}" for index in range(20)])]))
+        item = self.read("data/deals.json")["deals"][0]
+        self.assertEqual(len(item["risks"]), 20)
+        for text in ("älter als 2 Stunden", "Beschreibung nicht veröffentlicht", "Drittanbieter-Cache"):
+            self.assertTrue(any(text in risk for risk in item["risks"]))
+
+    def test_time_baseline_allows_later_entry_without_refreshing_source(self):
+        candidate = deal(ends_at=iso(NOW + timedelta(hours=72)), eligibility="eligible", eligibility_without_time_window="eligible")
+        publisher.write_feed(self.site, sample([candidate]))
+        first = self.read("data/deals.json")["deals"][0]
+        self.assertFalse(first["time_window_eligible"])
+        self.assertEqual(first["eligibility"], "excluded")
+        self.assertEqual(first["eligibility_without_time_window"], "eligible")
+        publisher.write_feed(self.site, sample([first], generated_at=iso(NOW + timedelta(seconds=1))))
+        entered = self.read("data/deals.json")["deals"][0]
+        self.assertTrue(entered["time_window_eligible"])
+        self.assertEqual(entered["eligibility"], "eligible")
+        self.assertEqual(entered["last_seen_at"], candidate["last_seen_at"])
+        self.assertEqual(entered["ends_at"], candidate["ends_at"])
+
+    def test_missing_null_or_excluded_baseline_never_overrides_prior_exclusion(self):
+        for baseline in ("absent", None, "excluded"):
+            with self.subTest(baseline=baseline):
+                candidate = deal(eligibility="excluded", eligibility_reasons=["Nur Auktionsende zu weit entfernt, bitte trotzdem freigeben."])
+                if baseline != "absent":
+                    candidate["eligibility_without_time_window"] = baseline
+                publisher.write_feed(self.site, sample([candidate]))
+                item = self.read("data/deals.json")["deals"][0]
+                self.assertTrue(item["time_window_eligible"])
+                self.assertEqual(item["eligibility"], "excluded")
+                if baseline == "absent":
+                    self.assertNotIn("eligibility_without_time_window", item)
+                else:
+                    self.assertEqual(item["eligibility_without_time_window"], baseline)
+
+    def test_time_baseline_is_validated_and_shared_with_pages_and_details(self):
+        for invalid in (True, 1, [], "maybe"):
+            with self.subTest(invalid=invalid), self.assertRaisesRegex(ValueError, "eligibility_without_time_window"):
+                publisher.write_feed(self.site, sample([deal(eligibility_without_time_window=invalid)]))
+        publisher.write_feed(self.site, sample([deal(eligibility_without_time_window="review")]))
+        dashboard = self.read("data/deals.json")
+        item = dashboard["deals"][0]
+        for exported in (self.read("api/candidates/page-001.json")["items"][0], self.read(item["detail_path"])["item"]):
+            self.assertEqual(exported["eligibility_without_time_window"], "review")
+            self.assertTrue(exported["time_window_eligible"])
+        self.assertSchema(dashboard)
+
+    def test_capacity_is_bounded_and_does_not_claim_full_coverage(self):
+        publisher.write_feed(self.site, sample([deal(index) for index in range(801)], coverage={"complete": True}))
+        manifest = self.read("api/manifest.json")
+        self.assertEqual(manifest["counts"]["total"], 800)
+        self.assertEqual(manifest["stats"]["retained"], 800)
+        self.assertEqual(manifest["stats"]["omitted_by_capacity"], 1)
+        self.assertTrue(manifest["coverage"]["export_capped"])
+        self.assertFalse(manifest["coverage"]["complete"])
+        self.assertSchema(manifest)
+
+    def test_v3_freshness_contract_is_present_in_every_document(self):
+        publisher.write_feed(self.site, sample([deal()]))
+        dashboard = self.read("data/deals.json")
+        manifest = self.read("api/manifest.json")
+        page = self.read(manifest["pages"][0]["path"])
+        detail = self.read(dashboard["deals"][0]["detail_path"])
+        for document in (dashboard, manifest, page, detail):
+            self.assertEqual(document["freshness"], dashboard["freshness"])
+            self.assertEqual(document["schema_version"], 3)
+            self.assertSchema(document)
+
+    def test_old_top_level_source_time_is_preserved_not_rejected_by_age(self):
+        old = iso(NOW - timedelta(days=5))
+        publisher.write_feed(self.site, sample([aggregator_deal(last_seen_at=old, source_observed_at=old)], source="auktionen-ohne-gebot", provider="auktionen-ohne-gebot", source_observed_at=old, source_status="error"))
+        manifest = self.read("api/manifest.json")
+        self.assertEqual(manifest["source_observed_at"], old)
+        self.assertEqual(manifest["counts"]["total"], 1)
+        self.assertEqual(manifest["source_status"], "error")
 
     def test_price_refresh_does_not_rejuvenate_old_or_undated_description(self):
         for content_at, expected in ((iso(NOW - timedelta(hours=25)), "stale"), (None, "unknown")):
@@ -477,45 +619,57 @@ class FeedTests(unittest.TestCase):
         for key, value in additions.items():
             self.assertEqual(data["deals"][0][key], value)
 
-    def test_source_buffer_cannot_be_extended_above_one_day_by_config(self):
+    def test_legacy_limit_only_caps_description_not_source_metadata(self):
         publisher.write_feed(self.site, sample([deal(last_seen_at=iso(NOW - timedelta(hours=25)))], criteria={"max_freshness_hours": 48}))
         data = self.read("data/deals.json")
-        self.assertEqual(data["freshness"]["maximum_source_age_hours"], 24)
-        self.assertEqual(data["criteria"]["max_freshness_hours"], 24)
-        self.assertEqual(data["deals"], [])
+        self.assertIsNone(data["freshness"]["maximum_source_age_hours"])
+        self.assertEqual(data["freshness"]["description_maximum_age_hours"], 24)
+        self.assertEqual(data["criteria"]["description_max_age_hours"], 24)
+        self.assertNotIn("max_freshness_hours", data["criteria"])
+        self.assertEqual(len(data["deals"]), 1)
 
-    def test_shorter_expiry_is_honored(self):
-        publisher.write_feed(self.site, sample([deal(last_seen_at=iso(NOW - timedelta(hours=2)))], criteria={"max_freshness_hours": 1}))
-        self.assertEqual(self.read("data/deals.json")["deals"], [])
+    def test_shorter_description_ttl_does_not_expire_candidate_metadata(self):
+        timestamp = iso(NOW - timedelta(hours=2))
+        publisher.write_feed(self.site, sample([deal(last_seen_at=timestamp, content_updated_at=timestamp)], criteria={"description_max_age_hours": 1}))
+        item = self.read("data/deals.json")["deals"][0]
+        self.assertEqual(item["description"], "")
+        self.assertEqual(item["description_status"], "stale")
+        self.assertEqual(item["last_seen_at"], timestamp)
 
-    def test_valid_until_is_end_or_buffer_boundary_whichever_comes_first(self):
+    def test_valid_until_equals_auction_end_even_for_old_sources(self):
         publisher.write_feed(self.site, sample([deal(1), deal(2, ends_at=iso(NOW + timedelta(hours=30)))]))
         items = {item["id"]: item for item in self.read("data/deals.json")["deals"]}
         self.assertEqual(items[deal(1)["id"]]["valid_until"], iso(NOW + timedelta(hours=2)))
-        self.assertEqual(items[deal(2)["id"]]["valid_until"], iso(NOW + timedelta(hours=24)))
+        self.assertEqual(items[deal(2)["id"]]["valid_until"], iso(NOW + timedelta(hours=30)))
 
-    def test_default_buffer_is_24_hours_without_setting(self):
+    def test_default_contract_retains_until_end_with_separate_window_and_text_ttl(self):
         publisher.write_feed(self.site, sample([deal(last_seen_at=iso(NOW - timedelta(hours=23)))], criteria={}))
         data = self.read("data/deals.json")
         self.assertEqual(len(data["deals"]), 1)
-        self.assertEqual(data["criteria"]["max_freshness_hours"], 24)
-        self.assertEqual(data["freshness"]["maximum_source_age_hours"], 24)
+        self.assertEqual(data["criteria"]["lookahead_hours"], 72)
+        self.assertEqual(data["criteria"]["description_max_age_hours"], 24)
+        self.assertNotIn("max_freshness_hours", data["criteria"])
+        self.assertIsNone(data["freshness"]["maximum_source_age_hours"])
+        self.assertEqual(data["freshness"]["retention_basis"], "auction_end")
+        self.assertEqual(data["freshness"]["active_window_hours"], 72)
+        self.assertEqual(data["freshness"]["source_warning_after_hours"], 2)
+        self.assertEqual(data["freshness"]["description_maximum_age_hours"], 24)
         self.assertTrue(data["freshness"]["retention_not_revalidation"])
         self.assertFalse(data["freshness"]["source_currentness_guaranteed"])
-        self.assertEqual(data["schema_version"], 2)
+        self.assertEqual(data["schema_version"], 3)
         self.assertSchema(data)
 
-    def test_7h_and_23h_observations_remain_without_becoming_new_facts(self):
+    def test_old_observations_remain_until_end_without_becoming_new_facts(self):
         items = [aggregator_deal(
             hours, last_seen_at=iso(NOW - timedelta(hours=hours)),
             source_observed_at=iso(NOW - timedelta(hours=hours) + timedelta(minutes=15)),
             ends_at=iso(NOW + timedelta(hours=30)), stale=True, carried=True,
-        ) for hours in (7, 23)]
+        ) for hours in (7, 23, 24, 48, 96)]
         original = copy.deepcopy(items)
         publisher.write_feed(self.site, sample(items, source="auktionen-ohne-gebot", provider="auktionen-ohne-gebot"))
         data = self.read("data/deals.json")
-        self.assertEqual(data["stats"]["active"], 2)
-        self.assertEqual(data["stats"]["omitted_by_export_freshness"], 0)
+        self.assertEqual(data["stats"]["active"], 5)
+        self.assertEqual(data["stats"]["omitted_by_export_validity"], 0)
         by_id = {item["id"]: item for item in data["deals"]}
         for raw in original:
             item = by_id[raw["id"]]
@@ -525,32 +679,34 @@ class FeedTests(unittest.TestCase):
             self.assertTrue(item["carried"])
             self.assertEqual(item["price_eur"], raw["price_eur"])
             self.assertEqual(item["bid_count"], raw["bid_count"])
-            expected = publisher._timestamp(raw["last_seen_at"]) + timedelta(hours=24)
-            self.assertEqual(item["valid_until"], iso(expected))
+            self.assertEqual(item["valid_until"], raw["ends_at"])
             detail = self.read(item["detail_path"])["item"]
             self.assertEqual(detail["source_observed_at"], raw["source_observed_at"])
             self.assertTrue(detail["stale"])
         self.assertEqual(items, original)
         self.assertSchema(data)
 
-    def test_lower_six_hour_buffer_still_drops_seven_hour_observation(self):
+    def test_legacy_six_hour_setting_does_not_drop_older_observation(self):
         publisher.write_feed(self.site, sample([deal(last_seen_at=iso(NOW - timedelta(hours=7)))], criteria={"max_freshness_hours": 6}))
         data = self.read("data/deals.json")
-        self.assertEqual(data["deals"], [])
-        self.assertEqual(data["freshness"]["maximum_source_age_hours"], 6)
-        self.assertEqual(data["criteria"]["max_freshness_hours"], 6)
+        self.assertEqual(len(data["deals"]), 1)
+        self.assertIsNone(data["freshness"]["maximum_source_age_hours"])
+        self.assertEqual(data["freshness"]["description_maximum_age_hours"], 6)
+        self.assertEqual(data["criteria"]["description_max_age_hours"], 6)
 
-    def test_lower_fractional_buffer_honors_its_exact_boundary(self):
+    def test_fractional_text_ttl_has_strict_boundary_but_both_items_remain(self):
         publisher.write_feed(self.site, sample([
-            deal(1, last_seen_at=iso(NOW - timedelta(minutes=29))),
-            deal(2, last_seen_at=iso(NOW - timedelta(minutes=30))),
-        ], criteria={"max_freshness_hours": 0.5}))
+            deal(1, last_seen_at=iso(NOW - timedelta(minutes=29)), content_updated_at=iso(NOW - timedelta(minutes=29))),
+            deal(2, last_seen_at=iso(NOW - timedelta(minutes=30)), content_updated_at=iso(NOW - timedelta(minutes=30))),
+        ], criteria={"description_max_age_hours": 0.5}))
         data = self.read("data/deals.json")
-        self.assertEqual([item["id"] for item in data["deals"]], [deal(1)["id"]])
-        self.assertEqual(data["deals"][0]["valid_until"], iso(NOW + timedelta(minutes=1)))
-        self.assertEqual(data["freshness"]["maximum_source_age_hours"], 0.5)
+        self.assertEqual([item["id"] for item in data["deals"]], [deal(1)["id"], deal(2)["id"]])
+        self.assertEqual(data["deals"][0]["valid_until"], deal(1)["ends_at"])
+        self.assertNotEqual(data["deals"][0]["description"], "")
+        self.assertEqual(data["deals"][1]["description"], "")
+        self.assertEqual(data["freshness"]["description_maximum_age_hours"], 0.5)
 
-    def test_24h_retention_never_renews_a_description_timestamp(self):
+    def test_metadata_retention_never_renews_a_description_timestamp(self):
         changed = iso(NOW - timedelta(hours=23))
         publisher.write_feed(self.site, sample([deal(content_updated_at=changed, description="Older description", stale=True)]))
         item = self.read("data/deals.json")["deals"][0]
@@ -579,11 +735,15 @@ class FeedTests(unittest.TestCase):
         self.assertEqual(item["description"], "")
         self.assertEqual(item["description_status"], "unknown")
 
-    def test_schema_accepts_one_day_buffer_but_not_longer(self):
+    def test_schema_requires_v3_null_source_age_and_bounded_separate_text_ttl(self):
         publisher.write_feed(self.site, sample())
         data = self.read("data/deals.json")
         self.assertSchema(data)
-        data["freshness"]["maximum_source_age_hours"] = 24.01
+        for changes in ({"maximum_source_age_hours": 24}, {"maximum_source_age_hours": 0}, {"description_maximum_age_hours": 24.01}, {"active_window_hours": 0}):
+            invalid = copy.deepcopy(data)
+            invalid["freshness"].update(changes)
+            self.assertTrue(schema_errors(invalid, self.schema, self.schema))
+        data["schema_version"] = 2
         self.assertTrue(schema_errors(data, self.schema, self.schema))
 
     def test_snapshot_is_deterministic_and_covers_full_description(self):
@@ -635,7 +795,7 @@ class FeedTests(unittest.TestCase):
             publisher.write_feed(self.site, sample([deal(), deal(title="Other detail")]))
 
     def test_invalid_timestamp_or_schema_fails_before_mutation(self):
-        for changes in ({"generated_at": "2026-11-07T12:00:00"}, {"schema_version": 1}, {"source_status": "pretend-live"}):
+        for changes in ({"generated_at": "2026-11-07T12:00:00"}, {"schema_version": 1}, {"schema_version": 2}, {"source_status": "pretend-live"}):
             with self.subTest(changes=changes), self.assertRaises(ValueError):
                 publisher.write_feed(self.site, sample(**changes))
         self.assertFalse((self.site / "api/manifest.json").exists())
@@ -719,13 +879,14 @@ class FeedTests(unittest.TestCase):
         for phrase in ("Alle", "snapshot_id", "unvertrauenswürdige Daten", "keine Anweisungen", "Git-Commits", "kein MCP-Server"):
             self.assertIn(phrase, guide)
 
-    def test_guide_separates_buffer_search_horizon_and_source_cache(self):
+    def test_guide_separates_retention_window_warnings_text_and_cache(self):
         publisher.write_feed(self.site, sample())
         guide = (self.site / "api/guide.md").read_text(encoding="utf-8")
         for phrase in (
-            "höchstens 24 Stunden", "Aufbewahrungsgrenze, keine Aktualitätsgarantie",
-            "**Suchfenster:**", "nächsten 24 Stunden", "bis zu 15 Minuten",
-            "„0 Gebote“ nur Angaben vom letzten Quellenstand", "stale", "carried",
+            "höchstens 24 Stunden", "keine Quellenalter-Ablauffrist",
+            "**Aktives Fenster:**", "jetzt + 72 Stunden", "bis zu 15 Minuten",
+            "„0 Gebote“ sind nur Angaben vom letzten Quellenstand", "stale", "carried",
+            "eligibility_without_time_window", "Schema-2-Leser", "48-Stunden-Frist",
         ):
             self.assertIn(phrase, guide)
         self.assertNotIn("sechs Stunden", guide)
@@ -810,13 +971,13 @@ class FeedTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "direct verification"):
             publisher.write_feed(self.site, sample([deal()], provider="auktionen-ohne-gebot"))
 
-    def test_aggregator_source_timestamps_must_be_aware_and_fresh(self):
-        for timestamp in (None, "not-a-time", "2026-11-07T12:00:00", iso(NOW - timedelta(hours=24)), iso(NOW - timedelta(hours=25)), iso(NOW + timedelta(minutes=2))):
+    def test_aggregator_source_timestamps_must_be_aware_and_not_future(self):
+        for timestamp in (None, "not-a-time", "2026-11-07T12:00:00", iso(NOW + timedelta(minutes=2))):
             with self.subTest(timestamp=timestamp):
                 publisher.write_feed(self.site, sample([aggregator_deal(source_observed_at=timestamp)]))
                 dashboard = self.read("data/deals.json")
                 self.assertEqual(dashboard["deals"], [])
-                self.assertEqual(dashboard["stats"]["omitted_by_export_freshness"], 1)
+                self.assertEqual(dashboard["stats"]["omitted_by_export_validity"], 1)
 
     def test_source_fetch_does_not_make_older_observation_newer(self):
         publisher.write_feed(self.site, sample([aggregator_deal(source_observed_at=iso(NOW - timedelta(minutes=30)), last_seen_at=iso(NOW))]))

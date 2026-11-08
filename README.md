@@ -15,6 +15,10 @@ Dafür sind keine eBay-Schlüssel nötig. Der beauftragte Live-Export ist aktivi
 `HUNTER_PUBLISH_LIVE_DATA=false` oder `HUNTER_SOURCE=disabled` schalten ihn ab.
 Quellenfehler werden sichtbar ausgewiesen; Demodaten sind fiktiv und getrennt.
 
+Die allgemeine [Design-Philosophie](DESIGN.md) ist auch für andere Websites
+verwendbar. Die [Fundgrube-Design-Notiz](docs/design-fundgrube.md) beschreibt ihre
+konkrete Anwendung als ruhigen, bildgeführten Auktions-Arbeitsbereich.
+
 ## Was die Anwendung macht
 
 - Liest die öffentlich von Auktionen ohne Gebot verwendete JSON-Schnittstelle
@@ -49,27 +53,41 @@ Die Vorgaben stehen in [config/settings.json](config/settings.json):
 | Aktueller Auktionspreis | höchstens 1 €; über `max_price_eur` konfigurierbar |
 | Gebote | 0 zum letzten Abrufzeitpunkt |
 | Transport | Versand höchstens 15 € **oder** bestätigte Abholung innerhalb 50 km um 69121 Heidelberg |
-| Auktionsende | innerhalb der nächsten 24 Stunden |
-| Speicherpuffer im aktuellen Export | bis zu 24 Stunden seit der letzten Quellenbeobachtung, längstens bis zum Auktionsende |
+| Aktives Auktionsfenster | strikt weniger als 72 Stunden Restlaufzeit; bereits abgelaufene Angebote ausgeschlossen |
+| Speicherfrist im aktuellen Export | bis zum bekannten Auktionsende, unabhängig vom Alter der Quellenbeobachtung; höchstens 800 Datensätze |
 
-**Pufferdauer ist nicht Aktualität.** Bereits gefundene, noch laufende Angebote
+**Aufbewahrung ist nicht Aktualität.** Bereits gefundene, noch laufende Angebote
 werden über mehrere Teilsuchen hinweg nach Artikel-ID zusammengeführt. Ein
 erneuter Export oder ein ausgebliebener Treffer setzt ihren Quellenzeitstempel
 nicht zurück. Ältere Angaben bleiben mit ihrem tatsächlichen Alter und den
 vorhandenen Aktualitätswarnungen sichtbar; Preis und null Gebote sind weiterhin
-nur Angaben zum Beobachtungszeitpunkt. `max_freshness_hours` bezeichnet aus
-Kompatibilitätsgründen diese Aufbewahrungs-/Exportgrenze und ist standardmäßig
-24, nicht eine Zusage 24 Stunden lang aktueller Fakten. Die Grenze von 800
-Datensätzen gilt zusätzlich; genau 24 Stunden alte oder abgelaufene Angebote
-fallen aus dem aktuellen Export. Alte Git-Snapshots werden dadurch nicht gelöscht.
+nur Angaben zum Beobachtungszeitpunkt. Seit Feed-Version 3 gibt es **keine
+altersbasierte Ablaufgrenze für Angebotsmetadaten** mehr: `valid_until` entspricht
+dem Auktionsende, `freshness.retention_basis` ist `auction_end`. Die GUI prüft
+`0 < Restlaufzeit < lookahead_hours` (Standard 72), die Interest-Schwelle und
+übrigen Filter auch bei länger geöffneter Seite. Bekannte, später endende Angebote
+können bereits im Bestand liegen; die Anzeige aktiviert sie erst im Zeitfenster.
+Unbekannte oder zukünftige Beobachtungszeiten werden nicht als verlässlich
+angenommen. Die Grenze von 800 Datensätzen gilt zusätzlich. Alte Git-Snapshots
+werden durch das Entfernen abgelaufener Angebote nicht gelöscht.
+
+Beschreibungstexte haben weiterhin eine **getrennte** Frist von 24 Stunden
+(`description_max_age_hours`); die Standardquelle liefert ohnehin keine
+Verkäufer-Volltexte. Der alte Konfigurationsname `max_freshness_hours` wird nur
+noch als Migrationsalias für diese Textfrist gelesen. Er begrenzt weder
+Sichtbarkeit noch Speicherfrist der Angebotsmetadaten.
 
 Die Quelle unterscheidet davon zwei andere Zeiträume: Ihre
 [Standardsuche](https://auktionen-ohne-gebot.de/suche/) sucht Auktionen, die in
 den **nächsten 24 Stunden enden**; unter den erweiterten Filtern gibt es auch
 „auch später endende Auktionen“. Laut
 [Hilfe](https://auktionen-ohne-gebot.de/hilfe/) werden Ergebnisse höchstens
-**15 Minuten zwischengespeichert**. Unser Suchhorizont bleibt bei 24 Stunden;
-der eigene 24-Stunden-Puffer erweitert ihn nicht und ist kein Quellenarchiv.
+**15 Minuten zwischengespeichert**. Für unseren erweiterten Suchhorizont wird
+der von der öffentlichen Suche verwendete Filter für spätere Enden
+(`endet=alle`) genutzt; die strikte 72-Stunden-Auswahl erfolgt lokal. Es wird
+kein nicht belegter `endet=72h`-Parameter erfunden. Anzahl und Tempo der
+Quellenanfragen bleiben unverändert. Ein größeres Zeitfenster bedeutet deshalb
+nicht automatisch vollständige Abdeckung aller Angebote.
 
 Unbekannt bleibt unbekannt: Fehlende Versandkosten sind nicht kostenloser
 Versand, fehlende Gebotszahlen nicht null Gebote, und fehlender Mindestpreisstatus
@@ -226,7 +244,7 @@ Nutzung und gegebenenfalls nötige Zustimmung müssen geklärt sein.
 Kurzmetadaten, generierte Einschätzungen und die Such-PLZ 69121. Beim Wechsel auf
 eine andere Quelle können zusätzliche Daten hinzukommen. Alte Commits bleiben
 erhalten; das kann mit Lösch- oder Aufbewahrungspflichten kollidieren.
-Der 24-Stunden-Quellenpuffer bereinigt nur den aktuellen
+Das Entfernen abgelaufener Angebote bereinigt nur den aktuellen
 Export, **nicht die Git-Historie**. Auch das spätere Ausschalten des Exports
 löscht frühere Veröffentlichungen nicht. Ohne passende Rechte zur öffentlichen
 Archivierung ist `HUNTER_PUBLISH_LIVE_DATA=false` zu setzen; die Anwendung wird dann
@@ -291,8 +309,9 @@ Die Bewertung gilt nur bei übereinstimmendem Inhalt und höchstens **48 Stunden
 Sie verändert weder Quellenfakten noch `eligibility`; neuere automatische
 API-Bewertungen haben Vorrang. Neue oder inhaltlich veränderte Angebote bleiben
 ohne passende andere Bewertung heuristisch, alte interaktive Reviews verfallen.
-Der 24-Stunden-Quellenpuffer für Angebotsdaten und das Auktionsende gelten unabhängig
-davon weiter. Im Feed kennzeichnen `assessment_basis: llm`,
+Die Speicherfrist bis zum Auktionsende und das aktive 72-Stunden-Fenster gelten
+unabhängig davon weiter; eine gültige Einordnung verjüngt keine Quellenfakten.
+Im Feed kennzeichnen `assessment_basis: llm`,
 `semantic_review_mode: interactive` und `semantic_assessed_at` die Herkunft;
 `interactive_review` fasst die Anwendung zusammen.
 

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "generated_at": null,
   "last_successful_scan_at": null,
   "source_status": "demo",
@@ -15,17 +15,31 @@
     "max_price_eur": 1,
     "max_bids": 0,
     "max_shipping_eur": 15,
-    "lookahead_hours": 24,
-    "max_freshness_hours": 24
+    "lookahead_hours": 72,
+    "description_max_age_hours": 24
+  },
+  "freshness": {
+    "retention_basis": "auction_end",
+    "maximum_source_age_hours": null,
+    "active_window_hours": 72,
+    "source_warning_after_hours": 2,
+    "description_maximum_age_hours": 24,
+    "recheck_at_read_time": true,
+    "retention_not_revalidation": true,
+    "source_currentness_guaranteed": false
   },
   "stats": {
     "received": 7,
-    "shortlisted": 6,
-    "active": 4,
+    "shortlisted": 5,
+    "retained": 7,
+    "active": 6,
+    "outside_active_window": 1,
+    "eligible": 2,
     "excluded": 1,
-    "review": 2,
+    "expired": 1,
+    "review": 3,
     "stale": 2,
-    "carried": 0
+    "carried": 1
   },
   "coverage": {},
   "deals": [
@@ -295,8 +309,8 @@
     },
     {
       "id": "demo-007",
-      "title": "Industrielle Waage – Quellenstand zu alt",
-      "description": "Fiktives Beispiel außerhalb des 24-Stunden-Puffers. Standardmäßig ausgeblendet, obwohl die gespeicherte Endzeit noch nicht erreicht ist.",
+      "title": "Industrielle Waage – ältere Quellenbeobachtung",
+      "description": "Fiktives Beispiel mit 25,2 Stunden altem Quellenstand und vier Stunden Restlaufzeit. Bleibt bei passendem Interest aktiv; Preis, Gebote und Verfügbarkeit sind nicht aktuell bestätigt.",
       "url": "",
       "image": "",
       "price_eur": 1,
@@ -304,7 +318,9 @@
       "bid_count": 0,
       "demo_hours_remaining": 4,
       "demo_last_seen_hours": 25.2,
-      "eligibility": "eligible",
+      "eligibility": "review",
+      "stale": true,
+      "carried": true,
       "reserve_status": "unknown",
       "local_pickup_confirmed": false,
       "pickup_radius_km": 50,
@@ -319,7 +335,7 @@
       "assessment_basis": "llm",
       "assessment_confidence": "low",
       "value_band": "around_500",
-      "value_reason": "Fiktives hochwertiges Messgerät. Die Beobachtung liegt jedoch außerhalb des 24-Stunden-Puffers.",
+      "value_reason": "Fiktives hochwertiges Messgerät mit eigener Anzeige. Die ältere Beobachtung bleibt sichtbar, ist aber keine neue Faktenprüfung.",
       "comparison_links": [],
       "reasons": [
         "Spezialgerät mit niedrigem gespeicherten Gebotspreis"

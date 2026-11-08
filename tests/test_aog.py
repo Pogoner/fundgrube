@@ -261,13 +261,23 @@ class SchedulingTests(unittest.TestCase):
             self.assertEqual(params["kat"], ["12576"])
             self.assertEqual(params["anzahl"], ["48"])
             self.assertEqual(params["sort"], ["ende"])
-            self.assertEqual(params["endet"], ["24h"])
+            self.assertEqual(params["endet"], ["alle"])
             self.assertNotIn("vmax", params)
         self.assertEqual(general["gratis"], ["0"])
         self.assertNotIn("gratis", pickup)
         self.assertEqual(pickup["abholung"], ["1"])
         self.assertEqual(pickup["plz"], ["69121"])
         self.assertEqual(pickup["km"], ["50"])
+        self.assertEqual(result["coverage"]["upstream_end_filter"], "alle")
+        self.assertEqual(result["coverage"]["local_active_window_hours"], 72)
+
+    def test_short_horizon_keeps_verified_day_filter_without_inventing_72h_parameter(self):
+        for lookahead, end_filter in ((1, "24h"), (24, "24h"), (24.01, "alle"), (72, "alle")):
+            with self.subTest(lookahead=lookahead):
+                result, fake, _ = run([robots(), api([]), api([])], settings={"lookahead_hours": lookahead})
+                for request in fake.requests[1:]:
+                    self.assertEqual(parse_qs(urlsplit(request["url"]).query)["endet"], [end_filter])
+                self.assertEqual(result["coverage"]["local_active_window_hours"], lookahead)
 
     def test_next_run_refreshes_zero_and_rotates_tail(self):
         pages = [api([article()], total=1128)] * 5 + [api([])]
@@ -352,7 +362,9 @@ class SchedulingTests(unittest.TestCase):
 
     def test_page_budget_cannot_be_raised_above_verified_bound(self):
         for settings in ({"aog_max_requests_per_run": 7}, {"aog_page_size": 1000}, {"max_price_eur": float("inf")},
-                         {"max_price_eur": 10**400}, {"pickup_radius_km": 10**400}, {"postcode": "69121,evil"}):
+                         {"max_price_eur": 10**400}, {"pickup_radius_km": 10**400}, {"postcode": "69121,evil"},
+                         {"lookahead_hours": True}, {"lookahead_hours": float("inf")}, {"lookahead_hours": 10**400},
+                         {"lookahead_hours": 0}):
             with self.subTest(settings=settings), self.assertRaises(ValueError):
                 run([], settings=settings)
 

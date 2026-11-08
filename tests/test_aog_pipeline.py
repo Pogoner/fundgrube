@@ -120,11 +120,15 @@ class PublicSourcePipelineTests(unittest.TestCase):
                 feed, _ = run(response([item(source_observed_at=value)]))
                 self.assertEqual(feed["deals"], [])
 
-    def test_old_observations_expire_despite_fresh_request(self):
-        for age in (timedelta(hours=24), timedelta(hours=24, seconds=1), timedelta(hours=25)):
+    def test_ongoing_auctions_remain_despite_old_observation(self):
+        for age in (timedelta(hours=24), timedelta(hours=72), timedelta(days=7)):
             with self.subTest(age=age):
                 feed, _ = run(response([item(source_observed_at=iso_time(NOW - age))]))
-                self.assertEqual(feed["deals"], [])
+                row = feed["deals"][0]
+                self.assertEqual(row["last_seen_at"], iso_time(NOW - age))
+                self.assertEqual(row["source_observed_at"], iso_time(NOW - age))
+                self.assertEqual(row["eligibility"], "review")
+                self.assertTrue(row["stale"])
 
     def test_seven_and_twenty_three_hour_source_observations_are_retained_but_stale(self):
         for age in (timedelta(hours=7), timedelta(hours=23), timedelta(hours=24, seconds=-1)):
@@ -138,7 +142,9 @@ class PublicSourcePipelineTests(unittest.TestCase):
                 self.assertTrue(row["stale"])
                 self.assertEqual(row["eligibility"], "review")
                 self.assertEqual(feed["stats"]["stale"], 1)
-                self.assertEqual(feed["criteria"]["max_freshness_hours"], 24)
+                self.assertEqual(feed["criteria"]["description_max_age_hours"], 24)
+                self.assertEqual(feed["criteria"]["lookahead_hours"], 72)
+                self.assertNotIn("max_freshness_hours", feed["criteria"])
                 self.assertEqual(state["records"][0], row)
                 self.assertTrue(any("älter als zwei Stunden" in risk for risk in row["risks"]))
 
@@ -157,8 +163,8 @@ class PublicSourcePipelineTests(unittest.TestCase):
         self.assertEqual(feed["deals"][0]["last_seen_at"], iso_time(OBSERVED))
         self.assertEqual(feed["last_successful_scan_at"], iso_time(NOW))
 
-    def test_cooldown_keeps_twenty_three_hour_cache_without_refreshing_observation(self):
-        observed = iso_time(NOW - timedelta(hours=23))
+    def test_cooldown_keeps_week_old_cache_without_refreshing_observation(self):
+        observed = iso_time(NOW - timedelta(days=7))
         _, previous = run(response([item(source_observed_at=observed)]))
         feed, _ = run(response([], status="cooldown", pages=0), state=previous, at=NOW + timedelta(minutes=10))
         row = feed["deals"][0]
@@ -285,9 +291,9 @@ class PublicSourcePipelineTests(unittest.TestCase):
         self.assertEqual(feed["interactive_review"]["status"], "invalid")
         self.assertEqual(feed["deals"][0]["assessment_basis"], "heuristic")
 
-    def test_valid_interactive_review_stays_on_retained_seven_and_twenty_three_hour_source(self):
+    def test_valid_interactive_review_stays_on_retained_old_source(self):
         reviewed = iso_time(NOW - timedelta(hours=2))
-        for age in (timedelta(hours=7), timedelta(hours=23)):
+        for age in (timedelta(hours=7), timedelta(hours=23), timedelta(days=7)):
             with self.subTest(age=age):
                 source = item(source_observed_at=iso_time(NOW - age))
                 normalized = normalize_item(source, NOW)

@@ -37,27 +37,29 @@
   const aggregatorFeed = () => !isDemo && (isAggregator() || array(feed?.deals).some(isAggregator));
   // An import timestamp cannot make independently observed aggregator data fresh again.
   const observedAt = item => isAggregator(item) ? item.source_observed_at : item.last_seen_at;
-  const maximumRetentionHours = 24;
-  function retentionHours() {
-    const configured = [feed?.criteria?.max_freshness_hours, feed?.freshness?.maximum_source_age_hours]
-      .map(number).filter(value => value !== null && value > 0);
-    return Math.min(maximumRetentionHours, ...configured);
+  function activeWindowHours() {
+    // V1/V2 used a different, observation-based policy. Their old 24-hour
+    // settings must not silently reinstate that policy during migration.
+    const configured = feed?.schema_version >= 3
+      ? number(feed?.freshness?.active_window_hours) ?? number(feed?.criteria?.lookahead_hours) : null;
+    return configured !== null && configured > 0 && configured <= 744 ? configured : 72;
   }
-  const retentionLabel = () => `${String(retentionHours()).replace(".", ",")}-Stunden-Puffer`;
-  const validityDeclared = item => item.valid_until !== undefined;
-  const validityUnknown = item => validityDeclared(item) && !Number.isFinite(timestamp(item.valid_until));
+  const windowLabel = () => `Ende in weniger als ${String(activeWindowHours()).replace(".", ",")} Stunden`;
   const auctionExpired = item => Number.isFinite(timestamp(item.ends_at)) && timestamp(item.ends_at) <= Date.now();
-  const validityExpired = item => Number.isFinite(timestamp(item.valid_until)) && timestamp(item.valid_until) <= Date.now();
   const staleTimestamp = value => !Number.isFinite(timestamp(value)) || Date.now() - timestamp(value) > 7200000 || timestamp(value) > Date.now();
-  const expired = item => auctionExpired(item) || validityExpired(item);
+  const expired = item => auctionExpired(item);
   const stale = item => staleTimestamp(observedAt(item));
-  const tooOld = item => !Number.isFinite(timestamp(observedAt(item))) || Date.now() - timestamp(observedAt(item)) >= retentionHours() * 3600000 || timestamp(observedAt(item)) > Date.now() || validityUnknown(item);
-  function bufferDeadline(item) {
-    const seen = timestamp(observedAt(item));
-    if (!Number.isFinite(seen) || seen > Date.now() || validityUnknown(item)) return null;
-    return new Date(Math.min(seen + retentionHours() * 3600000, ...[timestamp(item.ends_at), timestamp(item.valid_until)].filter(Number.isFinite))).toISOString();
-  }
-  const eligibility = item => ["eligible", "review", "excluded"].includes(item.eligibility) ? item.eligibility : "review";
+  const unknownTime = item => !Number.isFinite(timestamp(observedAt(item))) || timestamp(observedAt(item)) > Date.now() || !Number.isFinite(timestamp(item.ends_at));
+  const outsideWindow = item => Number.isFinite(timestamp(item.ends_at)) && (expired(item) || timestamp(item.ends_at) >= Date.now() + activeWindowHours() * 3600000);
+  const active = item => !outsideWindow(item) && !unknownTime(item);
+  const eligibility = item => {
+    const baseline = item.eligibility_without_time_window;
+    // Only an explicit V3 baseline can release a time-only exclusion when
+    // an auction enters the live reading window; never infer it from prose.
+    const state = feed?.schema_version >= 3 && active(item) && ["eligible", "review", "excluded"].includes(baseline)
+      ? baseline : ["eligible", "review", "excluded"].includes(item.eligibility) ? item.eligibility : "review";
+    return state === "eligible" && stale(item) ? "review" : state;
+  };
   const semanticAssessed = item => item.semantic_assessed === true;
   const valueBand = item => semanticAssessed(item) && ["around_5", "around_50", "around_500"].includes(item.value_band) ? item.value_band : "unknown";
   const scoreValue = value => Number.isInteger(value) && value >= 0 && value <= 100 ? value : null;
@@ -146,8 +148,6 @@
   }
   function timeLabel(item) {
     if (auctionExpired(item)) return "Auktion abgelaufen";
-    if (validityExpired(item)) return "Pufferfrist abgelaufen";
-    if (validityUnknown(item)) return "Pufferfrist ungeklärt";
     return remaining(item.ends_at);
   }
   function bidText(item) {
@@ -169,7 +169,7 @@
     const searchRadius = number(item.pickup_search_radius_km);
     const profileRadius = number(feed?.location?.pickup_radius_km);
     const postcode = item.pickup_search_postcode;
-    return isAggregator(item) && item.pickup_search_confirmed === true && !tooOld(item) && !expired(item)
+    return isAggregator(item) && item.pickup_search_confirmed === true && active(item)
       && typeof postcode === "string" && /^\d{5}$/.test(postcode) && postcode === feed?.location?.postcode
       && searchRadius !== null && searchRadius > 0 && profileRadius !== null && searchRadius <= profileRadius;
   }
@@ -177,7 +177,7 @@
     return confirmedNearby(item) || matchingPickupSearch(item);
   }
   function visibleSignature(items) {
-    return JSON.stringify(items.map(item => [item.id, expired(item), tooOld(item), matchingPickupSearch(item)]));
+    return JSON.stringify(items.map(item => [item.id, outsideWindow(item), unknownTime(item), eligibility(item), matchingPickupSearch(item)]));
   }
   function cheapShipping(item) {
     const max = number(feed?.criteria?.max_shipping_eur);
@@ -228,7 +228,7 @@
       const response = await fetch(demo ? "./data/demo.json" : "./data/deals.json", {cache: "no-store"});
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const json = await response.json();
-      if (!json || !Array.isArray(json.deals) || ![1, 2].includes(json.schema_version)) throw new Error("Nicht unterstütztes Datenformat");
+      if (!json || !Array.isArray(json.deals) || ![1, 2, 3].includes(json.schema_version)) throw new Error("Nicht unterstütztes Datenformat");
       if (json.deals.some(item => !item || typeof item !== "object" || typeof item.id !== "string")) throw new Error("Angebotsdaten unvollständig");
       feed = demo ? demoTimes(json) : json;
       isDemo = demo || feed.source_status === "demo";
@@ -284,9 +284,9 @@
     if (number(criteria.max_bids) !== null) badges.push(criteria.max_bids === 0 ? "0 Gebote gesucht" : `bis ${criteria.max_bids} Gebote`);
     if (number(criteria.max_shipping_eur) !== null) badges.push(`Versand ≤ ${money(criteria.max_shipping_eur)}`);
     if (number(loc.pickup_radius_km) !== null) badges.push(`Abholsuche ${loc.pickup_radius_km} km`);
-    if (number(criteria.lookahead_hours) !== null) badges.push(`Ende ≤ ${criteria.lookahead_hours} Std.`);
+    badges.push(`Ende < ${activeWindowHours()} Std.`);
     els.criteria.innerHTML = (badges.length ? badges : ["Suchkriterien offen"]).map(value => `<span>${esc(value)}</span>`).join("");
-    const buffered = feed.deals.filter(item => !expired(item) && !tooOld(item) && eligibility(item) !== "excluded");
+    const buffered = feed.deals.filter(item => active(item) && eligibility(item) !== "excluded");
     const pending = buffered.filter(item => !scores(item).complete).length;
     const review = buffered.filter(item => eligibility(item) === "review").length;
     const minimum = minimumInterest();
@@ -298,8 +298,8 @@
     els["metric-highvalue"].textContent = String(buffered.filter(meetsInterest).length);
     els["minimum-interest-value"].textContent = String(minimum);
     els["show-all-interest"].setAttribute("aria-pressed", String(minimum === 0));
-    els["show-stale-label"].textContent = `Außerhalb des ${retentionLabel()}s / undatiert`;
-    els["retention-note"].textContent = `${retentionLabel()} · keine Live-Prüfung`;
+    els["show-stale-label"].textContent = "Unklare Zeitstempel anzeigen";
+    els["retention-note"].textContent = `${windowLabel()} · Quellenalter bleibt sichtbar`;
     els["metric-updated"].textContent = isDemo ? "DEMO" : dateText(feed.generated_at);
     els["metric-source"].textContent = isDemo ? "Keine echten Auktionen" : interactiveReviewText() || statuses[feed.source_status] || "Status unbekannt";
     els["source-attribution"].innerHTML = isDemo ? "Fiktive Beispieldaten" : aggregatorFeed() ? `Aggregator-Cache · nicht direkt verifiziert · ${sourceLink() || sourceLink(feed.deals.find(item => providerOf(item) === aggregatorProvider)) || "Drittquelle"}` : "Quellenstand aus veröffentlichtem Snapshot";
@@ -309,8 +309,8 @@
     const query = els.search.value.trim().toLocaleLowerCase("de-DE");
     const list = (feed?.deals || []).filter(item => {
       const state = eligibility(item);
-      if (!els["show-expired"].checked && expired(item)) return false;
-      if (!els["show-stale"].checked && tooOld(item)) return false;
+      if (!els["show-expired"].checked && outsideWindow(item)) return false;
+      if (!els["show-stale"].checked && unknownTime(item)) return false;
       if (!meetsInterest(item)) return false;
       if (els.eligibility.value === "active" ? state === "excluded" : state !== els.eligibility.value) return false;
       if (query && ![item.title, item.description, item.city, item.condition].filter(Boolean).join(" ").toLocaleLowerCase("de-DE").includes(query)) return false;
@@ -338,30 +338,51 @@
     return list;
   }
 
-  function card(item) {
-    const picture = imageUrl(item.image);
+  function card(item, index) {
+    const picture = isDemo ? null : imageUrl(item.image);
     const url = isDemo ? null : itemUrl(item.url);
     const state = eligibility(item);
     const rating = scores(item);
-    const symbol = String(item.title || "FG").trim().slice(0, 2).toUpperCase();
     const rationale = typeof item.value_reason === "string" && item.value_reason.trim() ? item.value_reason : array(item.reasons)[0];
-    const preview = typeof item.description === "string" && item.description.trim() ? item.description : rationale ? `Einordnung: ${rationale}` : "Keine Beschreibung verfügbar; Details im Original prüfen.";
+    const preview = rationale || "Noch keine begründete Einordnung. Lieferumfang und Zustand im Original prüfen.";
     const risks = array(item.risks).slice(0, 2);
     return `<article class="deal-card${expired(item) ? " expired" : ""}" data-id="${esc(item.id)}">
-      <div class="card-top"><div class="card-visual">${picture && !isDemo ? `<img alt="Foto zum Angebot" loading="lazy" referrerpolicy="no-referrer" src="${esc(picture)}" />` : `<span class="shape" aria-hidden="true">${esc(symbol)}</span>`}</div><div class="card-info">
-        <div class="card-kicker"><span class="score-badge ${state}">${esc(potentialLabel(item))}</span><span class="time-badge" data-ends-at="${esc(item.ends_at)}"${validityDeclared(item) ? ` data-valid-until="${esc(item.valid_until)}"` : ""}>${esc(timeLabel(item))}</span></div>
-        <h3>${esc(item.title || "Angebot ohne Titel")}</h3><p class="card-descr">${esc(preview)}</p>
-      </div></div>
-      <div class="card-bottom">
+      <div class="card-visual${picture ? " image-loading" : " image-missing"}">
+        ${picture ? `<img class="offer-image" alt="${esc("Angebotsfoto: " + (item.title || "Objekt"))}" width="720" height="450" loading="${index < 3 ? "eager" : "lazy"}" fetchpriority="${index === 0 ? "high" : "auto"}" decoding="async" referrerpolicy="no-referrer" src="${esc(picture)}" />` : ""}
+        <span class="image-fallback"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" aria-hidden="true"><rect x="7" y="10" width="34" height="28" rx="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="20" r="3" stroke="currentColor" stroke-width="1.5"/><path d="m9 35 10-10 7 6 6-7 8 10" stroke="currentColor" stroke-width="1.5"/></svg><strong class="image-state">${picture ? "Bild wird geladen …" : isDemo ? "Fiktives Beispiel" : "Kein Bild in der Quelle"}</strong><span>${picture ? "Originalfoto von eBay" : isDemo ? "Keine echte Auktion" : "Objekt im Originalangebot ansehen"}</span></span>
+        ${picture ? `<a class="image-source-link" href="${esc(picture)}" target="_blank" rel="noopener noreferrer" hidden>Originalbild öffnen ↗</a>` : ""}
+      </div>
+      <div class="card-content">
+        <div class="card-kicker"><span class="score-badge ${state}">${esc(potentialLabel(item))}</span><span class="time-badge" data-ends-at="${esc(item.ends_at)}">${esc(timeLabel(item))}</span></div>
+        <h3>${esc(item.title || "Angebot ohne Titel")}</h3>
+        <p class="card-descr"><span class="reason-label">Einordnung</span>${esc(preview)}</p>
         <div class="score-panel${rating.complete ? "" : " score-pending"}" aria-label="Getrennte Angebotsbewertung"><div class="interest-score"><small>INTEREST</small><strong>${rating.interest ?? "—"}</strong><span>${rating.interest === null ? "noch offen" : "/ 100"}</span></div><div class="component-scores"><div><span>Scalp${rating.legacy && rating.scalp !== null ? " · Altwert" : ""}</span><strong>${rating.scalp ?? "—"}</strong></div><div><span>Useability</span><strong>${rating.useability ?? "—"}</strong></div><p>${esc(basisText(item))}${semanticAssessed(item) ? ` · Konfidenz ${esc(confidenceText(item))}` : ""}</p></div></div>
         <div class="offer-price"><div><small>${isAggregator(item) ? "LAUT QUELLE" : "BEIM SCAN"} · ${esc(bidText(item).toUpperCase())}</small><strong>${esc(money(item.price_eur))}</strong></div><span>${esc(item.condition || "Zustand unbekannt")}</span></div>
         <p class="delivery">${esc(transportText(item))}</p>
         <p class="card-notes">${esc(reserveText(item))}</p>
         ${risks.length ? `<p class="card-risks"><span aria-hidden="true">!</span> ${risks.map(value => esc(String(value).slice(0, 180))).join(" · ")}</p>` : ""}
         <p class="card-meta"><span class="${stale(item) ? "freshness-warning" : ""}" data-last-seen="${esc(observedAt(item))}">${esc(sourceAgeText(observedAt(item)))}</span></p>
-        ${tooOld(item) ? `<p class="card-notes freshness-warning">Außerhalb des ${esc(retentionLabel())}s / Zeitstempel ungeklärt.</p>` : ""}
-        <div class="card-action"><button type="button" class="primary-button detail-open" data-id="${esc(item.id)}" aria-label="${esc("Details prüfen: " + (item.title || item.id))}">Details prüfen ↗</button>${url ? `<a class="outline-button" target="_blank" rel="noopener noreferrer" href="${esc(url)}">Bei eBay ↗</a>` : `<button class="outline-button" type="button" disabled>${isDemo ? "Demo" : "Kein Link"}</button>`}</div>
+        ${unknownTime(item) || outsideWindow(item) ? `<p class="card-notes freshness-warning">${unknownTime(item) ? "Zeitstempel ungeklärt." : "Außerhalb des aktiven Zeitfensters."} Nur durch Debug-Filter sichtbar.</p>` : ""}
+        <div class="card-action"><button type="button" class="primary-button detail-open" data-id="${esc(item.id)}" aria-label="${esc("Details prüfen: " + (item.title || item.id))}">Einordnung & Details</button>${url ? `<a class="outline-button" target="_blank" rel="noopener noreferrer" href="${esc(url)}">eBay ↗</a>` : `<button class="outline-button" type="button" disabled>${isDemo ? "Demo" : "Kein Link"}</button>`}</div>
       </div></article>`;
+  }
+  function initializeImages() {
+    els.cards.querySelectorAll(".offer-image").forEach(image => {
+      const frame = image.parentElement;
+      const update = loaded => {
+        frame.classList.toggle("image-loading", false);
+        frame.classList.toggle("image-loaded", loaded);
+        frame.classList.toggle("image-failed", !loaded);
+        image.hidden = !loaded;
+        frame.querySelector(".image-fallback").hidden = loaded;
+        frame.querySelector(".image-source-link").hidden = loaded;
+        if (!loaded) frame.querySelector(".image-state").textContent = "Bild konnte nicht geladen werden";
+      };
+      image.addEventListener("load", () => update(true));
+      image.addEventListener("error", () => update(false));
+      // A cached image may have completed before listeners were registered.
+      if (image.complete) update(image.naturalWidth > 0);
+    });
   }
   function renderCards() {
     const list = visibleDeals();
@@ -369,14 +390,15 @@
     visibleIds = visibleSignature(list);
     els["result-count"].textContent = `(${list.length} / ${feed.deals.length})`;
     els.cards.innerHTML = list.map(card).join("");
-    const hiddenExpired = feed.deals.filter(expired).length;
-    const hiddenStale = feed.deals.filter(item => tooOld(item) && (els["show-expired"].checked || !expired(item))).length;
-    const pending = feed.deals.filter(item => !expired(item) && !tooOld(item) && !scores(item).complete).length;
+    initializeImages();
+    const hiddenOutside = feed.deals.filter(outsideWindow).length;
+    const hiddenUnknown = feed.deals.filter(item => unknownTime(item) && (els["show-expired"].checked || !outsideWindow(item))).length;
+    const pending = feed.deals.filter(item => active(item) && !scores(item).complete).length;
     const minimum = minimumInterest();
-    els["result-summary"].textContent = `${list.length} von ${feed.deals.length} gespeicherten Angeboten sichtbar · ${minimum ? `Interest ≥ ${minimum}` : "alle Score-Stände"}${pending ? ` · ${pending} duale Bewertungen offen` : ""}${!els["show-expired"].checked && hiddenExpired ? ` · ${hiddenExpired} abgelaufen` : ""}${!els["show-stale"].checked && hiddenStale ? ` · ${hiddenStale} außerhalb Puffer / undatiert` : ""}${els["show-stale"].checked || els["show-expired"].checked ? " · ACHTUNG: ungültige / alte Beobachtungen zugelassen" : ""}${isDemo ? " · fiktive Beispiele" : ""}`;
+    els["result-summary"].textContent = `${list.length} von ${feed.deals.length} gespeicherten Angeboten sichtbar · ${minimum ? `Interest ≥ ${minimum}` : "alle Score-Stände"}${pending ? ` · ${pending} duale Bewertungen offen` : ""}${!els["show-expired"].checked && hiddenOutside ? ` · ${hiddenOutside} außerhalb Zeitfenster` : ""}${!els["show-stale"].checked && hiddenUnknown ? ` · ${hiddenUnknown} Zeitstempel ungeklärt` : ""}${els["show-stale"].checked || els["show-expired"].checked ? " · ACHTUNG: Debug-Filter lässt ungültige Zeitstände zu" : ""}${isDemo ? " · fiktive Beispiele" : ""}`;
     els.empty.hidden = list.length > 0;
     els["empty-show-all-interest"].hidden = minimum === 0 || !feed.deals.length;
-    els["empty-description"].textContent = feed.deals.length ? `Kein Angebot erfüllt diese Filter${minimum ? ` und Interest ≥ ${minimum}` : ""}. Mit „Alles (0)“ werden auch unvollständige Bewertungen sichtbar. ${retentionLabel()}, Auktionsende und Datenfrist gelten weiterhin.` : "Noch keine Angebote im Snapshot. Den Quellenstatus oben prüfen; die Demo enthält ausschließlich fiktive Beispiele.";
+    els["empty-description"].textContent = feed.deals.length ? `Kein Angebot erfüllt diese Filter${minimum ? ` und Interest ≥ ${minimum}` : ""}. „Alles (0)“ zeigt auch unvollständige Bewertungen. Aktives Zeitfenster: ${windowLabel().toLowerCase()}; bereits abgelaufene Angebote bleiben ausgeblendet.` : "Noch keine Angebote im Snapshot. Den Quellenstatus oben prüfen; die Demo enthält ausschließlich fiktive Beispiele.";
     if (activeId) Array.from(els.cards.querySelectorAll(".detail-open")).find(button => button.dataset.id === activeId)?.focus({preventScroll: true});
   }
   function render() {
@@ -396,7 +418,7 @@
     const fields = [
       [isAggregator(item) ? "Gebotspreis laut Quelle" : "Gebotspreis beim Scan", money(item.price_eur), false], [isAggregator(item) ? "Gebote laut Quelle" : "Gebote beim Scan", bidText(item), number(item.bid_count) === null],
       ["Auktionsende (Berlin)", dateText(item.ends_at), !Number.isFinite(timestamp(item.ends_at))], ["Mindestpreis", reserveText(item), !["none", "met"].includes(item.reserve_status)],
-      ["Puffer höchstens bis (Berlin)", dateText(bufferDeadline(item)), expired(item) || tooOld(item)],
+      ["Metadaten bis Auktionsende", dateText(item.ends_at), expired(item) || unknownTime(item)],
       ["Versand", money(item.shipping_eur), number(item.shipping_eur) === null], ["Standort", [item.city, item.postcode].filter(Boolean).join(" · ") || "Unbekannt", false],
       [isAggregator(item) ? "Zustand laut Quelle" : "Zustand laut Anzeige", item.condition || "Unbekannt", !item.condition], ["Prüfstatus", ({eligible:"Kandidat", review:"Noch zu prüfen", excluded:"Ausgeschlossen"})[eligibility(item)], eligibility(item) !== "eligible"],
       ["Interest", rating.interest === null ? "Noch offen" : `${rating.interest} / 100`, rating.interest === null],
@@ -406,7 +428,7 @@
     ];
     if (interactiveAssessed(item)) fields.push(["ChatGPT-Sichtung (Berlin)", dateText(item.semantic_assessed_at), !Number.isFinite(timestamp(item.semantic_assessed_at))]);
     els["dialog-content"].innerHTML = `${isDemo ? '<p class="demo-stamp">FIKTIVES BEISPIEL · KEINE ECHTE AUKTION</p>' : ""}
-      <p class="detail-disclaimer">${isDemo ? "Alle folgenden Angaben sind erfunden und dienen nur zur Demonstration." : `${isAggregator(item) ? "Beim Aggregator beobachtet" : "Quellenstand"}: ${esc(dateText(observedAt(item)))} (Berlin). ${isAggregator(item) ? "Zwischengespeicherte Drittquelle, nicht direkt bei eBay verifiziert. " : ""}${stale(item) ? "Ältere Quellenbeobachtung oder Datenalter nicht belegt: nicht aktuell bestätigt. " : ""}${expired(item) || tooOld(item) ? "Auktion, Datenfrist oder Aufbewahrungsfenster abgelaufen beziehungsweise ungeklärt. " : ""}${esc(retentionLabel())} bedeutet Aufbewahrung, keine erneute Prüfung. Vor jedem Gebot Preise, Mitbieter, Zustand, Versand und Mindestpreis bei eBay kontrollieren.`}</p>
+      <p class="detail-disclaimer">${isDemo ? "Alle folgenden Angaben sind erfunden und dienen nur zur Demonstration." : `${isAggregator(item) ? "Beim Aggregator beobachtet" : "Quellenstand"}: ${esc(dateText(observedAt(item)))} (Berlin). ${isAggregator(item) ? "Zwischengespeicherte Drittquelle, nicht direkt bei eBay verifiziert. " : ""}${stale(item) ? "Ältere Quellenbeobachtung oder Datenalter nicht belegt: nicht aktuell bestätigt. " : ""}${outsideWindow(item) || unknownTime(item) ? "Außerhalb des aktiven Zeitfensters oder Zeitstempel ungeklärt. " : ""}Metadaten bleiben bis zum Auktionsende erhalten; ihr Quellenalter wird dadurch nicht erneuert. Aktive Auswahl: ${esc(windowLabel().toLowerCase())}. Vor jedem Gebot Preise, Mitbieter, Zustand, Versand und Mindestpreis bei eBay kontrollieren.`}</p>
       <div class="detail-grid">${fields.map(([label, value, warning]) => `<div class="detail-cell${warning ? " warning" : ""}"><small>${esc(label)}</small><strong>${esc(value)}</strong></div>`).join("")}</div>
       <p>${esc(transportText(item))}</p>
       <div class="dialog-section"><h3>Warum auf der Liste?</h3>${list(item.reasons)}</div>
@@ -476,14 +498,20 @@
   els["refresh-button"].addEventListener("click", () => load(isDemo));
   $("#close-dialog").addEventListener("click", () => els["detail-dialog"].close());
   els["detail-dialog"].addEventListener("click", event => { if (event.target === els["detail-dialog"]) els["detail-dialog"].close(); });
-  els["detail-dialog"].addEventListener("close", () => { selectedId = null; ++detailSequence; });
+  els["detail-dialog"].addEventListener("close", () => {
+    const id = selectedId;
+    selectedId = null;
+    ++detailSequence;
+    const opener = Array.from(els.cards.querySelectorAll(".detail-open")).find(button => button.dataset.id === id);
+    (opener || els.search).focus({preventScroll: true});
+  });
   setInterval(() => {
     if (!feed || loading || document.hidden) return;
     renderStatus();
     renderProfile();
     if (visibleSignature(visibleDeals()) !== visibleIds) renderCards();
     else {
-      els.cards.querySelectorAll("[data-ends-at]").forEach(node => { node.textContent = timeLabel({ends_at: node.dataset.endsAt, valid_until: node.dataset.validUntil}); });
+      els.cards.querySelectorAll("[data-ends-at]").forEach(node => { node.textContent = timeLabel({ends_at: node.dataset.endsAt}); });
       els.cards.querySelectorAll("[data-last-seen]").forEach(node => {
         node.textContent = sourceAgeText(node.dataset.lastSeen);
         node.classList.toggle("freshness-warning", staleTimestamp(node.dataset.lastSeen));

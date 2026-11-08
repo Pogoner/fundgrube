@@ -166,6 +166,8 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
     risks: list[str] = []
     failed: list[str] = []
     unknown: list[str] = []
+    time_failed: list[str] = []
+    time_unknown: list[str] = []
     price = finite_number(item.get("price_eur"))
     shipping = finite_number(item.get("shipping_eur"))
     distance = finite_number(item.get("distance_km"))
@@ -177,12 +179,12 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
     delivery = shipping is not None and shipping <= max_shipping
     points = 0
     if price is None:
-        unknown.append("Aktueller Auktionspreis unbekannt")
+        unknown.append("Beobachteter Auktionspreis unbekannt")
     elif price > float(settings.get("max_price_eur", 10)):
-        failed.append("Aktueller Preis über dem Suchlimit")
+        failed.append("Beobachteter Preis über dem Suchlimit")
     else:
         points += 12 if price <= 1 else 7
-        reasons.append("Aktueller Auktionspreis höchstens 1 €" if price <= 1 else "Aktueller Auktionspreis unter dem Suchlimit")
+        reasons.append("Beobachteter Auktionspreis höchstens 1 €" if price <= 1 else "Beobachteter Auktionspreis unter dem Suchlimit")
     bids = item.get("bid_count")
     if bids is None:
         unknown.append("Gebotszahl unbekannt")
@@ -212,17 +214,16 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
         unknown.append("Auktionsformat nicht bestätigt")
     end = parse_time(item.get("ends_at"))
     if not end:
-        unknown.append("Ablaufdatum unbekannt")
+        time_unknown.append("Ablaufdatum unbekannt")
     elif end <= at:
-        failed.append("Angebot abgelaufen")
-    elif end > at + timedelta(hours=float(settings.get("lookahead_hours", 24))):
-        failed.append("Ablauf außerhalb des Suchfensters")
+        time_failed.append("Angebot abgelaufen")
+    elif end >= at + timedelta(hours=float(settings.get("lookahead_hours", 72))):
+        time_failed.append("Ablauf außerhalb des Suchfensters")
     seen = parse_time(item.get("last_seen_at"))
     if not seen or seen > at:
         unknown.append("Quellenstand unbekannt oder unplausibel")
-    elif at - seen >= timedelta(hours=min(24, float(settings.get("max_freshness_hours", 24)))):
-        failed.append("Quellenstand hat das zulässige Aufbewahrungsfenster erreicht")
     elif at - seen > timedelta(hours=2):
+        unknown.append("Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen")
         risks.append("Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen")
     reserve = item.get("reserve_status", "unknown")
     if reserve == "not_met":
@@ -236,6 +237,12 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
         unknown.append("Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen")
     if item.get("verification_level") == "aggregator":
         risks.append("Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen")
+    # Static clients may see an auction cross the lookahead boundary before
+    # the next build. Preserve all non-time constraints explicitly so they can
+    # recompute that boundary without weakening price/bid/shipping exclusions.
+    eligibility_without_time_window = "excluded" if failed else ("review" if unknown else "eligible")
+    failed += time_failed
+    unknown += time_unknown
     eligibility = "excluded" if failed else ("review" if unknown else "eligible")
     assessment = heuristic_assessment(item)
     # Keep the historical fact tally only for audit and explicit V1 review
@@ -244,6 +251,7 @@ def assess_item(item: dict[str, Any], settings: dict[str, Any], at: datetime) ->
     result.update(assessment)
     result.update({
         "eligibility": eligibility, "eligibility_reasons": failed + unknown,
+        "eligibility_without_time_window": eligibility_without_time_window,
         "semantic_assessed": True, "assessment_basis": "heuristic",
         "fact_score": fact_points, "local_pickup_confirmed": local,
         "fact_reasons": _unique(reasons), "fact_risks": _unique(failed + unknown + risks),

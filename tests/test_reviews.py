@@ -254,10 +254,8 @@ class ApplyReviewsTests(unittest.TestCase):
         _, metadata = apply_reviews([source], sealed(), at)
         self.assertEqual(metadata["applied"], 1)
 
-    def test_stale_future_unknown_and_expired_source_skipped(self):
-        for change in ({"last_seen_at": stamp(NOW - timedelta(hours=24, seconds=1))},
-                       {"last_seen_at": stamp(NOW - timedelta(hours=24))},
-                       {"last_seen_at": stamp(NOW + timedelta(seconds=1))}, {"last_seen_at": None},
+    def test_future_unknown_and_expired_source_skipped(self):
+        for change in ({"last_seen_at": stamp(NOW + timedelta(seconds=1))}, {"last_seen_at": None},
                        {"ends_at": stamp(NOW)}, {"ends_at": None}):
             with self.subTest(change=change):
                 source = item(**change)
@@ -265,9 +263,9 @@ class ApplyReviewsTests(unittest.TestCase):
                 self.assertEqual(result, [source])
                 self.assertEqual(metadata["skipped_stale"], 1)
 
-    def test_seven_and_twenty_three_hour_observations_keep_valid_review_without_revalidation(self):
+    def test_old_observations_keep_valid_review_without_revalidation(self):
         reviewed = NOW - timedelta(hours=2)
-        for age in (timedelta(hours=7), timedelta(hours=23), timedelta(hours=24, seconds=-1)):
+        for age in (timedelta(hours=7), timedelta(hours=23), timedelta(hours=24), timedelta(days=7)):
             with self.subTest(age=age):
                 source = item(last_seen_at=stamp(NOW - age), stale=True, carried=True)
                 snapshot = feed([source])

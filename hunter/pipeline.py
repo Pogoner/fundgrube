@@ -24,15 +24,16 @@ from .ranking import assess_item
 ROOT = Path(__file__).resolve().parents[1]
 SETTINGS_PATH = ROOT / "config" / "settings.json"
 STATE_VERSION = 2
+FEED_VERSION = 3
 MAX_INPUT_BYTES = 32 * 1024 * 1024
 MODES = ("delivery", "pickup")
 DEFAULTS = {
     "marketplace": "EBAY_DE", "root_category_id": "12576", "postcode": "69121",
     "pickup_radius_km": 50, "max_price_eur": 10, "max_shipping_eur": 15,
-    "max_bids": 0, "lookahead_hours": 24,
+    "max_bids": 0, "lookahead_hours": 72,
     "browse_daily_budget": 4500, "browse_calls_per_run": 85,
     "max_pages_per_category": 2, "categories_per_run": 20,
-    "detail_limit_per_run": 35, "max_freshness_hours": 24,
+    "detail_limit_per_run": 35, "description_max_age_hours": 24,
     "refresh_after_minutes": 90, "max_records": 800,
     "max_ai_items_per_run": 20, "api_page_size": 50,
     "schedule_interval_minutes": 10, "aog_max_requests_per_run": 4,
@@ -43,7 +44,7 @@ RECORD_FIELDS = frozenset({
     "shipping_eur", "bid_count", "ends_at", "last_seen_at", "content_updated_at",
     "city", "postcode", "country", "distance_km", "condition", "buying_options",
     "is_auction", "reserve_status", "local_pickup_confirmed", "pickup_radius_km",
-    "details_fetched", "eligibility", "eligibility_reasons", "interest_score", "score",
+    "details_fetched", "eligibility", "eligibility_reasons", "eligibility_without_time_window", "interest_score", "score",
     "reasons", "risks", "value_band", "assessment_confidence", "assessment_basis",
     "semantic_assessed", "semantic_assessed_at", "value_reason", "fact_score", "fact_reasons", "fact_risks",
     "product_kind", "semantic_interest", "next_checks", "total_known_eur",
@@ -79,6 +80,13 @@ def validate_settings(settings: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(settings, Mapping):
         raise ConfigurationError("Settings must be a JSON object.")
     result = {**DEFAULTS, **dict(settings)}
+    # The old source-age limit now migrates only the separate text TTL. An
+    # unchanged observation is never a reason to expire an ongoing auction.
+    if "max_freshness_hours" in settings:
+        _finite(settings["max_freshness_hours"], "max_freshness_hours", 0.01, 24)
+        if "description_max_age_hours" not in settings:
+            result["description_max_age_hours"] = settings["max_freshness_hours"]
+        result.pop("max_freshness_hours", None)
     try:
         json.dumps(result, allow_nan=False)
     except (ValueError, TypeError):
@@ -103,7 +111,7 @@ def validate_settings(settings: Mapping[str, Any]) -> dict[str, Any]:
     for key, bounds in {
         "max_price_eur": (0, 1000000000), "max_shipping_eur": (0, 1000000),
         "pickup_radius_km": (0.01, 1000), "lookahead_hours": (0.01, 744),
-        "max_freshness_hours": (0.01, 24), "refresh_after_minutes": (1, 180),
+        "description_max_age_hours": (0.01, 24), "refresh_after_minutes": (1, 180),
     }.items():
         _finite(result[key], key, *bounds)
     return result
@@ -161,12 +169,16 @@ def _public_record(item: dict[str, Any]) -> dict[str, Any]:
     return {key: copy.deepcopy(value) for key, value in item.items() if key in RECORD_FIELDS}
 
 
-def _fresh(item: Any, at: datetime, settings: Mapping[str, Any]) -> bool:
-    """Within the retention window, not a claim of newly verified facts."""
+def _retained(item: Any, at: datetime) -> bool:
+    """Keep known, ongoing auctions until their end, not until a source TTL.
+
+    Observation age is a warning about facts, never a listing lifetime. The
+    active lookahead window is a separate eligibility check, recomputed each run.
+    """
     if not isinstance(item, dict) or not isinstance(item.get("id"), str) or not item["id"]:
         return False
     end, seen = parse_time(item.get("ends_at")), parse_time(item.get("last_seen_at"))
-    return bool(end and seen and at < end and seen <= at and at - seen < timedelta(hours=settings["max_freshness_hours"]))
+    return bool(end and seen and at < end and seen <= at)
 
 
 def _sort_key(item: Mapping[str, Any]) -> tuple[Any, ...]:
@@ -176,9 +188,24 @@ def _sort_key(item: Mapping[str, Any]) -> tuple[Any, ...]:
     return (eligibility, -score, str(item.get("ends_at", "")), str(item.get("id", "")))
 
 
+def _reviewed_capacity_order(rows: list[dict[str, Any]], review_doc: dict | None, at: datetime) -> list[dict[str, Any]]:
+    """Restore only validated local reviews before irreversible capacity cuts.
+
+    Recomputing facts starts every row with its heuristic. Discarding rows at
+    that point can lose an already reviewed high-priority item permanently.
+    This pass performs no model or source requests; expiry, content hashes and
+    factual eligibility still govern which annotations may be reused. The
+    normal post-API pass remains responsible for precedence and public counts.
+    """
+    if review_doc is not None:
+        from .reviews import apply_reviews
+        rows, _ = apply_reviews(rows, review_doc, at)
+    return sorted(rows, key=_sort_key)
+
+
 def _clear_stale_description(item: dict, at: datetime, settings: Mapping) -> dict:
     updated = parse_time(item.get("content_updated_at"))
-    if not updated or updated > at or at - updated >= timedelta(hours=settings["max_freshness_hours"]):
+    if not updated or updated > at or at - updated >= timedelta(hours=settings["description_max_age_hours"]):
         item["description"] = ""
     return item
 
@@ -212,7 +239,7 @@ def _upsert(records: dict, item: dict, at: datetime, settings: Mapping, assess: 
             item = current
         elif (not item.get("details_fetched") and old.get("description") and old.get("details_fetched")
               and parse_time(old.get("content_updated_at"))
-              and timedelta(0) <= at - parse_time(old["content_updated_at"]) < timedelta(hours=settings["max_freshness_hours"])):
+              and timedelta(0) <= at - parse_time(old["content_updated_at"]) < timedelta(hours=settings["description_max_age_hours"])):
             item = dict(item)
             item["description"] = old["description"]
             item["content_updated_at"] = old.get("content_updated_at", old.get("last_seen_at"))
@@ -321,7 +348,7 @@ def _discover(client: Any, state: dict, records: dict, settings: dict, at: datet
                 return
     if len(due) > detail_limit:
         _block(blockers, "refresh_pending", "Nicht alle fälligen Detailprüfungen passen in diesen Lauf.",
-               f"Ältere Daten bleiben als prüfbedürftig markiert und werden spätestens nach {settings['max_freshness_hours']:g} Stunden oder bei Auktionsende entfernt.")
+               "Ältere Angaben bleiben bis zum Auktionsende als prüfbedürftig erhalten; ihr Beobachtungszeitpunkt wird nicht erneuert.")
     leaves = _taxonomy(client, state, settings, at, manual_ids)
     ids, cursor = [row["id"] for row in leaves], state["cursor"]
     stats["categories_total"] = len(ids)
@@ -451,7 +478,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         # eBay details under an aggregator-only claim (or vice versa).
         if isinstance(cached, dict) and ((source == "aog") != (cached.get("source_provider") == "auktionen-ohne-gebot")):
             continue
-        if _fresh(cached, at, settings):
+        if _retained(cached, at):
             item = _public_record(cached)
             _clear_stale_description(item, at, settings)
             item.update(carried=True, stale=at - parse_time(item["last_seen_at"]) >= timedelta(minutes=settings["refresh_after_minutes"]))
@@ -549,12 +576,15 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                 calls_this_run = _count(client.calls_used, "client.calls_used", 0, 1000000)
                 state["daily_budget"]["calls_used"] += calls_this_run
                 state["cursor"]["offset"] = 0
-                state["records"] = sorted((_public_record(row) for row in records.values() if _fresh(row, at, settings)), key=_sort_key)[:settings["max_records"]]
+                checkpoint_rows = [_public_record(row) for row in records.values() if _retained(row, at)]
+                state["records"] = _reviewed_capacity_order(checkpoint_rows, review_doc, at)[:settings["max_records"]]
                 if checkpoint is not None:
                     checkpoint(state)
             if scan["searches_succeeded"]:
                 state["last_successful_scan_at"] = iso_time(at)
-    rows = sorted((_public_record(row) for row in records.values() if _fresh(row, at, settings)), key=_sort_key)
+    rows = [_public_record(row) for row in records.values() if _retained(row, at)]
+    capacity_reviews = review_doc if status not in {"unconfigured", "disabled"} else None
+    rows = _reviewed_capacity_order(rows, capacity_reviews, at)
     omitted_records = max(0, len(rows) - settings["max_records"])
     rows = rows[:settings["max_records"]]
     semantic = {"ai_enabled": False, "llm_status": "disabled", "calls_used": 0,
@@ -580,7 +610,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         interactive_review["status"] = {"ok": "applied", "partial": "applied", "absent": "none",
                                         "future": "invalid"}.get(review_meta.get("status"), review_meta.get("status", "invalid"))
         interactive_review["available"] = review_meta.get("total", 0)
-    rows = sorted((_public_record(row) for row in rows if _fresh(row, at, settings)), key=_sort_key)
+    rows = sorted((_public_record(row) for row in rows if _retained(row, at)), key=_sort_key)
     state["records"], state["updated_at"] = rows[:settings["max_records"]], iso_time(at)
     rows = state["records"]
     # V1 can contain an authentic LLM review without an independent Useability
@@ -596,6 +626,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
     leaves = state.get("taxonomy", {}).get("leaves", [])
     categories_total = scan["categories_total"] or (len(manual_ids) if manual_ids else len(leaves) if isinstance(leaves, list) else 0)
     counts = {name: sum(row.get("eligibility") == name for row in rows) for name in ("eligible", "review", "excluded")}
+    active = sum(at < parse_time(row["ends_at"]) < at + timedelta(hours=settings["lookahead_hours"]) for row in rows)
     messages = {"unconfigured": "Noch keine freigegebene Live-Datenquelle eingerichtet.", "disabled": "Datenquelle ausgeschaltet.",
         "live": "Der geplante Abruf ist abgeschlossen; die Gesamtkategorie wird schrittweise durchsucht.",
         "partial": "Teilabruf: Abdeckung und Aktualität einzelner Angebote sind begrenzt.",
@@ -606,12 +637,13 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         messages["live"] = "Öffentliche Angebotsübersicht abgerufen; Angaben stammen von auktionen-ohne-gebot.de, nicht aus einer eigenen eBay-Prüfung."
         messages["partial"] = "Öffentliche Quelle aktiv: begrenzter Ausschnitt mit zwischengespeicherten Angaben von auktionen-ohne-gebot.de."
     feed = {
-        "schema_version": STATE_VERSION, "generated_at": iso_time(at), "last_successful_scan_at": state.get("last_successful_scan_at"),
+        "schema_version": FEED_VERSION, "generated_at": iso_time(at), "last_successful_scan_at": state.get("last_successful_scan_at"),
         "source_status": status, "status_message": messages[status], "blockers": blockers, "source": provider, "provider": provider,
         "site_url": settings.get("site_url", "https://pogoner.github.io/fundgrube/"),
         "location": {"postcode": settings["postcode"], "city": settings.get("city", "Heidelberg"), "country": "DE", "pickup_radius_km": settings["pickup_radius_km"]},
-        "criteria": {key: settings[key] for key in ("max_price_eur", "max_shipping_eur", "max_bids", "lookahead_hours", "max_freshness_hours", "refresh_after_minutes")},
-        "stats": {**scan, "shortlisted": counts["eligible"] + counts["review"], "active": len(rows), **counts,
+        "criteria": {key: settings[key] for key in ("max_price_eur", "max_shipping_eur", "max_bids", "lookahead_hours", "description_max_age_hours", "refresh_after_minutes")},
+        "stats": {**scan, "shortlisted": counts["eligible"] + counts["review"], "active": active,
+                  "retained": len(rows), "outside_active_window": len(rows) - active, **counts,
                   "stale": sum(bool(row.get("stale")) for row in rows), "carried": sum(bool(row.get("carried")) for row in rows), "omitted_records": omitted_records},
         "coverage": {"categories_total": categories_total, "categories_scanned": scan["categories_scanned"], "categories_completed": scan["categories_completed"],
                      "categories_planned": scan["categories_planned"], "cycle_estimate_hours": (math.ceil(categories_total / settings["categories_per_run"]) * settings["schedule_interval_minutes"] / 60) if categories_total else None,

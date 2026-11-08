@@ -9,7 +9,7 @@ from hunter.ranking import apply_semantic, assess_item
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 SETTINGS = {"max_price_eur": 10, "max_shipping_eur": 15, "max_bids": 0,
             "postcode": "69121", "pickup_radius_km": 50,
-            "lookahead_hours": 24, "max_freshness_hours": 24}
+            "lookahead_hours": 72, "description_max_age_hours": 24}
 
 
 def raw(**overrides):
@@ -152,9 +152,9 @@ class RankingTests(unittest.TestCase):
                 self.assertEqual(result["last_seen_at"], iso_time(NOW))
                 self.assertTrue(any("älter als zwei Stunden" in risk for risk in result["risks"]))
 
-    def test_retention_boundary_excluded_with_default_or_capped_settings(self):
-        for age in (timedelta(hours=24), timedelta(hours=24, seconds=1)):
-            for retention in (None, 24, 48):
+    def test_source_age_never_excludes_an_ongoing_auction(self):
+        for age in (timedelta(hours=24), timedelta(hours=72), timedelta(days=7)):
+            for retention in (None, 0.5, 24, 48):
                 with self.subTest(age=age, retention=retention):
                     at = NOW + age
                     settings = {key: value for key, value in SETTINGS.items() if key != "max_freshness_hours"}
@@ -162,8 +162,48 @@ class RankingTests(unittest.TestCase):
                         settings["max_freshness_hours"] = retention
                     source = normalize_item(raw(itemEndDate=iso_time(at + timedelta(hours=1))), NOW)
                     result = assess_item(source, settings, at)
-                    self.assertEqual(result["eligibility"], "excluded")
-                    self.assertTrue(any("Aufbewahrungsfenster" in risk for risk in result["risks"]))
+                    self.assertEqual(result["eligibility"], "review")
+                    self.assertEqual(result["last_seen_at"], source["last_seen_at"])
+                    self.assertTrue(any("älter als zwei Stunden" in risk for risk in result["risks"]))
+
+    def test_remaining_time_window_is_strict_at_both_ends(self):
+        cases = ((timedelta(seconds=-1), "excluded"), (timedelta(0), "excluded"),
+                 (timedelta(seconds=1), "eligible"), (timedelta(hours=72, seconds=-1), "eligible"),
+                 (timedelta(hours=72), "excluded"), (timedelta(hours=72, seconds=1), "excluded"))
+        for remaining, eligibility in cases:
+            with self.subTest(remaining=remaining):
+                result = self.rank(raw(itemEndDate=iso_time(NOW + remaining)))
+                self.assertEqual(result["eligibility"], eligibility)
+
+    def test_default_window_and_configured_fraction_are_exclusive(self):
+        for settings, remaining, expected in (({}, 48, "eligible"), ({}, 72, "excluded"),
+                                              ({"lookahead_hours": 0.5}, 0.5, "excluded"),
+                                              ({"lookahead_hours": 0.5}, 0.49, "eligible")):
+            with self.subTest(settings=settings, remaining=remaining):
+                item = normalize_item(raw(itemEndDate=iso_time(NOW + timedelta(hours=remaining))), NOW)
+                self.assertEqual(assess_item(item, settings, NOW)["eligibility"], expected)
+
+    def test_time_window_baseline_preserves_all_other_facts_and_uncertainty(self):
+        beyond = iso_time(NOW + timedelta(hours=73))
+        cases = ((raw(itemEndDate=beyond), "eligible"),
+                 (raw(itemEndDate=beyond, reserve_status="unknown"), "review"),
+                 (raw(itemEndDate=beyond, bidCount=1), "excluded"),
+                 (raw(itemEndDate=beyond, currentBidPrice={"value": "11", "currency": "EUR"}), "excluded"),
+                 (raw(itemEndDate=beyond, shippingOptions=[{"shippingCost": {"value": "100", "currency": "EUR"}}]), "excluded"),
+                 (raw(itemEndDate=beyond, reserve_status="not_met"), "excluded"))
+        for data, base in cases:
+            with self.subTest(data=data):
+                result = self.rank(data)
+                self.assertEqual(result["eligibility"], "excluded")
+                self.assertEqual(result["eligibility_without_time_window"], base)
+                self.assertIn("Ablauf außerhalb des Suchfensters", result["eligibility_reasons"])
+
+    def test_old_observation_remains_uncertain_in_time_independent_baseline(self):
+        at = NOW + timedelta(days=5)
+        result = self.rank(raw(itemEndDate=iso_time(at + timedelta(hours=73))), at)
+        self.assertEqual(result["eligibility_without_time_window"], "review")
+        self.assertEqual(result["eligibility"], "excluded")
+        self.assertEqual(result["last_seen_at"], iso_time(NOW))
 
     def test_auction_ending_exactly_now_is_excluded_despite_buffer(self):
         self.assertEqual(self.rank(raw(itemEndDate=iso_time(NOW)))["eligibility"], "excluded")
@@ -175,6 +215,7 @@ class RankingTests(unittest.TestCase):
                             bid_count=0, eligibility="eligible", price_eur=0)
         result = apply_semantic(item, answer)
         self.assertEqual(result["eligibility"], "excluded")
+        self.assertEqual(result["eligibility_without_time_window"], "excluded")
         self.assertEqual(result["bid_count"], 2)
         self.assertEqual(result["price_eur"], 1)
         self.assertEqual(item, original)

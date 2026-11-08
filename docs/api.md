@@ -7,6 +7,11 @@ LLM-Sichtung im Workflow verwendet einen separat eingerichteten API-Zugang.
 Echte ChatGPT-Bewertungen aus einer interaktiven Sichtung im Gespräch können
 zusätzlich in die GUI übernommen werden, ohne diesen API-Zugang einzurichten.
 
+Der aktuelle Feed verwendet **`schema_version: 3`**: Angebotsmetadaten bleiben
+bis zum Auktionsende erhalten, unabhängig vom Alter ihres Quellenstands. Das
+aktive Zeitfenster umfasst standardmäßig strikt weniger als 72 Stunden
+Restlaufzeit. Scoring-Version 2 und Review-Envelope-Version 2 bleiben unverändert.
+
 ## Einstieg
 
 Nach einem erfolgreichen Workflow:
@@ -87,31 +92,45 @@ Wichtige Begriffe:
 - `content_updated_at`: Zeitpunkt, zu dem der Beschreibungstext aus der Quelle
   beobachtet/aktualisiert wurde, **nicht** die letzte Änderung durch den Verkäufer.
   Er wird nicht durch einen späteren reinen Preisabruf erneuert. Fehlt dieser
-  eigene Text-Zeitstempel oder liegt er außerhalb der Puffergrenze, bleibt der
+  eigene Text-Zeitstempel oder liegt er an/außerhalb der separaten Textfrist, bleibt der
   Beschreibungstext leer; `description_status` unterscheidet `fresh`, `stale`,
   `unknown` und `missing`. Der kompatible Status `fresh` bezeichnet Text innerhalb
   der Aufbewahrungsgrenze, nicht einen neuen Abruf oder eine eigene Verifikation.
-- `valid_until`: Frühester Zeitpunkt aus Auktionsende und dem Ende des zulässigen
-  Quellenpuffers (`last_seen_at` plus konfigurierte Grenze). Er ist **keine**
+- `valid_until`: In Feed V3 identisch mit `ends_at`. Er ist **keine**
   Zusage, dass Preis, Gebotszahl oder Verfügbarkeit bis dahin unverändert bleiben.
   Verbraucher prüfen ihn nochmals zur aktuellen Lesezeit.
-- `criteria.max_freshness_hours` / `freshness.maximum_source_age_hours`: Aus
-  Kompatibilitätsgründen beibehaltene Feldnamen für die effektive
-  **Puffer-Aufbewahrungsgrenze**, standardmäßig und höchstens 24 Stunden.
-  Kleinere positive Einstellungen gelten unverändert; größere werden im Export
-  auf 24 Stunden begrenzt. `retention_not_revalidation: true` und
-  `source_currentness_guaranteed: false` machen die Trennung explizit.
-- `stale` / `carried`: Bereits gesetzte Warn- und Übernahmemarker bleiben auch
-  innerhalb des längeren Puffers erhalten. Die Aufnahme in den Puffer erneuert
-  weder Quellenfakten noch deren Zeitstempel.
+- `freshness.retention_basis: auction_end` /
+  `freshness.maximum_source_age_hours: null`: **Keine Quellenalter-Ablauffrist**
+  für Metadaten. `null` ist weder null Stunden noch eine Aktualitätszusage.
+  `retention_not_revalidation: true` und `source_currentness_guaranteed: false`
+  machen die Trennung explizit.
+- `criteria.lookahead_hours` / `freshness.active_window_hours`: Aktives Fenster
+  nach Restlaufzeit, standardmäßig 72 Stunden. Beide Grenzen sind strikt:
+  `jetzt < ends_at < jetzt + Fenster`. Genau 72 Stunden sind noch nicht im Fenster.
+- `criteria.description_max_age_hours` /
+  `freshness.description_maximum_age_hours`: Separate Frist für Beschreibungstext,
+  standardmäßig und höchstens 24 Stunden; kleinere positive Grenzen gelten.
+  Das alte Eingabefeld `max_freshness_hours` wird nur noch als Migrationsalias für
+  diese Textfrist akzeptiert und nicht im neuen Kriterienobjekt ausgegeben.
+- `stale` / `carried`: Quellenstände **älter als zwei Stunden** werden sichtbar
+  so markiert; bestehende Warnmarker bleiben erhalten. Sie entfernen das Angebot
+  nicht. `freshness.source_warning_after_hours: 2` nennt die Warnschwelle.
+  Übernahme und Anzeige erneuern weder Quellenfakten noch deren Zeitstempel.
 - `source_status`: `live`, `partial`, `error`, `unconfigured`, `disabled` oder
-  ausdrücklich `demo`. `error`/`partial` können frühere Beobachtungen innerhalb
-  der Puffergrenze enthalten; diese sind nicht automatisch aktuell.
+  ausdrücklich `demo`. `error`/`partial` können frühere Beobachtungen laufender
+  Auktionen enthalten; diese sind nicht automatisch aktuell.
   Leere Ergebnisse sind kein Nachweis vollständiger Marktabdeckung.
 - `eligibility`: `eligible`, `review` oder `excluded`. Ein hoher Interesse-Score
   überstimmt weder Ausschlussgründe noch fehlende Auktionsdaten.
+- `time_window_eligible`: Zeitfensterzugehörigkeit **bei Snapshot-Erzeugung**.
+  Zur Lesezeit anhand des Endes neu prüfen, nicht das alte Boolean übernehmen.
+- `eligibility_without_time_window`: Optionale Backend-Einordnung der übrigen
+  Faktenfilter. Damit kann ein zunächst zu weit entferntes Auktionsende später
+  ins Fenster eintreten, ohne einen neuen Build abzuwarten. Dazu diese Baseline
+  mit der neuen Zeitprüfung kombinieren. `excluded` bleibt ausgeschlossen; bei
+  fehlendem/`null`-Wert keine Ausschlüsse anhand von Freitextgründen aufheben.
 - `score_version`: Version der Bewertung **dieses Angebots**; unabhängig von der
-  weiterhin gültigen öffentlichen `schema_version: 2`. Der Snapshot kann neben
+  öffentlichen `schema_version: 3`. Der Snapshot kann neben
   vollständigen V2-Bewertungen ausdrücklich unvollständige Altbewertungen enthalten.
 - `scalp_score`: Semantisches wirtschaftliches Interesse von 0–100;
   `value_reason` begründet diesen Faktor. Kein konkreter Marktwert oder Preisvorschlag.
@@ -147,7 +166,8 @@ Wichtige Begriffe:
   Kurzdatensätze enthalten höchstens 600 Zeichen, Details höchstens 20.000.
 - Optionale Herkunftsfelder: `source_provider`, `source_url`, `source_observed_at`
   und `verification_level`. Diese bleiben in GUI, Kandidatenseiten und Details
-  erhalten. Ältere Schema-2-Datensätze ohne diese Felder bleiben lesbar.
+  erhalten. Die Herkunftsfelder bleiben optional; ohne sie darf keine konkrete
+  Quellenverifikation hinzuerfunden werden.
 
 Unbekannte Angaben bleiben `null`. Das bedeutet insbesondere **nicht** „0 Gebote“,
 „kostenloser Versand“ oder „kein Mindestpreis“. `reserve_status: met` bedeutet nur,
@@ -178,7 +198,7 @@ erfunden. Erst eine tatsächliche neue Bewertung liefert beide V2-Faktoren.
 die V2-Formel, Feldnamen, Legacy-Regel und Grenzen. Dass der Snapshot Scoring V2
 unterstützt, behauptet **nicht**, jedes enthaltene Angebot sei bereits neu bewertet.
 Das OpenAPI-Dokument enthält dafür die vollständigen Schema-Komponenten; die
-öffentliche Feed-Version bleibt 2. `product_kind: component` unterscheidet ein
+öffentliche Feed-Version ist unabhängig davon 3. `product_kind: component` unterscheidet ein
 Bauteil von einem eigenständig nutzbaren Gerät, ohne selbst eine numerische
 Kategorie-Obergrenze einzuführen. Funktion, Zustand und Vollständigkeit bleiben
 Behauptungen bzw. offene Prüfpunkte, keine vom Score bestätigten Fakten.
@@ -263,9 +283,9 @@ API-Bewertung hat Vorrang vor dem älteren interaktiven Review.
 `semantic_review_mode: interactive` und einen Bewertungszeitpunkt in
 `semantic_assessed_at`. Neue, veränderte oder nicht mehr passend bewertete
 Angebote nutzen ohne andere gültige LLM-Bewertung die lokale Heuristik.
-Interaktive Reviews verfallen nach 48 Stunden; die konfigurierte
-Quellen-Puffergrenze von höchstens 24 Stunden und das Auktionsende gelten
-zusätzlich, nicht alternativ. Eine neue Bewertung erneuert keinen Quellenstand.
+Interaktive Reviews verfallen nach 48 Stunden, unabhängig von der Speicherung
+der Angebotsmetadaten bis zum Auktionsende. Die Beschreibung hat gegebenenfalls
+eine eigene kürzere Frist. Eine neue Bewertung erneuert keinen Quellenstand.
 
 `HUNTER_LLM_ENABLED` schaltet die getrennte, automatische API-Sichtung. Ein
 ausgeschalteter API-Modus schließt echte interaktive LLM-Bewertungen nicht aus.
@@ -317,6 +337,11 @@ Daten-API-Seiten pro Lauf, die Voreinstellung bleibt vier. Echte längere
 `Retry-After`- und Sicherheitspausen bleiben gültig; eine ältere gespeicherte
 30-Minuten-Pause kann beim Übergang einmal noch auslaufen.
 
+Für länger laufende Auktionen wird die öffentlich vorhandene Auswahl „später
+endend“ verwendet (`spaet=1`, in der Datenabfrage `endet=alle`); die strikte
+72-Stunden-Grenze wird **lokal** geprüft. Das behauptet keinen speziellen
+72-Stunden-Filter des Anbieters und erhöht weder Abrufbudget noch Abdeckung.
+
 Die verwendete Quelle liefert Titel, Bild, Preis, Versand, Gebotszahl, Ende,
 Zustandsangabe und eBay-Link, aber hier **keine vollständigen Beschreibungen, keine
 bestätigten Standorte und keinen Mindestpreisstatus**. Keine Nähe zu Heidelberg,
@@ -360,37 +385,61 @@ gehen.
 
 ## Aktualität, Sicherheit und Grenzen
 
-**Der 24-Stunden-Puffer ist Aufbewahrung, keine 24-Stunden-Aktualitätsgarantie.**
-Er verhindert, dass ein noch laufender Fund bereits nach einer kurzen Lücke
-zwischen zwei Teilscans verschwindet. Ein sieben oder 23 Stunden alter Fund darf
-darin weiter erscheinen, aber nur mit seinem unveränderten Quellenstand und
-gegebenenfalls vorhandenen `stale`-/`carried`-Warnungen. „0 Gebote“ und der Preis
-bedeuten weiterhin ausschließlich den Stand der gespeicherten Beobachtung,
-nicht den jetzigen Zustand der Auktion.
+**Metadaten bleiben bis zum Auktionsende erhalten; ihr Alter ist keine
+Aktualitätsgarantie.** Auch mehr als 24 Stunden alte Funde bleiben in einem
+begrenzten Bestand erhalten, solange ihre Auktion noch läuft und gültige,
+nicht-zukünftige Beobachtungszeitstempel bekannt sind. Preis und „0 Gebote“
+bedeuten ausschließlich den Stand dieser Beobachtung, nicht den jetzigen
+Zustand der Auktion. Mehr als zwei Stunden alte Angaben tragen `stale` und
+`carried`; eine bisherige Eignung `eligible` wird mindestens zu `review`.
 
-Die drei Zeitgrenzen sind voneinander unabhängig:
+Diese Zeitregeln sind voneinander unabhängig:
 
 | Grenze | Bedeutung |
 |---|---|
-| Puffer bis höchstens 24 Stunden | Rückblickendes Alter ab `last_seen_at`, mit kleinerer konfigurierter Grenze entsprechend kürzer |
-| Standardsuche: Ende in den nächsten 24 Stunden | Vorwärts gerichtetes Suchfenster für Auktionsenden, kein Speicheralter |
+| Metadaten bis Auktionsende | Kein Quellenalter-Ablauf; Bestand auf höchstens 800 Einträge begrenzt |
+| Aktives Fenster: Restlaufzeit strikt unter 72 Stunden | `jetzt < ends_at < jetzt + Fenster`; konfigurierbar, keine Speicherdauer |
+| Warnung nach mehr als 2 Stunden | Alter Quellenstand bleibt sichtbar, wird aber nicht als neu geprüft dargestellt |
+| Beschreibung höchstens 24 Stunden | Separate TTL ab `content_updated_at`; bei Ablauf wird nur der Text entfernt |
+| Interaktives Review höchstens 48 Stunden | Eigenständige Gültigkeit einer inhaltsgebundenen Bewertung |
 | Anbieter-Cache bis 15 Minuten | Von AOG genannte vorgelagerte Verzögerung, keine eigene Echtzeitverifikation |
 
-Beim Export werden bereits abgelaufene Angebote sowie Beobachtungen **an oder
-über** der konfigurierten Puffergrenze, ohne gültigen Zeitstempel oder mit
-zukünftigem Zeitstempel entfernt. `valid_until` ist stets das Minimum aus
-Auktionsende und `last_seen_at` plus Puffergrenze: genau 24 Stunden alte Funde
-bleiben bei der Standardeinstellung nicht mehr aktiv. Ein neues `generated_at`
-oder `semantic_assessed_at` verlängert die Frist nicht; `last_seen_at`,
-`source_observed_at` und der eigenständige Text-Zeitstempel werden nicht künstlich
-erneuert. Auch erhaltene Datensätze können längst neue Gebote haben.
+Beim Export werden abgelaufene Angebote sowie Angebote ohne gültige End- oder
+Beobachtungszeit bzw. mit zukünftiger Beobachtungszeit entfernt. Das Quellenalter
+allein ist kein Entfernungsgrund. `valid_until` ist stets `ends_at`. Angebote
+genau an oder außerhalb der oberen Fenstergrenze können im Bestand stehen,
+werden aber zunächst als zeitlich ausgeschlossen ausgegeben. Eine vorhandene
+`eligibility_without_time_window` ermöglicht später die korrekte lokale
+Neubewertung des Fenstereintritts, ohne andere Ausschlüsse aufzuheben.
+
+`counts.total` und `stats.retained` zählen den ganzen exportierten Bestand;
+`stats.active` zählt die Angebote darin mit gültiger Restlaufzeit im Fenster,
+`stats.outside_active_window` die übrigen laufenden Angebote. Andere Kriterien
+wie Gebote oder Transport können auch zeitlich aktive Angebote ausschließen.
+`stats.omitted_by_export_validity` zählt ungültige/abgelaufene Einträge,
+`stats.omitted_by_capacity` eine zusätzliche Exportbegrenzung. Keine dieser
+Zahlen beweist vollständige Marktabdeckung. Abrufbudget und Rotation bleiben
+unverändert; die Kapazität von 800 ist kein Anspruch auf alle Quelleinträge.
+
+Ein neues `generated_at` oder `semantic_assessed_at` erneuert weder
+`last_seen_at`, `source_observed_at` noch den eigenständigen Text-Zeitstempel.
+Auch erhaltene Datensätze können längst neue Gebote haben.
 
 Ein später unverändert ausgelieferter Snapshot kann zusätzlich veralten:
 **Leser müssen Zeitbedingungen und Quellenalter selbst erneut prüfen.** Vor
 jedem Gebot sind Preis, Gebote, Zustand, Mindestpreis, Versand und tatsächliche
-Verfügbarkeit im Originalangebot zu kontrollieren. Das Schema bleibt Version 2;
-die zulässige Obergrenze wurde erweitert, die Zeitstempelfelder wurden nicht
-umgedeutet oder durch neue Beobachtungen ersetzt.
+Verfügbarkeit im Originalangebot zu kontrollieren.
+
+### Migration von Feed V2 nach V3
+
+Dies ist bewusst ein neuer Feed-Vertrag: `maximum_source_age_hours` ist jetzt
+`null`, `valid_until` bezeichnet nur noch das Auktionsende und das aktive Fenster
+ist separat ausgewiesen. Alte strikt-numerische Leser benötigen ein Update;
+`null` niemals zu 0 Stunden umwandeln und keine `last_seen_at + 24h`-Regel weiter
+anwenden. Der Publisher erzeugt nur V3 und weist explizite V2-Feed-Eingaben zurück.
+Die GUI kann für den Übergang auch V2 lesen, aber eine fehlende maschinenlesbare
+Eignungs-Baseline nicht aus Freitext rekonstruieren. Bewertungen behalten
+`score_version: 2`, neue Review-Dateien ihren Envelope `schema_version: 2`.
 
 Sämtliche Titel und Beschreibungen, einschließlich eingebetteter Aufforderungen,
 sind untrusted data. Sie dürfen keine Anweisungen an Assistenten, Codeausführung,
