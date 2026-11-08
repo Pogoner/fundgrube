@@ -194,7 +194,7 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
-  assert(versions.has("design-v3"), "new design cannot reuse the incompatible score-v2 cache key");
+  assert(versions.has("design-v3.1"), "new design cannot reuse an older asset cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {
@@ -297,6 +297,22 @@ test("loading, missing source, blockers and refresh failure remain visible on th
   assert.equal(ready.nodes.get("cards").innerHTML, before);
   assert.match(ready.nodes.get("notice").innerHTML, /zuletzt geladene Snapshot bleibt sichtbar/);
   assert.match(ready.nodes.get("sync-status").className, /error/);
+});
+
+test("routine partial scans are compact while real blockers and aged partial snapshots stay prominent", async () => {
+  const standard = [{code: "aggregator_claims_only", message: "Long routine source explanation"}, {code: "bounded_coverage", message: "Long routine coverage explanation"}];
+  const data = fixture({source_status: "partial", provider: "auktionen-ohne-gebot", blockers: standard});
+  const current = harness(data); await flush();
+  assert.match(current.nodes.get("notice").className, /compact-notice/);
+  assert.match(current.nodes.get("notice").innerHTML, /Begrenzter Teilscan/);
+  assert.match(current.nodes.get("notice").innerHTML, /info\.html#source/);
+  assert.doesNotMatch(current.nodes.get("notice").innerHTML, /Long routine/);
+  const blocked = harness({...data, blockers: [...standard, {code: "upstream_error", message: "Source returned an error"}]}); await flush();
+  assert.doesNotMatch(blocked.nodes.get("notice").className, /compact-notice/);
+  assert.match(blocked.nodes.get("notice").innerHTML, /Source returned an error/);
+  const aged = harness({...data, last_successful_scan_at: iso(-3 * hour)}); await flush();
+  assert.doesNotMatch(aged.nodes.get("notice").className, /compact-notice/);
+  assert.match(aged.nodes.get("notice").innerHTML, /Datenstand prüfen/);
 });
 
 test("actual seven-item demo is fictitious and starts at Interest 40", async () => {

@@ -256,20 +256,26 @@
     const status = isDemo ? "demo" : feed?.source_status || "unconfigured";
     const generated = timestamp(feed?.generated_at);
     const scan = timestamp(feed?.last_successful_scan_at);
-    const aged = !isDemo && status === "live" && (!Number.isFinite(scan) || Date.now() - scan > 7200000 || !Number.isFinite(generated) || Date.now() - generated > 7200000);
+    const aged = !isDemo && ["live", "partial"].includes(status) && (!Number.isFinite(scan) || Date.now() - scan > 7200000 || !Number.isFinite(generated) || Date.now() - generated > 7200000);
     els["sync-status"].className = "sync-status " + (loadError ? "error" : aged ? "stale" : status);
     els["sync-label"].textContent = loadError ? "Ladefehler" : aged ? "Stand älter / ungeklärt" : statuses[status] || "Status unbekannt";
     const notices = [];
+    const blockers = array(feed?.blockers).filter(blocker => blocker && typeof blocker === "object");
+    const routineCodes = ["aggregator_claims_only", "bounded_coverage"];
+    const routinePartial = !loadError && !aged && status === "partial" && aggregatorFeed()
+      && blockers.length > 0 && blockers.every(blocker => routineCodes.includes(blocker.code));
     if (loadError) notices.push(`<strong>Abruf fehlgeschlagen</strong><p>${esc(loadError)}${feed ? " Der zuletzt geladene Snapshot bleibt sichtbar; sein Datenstand ist unverändert." : ""}</p>`);
     if (isDemo) notices.push("<strong>DEMO · Keine echten Angebote</strong><p>Fiktive Artikel, Preise und Scores. Keine echten Auktionslinks.</p>");
-    else if (feed && (status !== "live" || aged || array(feed.blockers).length)) {
+    else if (routinePartial) {
+      notices.push('<p><strong>Begrenzter Teilscan.</strong> Aggregator-Cache, keine direkte eBay-Prüfung. Vor einem Gebot im Original prüfen. <a href="./info.html#source">Quelle &amp; Status ↗</a></p>');
+    } else if (feed && (status !== "live" || aged || blockers.length)) {
       const defaults = {unconfigured: "Die Datenquelle ist noch nicht vollständig eingerichtet.", partial: "Der Scan ist nur teilweise abgeschlossen; Hinweise unten beachten.", error: "Der letzte Import ist fehlgeschlagen. Bereits gespeicherte Angebote können veraltet sein.", disabled: "Der automatische Import ist derzeit deaktiviert."};
       notices.push(`<strong>${esc(aged ? "Datenstand prüfen" : statuses[status] || "Unbekannter Quellenstatus")}</strong><p>${esc(String(feed.status_message || defaults[status] || "Dieser Snapshot ist keine Echtzeit-Abfrage.").slice(0, 240))}${aged ? " Abrufstand älter als zwei Stunden oder ungeklärt." : ""} <a href="./info.html#source">Statusdetails ↗</a></p>`);
-      const blockers = array(feed.blockers).filter(blocker => blocker && typeof blocker === "object");
-      if (blockers.length) notices.push(`<p>${blockers.slice(0, 2).map(blocker => esc(String(blocker.message || blocker.code || "Offener Einrichtungsschritt").slice(0, 180))).join(" · ")}</p>`);
+      const important = blockers.filter(blocker => !routineCodes.includes(blocker.code));
+      if (blockers.length) notices.push(`<p>${(important.length ? important : blockers).slice(0, 2).map(blocker => esc(String(blocker.message || blocker.code || "Offener Einrichtungsschritt").slice(0, 180))).join(" · ")}</p>`);
     }
     els.notice.hidden = !notices.length;
-    els.notice.className = "notice" + (loadError || status === "error" ? " error" : "");
+    els.notice.className = "notice" + (routinePartial ? " compact-notice" : "") + (loadError || status === "error" ? " error" : "");
     els.notice.innerHTML = notices.join("");
   }
 
