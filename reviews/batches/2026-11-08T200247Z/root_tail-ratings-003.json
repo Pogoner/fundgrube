@@ -1,0 +1,1415 @@
+{
+  "schema_version": 2,
+  "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235",
+  "reviewed_at": "2026-11-08T20:38:59.029562Z",
+  "reviewer": "ChatGPT",
+  "groups": [
+    {
+      "ids": [
+        "v1|128183076632|0"
+      ],
+      "assessment": {
+        "scalp_score": 32,
+        "useability_score": 42,
+        "product_kind": "component",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein benanntes Schutzgerät mit Ersatzteilnutzen; keine komplette Verteilung.",
+        "useability_reason": "Erfordert passende elektrische Anlage, Einbau und fachgerechte Prüfung.",
+        "dependencies": [
+          "Passende Elektroinstallation",
+          "Fachgerechte Montage"
+        ],
+        "reasons": [
+          "Ein Siemens-FI-Schutzschalter."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Polzahl, Bemessungsdaten, Auslöseprüfung und Beschädigungen prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|128183087260|0"
+      ],
+      "assessment": {
+        "scalp_score": 18,
+        "useability_score": 42,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einzelnes gebrauchtes Standardschutzbauteil mit begrenztem Potenzial.",
+        "useability_reason": "Erfordert geeignete Verteilung und fachgerechten elektrischen Anschluss.",
+        "dependencies": [
+          "Passende Elektroinstallation",
+          "Fachgerechte Montage"
+        ],
+        "reasons": [
+          "Ein Siemens-Leitungsschutzschalter C16."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Polzahl, Abschaltvermögen und Zustand prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|128183114864|0"
+      ],
+      "assessment": {
+        "scalp_score": 11,
+        "useability_score": 42,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einzelner älterer gebrauchter Schutzschalter.",
+        "useability_reason": "Nur als Teil einer kompatiblen Elektroinstallation nutzbar.",
+        "dependencies": [
+          "Passende Verteilung",
+          "Fachgerechte Montage"
+        ],
+        "reasons": [
+          "Ein Geyer-Leitungsschutzschalter 10 A."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Bauform, Charakteristik und Prüfzustand klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|147672168612|0"
+      ],
+      "assessment": {
+        "scalp_score": 7,
+        "useability_score": 32,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Kleines Anschlussbauteil, kein Magnetventil.",
+        "useability_reason": "Benötigt passende Ventilspule, Leitung und elektrische Anschlussdaten.",
+        "dependencies": [
+          "Passende Ventilspule",
+          "Kabel und elektrische Versorgung"
+        ],
+        "reasons": [
+          "Ein Magnetventil-Steckverbinder nach genannter Norm."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Bauform, Beschaltung und Dichtung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|227599941484|0"
+      ],
+      "assessment": {
+        "scalp_score": 16,
+        "useability_score": 43,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein kleines vollständiger beschriebenes Bedienelement; keine Steuerung.",
+        "useability_reason": "Erfordert Schalttafel, Verdrahtung und geeignete Steuerschaltung.",
+        "dependencies": [
+          "Schalttafel",
+          "Passende Steuerverdrahtung"
+        ],
+        "reasons": [
+          "Grüner Eaton-Drucktaster mit Kontaktblock und Halterung."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Kontaktfunktion, Einbaumaß und Vollständigkeit prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|257842407333|0"
+      ],
+      "assessment": {
+        "scalp_score": 48,
+        "useability_score": 96,
+        "product_kind": "tool",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Benannte Motorsäge mit Zubehör und möglichem Reparatur- oder Teilepotenzial; Defekt begrenzt die Sicherheit.",
+        "useability_reason": "Die angebotene Bauart ist eigenständig mit Kraftstoff nutzbar; der Defekt ist eine Zustandsfrage.",
+        "dependencies": [
+          "Passender Kraftstoff und Kettenöl"
+        ],
+        "reasons": [
+          "Solo-651-Benzinkettensäge mit Schwert, Kette und zwei Schwertschutzen; als defekt angeboten."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft.",
+          "Betriebsfähigkeit ist ausdrücklich nicht belegt."
+        ],
+        "next_checks": [
+          "Defektbild, Motor, Kettenbremse und Vollständigkeit prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|800849147824|0"
+      ],
+      "assessment": {
+        "scalp_score": 44,
+        "useability_score": 99,
+        "product_kind": "tool",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Bezifferte Mehrstückmenge handlicher Werkzeuge mit plausiblem Postenpotenzial.",
+        "useability_reason": "Jede Schere ist als Handwerkzeug ohne zusätzliche Maschine verwendbar.",
+        "dependencies": [],
+        "reasons": [
+          "24 Benson-Gartenscheren als neuer Restposten."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Modelle, Mechanik, Verpackung und tatsächliche Stückzahl prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|940076212103|0"
+      ],
+      "assessment": {
+        "scalp_score": 24,
+        "useability_score": 56,
+        "product_kind": "consumable",
+        "value_band": "around_50",
+        "assessment_confidence": "low",
+        "value_reason": "Benanntes Montagematerial; Restfüllung und Haltbarkeit sind entscheidend und ungeklärt.",
+        "useability_reason": "Benötigt passendes Auspressgerät, Mischer und geeigneten Befestigungsaufbau.",
+        "dependencies": [
+          "Kompatibles Auspressgerät",
+          "Mischer und Befestigungssystem"
+        ],
+        "reasons": [
+          "Zwei Hilti-HIT-HY-200-A-Injektionsmörtelgebinde, als gebraucht geführt."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Restmenge, Haltbarkeitsdatum und Lagerung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|366795306267|0"
+      ],
+      "assessment": {
+        "scalp_score": 63,
+        "useability_score": 91,
+        "product_kind": "tool",
+        "value_band": "around_500",
+        "assessment_confidence": "medium",
+        "value_reason": "Spezialisiertes forstliches Werkzeug mit plausibel höherem wirtschaftlichem Potenzial; Ausführung ungeprüft.",
+        "useability_reason": "Dient als eigenständiges mechanisches Hilfswerkzeug, benötigt passende Betätigung und Anwendungssituation.",
+        "dependencies": [
+          "Passendes Betätigungswerkzeug"
+        ],
+        "reasons": [
+          "Ein mechanischer Spindel-Fällkeil SK20."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Spindel, Keilflächen, Betätigung und Lieferumfang prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|960158919718|0"
+      ],
+      "assessment": {
+        "scalp_score": 28,
+        "useability_score": 99,
+        "product_kind": "accessory",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Überschaubares Metall- und Dekorationsobjekt; Gewicht und Kupfergehalt sind Verkäuferangaben.",
+        "useability_reason": "Als Schild oder Dekoration ohne anderes Spezialgerät nutzbar.",
+        "dependencies": [],
+        "reasons": [
+          "Ein als massiv bezeichnetes Kupferschild mit Bergbaumotiv und 1,6 kg Angabe."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Material, tatsächliches Gewicht, Maße und Befestigung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|198775582080|0"
+      ],
+      "assessment": {
+        "scalp_score": 8,
+        "useability_score": 40,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "low",
+        "value_reason": "Kleiner diskreter Bauteilposten; die ungewöhnliche Einheitenangabe ist zu verifizieren.",
+        "useability_reason": "Erfordert passende Schaltung und Löt- oder Anschlussarbeit.",
+        "dependencies": [
+          "Passende Schaltung",
+          "Montagewerkzeug"
+        ],
+        "reasons": [
+          "Elf Widerstände mit im Titel genannten elektrischen Daten."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Widerstandswert, Einheit, Belastbarkeit und Stückzahl prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|267834846106|0"
+      ],
+      "assessment": {
+        "scalp_score": 19,
+        "useability_score": 34,
+        "product_kind": "consumable",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Kleine Menge spezieller Filtereinsätze, keine vollständige Atemschutzmaske.",
+        "useability_reason": "Nur mit kompatibler Maske und geeignetem Einsatzzweck nutzbar.",
+        "dependencies": [
+          "Kompatible Moldex-EasyLock-Maske"
+        ],
+        "reasons": [
+          "Zwei Moldex-EasyLock-P3-R-Partikelfilter."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Versiegelung, Haltbarkeit und Filtereignung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|117506947748|0"
+      ],
+      "assessment": {
+        "scalp_score": 21,
+        "useability_score": 25,
+        "product_kind": "component",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Spezifisches elektronisches Filterbauteil mit Nischennutzen.",
+        "useability_reason": "Erfordert passende Schaltung und genaue Anschluss- und Frequenzdaten.",
+        "dependencies": [
+          "Kompatible elektronische Schaltung",
+          "Bauteildaten"
+        ],
+        "reasons": [
+          "Ein Murata-Audiofilter mit genannter 960-Hz-Angabe."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Typ, Durchlassbereich und elektrische Funktion prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|900064217928|0"
+      ],
+      "assessment": {
+        "scalp_score": 1,
+        "useability_score": 12,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "low",
+        "value_reason": "Ein nicht näher spezifiziertes Kleinteil mit sehr begrenztem Potenzial.",
+        "useability_reason": "Nutzen hängt von unbekannten Abmessungen und einem passenden Gegenstück ab.",
+        "dependencies": [
+          "Passendes Gegenstück"
+        ],
+        "reasons": [
+          "Eine kleine weiße Kunststoffkappe ohne weitere Maße."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Maße, Form und vorgesehenen Einsatz klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|840098777441|0"
+      ],
+      "assessment": {
+        "scalp_score": 10,
+        "useability_score": 42,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Klar bezifferter kleiner Standardbauteilposten.",
+        "useability_reason": "Erfordert passende Schaltung und Montage.",
+        "dependencies": [
+          "Elektronische Schaltung",
+          "Lötwerkzeug"
+        ],
+        "reasons": [
+          "30 Vishay-Zenerdioden BZX85C mit 9,1-V-Angabe."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Typ, Polarität, Verpackung und Menge prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|377625432722|0"
+      ],
+      "assessment": {
+        "scalp_score": 22,
+        "useability_score": 54,
+        "product_kind": "accessory",
+        "value_band": "around_50",
+        "assessment_confidence": "low",
+        "value_reason": "Gemischtes Verbindungsmaterial; Umfang und Steckerkombinationen fehlen.",
+        "useability_reason": "Die Kabel benötigen jeweils Geräte mit passenden Anschlüssen.",
+        "dependencies": [
+          "Kompatible Geräteanschlüsse"
+        ],
+        "reasons": [
+          "Ein Konvolut aus RG58-, Dioden- und Audioadapterkabeln."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Anzahl, Längen, Stecker und Durchgang prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|137906813927|0"
+      ],
+      "assessment": {
+        "scalp_score": 4,
+        "useability_score": 99,
+        "product_kind": "accessory",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einzelner einfacher Gebrauchsgegenstand.",
+        "useability_reason": "Direkt zum Tragen verwendbar, ohne weitere Geräte.",
+        "dependencies": [],
+        "reasons": [
+          "Ein Motiv-Tragebeutel in genannter Größe."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Material, Henkel und Zustand prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|307269329840|0",
+        "v1|307270084335|0",
+        "v1|307270087082|0",
+        "v1|307270087171|0",
+        "v1|307270983176|0",
+        "v1|307272427637|0"
+      ],
+      "assessment": {
+        "scalp_score": 5,
+        "useability_score": 64,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Eine geringe Stückzahl standardisierter Befestigungsteile.",
+        "useability_reason": "Benötigt passende Gewinde oder Muttern und gewöhnliches Werkzeug.",
+        "dependencies": [
+          "Passendes Gewinde oder Muttern",
+          "Passender Schraubendreher"
+        ],
+        "reasons": [
+          "Zehn kleine Edelstahlschrauben im jeweils genannten Gewinde und Format."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Gewinde, Länge und Kopfform passend zum Einsatz prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|287708849376|0"
+      ],
+      "assessment": {
+        "scalp_score": 18,
+        "useability_score": 28,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Steckverbindergehäuse, nicht automatisch ein vollständig bestückter Anschluss.",
+        "useability_reason": "Benötigt passende Kontakteinsätze, Gegenstecker und Montage.",
+        "dependencies": [
+          "Kompatible Kontakteinsätze",
+          "Passender Gegenstecker"
+        ],
+        "reasons": [
+          "Phoenix-Sockelgehäuse B16 mit Deckel."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Gehäuseausführung, Dichtungen und enthaltene Einsätze klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|237167093521|0"
+      ],
+      "assessment": {
+        "scalp_score": 8,
+        "useability_score": 57,
+        "product_kind": "accessory",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einzelnes gebrauchtes Werkzeugzubehör mit geringem Potenzial.",
+        "useability_reason": "Benötigt passende Bohrmaschine und zulässige Drehzahl.",
+        "dependencies": [
+          "Bohrmaschine mit passender Aufnahme"
+        ],
+        "reasons": [
+          "Eine Stahldrahtbürste für Bohrmaschinen."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Schaft, Drahtzustand und zulässige Drehzahl prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|327442863103|0"
+      ],
+      "assessment": {
+        "scalp_score": 4,
+        "useability_score": 26,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Kleine Verbindungsteile ohne komplette Hydraulikverschraubung.",
+        "useability_reason": "Benötigt passende Rohre, Überwurfmuttern und Anschlusskörper.",
+        "dependencies": [
+          "Passendes Hydraulikrohr",
+          "Passende Verschraubungsteile"
+        ],
+        "reasons": [
+          "Zwei 12-mm-Hydraulik-Schneidringe."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Baureihe, Werkstoff und Maßkompatibilität prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|327442884012|0"
+      ],
+      "assessment": {
+        "scalp_score": 13,
+        "useability_score": 97,
+        "product_kind": "accessory",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Kleiner Posten einfacher Laborgefäße.",
+        "useability_reason": "Als Ablage oder Abdeckung direkt verwendbar; besondere Verfahren können weiteres Laborzubehör erfordern.",
+        "dependencies": [],
+        "reasons": [
+          "Sechs gewölbte Uhrgläser mit 50-mm-Angabe."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Glaszustand, Durchmesser und tatsächliche Stückzahl prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|377625917536|0"
+      ],
+      "assessment": {
+        "scalp_score": 15,
+        "useability_score": 19,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "low",
+        "value_reason": "Ein einzelnes systemgebundenes Anschlussbauteil.",
+        "useability_reason": "Benötigt das exakt passende Siemens-Gerät und passende Verdrahtung.",
+        "dependencies": [
+          "Kompatibles Siemens-Modul",
+          "Verdrahtung"
+        ],
+        "reasons": [
+          "Ein Siemens-Frontstecker ohne genaue Typnummer."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Typnummer, Polzahl und Anschlussausführung klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|900070229785|0"
+      ],
+      "assessment": {
+        "scalp_score": 10,
+        "useability_score": 43,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Kleiner spezifizierter Bauteilvorrat; Lageralter begrenzt die Sicherheit.",
+        "useability_reason": "Erfordert passende Schaltung und Montage.",
+        "dependencies": [
+          "Passende Schaltung",
+          "Lötwerkzeug"
+        ],
+        "reasons": [
+          "Zehn ältere unbenutzte Thomson-Elkos mit 47 µF und 50 V."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Kapazität, Leckstrom und Lagerzustand prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|267835469222|0"
+      ],
+      "assessment": {
+        "scalp_score": 45,
+        "useability_score": 27,
+        "product_kind": "component",
+        "value_band": "around_50",
+        "assessment_confidence": "low",
+        "value_reason": "Spezialisierte Schnittstellenbaugruppe mit möglichem Labor-Nischennutzen.",
+        "useability_reason": "Benötigt passende Steuerung, Geräte, Anschlüsse und gegebenenfalls Software.",
+        "dependencies": [
+          "Kompatible Messgeräte",
+          "Steuerrechner und Software",
+          "Passende Anschlussverdrahtung"
+        ],
+        "reasons": [
+          "RS232-zu-GPIB-Schnittstelle mit Messerleiste."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Hersteller, Protokoll, Versorgung und Funktionsnachweis klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|257838470807|0"
+      ],
+      "assessment": {
+        "scalp_score": 48,
+        "useability_score": 96,
+        "product_kind": "tool",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Benanntes motorisches Handwerkzeug mit mittlerem Potenzial.",
+        "useability_reason": "Mit Stromversorgung und gewöhnlichen passenden Einsätzen eigenständig nutzbar.",
+        "dependencies": [
+          "Passende Einsätze",
+          "Geeignete Stromversorgung"
+        ],
+        "reasons": [
+          "Kress-150-ES-Elektronikschrauber und Gewindeschneidgerät."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Antrieb, Drehzahlregelung, Aufnahme und Zubehör prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|168843255094|0"
+      ],
+      "assessment": {
+        "scalp_score": 12,
+        "useability_score": 99,
+        "product_kind": "tool",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Einfaches handbetätigtes Spannwerkzeug; Größe und Bauform fehlen.",
+        "useability_reason": "Ohne anderes Gerät direkt zum Spannen geeignet.",
+        "dependencies": [],
+        "reasons": [
+          "Eine Klemmzwinge."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Spannweite, Mechanik und Material klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|198777162638|0"
+      ],
+      "assessment": {
+        "scalp_score": 7,
+        "useability_score": 38,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einzelnes spezifiziertes Bauteil, kein Messgerät.",
+        "useability_reason": "Benötigt eine passende elektrische Schaltung und Montage.",
+        "dependencies": [
+          "Geeignete Schaltung"
+        ],
+        "reasons": [
+          "Ein Siemens-Drahtwiderstand mit 700-Ohm-Angabe."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Tatsächlichen Wert, Belastbarkeit und Zustand prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|128178954252|0"
+      ],
+      "assessment": {
+        "scalp_score": 24,
+        "useability_score": 99,
+        "product_kind": "consumable",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Bezifferter Verbrauchsmaterialposten mit überschaubarem wirtschaftlichem Potenzial.",
+        "useability_reason": "Direkt tragbar; Schutzwirkung und Einsatzeignung hängen von der konkreten Ausführung ab.",
+        "dependencies": [],
+        "reasons": [
+          "300 Nitril-Einweghandschuhe in Größe M."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Größe, Verpackung, Alter und Schutzkennzeichnung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|940070546176|0"
+      ],
+      "assessment": {
+        "scalp_score": 3,
+        "useability_score": 31,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "low",
+        "value_reason": "Ein einzelnes unspezifiziertes Standardbauteil.",
+        "useability_reason": "Benötigt geeignete Schaltung; ohne Kapazität und Spannungsfestigkeit ist der Einsatz unklar.",
+        "dependencies": [
+          "Passende Schaltung",
+          "Bauteildaten"
+        ],
+        "reasons": [
+          "Ein MKT-Kondensator ohne elektrische Daten im Titel."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Kapazität, Spannungsfestigkeit und Rastermaß klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|128179025123|0"
+      ],
+      "assessment": {
+        "scalp_score": 48,
+        "useability_score": 70,
+        "product_kind": "apparatus",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Benanntes vollständiges Lüfteraggregat mit plausibler technischer Verwendung.",
+        "useability_reason": "Benötigt geeignete Befestigung, Schutz und Stromanschluss, aber keine spezielle Steuerungsplattform.",
+        "dependencies": [
+          "Geeignete Montage",
+          "Sicherer Stromanschluss"
+        ],
+        "reasons": [
+          "Ein neuer FERONO-Axialventilator mit 350 mm und 230 V."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Vollständigkeit, Laufrad, Anschluss und Einbaumaße prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|820324163690|0"
+      ],
+      "assessment": {
+        "scalp_score": 35,
+        "useability_score": 98,
+        "product_kind": "tool",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Komplett angebotenes kleines Werkstattgerät; Marke und Qualität bleiben offen.",
+        "useability_reason": "Mit Netzanschluss und passender Kette eigenständig verwendbar.",
+        "dependencies": [
+          "Geeigneter Netzanschluss"
+        ],
+        "reasons": [
+          "Eine elektrische Sägekettenschleifmaschine."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Spannvorrichtung, Schleifscheibe und Einstellmöglichkeiten prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|257838682907|0"
+      ],
+      "assessment": {
+        "scalp_score": 8,
+        "useability_score": 18,
+        "product_kind": "accessory",
+        "value_band": "around_5",
+        "assessment_confidence": "high",
+        "value_reason": "Kleines Montagezubehör, dessen Wert an einer spezifischen Anwendung hängt.",
+        "useability_reason": "Benötigt passenden Sensor und Montageort.",
+        "dependencies": [
+          "Kompatibler Sensor",
+          "Passende Befestigung"
+        ],
+        "reasons": [
+          "Contrinex-Sensorhalter ASU-0002-120; kein Sensor."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Maße, Material und tatsächlichen Lieferumfang prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|257838686830|0",
+        "v1|257838688335|0"
+      ],
+      "assessment": {
+        "scalp_score": 19,
+        "useability_score": 13,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Systemgebundenes Anschlussmodul; keine eigenständige SPS.",
+        "useability_reason": "Erfordert passende ET200S-Station, Elektronikmodule und Verdrahtung.",
+        "dependencies": [
+          "Kompatible ET200S-Station",
+          "Passendes Elektronikmodul",
+          "Verdrahtung"
+        ],
+        "reasons": [
+          "Ein Siemens-ET200S-Terminalmodul 6ES7193-4CB00-0AA0."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Exakte Typnummer, Kontakte und Rastungen prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|257838698193|0"
+      ],
+      "assessment": {
+        "scalp_score": 18,
+        "useability_score": 13,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Anschlussbasis für ein Automatisierungssystem, kein eigenständiges Steuergerät.",
+        "useability_reason": "Benötigt passende Stationsbaugruppe und Elektronikbestückung.",
+        "dependencies": [
+          "Kompatible Station",
+          "Passende Elektronikmodule"
+        ],
+        "reasons": [
+          "Ein Siemens-Terminalmodul mit Typnummer 6ES7193-4CA50-0AA0."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Typnummer und Systemzuordnung anhand des Typenschilds prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|287709640625|0"
+      ],
+      "assessment": {
+        "scalp_score": 46,
+        "useability_score": 57,
+        "product_kind": "component",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Größeres elektrisches Bauteil mit brauchbarer Leistungsangabe.",
+        "useability_reason": "Benötigt sicheren Aufbau, Absicherung und geeignete Anschlüsse; ein fertiges Tischgerät ist nicht belegt.",
+        "dependencies": [
+          "Geeigneter Schutzaufbau",
+          "Absicherung und Anschlüsse"
+        ],
+        "reasons": [
+          "Ein 500-VA-Ringkern-Trenntransformator mit 220/230-V-Angaben."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Wicklungsdaten, Isolation, Gehäuse und Anschlusszustand prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|267835685040|0"
+      ],
+      "assessment": {
+        "scalp_score": 8,
+        "useability_score": 30,
+        "product_kind": "accessory",
+        "value_band": "around_5",
+        "assessment_confidence": "low",
+        "value_reason": "Einzelnes unspezifiziertes Netzteil mit begrenztem Ersatznutzen.",
+        "useability_reason": "Benötigt ein Gerät mit passender Spannung, Stromaufnahme, Polarität und Stecker.",
+        "dependencies": [
+          "Kompatibles Endgerät"
+        ],
+        "reasons": [
+          "Ein Silvercrest-Netzadapter ohne Ausgangsdaten."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Ausgangsdaten und Stecker vollständig klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|117508063294|0"
+      ],
+      "assessment": {
+        "scalp_score": 14,
+        "useability_score": 99,
+        "product_kind": "accessory",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einzelnes getragenes Paar; tatsächlicher Verschleiß und Schutzstatus unbekannt.",
+        "useability_reason": "Direkt tragbar bei passender Größe; keine Geräteabhängigkeit.",
+        "dependencies": [],
+        "reasons": [
+          "Gebrauchte Sicherheitsschuhe Größe 40 mit Stahlkappenangabe."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Sohle, Kappen, Passform und Schutzkennzeichnung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|198777618188|0"
+      ],
+      "assessment": {
+        "scalp_score": 19,
+        "useability_score": 12,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "low",
+        "value_reason": "Ältere systemspezifische Karte; Seltenheitsbehauptung allein belegt keinen hohen Wert.",
+        "useability_reason": "Erfordert kompatibles Endgerät, Software und gegebenenfalls noch nutzbare Kommunikationsdienste.",
+        "dependencies": [
+          "Kompatibles Altgerät",
+          "Passende Software",
+          "Geeignete Kommunikationsanbindung"
+        ],
+        "reasons": [
+          "Sony-PC-Card-QN-2PCM für ein älteres Kommunikationssystem."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Kompatibilität und heutige Nutzbarkeit des konkreten Systems prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|960162789004|0"
+      ],
+      "assessment": {
+        "scalp_score": 19,
+        "useability_score": 24,
+        "product_kind": "consumable",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Kleiner Posten spezialisierter Schneideinsätze.",
+        "useability_reason": "Benötigt passenden Halter und geeignete Bearbeitungsmaschine.",
+        "dependencies": [
+          "Kompatibler Werkzeughalter",
+          "Bearbeitungsmaschine"
+        ],
+        "reasons": [
+          "Zwei Sandvik-Wendeschneidplatten des genannten Typs."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Geometrie, Sorte und Kanten prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|307270158417|0",
+        "v1|307270170672|0"
+      ],
+      "assessment": {
+        "scalp_score": 4,
+        "useability_score": 36,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einzelnes Standard-Taktbauteil.",
+        "useability_reason": "Benötigt passende Oszillatorschaltung und Montage.",
+        "dependencies": [
+          "Geeignete Schaltung",
+          "Lötwerkzeug"
+        ],
+        "reasons": [
+          "Ein Schwingquarz mit der jeweils genannten Frequenz."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Frequenz, Bauform und Lastkapazität prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|307270165003|0"
+      ],
+      "assessment": {
+        "scalp_score": 8,
+        "useability_score": 99,
+        "product_kind": "apparatus",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einfaches vollständiges Anzeigeobjekt.",
+        "useability_reason": "Zeigt die Raumtemperatur ohne anderes Gerät an.",
+        "dependencies": [],
+        "reasons": [
+          "Ein Zimmerthermometer auf Filzuntergrund mit Tiermotiv."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Anzeige, Befestigung und Zustand prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|900071192617|0"
+      ],
+      "assessment": {
+        "scalp_score": 27,
+        "useability_score": 42,
+        "product_kind": "apparatus",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Nutzbares Eingabegerät, dessen Modell und Protokoll fehlen.",
+        "useability_reason": "Benötigt kompatiblen Rechner beziehungsweise Kassensystem und passende Versorgung.",
+        "dependencies": [
+          "RS232-fähiger Host",
+          "Passendes Netzteil",
+          "Kompatible Software"
+        ],
+        "reasons": [
+          "Ein Hand-Barcodescanner mit RS232-Kabel und Stromanschluss."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Modell, Netzteilumfang, Schnittstellenparameter und Lesefunktion prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|336883981683|0"
+      ],
+      "assessment": {
+        "scalp_score": 7,
+        "useability_score": 43,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Kleiner spezifizierter Bauteilposten.",
+        "useability_reason": "Benötigt passende elektronische Schaltung und Montage.",
+        "dependencies": [
+          "Schaltungsprojekt",
+          "Lötwerkzeug"
+        ],
+        "reasons": [
+          "Zehn Piher-Trimmpotentiometer mit 1-kOhm-Angabe."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Bauform, Widerstandswert und Verstellung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|128174955372|0",
+        "v1|128175053385|0",
+        "v1|128175083367|0",
+        "v1|920108122051|0",
+        "v1|128178909005|0",
+        "v1|128176780661|0"
+      ],
+      "assessment": {
+        "scalp_score": 28,
+        "useability_score": 99,
+        "product_kind": "accessory",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Neue beziehungsweise als B-Ware bezeichnete Arbeitsschuhe mit überschaubarem Wiederverwendungspotenzial.",
+        "useability_reason": "Direkt tragbar bei passender Größe; Mängel und Schutzstatus sind getrennt zu prüfen.",
+        "dependencies": [],
+        "reasons": [
+          "Ein Paar Nusca-Sicherheitsschuhe in der jeweils angegebenen Größe und Ausführung."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Genauen B-Ware-Mangel, Passform und Schutzkennzeichnung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|287710059254|0"
+      ],
+      "assessment": {
+        "scalp_score": 3,
+        "useability_score": 18,
+        "product_kind": "consumable",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einzelnes Verbrauchsteil mit unbekanntem Restinhalt.",
+        "useability_reason": "Nur in kompatiblem Drucker nutzbar; Restfüllung und Chipzustand sind offen.",
+        "dependencies": [
+          "Kompatibler Canon-Drucker"
+        ],
+        "reasons": [
+          "Eine als gebraucht geführte Canon-CLI-571-M-Tintenpatrone mit Chip."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Restmenge, Dichtheit und Chipfunktion prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|237168151246|0"
+      ],
+      "assessment": {
+        "scalp_score": 12,
+        "useability_score": 97,
+        "product_kind": "consumable",
+        "value_band": "around_5",
+        "assessment_confidence": "low",
+        "value_reason": "Einfaches Verpackungsmaterial mit unklarer Stückzahl.",
+        "useability_reason": "Mit gewöhnlichem Verschlussmaterial direkt zum Verpacken nutzbar.",
+        "dependencies": [
+          "Klebeband oder anderes Verschlussmaterial"
+        ],
+        "reasons": [
+          "Ein Konvolut gebrauchter Versandkartons verschiedener Größen."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Anzahl, Maße, Stabilität und Sauberkeit klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|267835938994|0"
+      ],
+      "assessment": {
+        "scalp_score": 10,
+        "useability_score": 99,
+        "product_kind": "accessory",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Ein einzelner einfacher Küchenbehälter.",
+        "useability_reason": "Direkt mit geeignetem Inhalt nutzbar, ohne Gerät.",
+        "dependencies": [],
+        "reasons": [
+          "Ein 150-ml-Ölspender aus Glas und Edelstahl."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Dichtigkeit, Ausgießer und Reinigung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|920113513222|0"
+      ],
+      "assessment": {
+        "scalp_score": 55,
+        "useability_score": 91,
+        "product_kind": "apparatus",
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "value_reason": "Größeres Dekorations- oder Reklameobjekt mit plausiblem Nischenpotenzial.",
+        "useability_reason": "Als Leuchtdekoration mit passender Versorgung und Befestigung nutzbar.",
+        "dependencies": [
+          "Passende Stromversorgung",
+          "Sichere Befestigung"
+        ],
+        "reasons": [
+          "Große beleuchtete Metallbuchstaben DEN, laut Titel leuchtend und 1,40 m groß."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Maßbezug, Beleuchtung, Anschlüsse und Umfang der drei Buchstaben prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|860092469883|0"
+      ],
+      "assessment": {
+        "scalp_score": 15,
+        "useability_score": 20,
+        "product_kind": "accessory",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Werkzeugkoffereinlage; weder Koffer noch Elektrowerkzeug sind belegt.",
+        "useability_reason": "Benötigt passenden Koffer und die vorgesehenen Werkzeuge.",
+        "dependencies": [
+          "Kompatibler Makita-Koffer",
+          "Passendes Werkzeug"
+        ],
+        "reasons": [
+          "Ein Makita-Boxeinsatz Größe 5 mit genannter Teilenummer."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Teilenummer und Formkompatibilität prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|307270980687|0"
+      ],
+      "assessment": {
+        "scalp_score": 4,
+        "useability_score": 64,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Sehr kleine Menge üblicher Befestigungsteile.",
+        "useability_reason": "Mit passendem Gewinde und gewöhnlichem Werkzeug nutzbar.",
+        "dependencies": [
+          "Passendes Gewinde",
+          "Innensechskantwerkzeug"
+        ],
+        "reasons": [
+          "Zwei Edelstahlschrauben M8 x 70."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Maße, Werkstoff und Gewinde prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|840103539301|0"
+      ],
+      "assessment": {
+        "scalp_score": 5,
+        "useability_score": 64,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Kleiner Standard-Befestigungsposten.",
+        "useability_reason": "Benötigt passende Gewinde oder Muttern und Schraubenschlüssel.",
+        "dependencies": [
+          "Passende Gewinde oder Muttern",
+          "Schraubenschlüssel"
+        ],
+        "reasons": [
+          "Sechs gebrauchte Sechskantschrauben M10 x 20."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Gewinde, Festigkeitsklasse und Zustand prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|840103543174|0"
+      ],
+      "assessment": {
+        "scalp_score": 6,
+        "useability_score": 64,
+        "product_kind": "component",
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "value_reason": "Kleiner Posten gewöhnlicher Verbindungselemente.",
+        "useability_reason": "Benötigt passende Gewinde oder Muttern und Standardwerkzeug.",
+        "dependencies": [
+          "Passende Gewinde oder Muttern",
+          "Innensechskantwerkzeug"
+        ],
+        "reasons": [
+          "Neun gebrauchte Innensechskantschrauben M10 x 20."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft."
+        ],
+        "next_checks": [
+          "Gewinde, Festigkeitsklasse und Zustand prüfen."
+        ]
+      }
+    }
+  ]
+}
