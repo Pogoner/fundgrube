@@ -24,6 +24,14 @@ keine zusätzliche Abhängigkeit von externen Schrift- oder Grafikdiensten.
 4. Scalp/Useability, semantische Begründung, Preis-/Transportangaben und Restzeit.
 5. Quellenalter, Unsicherheiten, aufklappbare Details und Originalangebot.
 
+Unterhalb der primären Treffer folgen zwei kompakte Top-10-Stöberlisten für
+vollständig bewertete Angebote unter der aktuellen Interest-Schwelle: einmal
+nach Scalp, einmal nach Useability. Sie ergänzen die Hauptpriorität, ersetzen
+sie nicht. Gleiche Sachfilter und das aktive Zeitfenster gelten weiter;
+unbekannte Bewertungen sind keine Nullwerte. Einträge dürfen in beiden Listen
+vorkommen. Rang, Titel, alle drei Scores, Herkunft und wesentliche Kosten/Risiken
+bleiben ohne ein zweites Raster aus zwanzig großen Bildkarten erkennbar.
+
 Auf schmalen Bildschirmen bilden Karten und Filter eine gut bedienbare Spalte.
 Kein horizontales Scrollen der gesamten Seite. Wichtige Handlungen funktionieren
 ohne Hover; Fokus, Touch-Ziele und Dialogbedienung bleiben sichtbar.
@@ -49,7 +57,10 @@ oder über einen neuen Proxy kopiert. Der vollständige Gegenstand ist wichtiger
 als ein spektakulärer Ausschnitt. Stabile Bildrahmen, frühes Laden der ersten
 Karten und verzögertes Laden weiterer Bilder reduzieren Sprünge und Wartezeit.
 Bei Ladefehlern gibt es einen erkennbaren Ersatz samt Originalbild-Verweis.
-Eine externe Browsersperre lässt sich damit nicht als behoben versprechen.
+Eine verlinkte Bildhilfe unterscheidet das Öffnen der Originaladresse von der
+Einbettung und erklärt den Firefox-eigenen Schutz unabhängig von Erweiterungen.
+Der Fehlerzustand behauptet keine automatisch erkannte Ursache. Eine externe
+Browsersperre lässt sich damit nicht als behoben versprechen.
 
 Bewegung beschränkt sich auf kleine Interaktionsrückmeldungen. Bei reduzierter
 Bewegung bleiben alle Informationen und Funktionen erhalten. Leerer Bestand,
@@ -60,6 +71,8 @@ verständlich beschriftete Zustände.
 
 Score-Logik und Faktenintegrität unverändert testen; strikte 72-Stunden-Grenze,
 ältere Beobachtungen, dynamischen Fenstereintritt und Bildfehler regressionsprüfen.
+Stöberlisten bei veränderter Interest-Schwelle, Sachfiltern und Zeitgrenzen
+mitprüfen; abgelaufene oder unvollständig bewertete Angebote nicht einschleusen.
 HTML/CSS/JS-Versionen in beiden Seiten gemeinsam anheben. Nach Deployment
 Dashboard, Info-Navigation, Filter, Detailabruf, Bilder und Daten-Snapshot prüfen.
 Nicht verfügbare Browser-/Viewport-Prüfungen ausdrücklich offenlassen.

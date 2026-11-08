@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#060b10" />
     <meta name="description" content="Fundgrube: interessante eBay-Auktionen nach Scalp, Useability und Interest sortieren." />
     <title>Fundgrube — Auktionsradar</title>
-    <link rel="stylesheet" href="./styles.css?v=design-v3.1" />
-    <script src="./app.js?v=design-v3.1" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=design-v3.2" />
+    <script src="./app.js?v=design-v3.2" defer></script>
   </head>
   <body class="dashboard-page">
     <a class="skip-link" href="#results-heading">Direkt zu den Angeboten</a>
@@ -61,10 +61,26 @@
             </div>
           </details>
           </div>
-          <div class="results-caption"><h2 id="results-heading" tabindex="-1">Deine Fundstücke <span id="result-count">(0 / 0)</span></h2><a href="./info.html#scores">Die Scores verstehen ↗</a></div>
+          <div class="results-caption"><h2 id="results-heading" tabindex="-1">Deine Fundstücke <span id="result-count">(0 / 0)</span></h2><nav class="results-links" aria-label="Ergebnisbereiche"><a href="#browse-heading">Zum Stöbern ↓</a><a href="./info.html#scores">Die Scores verstehen ↗</a></nav></div>
           <p id="result-summary" class="result-summary" role="status" aria-live="polite"></p>
           <div id="cards" class="cards" aria-busy="true"></div>
           <div id="empty" class="empty-state" hidden><span class="empty-icon" aria-hidden="true">⌁</span><h3>Keine passenden Fundstücke.</h3><p id="empty-description">Suche oder Filter anpassen.</p><button id="empty-show-all-interest" class="secondary-button" type="button">Interest-Schwelle auf 0 setzen</button></div>
+          <section id="browse" class="browse-section" aria-labelledby="browse-heading" hidden>
+            <div class="browse-heading"><div><p class="eyebrow">EIN ANDERER BLICK</p><h2 id="browse-heading" tabindex="-1">Zum Stöbern</h2></div><p>Unter deiner Interest-Schwelle, auf einer Achse vorn.</p></div>
+            <p id="browse-summary" class="result-summary" role="status" aria-live="polite"></p>
+            <div class="browse-columns">
+              <section class="browse-panel" aria-labelledby="browse-scalp-heading">
+                <div class="browse-panel-heading"><h3 id="browse-scalp-heading">Top 10 Scalp <span id="browse-scalp-count">(0)</span></h3><p>Wirtschaftliches Potenzial zuerst</p></div>
+                <ol id="browse-scalp-list" class="browse-list" aria-label="Angebote nach Scalp"></ol>
+                <p id="browse-scalp-empty" class="browse-empty" hidden>Keine passenden Angebote unter der Interest-Schwelle.</p>
+              </section>
+              <section class="browse-panel" aria-labelledby="browse-useability-heading">
+                <div class="browse-panel-heading"><h3 id="browse-useability-heading">Top 10 Useability <span id="browse-useability-count">(0)</span></h3><p>Eigenständige Nutzbarkeit zuerst</p></div>
+                <ol id="browse-useability-list" class="browse-list" aria-label="Angebote nach Useability"></ol>
+                <p id="browse-useability-empty" class="browse-empty" hidden>Keine passenden Angebote unter der Interest-Schwelle.</p>
+              </section>
+            </div>
+          </section>
         </section>
       </main>
       <footer><span>Fundgrube · Sichten. Einordnen. Selbst prüfen.</span><a href="./info.html">Quellen, Scores &amp; Schnittstelle ↗</a></footer>

@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#060b10" />
     <meta name="description" content="Quellen, Scores, Datenalter und die direkte ChatGPT-Schnittstelle von Fundgrube." />
     <title>Info &amp; Schnittstelle — Fundgrube</title>
-    <link rel="stylesheet" href="./styles.css?v=design-v3.1" />
-    <script src="./info.js?v=design-v3.1" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=design-v3.2" />
+    <script src="./info.js?v=design-v3.2" defer></script>
   </head>
   <body class="info-page">
     <a class="skip-link" href="#info-title">Zum Inhalt</a>
@@ -18,13 +18,14 @@
       </header>
       <main class="info-main">
         <div class="info-heading"><p class="eyebrow">HINTER DEM RADAR</p><h1 id="info-title" tabindex="-1">Info &amp; Schnittstelle</h1><p>Was die Zahlen aussagen, woher die Angebote kommen und wie ChatGPT denselben Datenstand lesen kann.</p></div>
-        <nav class="info-nav" aria-label="Auf dieser Seite"><a href="#scores">Scores</a><a href="#source">Quelle &amp; Datenalter</a><a href="#coverage">Abdeckung</a><a href="#interface">Für ChatGPT</a></nav>
+        <nav class="info-nav" aria-label="Auf dieser Seite"><a href="#scores">Scores</a><a href="#source">Quelle &amp; Datenalter</a><a href="#coverage">Abdeckung</a><a href="#automation">Aktualisierung</a><a href="#images">Bildhilfe</a><a href="#interface">Für ChatGPT</a></nav>
 
         <section id="scores" class="info-section" aria-labelledby="scores-title">
           <p class="eyebrow">DREI ZAHLEN, DREI VERSCHIEDENE FRAGEN</p><h2 id="scores-title">Aus Scalp und Useability wird Interest</h2>
           <p><strong>Scalp</strong> ordnet das interessante Fund- und Wertpotenzial ein. <strong>Useability</strong> beschreibt, wie eigenständig sich das Objekt sinnvoll nutzen lässt. <strong>Interest</strong> verbindet beides zur Reihenfolge auf dem Radar. Alle drei Werte liegen zwischen 0 und 100; sie sind keine Erfolgswahrscheinlichkeiten und keine Euro-Preise.</p>
           <div class="formula-panel"><code>Interest = ⌊(Scalp × Useability + 50) / 100⌋</code><p>Auf ganze Punkte gerundet, bei einer halben Zahl aufwärts. Beispiel: Scalp 90 × Useability 95 → <strong>Interest 86</strong>. Eine hochwertige Systembaugruppe mit 90 × 20 kommt dagegen auf <strong>Interest 18</strong>.</p></div>
           <p>Der Radar startet mit <strong>Mindest-Interest 40</strong>. Du kannst die Schwelle frei ändern. <strong>Alles (0)</strong> zeigt auch Angebote ohne vollständige Bewertung; ein Strich bedeutet unbekannt, nicht null.</p>
+          <p>Unter der normalen Trefferliste stehen zwei Stöberlisten: die jeweils <strong>Top 10 nach Scalp und nach Useability unter deiner Interest-Schwelle</strong>. Sie berücksichtigen dieselben Such- und Sachfilter, aber nur vollständig bewertete, nicht ausgeschlossene und aktuell laufende Angebote im aktiven Zeitfenster. Diagnosefilter für abgelaufene oder undatierte Angebote erweitern diese Listen nicht. Ein Angebot kann in beiden Listen erscheinen. Bei Interest 0 gibt es keine Angebote unterhalb der Schwelle.</p>
           <h3>Die Scalp-Skala</h3>
           <div class="info-table-wrap"><table class="rubric-table"><thead><tr><th scope="col">Scalp</th><th scope="col">Kalibrierung</th></tr></thead><tbody><tr><th scope="row">0–9</th><td>Trivial: gewöhnliches Kleinteil oder Verbrauchsmaterial</td></tr><tr><th scope="row">10–24</th><td>Klein: begrenztes Fundpotenzial</td></tr><tr><th scope="row">25–44</th><td>Mittel: interessant, aber kein außergewöhnlicher Fund</td></tr><tr><th scope="row">45–64</th><td>Substanziell: merklich höherwertiges Objekt</td></tr><tr><th scope="row">65–79</th><td>Professionell: relevantes Gerät oder hochwertige Ausrüstung</td></tr><tr><th scope="row">80–89</th><td>Hoch: deutlich überdurchschnittliches Fundpotenzial</td></tr><tr><th scope="row">90–100</th><td>Außergewöhnlich: nur für klar begründete Spitzenfälle</td></tr></tbody></table></div>
           <h3>Useability ist nicht der Zustand</h3>
@@ -51,6 +52,23 @@
         </section>
 
         <section id="coverage" class="info-section" aria-labelledby="coverage-title"><p class="eyebrow">WAS DER SNAPSHOT ABBILDET</p><h2 id="coverage-title">Abdeckung &amp; Abrufgrenzen</h2><div id="info-summary" class="info-dynamic"></div><div id="info-coverage" class="coverage-content"></div><p>Der Feed ist ein begrenzter Ausschnitt, keine garantierte Vollabdeckung aller eBay-Auktionen. Ein vollständig eingelesenes Quellenverzeichnis wäre ebenfalls keine vollständige Abbildung des Marktes. Quellenstatus, laufende Limits und ältere Beobachtungen müssen bei jeder Auswertung berücksichtigt werden.</p></section>
+
+        <section id="automation" class="info-section" aria-labelledby="automation-title">
+          <p class="eyebrow">SAMMELN IST NICHT NEU BEWERTEN</p><h2 id="automation-title">Was läuft automatisch?</h2>
+          <p>Der <a href="https://github.com/Pogoner/fundgrube/actions/workflows/publish.yml" target="_blank" rel="noopener noreferrer">GitHub-Workflow</a> ist für alle zehn Minuten vorgesehen, jeweils zu Minute 03, 13, 23, 33, 43 und 53. Änderungen auf <code>main</code> und ein manueller Start lösen denselben Ablauf aus. <strong>Ein eingestellter Zeitplan belegt noch keinen ausgeführten Abruf.</strong> GitHub kann geplante Läufe verzögern oder auslassen. Prüfe die Laufhistorie und den oben angegebenen letzten erfolgreichen Quellenabruf; ein erfolgreicher Veröffentlichungszeitpunkt allein genügt nicht.</p>
+          <div class="info-table-wrap"><table class="rubric-table"><thead><tr><th scope="col">Schritt</th><th scope="col">Verhalten</th></tr></thead><tbody><tr><th scope="row">Daten sammeln</th><td>Bei einem gestarteten Workflow schonend aus der Quelle lesen. Abrufpause, Tagesbudget und Quellenfehler können einen neuen Abruf verhindern.</td></tr><tr><th scope="row">Bestand &amp; Website</th><td>Automatisch zusammenführen, doppelte IDs vermeiden, abgelaufene Angebote entfernen und Feed sowie Website veröffentlichen. Metadaten bleiben bis zum Auktionsende erhalten; die Kapazitätsgrenze ist 800 Datensätze.</td></tr><tr><th scope="row">Vorhandene Bewertungen</th><td>Passende, noch gültige Einordnungen wiederverwenden. Interaktive Reviews haben eine eigene Frist von 48 Stunden und bestätigen keine aktuellen Quellenfakten.</td></tr><tr><th scope="row">Neue LLM-Sichtung</th><td>Ein eigener Arbeitsschritt. Den aktuellen API-Zustand zeigt der Bewertungsstatus oben. Bei ausgeschalteter API bleiben neue, noch nicht semantisch gesichtete Angebote heuristisch eingeordnet.</td></tr><tr><th scope="row">Im Browser neu laden</th><td>Nur den veröffentlichten Snapshot abrufen. Das startet weder den Sammler noch eine neue LLM-Bewertung.</td></tr></tbody></table></div>
+          <h3>Eine wiederkehrende ChatGPT-Sichtung</h3>
+          <p>Als Ausgangspunkt eignet sich eine <strong>stündliche Sichtung neuer oder geänderter Angebote</strong> mit der GitHub-Anbindung. Bestehende gültige Bewertungen nicht jedes Mal neu erzeugen. Eine reine Shortlist-Aufgabe verändert keine GUI-Scores; dafür ist ein ausdrücklicher Speicherauftrag erforderlich. Die Einrichtung einer solchen Aufgabe ist unabhängig vom GitHub-Zeitplan und erfolgt nicht durch das Öffnen dieser Seite.</p>
+          <p>Ein vorbereiteter <a href="https://github.com/Pogoner/fundgrube/blob/main/docs/recurring-triage.md" target="_blank" rel="noopener noreferrer">Auftrag mit Lese- und optionalem Speicherumfang</a> beschreibt den konsistenten Datenabruf, die Bewertung und die Grenzen. Eine wiederkehrende Aufgabe braucht Zugriff auf das Repository, aber für die interaktive Sichtung keinen zusätzlichen API-Key. Ihre tatsächlichen Läufe und Ergebnisse müssen separat kontrolliert werden.</p>
+        </section>
+
+        <section id="images" class="info-section" aria-labelledby="images-title">
+          <p class="eyebrow">FEHLENDE ANGEBOTSFOTOS</p><h2 id="images-title">Bilder in Firefox prüfen</h2>
+          <p>Die Angebotsfotos werden direkt von <code>i.ebayimg.com</code> geladen. Firefox besitzt einen eigenen Schutz vor Aktivitätenverfolgung, unabhängig von uBlock. Mozilla dokumentiert, dass dieser auch eingebettete eBay-Bilder blockieren kann. Das ist eine mögliche Ursache, kein Nachweis für deinen Browser.</p>
+          <ol><li>Öffne bei einem betroffenen Angebot <strong>„Originalbild öffnen“</strong>. Erscheint das Foto dort, funktioniert die Bildadresse grundsätzlich; das Problem betrifft möglicherweise nur das Einbetten.</li><li>Prüfe auf Fundgrube das <strong>Schild links neben der Firefox-Adresszeile</strong> und die Liste blockierter Inhalte. Taucht <code>i.ebayimg.com</code> dort auf, ist die Browsersperre als Ursache belegt. Nur uBlock zu deaktivieren ändert diese Firefox-Einstellung nicht.</li><li>Falls dort keine entsprechende Sperre steht: Öffne die Entwicklerwerkzeuge mit F12, lade die Seite neu und prüfe in Netzwerk oder Konsole die Fehlermeldung zur Bildadresse. Ein Screenshot dieser Meldung unterscheidet eine Sperre von einem Netzwerk- oder Serverfehler.</li></ol>
+          <p>Fundgrube kann aus dem Bildfehler selbst keinen verlässlichen Sperrgrund lesen und schaltet keine Schutzfunktion ab. Du musst den Schutz nicht global deaktivieren. Die Originalbild- und Angebotslinks bleiben als Alternative verfügbar; Bilder werden nicht über einen zusätzlichen Dienst umgeleitet.</p>
+          <p><a href="https://support.mozilla.org/de/kb/verbesserter-schutz-aktivitatenverfolgung-desktop" target="_blank" rel="noopener noreferrer">Mozilla: Schutz und blockierte Inhalte prüfen ↗</a> · <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=2084858" target="_blank" rel="noopener noreferrer">Mozilla-Fehlerbericht zu eingebetteten eBay-Bildern ↗</a></p>
+        </section>
 
         <section id="interface" class="info-section" aria-labelledby="interface-title">
           <p class="eyebrow">DIESELBEN DATEN FÜR DICH UND CHATGPT</p><h2 id="interface-title">Direkte Schnittstelle</h2>

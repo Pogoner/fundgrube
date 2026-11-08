@@ -76,7 +76,7 @@ class Element {
       this.childQueries.set(selector, images);
       return images;
     }
-    if ([".image-fallback", ".image-state", ".image-source-link"].includes(selector)) {
+    if ([".image-fallback", ".image-state", ".image-source-link", ".image-help-link"].includes(selector)) {
       const matches = [];
       for (const match of this.markup.matchAll(/<([a-z]+)\b([^>]*)>([^<]*)/g)) {
         const attrs = attributes(match[2]);
@@ -147,11 +147,12 @@ function harness(data = fixture(), options = {}) {
     get copied() { return copied; },
     get count() { return Number(nodes.get("result-count").textContent.match(/^\((\d+)/)?.[1]); },
     get ids() { return nodes.get("cards").querySelectorAll(".detail-open").map(node => node.dataset.id); },
+    browseIds(axis) { return nodes.get(`browse-${axis}-list`).querySelectorAll(".detail-open").map(node => node.dataset.id); },
     setFetch(callback) { fetcher = callback; },
     async value(id, value) { nodes.get(id).value = String(value); await nodes.get(id).dispatch(["search", "minimum-interest"].includes(id) ? "input" : "change"); },
     async check(id, checked) { nodes.get(id).checked = checked; await nodes.get(id).dispatch("change"); },
     async click(id) { await nodes.get(id).dispatch("click"); },
-    async detail(id) { const button = nodes.get("cards").querySelectorAll(".detail-open").find(node => node.dataset.id === id); assert(button, `Detail button exists for ${id}`); await nodes.get("cards").dispatch("click", {target: button}); },
+    async detail(id, listId = "cards") { const button = nodes.get(listId).querySelectorAll(".detail-open").find(node => node.dataset.id === id); assert(button, `Detail button exists for ${id} in ${listId}`); button.focus(); await nodes.get(listId).dispatch("click", {target: button}); },
     tick(milliseconds = 0) { clock.now += milliseconds; for (const interval of intervals) interval.callback(); }
   };
 }
@@ -160,6 +161,10 @@ test("home is a compact radar; long documentation lives on a real linked Info pa
   const home = pages.index.html;
   const info = pages.info.html;
   assert.match(home, /href="\.\/info\.html"/);
+  assert(home.indexOf('id="cards"') < home.indexOf('id="browse"'));
+  assert.match(home, /href="#browse-heading"/);
+  assert.match(home, /Top 10 Scalp/);
+  assert.match(home, /Top 10 Useability/);
   assert.doesNotMatch(home, /class="hero|id="interface"|id="coverage-details"|id="copy-instructions"|id="tool-instructions"|class="footnote"/);
   assert(home.indexOf('id="minimum-interest"') < home.indexOf('id="cards"'));
   assert.match(info, /id="home-link"[^>]*href="\.\/"/);
@@ -194,7 +199,7 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
-  assert(versions.has("design-v3.1"), "new design cannot reuse an older asset cache key");
+  assert(versions.has("design-v3.2"), "new design cannot reuse an older asset cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {
@@ -223,6 +228,11 @@ test("image loading is early for visible cards, dimensioned and has a safe recov
   }
   assert.doesNotMatch(h.nodes.get("cards").innerHTML, /onerror="injected"|onload="/);
   const first = images[0];
+  assert.equal(first.complete, false);
+  assert.equal(first.naturalWidth, 0);
+  assert(first.parentElement.classList.contains("image-loading"), "a pending image is not a failed image");
+  const help = first.parentElement.querySelector(".image-help-link");
+  assert.equal(help.hidden, true);
   await first.dispatch("error");
   assert(first.parentElement.classList.contains("image-failed"));
   assert.equal(first.hidden, true);
@@ -232,12 +242,26 @@ test("image loading is early for visible cards, dimensioned and has a safe recov
   assert.equal(original.hidden, false);
   assert.equal(original.attributes.get("href"), image);
   assert.equal(original.attributes.get("rel"), "noopener noreferrer");
+  assert.equal(help.hidden, false);
+  assert.equal(help.attributes.get("href"), "./info.html#images");
   await first.dispatch("load");
   assert(first.parentElement.classList.contains("image-loaded"));
   assert.equal(first.hidden, false);
   assert.equal(first.parentElement.querySelector(".image-fallback").hidden, true);
   assert.equal(original.hidden, true);
+  assert.equal(help.hidden, true);
   assert.equal(h.requests.length, 1, "No image proxy, image prefetch or unexpected API call is introduced");
+});
+
+test("image help and automation guidance are reachable without claiming a Firefox fix or automatic LLM", () => {
+  assert.match(pages.info.html, /href="#images"/);
+  assert.match(pages.info.html, /id="images"/);
+  assert.match(pages.info.html, /Schild links neben der Firefox-Adresszeile/);
+  assert.match(pages.info.html, /mögliche Ursache, kein Nachweis für deinen Browser/);
+  assert.match(pages.info.html, /id="automation"/);
+  assert.match(pages.info.html, /Ein eingestellter Zeitplan belegt noch keinen ausgeführten Abruf/);
+  assert.match(pages.info.html, /Eine reine Shortlist-Aufgabe verändert keine GUI-Scores/);
+  assert.match(pages.info.html, /docs\/recurring-triage\.md/);
 });
 
 test("cached, missing and unsafe pictures use honest fallbacks without fabricated photos", async () => {
@@ -326,10 +350,14 @@ test("actual seven-item demo is fictitious and starts at Interest 40", async () 
   assert.deepEqual(h.ids, ["demo-001", "demo-002", "demo-007", "demo-003"]);
   assert.equal(h.nodes.get("metric-candidates").textContent, "5");
   assert.equal(h.nodes.get("metric-highvalue").textContent, "4");
+  assert.deepEqual(h.browseIds("scalp"), ["demo-004"]);
+  assert.deepEqual(h.browseIds("useability"), ["demo-004"]);
   assert.equal(h.nodes.get("info-link").href, "./info.html?demo=1");
   assert.match(h.nodes.get("notice").innerHTML, /Keine echten Angebote/);
   assert.doesNotMatch(h.nodes.get("cards").innerHTML, /href="https:/);
+  assert.doesNotMatch(h.nodes.get("browse-scalp-list").innerHTML, /href="https:/);
   await h.click("show-all-interest"); assert.equal(h.count, 5);
+  assert.deepEqual(h.browseIds("scalp"), []);
   assert(h.ids.includes("demo-004"));
   await h.value("transport", "shipping"); assert.equal(h.count, 4);
   await h.value("transport", "pickup"); assert.equal(h.count, 2);
@@ -382,6 +410,132 @@ test("legacy or incomplete pairs never relabel an old score as new Interest; nul
   await h.detail("missing-useability");
   assert.match(h.nodes.get("dialog-content").innerHTML, /Useability<\/small><strong>Noch offen/);
   assert.match(h.nodes.get("dialog-content").innerHTML, /alter Gesamtwert wird nicht als neuer Interest übernommen/);
+});
+
+test("browsing ranks unique below-threshold offers by each axis, with stable ties and a top-ten cap", async () => {
+  const module = offer({id: "module", scalp_score: 95, useability_score: 20});
+  const rows = [
+    module, {...module},
+    offer({id: "module-higher-use", scalp_score: 95, useability_score: 30}),
+    offer({id: "tie-b", scalp_score: 90, useability_score: 30, ends_at: iso(2 * hour)}),
+    offer({id: "tie-a", scalp_score: 90, useability_score: 30, ends_at: iso(2 * hour)}),
+    offer({id: "tie-later", scalp_score: 90, useability_score: 30, ends_at: iso(3 * hour)}),
+    offer({id: "easy-a", scalp_score: 35, useability_score: 100}),
+    offer({id: "easy-b", scalp_score: 30, useability_score: 100}),
+    offer({id: "zero", scalp_score: 100, useability_score: 0}),
+    ...Array.from({length: 12}, (_, index) => offer({id: `bulk-${String(index).padStart(2, "0")}`, scalp_score: 78 - index, useability_score: 20, ends_at: iso(index === 11 ? 60000 : 4 * hour)})),
+    offer({id: "at-threshold", scalp_score: 40, useability_score: 100}),
+    offer({id: "above"}),
+    offer({id: "pending", scalp_score: 100, useability_score: null}),
+    offer({id: "legacy", score_version: 1, scalp_score: 100, useability_score: 100}),
+    offer({id: "invalid-score", scalp_score: 100.5, useability_score: 1})
+  ];
+  const h = harness(fixture({deals: rows})); await flush();
+  assert.deepEqual(h.ids, ["above", "at-threshold"]);
+  assert.deepEqual(h.browseIds("scalp"), ["zero", "module-higher-use", "module", "tie-a", "tie-b", "tie-later", "bulk-00", "bulk-01", "bulk-02", "bulk-03"]);
+  assert.deepEqual(h.browseIds("useability"), ["easy-a", "easy-b", "module-higher-use", "tie-a", "tie-b", "tie-later", "module", "bulk-00", "bulk-01", "bulk-02"]);
+  assert.equal(h.nodes.get("browse-scalp-count").textContent, "(10)");
+  assert.match(h.nodes.get("browse-summary").textContent, /20 vollständig bewertete Angebote mit Interest < 40/);
+  assert.match(h.nodes.get("browse-summary").textContent, /Überschneidungen möglich/);
+  assert.match(h.nodes.get("browse-scalp-list").innerHTML, /Interest <strong>0<\/strong>/);
+  for (const axis of ["scalp", "useability"]) assert.equal(new Set(h.browseIds(axis)).size, 10);
+  const before = h.browseIds("scalp");
+  await h.value("sort", "ending"); assert.deepEqual(h.browseIds("scalp"), before);
+  h.tick(60000);
+  assert.deepEqual(h.browseIds("scalp"), before, "an off-list expiration does not reorder the top ten");
+  assert.match(h.nodes.get("browse-summary").textContent, /19 vollständig bewertete Angebote/);
+  assert.match(h.nodes.get("result-summary").textContent, /Bestand bis Auktionsende · aktiv: Restlaufzeit < 72 Std\./);
+});
+
+test("browsing follows the current Interest slider, computes the dual score and handles zero honestly", async () => {
+  const h = harness(fixture({deals: [
+    offer({id: "under", scalp_score: 95, useability_score: 20, interest_score: 99}),
+    offer({id: "at", scalp_score: 20, useability_score: 100}),
+    offer({id: "half-up", scalp_score: 1, useability_score: 50}),
+    offer({id: "pending", scalp_score: 99, useability_score: null})
+  ]})); await flush();
+  assert.deepEqual(h.browseIds("scalp"), ["under", "at", "half-up"]);
+  assert.match(h.nodes.get("browse-scalp-list").innerHTML, /Interest <strong>19<\/strong>/);
+  assert.match(h.nodes.get("browse-scalp-list").innerHTML, /Interest <strong>1<\/strong>/);
+  await h.value("minimum-interest", 20);
+  assert.deepEqual(h.ids, ["at"]);
+  assert.deepEqual(h.browseIds("scalp"), ["under", "half-up"]);
+  await h.click("show-all-interest");
+  assert.equal(h.count, 4);
+  for (const axis of ["scalp", "useability"]) {
+    assert.deepEqual(h.browseIds(axis), []);
+    assert.equal(h.nodes.get(`browse-${axis}-empty`).hidden, false);
+  }
+  assert.match(h.nodes.get("browse-summary").textContent, /Bei Interest 0/);
+  await h.click("reset-filters");
+  assert.deepEqual(h.browseIds("scalp"), ["under", "at", "half-up"]);
+});
+
+test("browsing shares search, transport, value and eligible/review filters but never factual exclusions", async () => {
+  const rows = [
+    offer({id: "ship", title: "Labormodul", scalp_score: 80, useability_score: 30, value_band: "around_500", shipping_eur: 6, local_pickup_confirmed: false, pickup_available: false, eligibility: "eligible"}),
+    aggregate({id: "pickup", title: "Prozesssensor", scalp_score: 70, useability_score: 30, value_band: "unknown", shipping_eur: null, pickup_available: true, pickup_search_confirmed: true, pickup_search_postcode: "69121", pickup_search_radius_km: 50, eligibility: "review"}),
+    offer({id: "small", scalp_score: 20, useability_score: 100, value_band: "around_5", shipping_eur: 8, local_pickup_confirmed: false, pickup_available: false, eligibility: "eligible"}),
+    offer({id: "excluded", scalp_score: 99, useability_score: 20, eligibility: "excluded", eligibility_without_time_window: "excluded"})
+  ];
+  const h = harness(fixture({deals: rows})); await flush();
+  assert.deepEqual(h.browseIds("scalp"), ["ship", "pickup", "small"]);
+  await h.value("search", "LABORMODUL"); assert.deepEqual(h.browseIds("scalp"), ["ship"]);
+  await h.value("search", ""); await h.value("transport", "shipping");
+  assert.deepEqual(h.browseIds("scalp"), ["ship", "small"]);
+  await h.value("value-filter", "plausible"); assert.deepEqual(h.browseIds("scalp"), ["ship"]);
+  await h.value("value-filter", "all"); await h.value("transport", "pickup");
+  assert.deepEqual(h.browseIds("scalp"), ["pickup"]);
+  assert.match(h.nodes.get("browse-scalp-list").innerHTML, /Abholsuche · 50 km.*Nähe laut Quelle; Standort im Original prüfen/);
+  await h.value("eligibility", "eligible"); assert.deepEqual(h.browseIds("scalp"), []);
+  await h.value("eligibility", "review"); assert.deepEqual(h.browseIds("scalp"), ["pickup"]);
+  await h.value("transport", "all"); await h.value("eligibility", "excluded");
+  assert.deepEqual(h.browseIds("scalp"), []); assert.deepEqual(h.browseIds("useability"), []);
+});
+
+test("browsing ignores debug time overrides, retains old observations and updates even when the main list is empty", async () => {
+  const low = overrides => offer({scalp_score: 80, useability_score: 30, ...overrides});
+  const h = harness(fixture({deals: [
+    low({id: "old", last_seen_at: iso(-96 * hour), ends_at: iso(5 * hour)}),
+    low({id: "ending", ends_at: iso(60000)}),
+    low({id: "enters", ends_at: iso(73 * hour), eligibility: "excluded", eligibility_without_time_window: "review"}),
+    low({id: "at-boundary", ends_at: iso(72 * hour), eligibility: "excluded", eligibility_without_time_window: "review"}),
+    low({id: "fact-excluded", ends_at: iso(73 * hour), eligibility: "excluded", eligibility_without_time_window: "excluded"}),
+    low({id: "ended", ends_at: iso(0)}),
+    low({id: "unknown-end", ends_at: null}),
+    low({id: "unknown-source", last_seen_at: null}),
+    low({id: "future-source", last_seen_at: iso(24 * hour)})
+  ]})); await flush();
+  assert.equal(h.count, 0);
+  assert.deepEqual(h.browseIds("scalp"), ["ending", "old"]);
+  assert.match(h.nodes.get("browse-scalp-list").innerHTML, /Quellenstand: vor 4 Tagen · ältere Beobachtung, nicht aktuell bestätigt/);
+  await h.check("show-expired", true); await h.check("show-stale", true);
+  assert.deepEqual(h.browseIds("scalp"), ["ending", "old"]);
+  h.tick(60000); assert.deepEqual(h.browseIds("scalp"), ["old", "at-boundary"]);
+  h.tick(hour); assert.deepEqual(h.browseIds("scalp"), ["old", "at-boundary", "enters"]);
+  const ages = h.nodes.get("browse-scalp-list").querySelectorAll("[data-last-seen]");
+  const ends = h.nodes.get("browse-scalp-list").querySelectorAll("[data-ends-at]");
+  assert(ages.some(node => node.classList.contains("freshness-warning")));
+  const before = ends[0].textContent;
+  h.tick(60000);
+  assert.notEqual(ends[0].textContent, before, "countdowns update in compact lists without a re-render");
+  assert.equal(h.requests.length, 1, "the clock is not an extra source scan");
+  await h.value("eligibility", "eligible");
+  assert.deepEqual(h.browseIds("scalp"), [], "old or review-baseline items do not become verified candidates");
+});
+
+test("compact browsing details keep safe links, unknown facts and keyboard focus in their original list", async () => {
+  const h = harness(fixture({deals: [offer({id: "unsafe", title: '<img src=x onerror="bad()"> Bauteil', scalp_score: 80, useability_score: 30, bid_count: null, shipping_eur: null, condition: "Ungeprüft", url: "javascript:alert(1)", detail_path: null, ends_at: iso(60000)})]})); await flush();
+  const markup = h.nodes.get("browse-useability-list").innerHTML;
+  assert.match(markup, /&lt;img src=x onerror=&quot;bad\(\)&quot;&gt;/);
+  assert.match(markup, /Gebote unbekannt/); assert.match(markup, /Versand ungeklärt/);
+  assert.match(markup, /Heuristik · Konfidenz niedrig/); assert.match(markup, /Ungeprüft/);
+  assert.doesNotMatch(markup, /<img|onerror="|href="javascript/);
+  const opener = h.nodes.get("browse-useability-list").querySelectorAll(".detail-open")[0];
+  await h.detail("unsafe", "browse-useability-list"); h.nodes.get("detail-dialog").close();
+  assert.equal(h.document.activeElement, opener, "overlap between lists returns focus to the actual opener");
+  await h.detail("unsafe", "browse-useability-list"); h.tick(60000); h.nodes.get("detail-dialog").close();
+  assert.equal(h.document.activeElement, h.nodes.get("search"));
 });
 
 test("legacy stray Useability is ignored and Scalp fallback matches the export contract", async () => {

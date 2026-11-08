@@ -7,8 +7,10 @@
     "metric-source", "location-label", "criteria", "result-count", "result-summary", "search", "info-link",
     "transport", "sort", "eligibility", "value-filter", "show-expired", "show-stale", "show-stale-label", "retention-note", "reset-filters",
     "cards", "empty", "empty-description", "detail-dialog", "dialog-title", "dialog-content",
+    "browse", "browse-summary", "browse-scalp-list", "browse-scalp-count", "browse-scalp-empty", "browse-useability-list", "browse-useability-count", "browse-useability-empty",
     "demo-button", "refresh-button", "minimum-interest", "minimum-interest-value", "show-all-interest", "empty-show-all-interest"
   ].map(id => [id, $("#" + id)]));
+  const offerLists = [els.cards, els["browse-scalp-list"], els["browse-useability-list"]];
   const euro = new Intl.NumberFormat("de-DE", {style: "currency", currency: "EUR"});
   const time = new Intl.DateTimeFormat("de-DE", {dateStyle: "short", timeStyle: "short", timeZone: "Europe/Berlin"});
   const statuses = {
@@ -20,6 +22,7 @@
   let loading = false;
   let loadError = "";
   let selectedId = null;
+  let selectedListId = "cards";
   let detailSequence = 0;
   let visibleIds = "";
   const detailCache = new Map();
@@ -311,23 +314,29 @@
     els["source-attribution"].innerHTML = isDemo ? "Fiktive Beispieldaten" : aggregatorFeed() ? `Aggregator-Cache · nicht direkt verifiziert · ${sourceLink() || sourceLink(feed.deals.find(item => providerOf(item) === aggregatorProvider)) || "Drittquelle"}` : "Quellenstand aus veröffentlichtem Snapshot";
   }
 
-  function visibleDeals() {
+  function matchesFilters(item, strictActive = false) {
     const query = els.search.value.trim().toLocaleLowerCase("de-DE");
-    const list = (feed?.deals || []).filter(item => {
-      const state = eligibility(item);
+    const state = eligibility(item);
+    // Browsing is an alternative score order, not a way around factual or
+    // timing exclusions. Debug toggles apply only to the main result list.
+    if (strictActive) {
+      if (!active(item) || state === "excluded") return false;
+    } else {
       if (!els["show-expired"].checked && outsideWindow(item)) return false;
       if (!els["show-stale"].checked && unknownTime(item)) return false;
-      if (!meetsInterest(item)) return false;
-      if (els.eligibility.value === "active" ? state === "excluded" : state !== els.eligibility.value) return false;
-      if (query && ![item.title, item.description, item.city, item.condition].filter(Boolean).join(" ").toLocaleLowerCase("de-DE").includes(query)) return false;
-      if (els.transport.value === "shipping" && !cheapShipping(item)) return false;
-      if (els.transport.value === "pickup" && !nearby(item)) return false;
-      const value = valueBand(item);
-      if (els["value-filter"].value === "plausible" && value !== "around_500") return false;
-      if (els["value-filter"].value === "unknown" && value !== "unknown") return false;
-      if (els["value-filter"].value === "unlikely" && !["around_5", "around_50"].includes(value)) return false;
-      return true;
-    });
+    }
+    if (els.eligibility.value === "active" ? state === "excluded" : state !== els.eligibility.value) return false;
+    if (query && ![item.title, item.description, item.city, item.condition].filter(Boolean).join(" ").toLocaleLowerCase("de-DE").includes(query)) return false;
+    if (els.transport.value === "shipping" && !cheapShipping(item)) return false;
+    if (els.transport.value === "pickup" && !nearby(item)) return false;
+    const value = valueBand(item);
+    if (els["value-filter"].value === "plausible" && value !== "around_500") return false;
+    if (els["value-filter"].value === "unknown" && value !== "unknown") return false;
+    if (els["value-filter"].value === "unlikely" && !["around_5", "around_50"].includes(value)) return false;
+    return true;
+  }
+  function visibleDeals() {
+    const list = (feed?.deals || []).filter(item => matchesFilters(item) && meetsInterest(item));
     const unknownLast = value => number(value) ?? Number.POSITIVE_INFINITY;
     const total = item => number(item.price_eur) !== null && number(item.shipping_eur) !== null ? item.price_eur + item.shipping_eur : Number.POSITIVE_INFINITY;
     list.sort((a, b) => {
@@ -343,6 +352,38 @@
     });
     return list;
   }
+  function browseSelections() {
+    const minimum = minimumInterest();
+    const pool = (feed?.deals || []).filter(item => {
+      const rating = scores(item);
+      return rating.complete && rating.interest < minimum && matchesFilters(item, true);
+    });
+    const top = axis => {
+      const other = axis === "scalp" ? "useability" : "scalp";
+      const seen = new Set();
+      return pool.slice().sort((a, b) => {
+        const left = scores(a), right = scores(b);
+        return right[axis] - left[axis] || right[other] - left[other]
+          || timestamp(a.ends_at) - timestamp(b.ends_at) || String(a.id).localeCompare(String(b.id));
+      }).filter(item => {
+        if (seen.has(item.id)) return false;
+        seen.add(item.id);
+        return true;
+      }).slice(0, 10);
+    };
+    return {scalp: top("scalp"), useability: top("useability"), total: new Set(pool.map(item => item.id)).size};
+  }
+  function resultsSignature(list, browsing) {
+    return JSON.stringify([visibleSignature(list), visibleSignature(browsing.scalp), visibleSignature(browsing.useability), browsing.total]);
+  }
+  function detailButton(id, preferredListId) {
+    const preferred = els[preferredListId];
+    for (const container of [preferred, ...offerLists.filter(list => list !== preferred)].filter(Boolean)) {
+      const button = Array.from(container.querySelectorAll(".detail-open")).find(node => node.dataset.id === id);
+      if (button) return button;
+    }
+    return null;
+  }
 
   function card(item, index) {
     const picture = isDemo ? null : imageUrl(item.image);
@@ -356,7 +397,7 @@
       <div class="card-visual${picture ? " image-loading" : " image-missing"}">
         ${picture ? `<img class="offer-image" alt="${esc("Angebotsfoto: " + (item.title || "Objekt"))}" width="720" height="450" loading="${index < 3 ? "eager" : "lazy"}" fetchpriority="${index === 0 ? "high" : "auto"}" decoding="async" referrerpolicy="no-referrer" src="${esc(picture)}" />` : ""}
         <span class="image-fallback"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" aria-hidden="true"><rect x="7" y="10" width="34" height="28" rx="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="20" r="3" stroke="currentColor" stroke-width="1.5"/><path d="m9 35 10-10 7 6 6-7 8 10" stroke="currentColor" stroke-width="1.5"/></svg><strong class="image-state">${picture ? "Bild wird geladen …" : isDemo ? "Fiktives Beispiel" : "Kein Bild in der Quelle"}</strong><span>${picture ? "Originalfoto von eBay" : isDemo ? "Keine echte Auktion" : "Objekt im Originalangebot ansehen"}</span></span>
-        ${picture ? `<a class="image-source-link" href="${esc(picture)}" target="_blank" rel="noopener noreferrer" hidden>Originalbild öffnen ↗</a>` : ""}
+        ${picture ? `<a class="image-source-link" href="${esc(picture)}" target="_blank" rel="noopener noreferrer" hidden>Originalbild öffnen ↗</a><a class="image-help-link" href="./info.html#images" hidden>Bildhilfe ↗</a>` : ""}
       </div>
       <div class="card-content">
         <div class="card-kicker"><span class="score-badge ${state}">${esc(potentialLabel(item))}</span><span class="time-badge" data-ends-at="${esc(item.ends_at)}">${esc(timeLabel(item))}</span></div>
@@ -382,6 +423,7 @@
         image.hidden = !loaded;
         frame.querySelector(".image-fallback").hidden = loaded;
         frame.querySelector(".image-source-link").hidden = loaded;
+        frame.querySelector(".image-help-link").hidden = loaded;
         if (!loaded) frame.querySelector(".image-state").textContent = "Bild konnte nicht geladen werden";
       };
       image.addEventListener("load", () => update(true));
@@ -390,22 +432,59 @@
       if (image.complete) update(image.naturalWidth > 0);
     });
   }
+  function browseRow(item, index, axis) {
+    const rating = scores(item);
+    const label = axis === "scalp" ? "Scalp" : "Useability";
+    const other = axis === "scalp" ? "Useability" : "Scalp";
+    const otherValue = axis === "scalp" ? rating.useability : rating.scalp;
+    const url = isDemo ? null : itemUrl(item.url);
+    return `<li class="browse-item" data-id="${esc(item.id)}">
+      <span class="browse-rank" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span>
+      <div class="browse-item-copy">
+        <h4><button type="button" class="browse-title detail-open" data-id="${esc(item.id)}" aria-label="${esc("Details prüfen: " + (item.title || item.id))}">${esc(item.title || "Angebot ohne Titel")}</button></h4>
+        <p class="browse-scoreline"><span>Interest <strong>${rating.interest}</strong></span><span>${other} <strong>${otherValue}</strong></span></p>
+        <p class="browse-facts"><span>${isAggregator(item) ? "Laut Quelle" : "Beim Scan"}: ${esc(money(item.price_eur))} · ${esc(bidText(item))}</span><span data-ends-at="${esc(item.ends_at)}">${esc(timeLabel(item))}</span></p>
+        <p class="browse-transport">${esc(transportText(item))} · ${esc(item.condition || "Zustand unbekannt")}</p>
+        <p class="browse-meta"><span>${esc(basisText(item))}${semanticAssessed(item) ? ` · Konfidenz ${esc(confidenceText(item))}` : ""} · ${esc(potentialLabel(item))}</span><span class="${stale(item) ? "freshness-warning" : ""}" data-last-seen="${esc(observedAt(item))}">${esc(sourceAgeText(observedAt(item)))}</span></p>
+      </div>
+      <div class="browse-side"><span>${label}</span><strong>${rating[axis]}</strong>${url ? `<a class="outline-button" href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc("Bei eBay ansehen: " + (item.title || item.id))}">eBay ↗</a>` : `<span class="browse-link-missing">${isDemo ? "Demo" : "Kein Link"}</span>`}</div>
+    </li>`;
+  }
+  function renderBrowse(selections) {
+    const minimum = minimumInterest();
+    els.browse.hidden = false;
+    els["browse-summary"].textContent = minimum
+      ? `${selections.total} vollständig bewertete Angebote mit Interest < ${minimum} · nur im aktiven Zeitfenster · übrige Filter gelten · Überschneidungen möglich. Titel öffnen die Details.`
+      : "Bei Interest 0 stehen alle Score-Stände in der Hauptliste; darunter gibt es keine Stöbertreffer.";
+    for (const axis of ["scalp", "useability"]) {
+      const list = selections[axis];
+      els[`browse-${axis}-count`].textContent = `(${list.length})`;
+      els[`browse-${axis}-list`].innerHTML = list.map((item, index) => browseRow(item, index, axis)).join("");
+      els[`browse-${axis}-empty`].hidden = list.length > 0;
+      els[`browse-${axis}-empty`].textContent = minimum
+        ? "Keine vollständig bewerteten Angebote unter dieser Schwelle mit den gewählten Filtern."
+        : "Die Interest-Schwelle steht auf 0.";
+    }
+  }
   function renderCards() {
     const list = visibleDeals();
+    const browsing = browseSelections();
     const activeId = document.activeElement?.classList?.contains("detail-open") ? document.activeElement.dataset.id : null;
-    visibleIds = visibleSignature(list);
+    const activeListId = activeId ? offerLists.find(container => container.contains(document.activeElement))?.id : null;
+    visibleIds = resultsSignature(list, browsing);
     els["result-count"].textContent = `(${list.length} / ${feed.deals.length})`;
     els.cards.innerHTML = list.map(card).join("");
     initializeImages();
+    renderBrowse(browsing);
     const hiddenOutside = feed.deals.filter(outsideWindow).length;
     const hiddenUnknown = feed.deals.filter(item => unknownTime(item) && (els["show-expired"].checked || !outsideWindow(item))).length;
     const pending = feed.deals.filter(item => active(item) && !scores(item).complete).length;
     const minimum = minimumInterest();
-    els["result-summary"].textContent = `${list.length} von ${feed.deals.length} gespeicherten Angeboten sichtbar · ${minimum ? `Interest ≥ ${minimum}` : "alle Score-Stände"}${pending ? ` · ${pending} duale Bewertungen offen` : ""}${!els["show-expired"].checked && hiddenOutside ? ` · ${hiddenOutside} außerhalb Zeitfenster` : ""}${!els["show-stale"].checked && hiddenUnknown ? ` · ${hiddenUnknown} Zeitstempel ungeklärt` : ""}${els["show-stale"].checked || els["show-expired"].checked ? " · ACHTUNG: Debug-Filter lässt ungültige Zeitstände zu" : ""}${isDemo ? " · fiktive Beispiele" : ""}`;
+    els["result-summary"].textContent = `${list.length} von ${feed.deals.length} gespeicherten Angeboten sichtbar · Bestand bis Auktionsende · aktiv: Restlaufzeit < ${activeWindowHours()} Std. · ${minimum ? `Interest ≥ ${minimum}` : "alle Score-Stände"}${pending ? ` · ${pending} duale Bewertungen offen` : ""}${!els["show-expired"].checked && hiddenOutside ? ` · ${hiddenOutside} außerhalb Zeitfenster` : ""}${!els["show-stale"].checked && hiddenUnknown ? ` · ${hiddenUnknown} Zeitstempel ungeklärt` : ""}${els["show-stale"].checked || els["show-expired"].checked ? " · ACHTUNG: Debug-Filter lässt ungültige Zeitstände zu" : ""}${isDemo ? " · fiktive Beispiele" : ""}`;
     els.empty.hidden = list.length > 0;
     els["empty-show-all-interest"].hidden = minimum === 0 || !feed.deals.length;
     els["empty-description"].textContent = feed.deals.length ? `Kein Angebot erfüllt diese Filter${minimum ? ` und Interest ≥ ${minimum}` : ""}. „Alles (0)“ zeigt auch unvollständige Bewertungen. Aktives Zeitfenster: ${windowLabel().toLowerCase()}; bereits abgelaufene Angebote bleiben ausgeblendet.` : "Noch keine Angebote im Snapshot. Den Quellenstatus oben prüfen; die Demo enthält ausschließlich fiktive Beispiele.";
-    if (activeId) Array.from(els.cards.querySelectorAll(".detail-open")).find(button => button.dataset.id === activeId)?.focus({preventScroll: true});
+    if (activeId) (detailButton(activeId, activeListId) || els.search).focus({preventScroll: true});
   }
   function render() {
     if (!feed) return;
@@ -448,10 +527,11 @@
       <p class="detail-load-status" role="status">${esc(detailState)}</p>
       <div class="dialog-links">${url ? `<a class="dialog-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Originalangebot bei eBay ↗</a>` : ""}${jsonUrl ? `<a class="detail-json-link" href="${esc(jsonUrl)}" target="_blank" rel="noopener noreferrer">Angebot als JSON ↗</a>` : ""}</div>`;
   }
-  async function showDetail(id) {
+  async function showDetail(id, listId = "cards") {
     const item = feed?.deals.find(deal => deal.id === id);
     if (!item) return;
     selectedId = id;
+    selectedListId = listId;
     const sequence = ++detailSequence;
     const dashboardSnapshot = feed.snapshot_id;
     const url = isDemo ? null : detailUrl(item.detail_path);
@@ -496,10 +576,10 @@
     els["minimum-interest"].value = "40";
     if (feed) { renderProfile(); renderCards(); }
   });
-  els.cards.addEventListener("click", event => {
+  offerLists.forEach(container => container.addEventListener("click", event => {
     const button = event.target.closest(".detail-open");
-    if (button && els.cards.contains(button)) showDetail(button.dataset.id);
-  });
+    if (button && container.contains(button)) showDetail(button.dataset.id, container.id);
+  }));
   els["demo-button"].addEventListener("click", () => load(!isDemo));
   els["refresh-button"].addEventListener("click", () => load(isDemo));
   $("#close-dialog").addEventListener("click", () => els["detail-dialog"].close());
@@ -508,19 +588,21 @@
     const id = selectedId;
     selectedId = null;
     ++detailSequence;
-    const opener = Array.from(els.cards.querySelectorAll(".detail-open")).find(button => button.dataset.id === id);
+    const opener = detailButton(id, selectedListId);
     (opener || els.search).focus({preventScroll: true});
   });
   setInterval(() => {
     if (!feed || loading || document.hidden) return;
     renderStatus();
     renderProfile();
-    if (visibleSignature(visibleDeals()) !== visibleIds) renderCards();
+    if (resultsSignature(visibleDeals(), browseSelections()) !== visibleIds) renderCards();
     else {
-      els.cards.querySelectorAll("[data-ends-at]").forEach(node => { node.textContent = timeLabel({ends_at: node.dataset.endsAt}); });
-      els.cards.querySelectorAll("[data-last-seen]").forEach(node => {
-        node.textContent = sourceAgeText(node.dataset.lastSeen);
-        node.classList.toggle("freshness-warning", staleTimestamp(node.dataset.lastSeen));
+      offerLists.forEach(container => {
+        container.querySelectorAll("[data-ends-at]").forEach(node => { node.textContent = timeLabel({ends_at: node.dataset.endsAt}); });
+        container.querySelectorAll("[data-last-seen]").forEach(node => {
+          node.textContent = sourceAgeText(node.dataset.lastSeen);
+          node.classList.toggle("freshness-warning", staleTimestamp(node.dataset.lastSeen));
+        });
       });
     }
   }, 60000);
