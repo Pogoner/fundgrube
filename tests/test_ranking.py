@@ -135,6 +135,33 @@ class RankingTests(unittest.TestCase):
             "Handbuecher fuer Mikroskope",
             "Betriebsanleitung Tisch-Autoklav",
             "Prospekt mit Bedienungsanleitung Kompressor",
+            "BROSHUIS NEWS MÄRZ 2005 & MÄRZ 2006 2x 8 Seiten BROSCHÜRE",
+            "HYDREMA 707-SERIE. DER MINI-TRUCK 707G/707G POWER+ 2 Seiten BROSCHÜRE RAR",
+            "DAEMO VERSCHROTTUNGS-& ABRISSAUFSÄTZE 12 Seiten DinA4 Broschüre 2014",
+            "DARDA ABBRUCHGERÄTE & ANBAUWERKZEUGE 80Seiten KATALOG DinA4 Broschüre 2019",
+            "Papke Verpackungstechnik Prospektblätter",
+            "COLLICO Plibox Prospektblatt",
+            "Brandner & Söhne Prospektblaetter",
+            "ZIRA Preisliste 2/85+2 Prospektblätter",
+            "ZIRA Preisliste 2/85",
+            "FARMTECH Stalldungstreuer für alpines Gelände ProspektTyp 400 500 550",
+            "Reparatur und Justieranleitung Geräteträger für OPMI Operation Mikroskop",
+            "Faltblätter von Mikroskop Geräte und Labor Instrumente Carl Zeiss",
+            "Faltblaetter von Carl Zeiss Mikroskop", "Mikroskop Faltblatt",
+            "HITACHI ZAXIS 250 HYDRAULIKBAGGER 12 SEITEN DATENBLATT 2003 ALT & RAR",
+            "AD574A: Complete 12-Bit A/D-Converter (Datenblatt)",
+            "Mikroskop Datenblätter", "Mikroskop Datenblaetter",
+            "CAT SCALE MODEL REPLICAS DIECAST MASTERS LIEFERPROGRAMM 44 Seiten FLYER 2018",
+            "Caterpillar Radlader 936E Teilekatalog/Parts Manual EN 1990 SEBP1760-03",
+            "Caterpillar Radlader 936E Parts Manual",
+            "Benutzerhandbuch Wincor Nixdorf BA69 Display User Guide",
+            "Bedienungs - und Wartungshandbuch TCM Gabelstapler",
+            "MITSUBISHI DIESEL ENGINE Bedinungshandbuch 4 Sprachen K Models",
+            "BERTI Gartengeräte Mulcher Faltprospekt", "Kuhn Landmaschinenprospekte",
+            "Kugellagerpreisliste Wellendichtringe",
+            "Analog Devices: Systeme Gesamtübersicht Juli 1986 (mit Preisliste)",
+            "Woolworths Memorabilia. Woolies Chancengleichheit 1996 Kollegenhandbuch",
+            "Datenbuch Passive Bauelemente 1996 Siemens Matsushita",
         ):
             with self.subTest(title=title):
                 result = self.rank(raw(title=title))
@@ -153,6 +180,9 @@ class RankingTests(unittest.TestCase):
             "Bohrmaschine inklusive deutscher Betriebsanleitung",
             "Bohrmaschine mit Koffer und Bedienungsanleitung",
             "Bohrmaschine samt Handbuch", "Bohrmaschine + Bedienungsanleitung",
+            "Bohrmaschine & Bedienungsanleitung",
+            "Bohrmaschine mit Benutzerhandbuch", "Bohrmaschine mit Wartungshandbuch",
+            "Bohrmaschine mit Datenblatt", "Bohrmaschine inkl. Preisliste",
             "Bohrmaschine ohne Bedienungsanleitung", "Bohrmaschine Anleitung fehlt",
             "Bohrmaschine Anleitung nicht dabei", "Bohrmaschine mit Ersatzteilen für die Spindel",
         ):
@@ -168,6 +198,10 @@ class RankingTests(unittest.TestCase):
             "Prospekthalter DIN A4", "Broschürenständer Metall", "Broschuerenstaender Metall",
             "Prospekt-Ständer DIN A4", "Prospekt Halter DIN A4", "Halter für Prospekte",
             "Ständer fuer Broschueren", "Zeitschriftenregal",
+            "Prospekthüllen DIN A4", "Prospekthuellen DIN A4", "Prospekt-Hülle DIN A4",
+            "Transparenter Acryl Prospektständer/Flyerständer aus Kunststoff, 2 Fächer",
+            "Blau A4 Ringbuch Dokumentenhalter",
+            "118 Teile Schulsachen,Schreibwaren, Prospekthüllen, Schnellhefter, Hefteinbände",
         ):
             with self.subTest(title=title):
                 result = self.rank(raw(title=title))
@@ -207,6 +241,9 @@ class RankingTests(unittest.TestCase):
             ("Tischbohrmaschine mit Bohrfutter", "Tischbohrmaschine"),
             ("Stichsäge mit Stichsägeblättern", "Stichsäge"),
             ("Stichsäge inkl. Stichsägenblatt", "Stichsäge"),
+            ("Operationsmikroskop mit Justieranleitung", "Operationsmikroskop"),
+            ("Dräger Gasspürgerät Multi Gas Detector 21/31 im Koffer mit Anleitung & Zubehör",
+             "Dräger Gasspürgerät Multi Gas Detector 21/31 im Koffer"),
         )
         for title, base in cases:
             with self.subTest(title=title):
@@ -239,6 +276,29 @@ class RankingTests(unittest.TestCase):
                 self.assertEqual(result["price_eur"], before["price_eur"])
         self.assertEqual(item, before)
 
+    def test_media_title_symbols_cannot_bypass_the_profile_after_an_llm_review(self):
+        for title in (
+            "BROSHUIS NEWS MÄRZ 2005 & MÄRZ 2006 2x 8 Seiten BROSCHÜRE",
+            "HYDREMA 707-SERIE. DER MINI-TRUCK 707G/707G POWER+ 2 Seiten BROSCHÜRE RAR",
+            "DAEMO VERSCHROTTUNGS-& ABRISSAUFSÄTZE 12 Seiten DinA4 Broschüre 2014",
+            "DARDA ABBRUCHGERÄTE & ANBAUWERKZEUGE 80Seiten KATALOG DinA4 Broschüre 2019",
+            "Papke Verpackungstechnik Prospektblätter",
+            "COLLICO Plibox Prospektblatt",
+            "ZIRA Preisliste 2/85+2 Prospektblätter",
+            "FARMTECH Stalldungstreuer für alpines Gelände ProspektTyp 400 500 550",
+            "Reparatur und Justieranleitung Geräteträger für OPMI Operation Mikroskop",
+            "Faltblätter von Mikroskop Geräte und Labor Instrumente Carl Zeiss",
+        ):
+            with self.subTest(title=title):
+                before = self.rank(raw(title=title))
+                result = apply_semantic(before, assessment(scalp_score=99, useability_score=99,
+                                                          product_kind="apparatus"))
+                self.assertTrue(result["personal_interest_excluded"])
+                self.assertEqual(result["useability_score"], 99)
+                self.assertEqual(result["interest_score"], 98)
+                self.assertEqual(result["assessment_basis"], "llm")
+                self.assertEqual(result["eligibility"], before["eligibility"])
+
     def test_profile_uses_semantic_media_kind_but_preserves_provenance_and_bundle_context(self):
         reviewed = {**self.rank(raw(title="KAESER Unterlagen alt")), "product_kind": "media",
                     "assessment_basis": "llm", "scalp_score": 22, "useability_score": 99,
@@ -250,7 +310,8 @@ class RankingTests(unittest.TestCase):
         for field in set(reviewed) - {"personal_interest_excluded", "personal_interest_reason"}:
             self.assertEqual(result[field], reviewed[field], field)
         self.assertEqual(reviewed, original)
-        for title in ("Bohrmaschine mit Bedienungsanleitung", "Prospekthalter", "Halter für Prospekte"):
+        for title in ("Bohrmaschine mit Bedienungsanleitung", "Prospekthalter", "Halter für Prospekte",
+                      "Prospekthüllen DIN A4", "Prospekthuellen DIN A4", "Prospekt-Hülle DIN A4"):
             with self.subTest(title=title):
                 result = apply_interest_profile({**reviewed, "title": title, "personal_interest_excluded": True})
                 self.assertFalse(result["personal_interest_excluded"])

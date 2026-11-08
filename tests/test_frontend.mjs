@@ -199,7 +199,7 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
-  assert(versions.has("design-v3.5"), "new design cannot reuse an older asset cache key");
+  assert(versions.has("design-v3.6"), "new design cannot reuse an older asset cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {
@@ -553,6 +553,76 @@ test("dashboard and Info share the same conservative legacy profile guard", () =
   const guard = script => script.match(/  function personalInterestExcluded\(item\) \{[\s\S]*?\n  \}/)?.[0];
   assert(guard(pages.index.script));
   assert.equal(guard(pages.index.script), guard(pages.info.script));
+});
+
+test("media-title plus signs and ampersands cannot masquerade as bundled manuals", async () => {
+  const papers = [
+    "BROSHUIS NEWS MÄRZ 2005 & MÄRZ 2006 2x 8 Seiten BROSCHÜRE",
+    "HYDREMA 707-SERIE. DER MINI-TRUCK 707G/707G POWER+ 2 Seiten BROSCHÜRE RAR",
+    "DAEMO VERSCHROTTUNGS-& ABRISSAUFSÄTZE 12 Seiten DinA4 Broschüre 2014",
+    "DARDA ABBRUCHGERÄTE & ANBAUWERKZEUGE 80Seiten KATALOG DinA4 Broschüre 2019"
+  ];
+  const devices = [
+    "Bohrmaschine + Bedienungsanleitung", "Bohrmaschine & Bedienungsanleitung",
+    "Autoklav\t+\tHandbuch", "Schmelzpunktgerät inkl. deutschem Handbuch",
+    "Mikroskop plus Koffer und Bedienungsanleitung"
+  ];
+  const rows = [
+    ...papers.map((title, i) => offer({id: `paper-${i}`, title, scalp_score: i % 2 ? 20 : 95, useability_score: 99, assessment_basis: "llm"})),
+    ...devices.map((title, i) => offer({id: `device-${i}`, title}))
+  ];
+  const h = harness(fixture({deals: rows})); await flush();
+  const wanted = devices.map((_, i) => `device-${i}`);
+  assert.deepEqual(h.ids, wanted);
+  for (const axis of ["scalp", "useability"]) assert.deepEqual(h.browseIds(axis), []);
+  await h.value("search", "Broschüre");
+  assert.deepEqual(h.ids, []);
+  for (const axis of ["scalp", "useability"]) assert.deepEqual(h.browseIds(axis), []);
+  await h.value("search", ""); await h.value("minimum-interest", 100);
+  for (const axis of ["scalp", "useability"]) assert.deepEqual(h.browseIds(axis), wanted);
+  await h.click("show-all-interest");
+  await h.check("show-expired", true); await h.check("show-stale", true);
+  assert.deepEqual(h.ids, wanted);
+  const info = harness(fixture({deals: rows}), {page: "info"}); await flush();
+  assert.match(info.nodes.get("info-profile").textContent, /4 von 9 gespeicherten Angeboten/);
+  assert.equal(rows[0].useability_score, 99, "profile exclusion does not rewrite an authored score");
+});
+
+test("known printed compounds are excluded without a generic book or prospect prefix rule", async () => {
+  const papers = [
+    "Papke Verpackungstechnik Prospektblätter", "COLLICO Plibox Prospektblatt",
+    "Brandner & Söhne Prospektblaetter", "ZIRA Preisliste 2/85+2 Prospektblätter",
+    "ZIRA Preisliste 2/85", "FARMTECH Stalldungstreuer für alpines Gelände ProspektTyp 400 500 550",
+    "Reparatur und Justieranleitung für OPMI Operationsmikroskop Mikroskop",
+    "Faltblätter von Mikroskop Geräte und Labor Instrumente Carl Zeiss",
+    "Faltblaetter zu Laborgeräten", "Datenblatt für Laborwaage", "Faltblatt für Laborgerät",
+    "Flyer für Autoklav", "Teilekatalog für Bohrmaschine", "Parts Manual für Drehmaschine",
+    "Benutzerhandbuch für Oszilloskop", "Wartungshandbuch für Maschine", "Bedienungshandbuch Laborgerät",
+    "Bedinungshandbuch Laborgerät", "Kollegenhandbuch für Betrieb", "Faltprospekt Carl Zeiss",
+    "Landmaschinenprospekte 1998", "Kugellagerpreisliste", "Analog Devices Gesamtübersicht (mit Preisliste)",
+    "Elektronik Gesamtuebersicht", "Kochbuch", "Sachbuch", "Lehrbuch", "Ernährungsbuch",
+    "Taschenbuch", "Klappbuch", "Gartenbuch", "Datenbuch"
+  ];
+  const physical = [
+    "Prospekthalter", "Prospekthüllen DIN A4", "Prospekthuellen DIN A4", "Prospekt Hüllen DIN A4",
+    "Prospektständer", "Flyerhalter", "Flyer Ständer", "Ringbuch DIN A4",
+    "Bohrmaschine mit Datenblatt", "Oszilloskop + Benutzerhandbuch", "Drehmaschine mit Wartungshandbuch"
+  ];
+  const rows = [
+    ...papers.map((title, i) => offer({id: `paper-${i}`, title, scalp_score: i % 2 ? 20 : 95, useability_score: 99, assessment_basis: "llm"})),
+    ...physical.map((title, i) => offer({id: `physical-${String(i).padStart(2, "0")}`, title}))
+  ];
+  const h = harness(fixture({deals: rows})); await flush();
+  const wanted = physical.map((_, i) => `physical-${String(i).padStart(2, "0")}`);
+  assert.deepEqual(h.ids, wanted);
+  for (const axis of ["scalp", "useability"]) assert.deepEqual(h.browseIds(axis), []);
+  await h.value("minimum-interest", 100);
+  for (const axis of ["scalp", "useability"]) assert.deepEqual(h.browseIds(axis), wanted.slice(0, 10));
+  await h.click("show-all-interest");
+  await h.check("show-expired", true); await h.check("show-stale", true);
+  assert.deepEqual(h.ids, wanted);
+  const info = harness(fixture({deals: rows}), {page: "info"}); await flush();
+  assert.match(info.nodes.get("info-profile").textContent, new RegExp(`^${papers.length} von ${rows.length} gespeicherten Angeboten`));
 });
 
 test("browsing shares search, transport, value and eligible/review filters but never factual exclusions", async () => {

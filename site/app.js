@@ -83,13 +83,14 @@
   function personalInterestExcluded(item) {
     if (typeof item.personal_interest_excluded === "boolean") return item.personal_interest_excluded;
     const title = String(item.title || "").toLocaleLowerCase("de-DE").replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
-    const media = /\b(?:zeitschrift(?:en)?|prospekt(?:e|en|s)?|katalog(?:e|en|s)?|broschuere(?:n)?|(?:bedienungs|betriebs|gebrauchs|wartungs|reparatur|montage|bau)?anleitung(?:en)?|ersatzteilkatalog(?:e|en|s)?|handb(?:uch|uecher)(?:s|n)?|magazin(?:e)?|heft(?:e|en)?|werbebl(?:att|aetter)|aufkleber|sticker)\b/g;
-    const hardware = [...title.matchAll(/\b(?:prospekt(?:e|en)?|broschuere(?:n)?|katalog(?:e|en)?|zeitschrift(?:en)?)[\s-]*(?:halter\w*|staender\w*|regal\w*|spender\w*|display\w*)\b/g)];
+    const media = /\b(?:zeitschrift(?:en)?|(?:falt|landmaschinen)?prospekt(?:e|en|s)?|prospekt(?:blatt|blaetter(?:n)?|typ(?:en)?)|(?:kugellager)?preisliste(?:n)?|(?:ersatzteile?|teile)?katalog(?:e|en|s)?|(?:daten|falt)bl(?:att|aetter(?:n)?)|flyer(?:n)?|parts\s+manual(?:s)?|gesamtuebersicht|broschuere(?:n)?|(?:bedienungs|betriebs|gebrauchs|wartungs|reparatur|justier|montage|bau)?anleitung(?:en)?|(?:benutzer|wartungs|bedienungs|bedinungs|kollegen)?handb(?:uch|uecher)(?:s|n)?|(?:koch|sach|lehr|ernaehrungs|taschen|klapp|garten|daten)buch|magazin(?:e)?|heft(?:e|en)?|werbebl(?:att|aetter)|aufkleber|sticker)\b/g;
+    const hardware = [...title.matchAll(/\b(?:prospekt(?:e|en)?|broschuere(?:n)?|katalog(?:e|en)?|zeitschrift(?:en)?|flyer)[\s-]*(?:halter\w*|staender\w*|huelle(?:n)?\w*|regal\w*|spender\w*|display\w*)\b/g)];
     for (const mention of title.matchAll(media)) {
       const prefix = title.slice(0, mention.index), suffix = title.slice(mention.index + mention[0].length);
       if (hardware.some(match => match.index <= mention.index && mention.index < match.index + match[0].length)) continue;
       if (/\b(?:halter\w*|staender\w*|regal\w*|spender\w*|display\w*)\s+(?:fuer)\s*$/.test(prefix)) continue;
-      if (/(?:\b(?:mit|inkl(?:usive)?\.?|einschliesslich|samt|plus|ohne)|[+&])(?:\s+[\w.-]+){0,5}\s*$/.test(prefix)) continue;
+      // A model suffix (POWER+) or joined subjects (& MÄRZ …) is not a bundle.
+      if (/(?:\b(?:mit|inkl(?:usive)?\.?|einschliesslich|samt|plus|ohne)(?:\s+[\w.-]+){0,5}|(?:^|\s)[+&])\s*$/.test(prefix)) continue;
       if (/^\s+(?:fehlt|fehlen|nicht\s+(?:dabei|vorhanden|enthalten))\b/.test(suffix)) continue;
       return true;
     }

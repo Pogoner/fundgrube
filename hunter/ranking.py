@@ -9,20 +9,26 @@ from typing import Any
 from hunter.models import finite_number, parse_time, plain_text
 
 MEDIA = re.compile(
-    r"\b(?:zeitschrift(?:en)?|prospekt(?:e|en|s)?|katalog(?:e|en|s)?|"
-    r"brosch(?:ü|ue)re(?:n)?|(?:bedienungs|betriebs|gebrauchs|wartungs|reparatur|montage|bau)?anleitung(?:en)?|"
-    r"ersatzteilkatalog(?:e|en|s)?|handb(?:uch|ücher|uecher)(?:s|n)?|"
+    r"\b(?:zeitschrift(?:en)?|(?:falt|landmaschinen)?prospekt(?:e|en|s)?|prospekt(?:blatt|bl(?:ä|ae)tter(?:n)?|typ(?:en)?)|"
+    r"(?:kugellager)?preisliste(?:n)?|(?:ersatzteile?|teile)?katalog(?:e|en|s)?|"
+    r"(?:daten|falt)bl(?:att|(?:ä|ae)tter(?:n)?)|flyer(?:n)?|parts\s+manual(?:s)?|gesamt(?:ü|ue)bersicht|"
+    r"brosch(?:ü|ue)re(?:n)?|(?:bedienungs|betriebs|gebrauchs|wartungs|reparatur|justier|montage|bau)?anleitung(?:en)?|"
+    r"(?:benutzer|wartungs|bedienungs|bedinungs|kollegen)?handb(?:uch|ücher|uecher)(?:s|n)?|"
+    r"(?:koch|sach|lehr|ern(?:ä|ae)hrungs|taschen|klapp|garten|daten)buch|"
     r"magazin(?:e)?|magazine|heft(?:e|en)?|werbebl(?:att|ätter|aetter)|aufkleber|sticker)\b", re.I)
 # Only whole media nouns: Prospekthalter/Broschürenständer are physical objects.
 # Separated spellings and "Halter für Prospekte" need the same protection.
 MEDIA_HARDWARE = re.compile(
-    r"\b(?:prospekt(?:e|en)?|brosch(?:ü|ue)re(?:n)?|katalog(?:e|en)?|zeitschrift(?:en)?)"
-    r"[\s-]*(?:halter\w*|st(?:ä|ae)nder\w*|regal\w*|spender\w*|display\w*)\b", re.I)
+    r"\b(?:prospekt(?:e|en)?|brosch(?:ü|ue)re(?:n)?|katalog(?:e|en)?|zeitschrift(?:en)?|flyer)"
+    r"[\s-]*(?:halter\w*|st(?:ä|ae)nder\w*|h(?:ü|ue)lle(?:n)?\w*|regal\w*|spender\w*|display\w*)\b", re.I)
 MEDIA_CONTAINER_PREFIX = re.compile(
     r"\b(?:halter\w*|st(?:ä|ae)nder\w*|regal\w*|spender\w*|display\w*)\s+(?:für|fuer)\s*$", re.I)
 MEDIA_COMPLEMENT_PREFIX = re.compile(
-    r"(?:\b(?:mit|inkl(?:usive)?\.?|einschlie(?:ß|ss)lich|samt|plus|ohne)|[+&])"
-    r"(?:\s+[\w.-]+){0,5}\s*$", re.I)
+    r"(?:\b(?:mit|inkl(?:usive)?\.?|einschlie(?:ß|ss)lich|samt|plus|ohne)"
+    r"(?:\s+[\w.-]+){0,5}|(?<!\S)[+&])\s*$", re.I)
+# A symbolic separator must stand alone directly before the complement noun.
+# POWER+ is a model suffix; '& MÄRZ 2006 … BROSCHÜRE' joins subjects in a media
+# title. Neither is evidence that a whole machine includes a bundled manual.
 PART_FOR = re.compile(r"\b(?:ersatz|glas|bau)?teil(?:e|en)?(?:\s+[\w./()-]+){0,3}\s+(?:für|fuer)\b", re.I)
 PART_CONDITION_PREFIX = re.compile(r"\bals(?:\s+(?:ein|reines?))?\s*$", re.I)
 PERSONAL_MEDIA_REASON = "Nicht im persönlichen Suchprofil: eigenständig angebotene Drucksache oder Medienartikel, kein Gerät."
