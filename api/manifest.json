@@ -31,22 +31,27 @@
   "blockers": [
     {
       "action": "Quellenstand und Abdeckung beachten; vor einem Gebot das Originalangebot prüfen. Der nächste geplante Lauf berücksichtigt Wartezeiten.",
-      "code": "source_cooldown",
-      "message": "Die schonende Abrufpause ist noch nicht abgelaufen."
+      "code": "aggregator_claims_only",
+      "message": "Drittanbieter-Snapshot, keine direkte eBay-Liveprüfung; Versand, Mindestpreis und tatsächlicher Standort können unbekannt sein."
+    },
+    {
+      "action": "Quellenstand und Abdeckung beachten; vor einem Gebot das Originalangebot prüfen. Der nächste geplante Lauf berücksichtigt Wartezeiten.",
+      "code": "bounded_coverage",
+      "message": "Seite eins wird erneut geprüft; weitere Seiten rotieren begrenzt. Die veränderliche Ergebnismenge ist nicht vollständig erfasst."
     }
   ],
   "counts": {
     "page_size": 50,
-    "pages": 12,
-    "total": 564
+    "pages": 13,
+    "total": 642
   },
   "coverage": {
-    "api_requests_this_run": 0,
+    "api_requests_this_run": 4,
     "browse_calls_this_run": 0,
     "browse_calls_today": 0,
     "categories_completed": 0,
     "categories_planned": 1,
-    "categories_scanned": 0,
+    "categories_scanned": 1,
     "categories_total": 1,
     "complete": false,
     "cursor": {
@@ -61,20 +66,20 @@
     "debounce_seconds": 540,
     "local_active_window_hours": 72,
     "manual_leaf_override": false,
-    "next_offset": 624,
+    "next_offset": 720,
     "page_size": 48,
-    "pages_fetched": 0,
+    "pages_fetched": 4,
     "pagination_caveat": "Begrenzter Ausschnitt aus einer veränderlichen, zwischengespeicherten Ergebnisliste. Die Trefferzahl der Quelle ist keine garantierte vollständige Abdeckung.",
     "pagination_is_stable": false,
-    "pickup_search_count": 0,
-    "pickup_total_reported": null,
+    "pickup_search_count": 1,
+    "pickup_total_reported": 257,
     "planned_interval_minutes": 10,
     "price_filter_applied": true,
-    "requests_this_run": 0,
+    "requests_this_run": 5,
     "schedule_interval_minutes": 10,
     "source_cache_max_age_minutes": 15,
     "source_claims_only": true,
-    "source_total_reported": null,
+    "source_total_reported": 4227,
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "upstream_end_filter": "alle"
   },
@@ -90,7 +95,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T08:09:49Z",
+    "evaluated_at": "2026-11-08T08:45:24Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -100,22 +105,22 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T08:09:49Z",
+  "generated_at": "2026-11-08T08:45:24Z",
   "interactive_review": {
-    "applied": 381,
+    "applied": 369,
     "available": 408,
     "errors": [],
     "expires_at": "2026-11-10T07:08:35Z",
     "reviewed_at": "2026-11-08T07:08:35Z",
     "reviewer": "ChatGPT",
     "skipped_changed": 0,
-    "skipped_missing": 27,
+    "skipped_missing": 39,
     "skipped_newer": 0,
     "skipped_stale": 0,
     "source_snapshot_id": "sha256:3f45858a4d149bab9de8b1d95f705d81753a0ab744bd617b29ef889da1de7184",
     "status": "applied",
     "total": 408,
-    "unreviewed": 183,
+    "unreviewed": 273,
     "validation_status": "partial"
   },
   "interface": {
@@ -128,7 +133,7 @@
     "site_url": "https://pogoner.github.io/fundgrube/"
   },
   "kind": "manifest",
-  "last_successful_scan_at": "2026-11-08T08:03:21Z",
+  "last_successful_scan_at": "2026-11-08T08:45:24Z",
   "location": {
     "city": "Heidelberg",
     "country": "DE",
@@ -140,73 +145,79 @@
       "count": 50,
       "index": 1,
       "path": "api/candidates/page-001.json",
-      "sha256": "d4d9af9b55911a5f2729af061684ed68792e78ffb2674fcbe9fb29cb971d87fd"
+      "sha256": "e3558a9f0f8cdca7040b6e8506e0ef732d9ee366ee8074f5e32b2ba5cae0bd7c"
     },
     {
       "count": 50,
       "index": 2,
       "path": "api/candidates/page-002.json",
-      "sha256": "78dce6b2a7df10c992ef46160631042a2f1ec84b82c2300823541710d96026e0"
+      "sha256": "8f8a12a7b98488add529dbd7ce6d901adaa464cb18f62fc44d95723629cd0bd2"
     },
     {
       "count": 50,
       "index": 3,
       "path": "api/candidates/page-003.json",
-      "sha256": "bad30d144889bff23a4a0c1876fea0f3ed07e96c83e36b5e2322e6d52980bcbe"
+      "sha256": "998d20fb3a7797268bf042247fca628835f52a58222517fb8a437f3f74be20d4"
     },
     {
       "count": 50,
       "index": 4,
       "path": "api/candidates/page-004.json",
-      "sha256": "1ebc4f321abe6e48dd324a0ec3e65402b79f5ad413e47a723953d3f4583c1084"
+      "sha256": "f1a38b8d6edcb10c4eaddfbe0d0645c7c86b057bcd23a4fe5e6d75c73cc0a7fb"
     },
     {
       "count": 50,
       "index": 5,
       "path": "api/candidates/page-005.json",
-      "sha256": "2517d0aadbe0d65f5ee58ee9d1efbfbafed9f5646d0667194ef76ddf7fce6ae7"
+      "sha256": "950071ffd7ea2cf09cfeaa617a2dd0cfc9710413e9789e36b4258ad2854d3192"
     },
     {
       "count": 50,
       "index": 6,
       "path": "api/candidates/page-006.json",
-      "sha256": "4fb3aea937b558c2d78abfcb42b4d78ed15964b02bf24552dcea46cb55abe268"
+      "sha256": "baefb3f935dfd275e9618f3d54f13b5525f9325d8b01f3bcc92b324e7b261f21"
     },
     {
       "count": 50,
       "index": 7,
       "path": "api/candidates/page-007.json",
-      "sha256": "68dc10a959df28ebe1d415437300de97f4959932d368caacffeab470a78a7046"
+      "sha256": "66c4552e2bb9206519cda95fd88724fc088b77ba77f06a2e42ba7b2e9a3eb051"
     },
     {
       "count": 50,
       "index": 8,
       "path": "api/candidates/page-008.json",
-      "sha256": "2316006876bc09aabe17eb733163f3f993a395bd797c43c2733a71e77b5ab994"
+      "sha256": "6342b3359bd37c3c6e8be75e9af955bf4d105512ef9bb0d53bc4dbf95754526c"
     },
     {
       "count": 50,
       "index": 9,
       "path": "api/candidates/page-009.json",
-      "sha256": "fefe3e74843154d5ec58e093f75f6ae0bc48be4bc39deeaa7bfa5ef68d469d4a"
+      "sha256": "3464b936869abb1c8c1514a1ac41866b0896670c94f19e3c684d4c23cf242435"
     },
     {
       "count": 50,
       "index": 10,
       "path": "api/candidates/page-010.json",
-      "sha256": "227d7070c860626039f27f26c75f455a181a7832895d7e6f08ffa5fcd528a06e"
+      "sha256": "c4fa09ddcb99f87f8449fa2cac41927d6a5ff19269a3b416e73564179ad40a5d"
     },
     {
       "count": 50,
       "index": 11,
       "path": "api/candidates/page-011.json",
-      "sha256": "9b88f9b0783e04c35d6a9b4d889b8d901d3e1d25338e40ceecf02de7fa2f5b1d"
+      "sha256": "716c144ced1a2617b7b52871437d79595f5f4bb3ac772e197283dd34a8951b27"
     },
     {
-      "count": 14,
+      "count": 50,
       "index": 12,
       "path": "api/candidates/page-012.json",
-      "sha256": "c3e48613a5585711c1911966e3aa9b9d065d75e75e4317bd33ff7e358593b5d7"
+      "sha256": "c7dcc4744db99fc15b3151ebfe68861c0c8e61dfe8e65d16c5549cea06a05272"
+    },
+    {
+      "count": 42,
+      "index": 13,
+      "path": "api/candidates/page-013.json",
+      "sha256": "fde9b1061a8edececba6d2968f59e68424e10eb25ac0fed1f86a8a9eb2744116"
     }
   ],
   "paths": {
@@ -257,37 +268,37 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:bd1bd3c386bb966316e9046649cde890e9c7b5aee6ea2d0b733476f1ed39a55b",
+  "snapshot_id": "sha256:dd439cb0ae5ec9e9d0ec38080ed891d6b7afeed3df3b58528893b65e640b3b13",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "stats": {
-    "active": 564,
+    "active": 642,
     "budget_limited": false,
-    "carried": 564,
+    "carried": 500,
     "categories_completed": 0,
     "categories_planned": 1,
-    "categories_scanned": 0,
+    "categories_scanned": 1,
     "categories_total": 1,
     "detail_failures": 0,
     "details_fetched": 0,
     "eligible": 0,
-    "excluded": 6,
+    "excluded": 7,
     "omitted_by_capacity": 0,
     "omitted_by_export_validity": 0,
     "omitted_by_source_status": 0,
     "omitted_records": 0,
     "outside_active_window": 0,
     "pages_omitted": 0,
-    "received": 0,
+    "received": 142,
     "refreshed": 0,
-    "retained": 564,
-    "review": 558,
+    "retained": 642,
+    "review": 635,
     "searches_failed": 0,
-    "searches_succeeded": 0,
-    "shortlisted": 558,
-    "stale": 333
+    "searches_succeeded": 4,
+    "shortlisted": 635,
+    "stale": 411
   },
   "status_message": "Öffentliche Quelle aktiv: begrenzter Ausschnitt mit zwischengespeicherten Angaben von auktionen-ohne-gebot.de.",
   "untrusted_listing_text": true,
