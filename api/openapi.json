@@ -106,11 +106,41 @@
           "coverage": {
             "additionalProperties": true,
             "properties": {
+              "api_requests_this_run": {
+                "minimum": 0,
+                "type": "integer"
+              },
               "capped": {
                 "type": "boolean"
               },
               "complete": {
                 "type": "boolean"
+              },
+              "daily_request_budget": {
+                "maximum": 8000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "duplicate_records": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "elapsed_seconds": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "last_successful_full_scan_at": {
+                "$ref": "#/components/schemas/nullableTime"
+              },
+              "max_api_requests_per_run": {
+                "maximum": 160,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "max_run_seconds": {
+                "maximum": 1500,
+                "minimum": 30,
+                "type": "integer"
               },
               "next_offset": {
                 "minimum": 0,
@@ -130,7 +160,22 @@
                 "minimum": 0,
                 "type": "integer"
               },
+              "pagination_is_stable": {
+                "type": "boolean"
+              },
+              "planned_interval_minutes": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "records_read": {
+                "minimum": 0,
+                "type": "integer"
+              },
               "requests_this_run": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "requests_today": {
                 "minimum": 0,
                 "type": "integer"
               },
@@ -139,6 +184,30 @@
                 "maximum": 5000,
                 "minimum": 1,
                 "type": "integer"
+              },
+              "scan_completed_at": {
+                "$ref": "#/components/schemas/nullableTime"
+              },
+              "scan_finished_at": {
+                "$ref": "#/components/schemas/nullableTime"
+              },
+              "scan_started_at": {
+                "$ref": "#/components/schemas/nullableTime"
+              },
+              "schedule_interval_minutes": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "searches": {
+                "properties": {
+                  "general": {
+                    "$ref": "#/components/schemas/sourceTraversal"
+                  },
+                  "pickup": {
+                    "$ref": "#/components/schemas/sourceTraversal"
+                  }
+                },
+                "type": "object"
               },
               "source_cache_max_age_minutes": {
                 "minimum": 0,
@@ -156,6 +225,14 @@
                   "integer",
                   "null"
                 ]
+              },
+              "traversal_completed": {
+                "description": "All enabled aggregator searches reached their then-reported ends in this run. Does not guarantee stable pagination or all-eBay coverage.",
+                "type": "boolean"
+              },
+              "unique_records": {
+                "minimum": 0,
+                "type": "integer"
               }
             },
             "type": "object"
@@ -315,6 +392,18 @@
             "$ref": "#/components/schemas/sourceUrl"
           },
           "stats": {
+            "properties": {
+              "personal_interest_excluded": {
+                "description": "Retained media listings excluded by the personal profile, independently of factual eligibility or scores.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "shortlisted": {
+                "description": "Items passing factual/time filters and the personal exclusion filter, before the adjustable Interest threshold.",
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
             "type": "object"
           },
           "status_message": {
@@ -635,6 +724,17 @@
             "maxItems": 20,
             "type": "array"
           },
+          "personal_interest_excluded": {
+            "description": "Personal-profile exclusion applied to the main list and both Top-10 browsing lists. Independent of factual eligibility and semantic scores.",
+            "type": "boolean"
+          },
+          "personal_interest_reason": {
+            "maxLength": 500,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "pickup_available": {
             "type": [
               "boolean",
@@ -647,12 +747,18 @@
           "pickup_search_confirmed": {
             "type": "boolean"
           },
+          "pickup_search_observed_at": {
+            "description": "Independent observation time of the aggregator radius match; a later general-search refresh does not renew it.",
+            "format": "date-time",
+            "type": "string"
+          },
           "pickup_search_postcode": {
             "pattern": "^[0-9]{5}$",
             "type": "string"
           },
           "pickup_search_radius_km": {
             "exclusiveMinimum": 0,
+            "maximum": 200,
             "type": "number"
           },
           "postcode": {
@@ -1164,6 +1270,33 @@
           "legacy_policy": {
             "type": "string"
           },
+          "personal_interest_filter": {
+            "properties": {
+              "applies_to": {
+                "items": {
+                  "enum": [
+                    "main",
+                    "top_scalp",
+                    "top_useability"
+                  ]
+                },
+                "type": "array"
+              },
+              "changes_scores": {
+                "const": false
+              },
+              "excluded_field": {
+                "const": "personal_interest_excluded"
+              },
+              "excludes_standalone_media": {
+                "const": true
+              },
+              "reason_field": {
+                "const": "personal_interest_reason"
+              }
+            },
+            "type": "object"
+          },
           "rounding": {
             "const": "half_up"
           },
@@ -1197,6 +1330,109 @@
           "string",
           "null"
         ]
+      },
+      "sourceTraversal": {
+        "description": "A bounded walk through one changing aggregator search, not an atomic market snapshot.",
+        "properties": {
+          "completed_at": {
+            "$ref": "#/components/schemas/nullableTime"
+          },
+          "duplicate_records": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "last_successful_traversal_at": {
+            "$ref": "#/components/schemas/nullableTime"
+          },
+          "next_offset": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "pages_fetched": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "records_read": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "remaining_reported": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "repeated_pages": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "short_pages": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "started_at": {
+            "$ref": "#/components/schemas/nullableTime"
+          },
+          "status": {
+            "type": "string"
+          },
+          "stop_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "total_changed": {
+            "type": "boolean"
+          },
+          "total_reported_initial": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "total_reported_latest": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "total_reported_max": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "total_reported_min": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "traversal_completed": {
+            "type": "boolean"
+          },
+          "unique_records": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "unobserved_estimate": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "type": "object"
       },
       "sourceUrl": {
         "enum": [
@@ -1526,6 +1762,1032 @@
           }
         },
         "summary": "Kandidatenseite 17 lesen"
+      }
+    },
+    "/api/candidates/page-018.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates18",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 18 lesen"
+      }
+    },
+    "/api/candidates/page-019.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates19",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 19 lesen"
+      }
+    },
+    "/api/candidates/page-020.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates20",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 20 lesen"
+      }
+    },
+    "/api/candidates/page-021.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates21",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 21 lesen"
+      }
+    },
+    "/api/candidates/page-022.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates22",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 22 lesen"
+      }
+    },
+    "/api/candidates/page-023.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates23",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 23 lesen"
+      }
+    },
+    "/api/candidates/page-024.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates24",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 24 lesen"
+      }
+    },
+    "/api/candidates/page-025.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates25",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 25 lesen"
+      }
+    },
+    "/api/candidates/page-026.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates26",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 26 lesen"
+      }
+    },
+    "/api/candidates/page-027.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates27",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 27 lesen"
+      }
+    },
+    "/api/candidates/page-028.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates28",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 28 lesen"
+      }
+    },
+    "/api/candidates/page-029.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates29",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 29 lesen"
+      }
+    },
+    "/api/candidates/page-030.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates30",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 30 lesen"
+      }
+    },
+    "/api/candidates/page-031.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates31",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 31 lesen"
+      }
+    },
+    "/api/candidates/page-032.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates32",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 32 lesen"
+      }
+    },
+    "/api/candidates/page-033.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates33",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 33 lesen"
+      }
+    },
+    "/api/candidates/page-034.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates34",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 34 lesen"
+      }
+    },
+    "/api/candidates/page-035.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates35",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 35 lesen"
+      }
+    },
+    "/api/candidates/page-036.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates36",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 36 lesen"
+      }
+    },
+    "/api/candidates/page-037.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates37",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 37 lesen"
+      }
+    },
+    "/api/candidates/page-038.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates38",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 38 lesen"
+      }
+    },
+    "/api/candidates/page-039.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates39",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 39 lesen"
+      }
+    },
+    "/api/candidates/page-040.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates40",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 40 lesen"
+      }
+    },
+    "/api/candidates/page-041.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates41",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 41 lesen"
+      }
+    },
+    "/api/candidates/page-042.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates42",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 42 lesen"
+      }
+    },
+    "/api/candidates/page-043.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates43",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 43 lesen"
+      }
+    },
+    "/api/candidates/page-044.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates44",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 44 lesen"
+      }
+    },
+    "/api/candidates/page-045.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates45",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 45 lesen"
+      }
+    },
+    "/api/candidates/page-046.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates46",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 46 lesen"
+      }
+    },
+    "/api/candidates/page-047.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates47",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 47 lesen"
+      }
+    },
+    "/api/candidates/page-048.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates48",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 48 lesen"
+      }
+    },
+    "/api/candidates/page-049.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates49",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 49 lesen"
+      }
+    },
+    "/api/candidates/page-050.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates50",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 50 lesen"
+      }
+    },
+    "/api/candidates/page-051.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates51",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 51 lesen"
+      }
+    },
+    "/api/candidates/page-052.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates52",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 52 lesen"
+      }
+    },
+    "/api/candidates/page-053.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates53",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 53 lesen"
+      }
+    },
+    "/api/candidates/page-054.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates54",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 54 lesen"
+      }
+    },
+    "/api/candidates/page-055.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates55",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 55 lesen"
+      }
+    },
+    "/api/candidates/page-056.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates56",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 56 lesen"
+      }
+    },
+    "/api/candidates/page-057.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates57",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 57 lesen"
+      }
+    },
+    "/api/candidates/page-058.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates58",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 58 lesen"
+      }
+    },
+    "/api/candidates/page-059.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates59",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 59 lesen"
+      }
+    },
+    "/api/candidates/page-060.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates60",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 60 lesen"
+      }
+    },
+    "/api/candidates/page-061.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates61",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 61 lesen"
+      }
+    },
+    "/api/candidates/page-062.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates62",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 62 lesen"
+      }
+    },
+    "/api/candidates/page-063.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates63",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 63 lesen"
+      }
+    },
+    "/api/candidates/page-064.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates64",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 64 lesen"
+      }
+    },
+    "/api/candidates/page-065.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates65",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 65 lesen"
+      }
+    },
+    "/api/candidates/page-066.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates66",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 66 lesen"
+      }
+    },
+    "/api/candidates/page-067.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates67",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 67 lesen"
+      }
+    },
+    "/api/candidates/page-068.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates68",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 68 lesen"
+      }
+    },
+    "/api/candidates/page-069.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates69",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 69 lesen"
+      }
+    },
+    "/api/candidates/page-070.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates70",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 70 lesen"
+      }
+    },
+    "/api/candidates/page-071.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates71",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 71 lesen"
+      }
+    },
+    "/api/candidates/page-072.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates72",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 72 lesen"
+      }
+    },
+    "/api/candidates/page-073.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates73",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 73 lesen"
+      }
+    },
+    "/api/candidates/page-074.json": {
+      "get": {
+        "operationId": "readFundgrubeCandidates74",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/candidatePage"
+                }
+              }
+            },
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+          }
+        },
+        "summary": "Kandidatenseite 74 lesen"
       }
     },
     "/api/items/{item_file}": {

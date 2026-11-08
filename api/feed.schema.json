@@ -105,11 +105,41 @@
         "coverage": {
           "additionalProperties": true,
           "properties": {
+            "api_requests_this_run": {
+              "minimum": 0,
+              "type": "integer"
+            },
             "capped": {
               "type": "boolean"
             },
             "complete": {
               "type": "boolean"
+            },
+            "daily_request_budget": {
+              "maximum": 8000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "duplicate_records": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "elapsed_seconds": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "last_successful_full_scan_at": {
+              "$ref": "#/$defs/nullableTime"
+            },
+            "max_api_requests_per_run": {
+              "maximum": 160,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "max_run_seconds": {
+              "maximum": 1500,
+              "minimum": 30,
+              "type": "integer"
             },
             "next_offset": {
               "minimum": 0,
@@ -129,7 +159,22 @@
               "minimum": 0,
               "type": "integer"
             },
+            "pagination_is_stable": {
+              "type": "boolean"
+            },
+            "planned_interval_minutes": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            "records_read": {
+              "minimum": 0,
+              "type": "integer"
+            },
             "requests_this_run": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "requests_today": {
               "minimum": 0,
               "type": "integer"
             },
@@ -138,6 +183,30 @@
               "maximum": 5000,
               "minimum": 1,
               "type": "integer"
+            },
+            "scan_completed_at": {
+              "$ref": "#/$defs/nullableTime"
+            },
+            "scan_finished_at": {
+              "$ref": "#/$defs/nullableTime"
+            },
+            "scan_started_at": {
+              "$ref": "#/$defs/nullableTime"
+            },
+            "schedule_interval_minutes": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            "searches": {
+              "properties": {
+                "general": {
+                  "$ref": "#/$defs/sourceTraversal"
+                },
+                "pickup": {
+                  "$ref": "#/$defs/sourceTraversal"
+                }
+              },
+              "type": "object"
             },
             "source_cache_max_age_minutes": {
               "minimum": 0,
@@ -155,6 +224,14 @@
                 "integer",
                 "null"
               ]
+            },
+            "traversal_completed": {
+              "description": "All enabled aggregator searches reached their then-reported ends in this run. Does not guarantee stable pagination or all-eBay coverage.",
+              "type": "boolean"
+            },
+            "unique_records": {
+              "minimum": 0,
+              "type": "integer"
             }
           },
           "type": "object"
@@ -314,6 +391,18 @@
           "$ref": "#/$defs/sourceUrl"
         },
         "stats": {
+          "properties": {
+            "personal_interest_excluded": {
+              "description": "Retained media listings excluded by the personal profile, independently of factual eligibility or scores.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "shortlisted": {
+              "description": "Items passing factual/time filters and the personal exclusion filter, before the adjustable Interest threshold.",
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
           "type": "object"
         },
         "status_message": {
@@ -634,6 +723,17 @@
           "maxItems": 20,
           "type": "array"
         },
+        "personal_interest_excluded": {
+          "description": "Personal-profile exclusion applied to the main list and both Top-10 browsing lists. Independent of factual eligibility and semantic scores.",
+          "type": "boolean"
+        },
+        "personal_interest_reason": {
+          "maxLength": 500,
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "pickup_available": {
           "type": [
             "boolean",
@@ -646,12 +746,18 @@
         "pickup_search_confirmed": {
           "type": "boolean"
         },
+        "pickup_search_observed_at": {
+          "description": "Independent observation time of the aggregator radius match; a later general-search refresh does not renew it.",
+          "format": "date-time",
+          "type": "string"
+        },
         "pickup_search_postcode": {
           "pattern": "^[0-9]{5}$",
           "type": "string"
         },
         "pickup_search_radius_km": {
           "exclusiveMinimum": 0,
+          "maximum": 200,
           "type": "number"
         },
         "postcode": {
@@ -1163,6 +1269,33 @@
         "legacy_policy": {
           "type": "string"
         },
+        "personal_interest_filter": {
+          "properties": {
+            "applies_to": {
+              "items": {
+                "enum": [
+                  "main",
+                  "top_scalp",
+                  "top_useability"
+                ]
+              },
+              "type": "array"
+            },
+            "changes_scores": {
+              "const": false
+            },
+            "excluded_field": {
+              "const": "personal_interest_excluded"
+            },
+            "excludes_standalone_media": {
+              "const": true
+            },
+            "reason_field": {
+              "const": "personal_interest_reason"
+            }
+          },
+          "type": "object"
+        },
         "rounding": {
           "const": "half_up"
         },
@@ -1196,6 +1329,109 @@
         "string",
         "null"
       ]
+    },
+    "sourceTraversal": {
+      "description": "A bounded walk through one changing aggregator search, not an atomic market snapshot.",
+      "properties": {
+        "completed_at": {
+          "$ref": "#/$defs/nullableTime"
+        },
+        "duplicate_records": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "last_successful_traversal_at": {
+          "$ref": "#/$defs/nullableTime"
+        },
+        "next_offset": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "pages_fetched": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "records_read": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "remaining_reported": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "repeated_pages": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "short_pages": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "started_at": {
+          "$ref": "#/$defs/nullableTime"
+        },
+        "status": {
+          "type": "string"
+        },
+        "stop_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "total_changed": {
+          "type": "boolean"
+        },
+        "total_reported_initial": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "total_reported_latest": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "total_reported_max": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "total_reported_min": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "traversal_completed": {
+          "type": "boolean"
+        },
+        "unique_records": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "unobserved_estimate": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
     },
     "sourceUrl": {
       "enum": [
