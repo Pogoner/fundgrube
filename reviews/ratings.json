@@ -1,1543 +1,240 @@
 {
   "schema_version": 2,
-  "source_snapshot_id": "sha256:1839cf8b1b3a17e3bd93eacaa6ebe24635da98037234b4d2f43e954bcf861b7d",
-  "reviewed_at": "2026-11-08T19:42:48.554Z",
+  "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235",
+  "reviewed_at": "2026-11-08T20:07:42.772Z",
   "reviewer": "ChatGPT",
   "groups": [
     {
       "ids": [
-        "v1|206661967094|0"
+        "v1|377606637116|0"
       ],
       "assessment": {
-        "scalp_score": 36,
-        "useability_score": 25,
-        "useability_reason": "Erfordert passenden KaVo-Antrieb und Dentalbehandlungsumgebung; als einzelnes Winkelstück nicht eigenständig nutzbar.",
-        "dependencies": [
-          "Kompatibler Dentalmotor bzw. KaVo-Antrieb",
-          "Passende Behandlungseinheit"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "KaVo-Lichtwinkelstück ist ein professionelles Dentalhandstück, doch der ausdrücklich defekte Zustand begrenzt das wirtschaftliche Potenzial.",
-        "reasons": [
-          "Tatsächlich ein Winkelstück, kein komplettes Dentalgerät."
-        ],
-        "risks": [
-          "Als defekt beschrieben; Schadensursache und Reparierbarkeit unbekannt."
-        ],
-        "next_checks": [
-          "Anschlussvariante, mechanischen Zustand und konkreten Fehler prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|800864506417|0"
-      ],
-      "assessment": {
-        "scalp_score": 24,
+        "scalp_score": 10,
         "useability_score": 94,
-        "useability_reason": "Als gedrucktes Farbreferenzmittel ohne zusätzliche Maschine benutzbar; keine Garantie farbmetrischer Aktualität.",
-        "dependencies": [],
+        "useability_reason": "Als Lesematerial eigenständig verwendbar; zum Einsatz als Bagger müsste separat die Maschine beschafft werden, die ausdrücklich nicht zum Lieferumfang gehört.",
+        "dependencies": [
+          "Keine Maschine nötig zum Lesen; gegebenenfalls Zugang zu weiteren technischen Unterlagen für Reparaturarbeit"
+        ],
         "value_band": "around_50",
         "assessment_confidence": "medium",
         "product_kind": "media",
-        "value_reason": "Originaler Pantone-TPX-Farbfächer kann als Referenz nützlich sein; Alterung und Auflage begrenzen das Potenzial.",
+        "value_reason": "Zwölfseitiger älterer Prospekt zum Hitachi Zaxis 225 US, kein verkaufter Hydraulikbagger; Sammlerwert einer einzelnen Drucksache begrenzt und unsicher.",
         "reasons": [
-          "Farbfächer ist ein Referenzmedium und kein Messgerät."
+          "Die Angabe „12 SEITEN 07/03 ALT & RAR“ kennzeichnet ein eigenständig angebotenes Druckstück, nicht den Zaxis-Bagger."
         ],
         "risks": [
-          "Farbchips können gealtert oder unvollständig sein."
+          "Originalität, Druckqualität, Vollständigkeit und Seiteninhalt ohne Bilder ungeprüft."
         ],
         "next_checks": [
-          "Auflage, Zustand und Vollständigkeit prüfen; aufgrund des Profils ausschließen."
+          "Originalangebot auf Blattformat und tatsächlichen Papier-Lieferumfang prüfen."
         ]
       }
     },
     {
       "ids": [
-        "v1|267830412803|0"
+        "v1|377606642708|0"
       ],
       "assessment": {
-        "scalp_score": 69,
-        "useability_score": 43,
-        "useability_reason": "Praktischer Nutzen entsteht erst in einer passenden CAN-Bus-Installation mit Konfiguration und Versorgung.",
-        "dependencies": [
-          "CAN-Bus-Netzwerke und korrekte Schnittstellen",
-          "Spannungsversorgung und Konfigurationszugang"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "IXXAT-CANbridge ist ein spezialisiertes industrielles Kommunikationsgerät mit plausiblem professionellem Potenzial.",
-        "reasons": [
-          "Ein Kommunikations-Gateway, kein vollständiges Produktionsgerät."
-        ],
-        "risks": [
-          "Revision, Funktion und Zubehör sind nur aus dem Titel nicht gesichert."
-        ],
-        "next_checks": [
-          "Modellanschlüsse, Firmware und Versorgung prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|267830412804|0",
-        "v1|267830412805|0"
-      ],
-      "assessment": {
-        "scalp_score": 65,
-        "useability_score": 22,
-        "useability_reason": "Setzt kompatiblen Host, PCIe-Mini-Steckplatz, Softwaretreiber und passende Industrial-Ethernet-Anwendung voraus.",
-        "dependencies": [
-          "Kompatibler Host mit PCIe-Mini",
-          "Treiber und geeignete Industrial-Ethernet-Umgebung"
-        ],
-        "value_band": "unknown",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "IXXAT INpact PCIe-Mini ist eine spezialisierte industrielle Schnittstellenkarte; potenziell wertig, aber eng gebunden.",
-        "reasons": [
-          "Angeboten ist eine Einsteckkarte, nicht ein eigenständiges Ethernet-Gerät."
-        ],
-        "risks": [
-          "Treiberstand, Protokollvariante und Funktionsnachweis unbekannt."
-        ],
-        "next_checks": [
-          "Exakte Artikelnummer und Hostkompatibilität prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|237156451352|0"
-      ],
-      "assessment": {
-        "scalp_score": 28,
-        "useability_score": 50,
-        "useability_reason": "Nur einzelne Inhalte könnten unabhängig benutzbar sein; aus der pauschalen Bezeichnung ist keine geschlossene Funktion ableitbar.",
-        "dependencies": [
-          "Identifikation der tatsächlichen Artikel"
-        ],
-        "value_band": "unknown",
-        "assessment_confidence": "low",
-        "product_kind": "unknown",
-        "value_reason": "Zwanzig neue gemischte Artikel können Nutzwert enthalten, ihre Art und Menge je Kategorie sind nicht belegt.",
-        "reasons": [
-          "Ein unbestimmter Mischposten, keine benannte Industriemaschine."
-        ],
-        "risks": [
-          "Ohne Inhaltsliste ist das wirtschaftliche Potenzial nicht belastbar einzuordnen."
-        ],
-        "next_checks": [
-          "Vollständige Postenliste und Fotos im Original prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|287697882215|0"
-      ],
-      "assessment": {
-        "scalp_score": 12,
-        "useability_score": 38,
-        "useability_reason": "Für Nutzen sind passendes Netzteil oder elektrisches Projekt und die richtige Polung nötig.",
-        "dependencies": [
-          "Passende 5,5/2,5-mm-Buchse bzw. Stromversorgung",
-          "Gegebenenfalls fachgerechte Verdrahtung"
-        ],
-        "value_band": "around_5",
-        "assessment_confidence": "medium",
-        "product_kind": "accessory",
-        "value_reason": "Ein einzelner DC-Hohlsteckverbinder ist einfaches Standardzubehör mit kleinem Einzelpotenzial.",
-        "reasons": [
-          "Kein Netzteil, sondern nur ein Steckverbinder."
-        ],
-        "risks": [
-          "Menge, Anschlussart und Qualität nicht näher beschrieben."
-        ],
-        "next_checks": [
-          "Stecker/Buchse, Polung und Stückzahl prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|287691358852|0"
-      ],
-      "assessment": {
-        "scalp_score": 59,
-        "useability_score": 42,
-        "useability_reason": "Ohne geeignete Rohrleitung, Anschlüsse und gegebenenfalls Betätigung nicht eigenständig nützlich.",
-        "dependencies": [
-          "Passende Rohrleitung und Flanschmaße",
-          "Geeignete Betätigung/Antrieb je Ausführung"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "GEMÜ-Absperrklappe PN10 ist ein professionelles Rohrleitungsbauteil; Modell und Nennweite sind konkret.",
-        "reasons": [
-          "Verkauft wird eine Absperrklappe, keine komplette Anlage."
-        ],
-        "risks": [
-          "Dichtheit und Materialverträglichkeit gebraucht ungeprüft."
-        ],
-        "next_checks": [
-          "Nennweite, Dichtungsmaterial und Antriebsart prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|287691381910|0"
-      ],
-      "assessment": {
-        "scalp_score": 53,
-        "useability_score": 38,
-        "useability_reason": "Benötigt Druckluft, Ventile, Verschlauchung und Montage in einer Anwendung.",
-        "dependencies": [
-          "Druckluftversorgung und Steuerventil",
-          "Passende Befestigung und Pneumatikanschlüsse"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "SMC-Kompaktzylinder ist eine professionelle Pneumatikkomponente, aber nur ein einzelner Aktor.",
-        "reasons": [
-          "Konkret identifizierbarer Kompaktzylinder."
-        ],
-        "risks": [
-          "Dichtungen und Hubfunktion gebraucht nicht geprüft."
-        ],
-        "next_checks": [
-          "Hub, Kolbendurchmesser und Sensorbelegung verifizieren."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|168826037315|0"
-      ],
-      "assessment": {
-        "scalp_score": 33,
-        "useability_score": 80,
-        "useability_reason": "Bei grundsätzlich vollständiger Anlage nach Anschluss an Wasser, Abfluss und Versorgung nutzbar; Defekt ist eine Zustandsfrage.",
-        "dependencies": [
-          "Wasser- und Abwasseranschlüsse",
-          "Regeneriersalz und passende Installation"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "low",
-        "product_kind": "apparatus",
-        "value_reason": "Leyco-Soft-9-Enthärtungsanlage ist als Gesamtgerät potenziell nutzbar, aber ausdrücklich als defekt angeboten.",
-        "reasons": [
-          "Titel bezeichnet eine Enthärtungsanlage, kein isoliertes Ersatzteil."
-        ],
-        "risks": [
-          "Fehlerbild, Harz- und Steuerungszustand sowie Vollständigkeit unbekannt."
-        ],
-        "next_checks": [
-          "Fehlerbild, Lieferumfang und Anschlüsse vor Ort klären."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|257829638116|0"
-      ],
-      "assessment": {
-        "scalp_score": 64,
-        "useability_score": 83,
-        "useability_reason": "Mit üblichem Bluetooth-Host und kompatibler Anwendung eigenständig zum Scannen verwendbar.",
-        "dependencies": [
-          "Bluetooth-fähiger Rechner oder mobiles Gerät",
-          "Kompatible Scan-Anwendung"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "Socket-Mobile-S740-Barcode-Scanner samt Dockingstation ist ein professionelles, weitgehend komplettes Erfassungsset.",
-        "reasons": [
-          "Scanner und Ladestation werden zusammen genannt."
-        ],
-        "risks": [
-          "Akku, Lasereinheit/Optik und Protokollkompatibilität ungeprüft."
-        ],
-        "next_checks": [
-          "Ladefunktion, Scan-Test und Zubehörumfang prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|168832205982|0"
-      ],
-      "assessment": {
-        "scalp_score": 16,
-        "useability_score": 36,
-        "useability_reason": "Nur eingebaut in einen passend dimensionierten Stromkreis sinnvoll; kein selbstständiges Gerät.",
-        "dependencies": [
-          "Geeignete Schaltung und thermische Montage"
-        ],
-        "value_band": "around_5",
-        "assessment_confidence": "high",
-        "product_kind": "component",
-        "value_reason": "Zwei Hochlastwiderstände sind für Elektronikprojekte brauchbar, doch die kleine Menge begrenzt das wirtschaftliche Potenzial.",
-        "reasons": [
-          "Widerstandswerte und Nennleistung sind benannt."
-        ],
-        "risks": [
-          "Belastbarkeit setzt korrekte Wärmeabfuhr voraus."
-        ],
-        "next_checks": [
-          "Werte und Bauform nachmessen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|900058459258|0"
-      ],
-      "assessment": {
-        "scalp_score": 44,
-        "useability_score": 59,
-        "useability_reason": "Mit Netzanschluss und geeignetem 24-V-Verbraucher einsetzbar; als Netzteil aber keine eigenständige Nutzfunktion.",
-        "dependencies": [
-          "Geeignete 24-V-Last und sichere Verdrahtung"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Wasserdichtes Synergy-21-Netzteil mit 24 V und 6,25 A ist ein brauchbares stärkeres Versorgungsmodul.",
-        "reasons": [
-          "Die Spannung und Stromstärke sind konkret genannt."
-        ],
-        "risks": [
-          "Gebrauchtes Netzteil; Isolation und Ausgang unter Last nicht geprüft."
-        ],
-        "next_checks": [
-          "Ausgang, Schutzart und Anschlussklemmen prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|227593740099|0"
-      ],
-      "assessment": {
-        "scalp_score": 41,
-        "useability_score": 8,
-        "useability_reason": "Nur in kompatibler Mazak-QT10-Steuerung sinnvoll, zudem aktuell als defekt bezeichnet.",
-        "dependencies": [
-          "Exakte Mazak-QT10-Steuerung und Steckverbinder",
-          "Fachgerechte Reparatur"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Mazak-Quickturn-Monitor ist ein spezifisches CNC-Steuerungsersatzteil; Defekt reduziert zusätzlich das Potenzial.",
-        "reasons": [
-          "Monitor statt kompletter Drehmaschine."
-        ],
-        "risks": [
-          "Defekt und unbestätigte Kompatibilität."
-        ],
-        "next_checks": [
-          "Teilenummer, Bildröhre/Elektronik und Fehlerbild prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|920096195637|0"
-      ],
-      "assessment": {
-        "scalp_score": 61,
-        "useability_score": 45,
-        "useability_reason": "Erfordern passende Welle, Lagerpassung und Befestigung in einer mechanischen Konstruktion.",
-        "dependencies": [
-          "Passende Welle und Befestigungsmaße",
-          "Montage in einer Maschine"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "SKF-Flanschlagergehäuse mit Spannlager in einem Zweier-Set haben professionellen Ersatzteilnutzen.",
-        "reasons": [
-          "Es sind Lager-/Gehäuseeinheiten, keine eigenständigen Maschinen."
-        ],
-        "risks": [
-          "Gebrauchter Lagerlauf und Modellvielfalt unklar; Quellenstand älter."
-        ],
-        "next_checks": [
-          "Lagerspiel, Dichtungen und Typenschilder prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|366770913839|0"
-      ],
-      "assessment": {
-        "scalp_score": 38,
-        "useability_score": 35,
-        "useability_reason": "Einzelteile benötigen je nach Typ Versorgung und Einbau; aus dem Paket ergibt sich keine unmittelbar komplette Anlage.",
-        "dependencies": [
-          "Identifikation und Prüfung jedes Einzelstücks"
-        ],
-        "value_band": "unknown",
-        "assessment_confidence": "low",
-        "product_kind": "unknown",
-        "value_reason": "Große Mischkiste mit Elektronik, Turbinen und Elektromotoren kann Teilewert enthalten; genaue Stücke sind nicht belegt.",
-        "reasons": [
-          "Tatsächlich ein gemischtes Konvolut, nicht eine als Ganzes benannte Turbine."
-        ],
-        "risks": [
-          "Zustand, Vollständigkeit und Funktion der erwähnten Geräte unbekannt."
-        ],
-        "next_checks": [
-          "Inhaltsliste, Fotos und Stückzahlen prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|168832382644|0"
-      ],
-      "assessment": {
-        "scalp_score": 85,
-        "useability_score": 86,
-        "useability_reason": "Mit geeignetem Zugfahrzeug und passender Kupplung unmittelbar als Anhänger nutzbar; keine stationäre Anlage erforderlich.",
-        "dependencies": [
-          "Geeignetes Zugfahrzeug und passende Kupplung",
-          "Gegebenenfalls verkehrsrechtliche Zulassung"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "Zweiachsiger landwirtschaftlicher Anhänger mit Holzaufbau ist ein großes vollständiges Nutzobjekt mit hohem Sachpotenzial.",
-        "reasons": [
-          "Verkauft wird ein Anhänger, kein Kleinteil."
-        ],
-        "risks": [
-          "Fahrwerk, Bremsen, Standsicherheit und Papiere unbekannt; Quellenstand älter."
-        ],
-        "next_checks": [
-          "Rahmen, Bereifung, Traglast, Papiere und Transportkosten prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|147657881516|0"
-      ],
-      "assessment": {
-        "scalp_score": 43,
-        "useability_score": 71,
-        "useability_reason": "Mit passendem Fass-, Leitungs- oder Zapfsystem benutzbar, aber alleine keine Zapfanlage.",
-        "dependencies": [
-          "Passender Getränkeschlauch bzw. Zapfanschluss"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "accessory",
-        "value_reason": "Bierzapfhahn aus dem Formenbauumfeld ist ein mechanisches Spezialzubehör von überschaubarem Potenzial.",
-        "reasons": [
-          "Ein Zapfhahn, nicht die gesamte Schankanlage."
-        ],
-        "risks": [
-          "Gewinde, Dichtungen und Hygienezustand ungeklärt."
-        ],
-        "next_checks": [
-          "Anschlussdurchmesser und Dichtheit prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|267830889188|0"
-      ],
-      "assessment": {
-        "scalp_score": 55,
-        "useability_score": 25,
-        "useability_reason": "Braucht das zugehörige Sicherheitssteuerungssystem, korrekte Verdrahtung und eine passende Maschine.",
-        "dependencies": [
-          "Kompatible Pilz-Sicherheitssteuerung",
-          "Sicherheitsfachgerechte Verdrahtung/Prüfung"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Pilz PZE 5 ist ein sicherheitsbezogenes Erweiterungsrelais für industrielle Steuerungen.",
-        "reasons": [
-          "Erweiterungsmodul, keine komplette Sicherheitssteuerung."
-        ],
-        "risks": [
-          "Funktions- und Zulassungslage des gebrauchten Moduls offen."
-        ],
-        "next_checks": [
-          "Exakte Variante und sicherheitsrelevanten Prüfstatus prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|128178691994|0"
-      ],
-      "assessment": {
-        "scalp_score": 34,
-        "useability_score": 93,
-        "useability_reason": "Mit der integrierten Tischklemmung unmittelbar handwerklich nutzbar, ohne Spezialmaschine.",
-        "dependencies": [],
-        "value_band": "around_50",
-        "assessment_confidence": "high",
-        "product_kind": "tool",
-        "value_reason": "Kleiner 50-mm-Tischschraubstock ist ein direkt verwendbares Werkstattwerkzeug mit begrenztem, aber solidem Nutzen.",
-        "reasons": [
-          "Drehbarer Schraubstock mit Tischklemme ausdrücklich genannt."
-        ],
-        "risks": [
-          "Backenführung und Klemmkraft nicht geprüft."
-        ],
-        "next_checks": [
-          "Spannweite und Materialqualität prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|137894881660|0"
-      ],
-      "assessment": {
-        "scalp_score": 67,
-        "useability_score": 51,
-        "useability_reason": "Für Luftaufbereitung in passende Druckluftkreise einzubauen; ohne Kompressor und Leitungen nicht selbstständig nutzbar.",
-        "dependencies": [
-          "Druckluftsystem und passende Gewinde",
-          "Filterschalen und ggf. Ersatzpatronen"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Sechs Norgren-Wartungseinheiten inklusive mindestens zweier benannter Komplettgeräte bieten professionellen Pneumatikwert.",
-        "reasons": [
-          "Ein mehrteiliges Pneumatik-Set, keine komplette Druckluftanlage."
-        ],
-        "risks": [
-          "Unterschiedliche Modelle, Gebrauchszustand und Filterausstattung unklar."
-        ],
-        "next_checks": [
-          "Alle sechs Typen und den Lieferumfang prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|168826498719|0"
-      ],
-      "assessment": {
-        "scalp_score": 89,
-        "useability_score": 51,
-        "useability_reason": "Als integrierte Zelle grundsätzlich nutzbar, jedoch sind industrielle Stromversorgung, Arbeitsschutz, Programmierung und Infrastruktur nötig.",
-        "dependencies": [
-          "Industriegerechte Stromversorgung und Aufstellfläche",
-          "Schweißgas/Absaugung und Sicherheitsintegration",
-          "Roboterprogrammierung und Inbetriebnahme"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "Reis-RV40-Schweißroboterzelle mit Oerlikon-Citowave-III-Stromquelle und Drehtisch ist ein umfangreiches Industrieensemble.",
-        "reasons": [
-          "Roboter, Stromquelle und Drehtisch werden gemeinsam als Zelle angeboten."
-        ],
-        "risks": [
-          "CE-Nennung ist Verkäuferangabe; Steuerung, Peripherie und Funktion ungeprüft."
-        ],
-        "next_checks": [
-          "Vollständige Komponentenliste, Steuerung, Dokumentation und Demontage prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|137894892491|0"
-      ],
-      "assessment": {
-        "scalp_score": 65,
-        "useability_score": 29,
-        "useability_reason": "Benötigen kompatible Auswerteelektronik, Einbau in passende Messstrecke und Kalibrierung.",
-        "dependencies": [
-          "Kompatible Messumformer/Auswerteeinheit",
-          "Geeignete Rohrleitung und Sensoraufnahme"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Sechs Weinreich-Ultraschall-Durchflusssensoren haben potenziell hochwertigen industriellen Sensorwert.",
-        "reasons": [
-          "Sensorelemente, keine komplette Durchflussmessanlage."
-        ],
-        "risks": [
-          "Unterschiedliche W-A-Nummern könnten Kompatibilität einschränken."
-        ],
-        "next_checks": [
-          "Typen und benötigte Auswerteelektronik abgleichen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|307261802964|0"
-      ],
-      "assessment": {
-        "scalp_score": 41,
-        "useability_score": 87,
-        "useability_reason": "Mit Strom, Papier, Tinte und kompatiblem Computer/Netzwerk selbstständig als Drucker einsetzbar.",
-        "dependencies": [
-          "Passende Tintenpatronen und Papier",
-          "Kompatibler Druckertreiber"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "Epson-WorkForce-Pro-WF-5690 ist ein vollständiger Bürodrucker mit begrenztem wirtschaftlichem Potenzial.",
-        "reasons": [
-          "Titel nennt ein Gesamtgerät und nicht nur Druckerzubehör."
-        ],
-        "risks": [
-          "Düsen, Wartungszustand und Verbrauchsmaterialien ungeprüft."
-        ],
-        "next_checks": [
-          "Drucktest, Zählerstand und Tintenstatus prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|920096630812|0"
-      ],
-      "assessment": {
-        "scalp_score": 69,
-        "useability_score": 42,
-        "useability_reason": "Für Nutzen braucht es eine passende Armatur, mechanische Kopplung sowie Strom- und Steuerungsanschlüsse.",
-        "dependencies": [
-          "Kompatible Armatur und Kupplung",
-          "Geeignete elektrische Ansteuerung"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Bernard-Controls-LEA-Schwenkantrieb ist ein professioneller elektrischer Industrieantrieb mit plausibler technischer Substanz.",
-        "reasons": [
-          "Stellantrieb, nicht eine vollständige Anlage."
-        ],
-        "risks": [
-          "Drehmoment, Stellweg und Funktion des Gebrauchtgeräts unbestätigt."
-        ],
-        "next_checks": [
-          "Typenschild, Anschlussschema und Endlagen testen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|840074700832|0"
-      ],
-      "assessment": {
-        "scalp_score": 52,
-        "useability_score": 60,
-        "useability_reason": "Ohne geeignetes Gehäuse und Verbraucher keine eigene Endgerätefunktion, aber relativ universell in Elektronikprojekten.",
-        "dependencies": [
-          "Sichere Netzverdrahtung/Gehäuse",
-          "Geeignete Verbraucher für ±15 V und 5 V"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Deutronic-ET60-C-Einbaunetzteil liefert mehrere geregelte Spannungen bei 62,5 W und hat professionellen Einbauwert.",
-        "reasons": [
-          "Mehrspannungs-Netzteil, kein eigenständiges Messgerät."
-        ],
-        "risks": [
-          "Funktionsprüfung und Anschlussplan fehlen."
-        ],
-        "next_checks": [
-          "Ausgangsspannungen, Lasttest und Isolation prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|336870563515|0"
-      ],
-      "assessment": {
-        "scalp_score": 77,
-        "useability_score": 63,
-        "useability_reason": "Als kompletter Wasserkühler nach Anschluss von Versorgung, Wasserleitungen und Wärmelast einsetzbar; betriebliche Infrastruktur nötig.",
-        "dependencies": [
-          "Passender elektrischer Anschluss",
-          "Kühlwasserkreislauf und geeignete Verbraucher"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "KKT-Kraus-Industriekühler ist ein substantielles gewerbliches Kühlaggregat mit plausibel hohem Sachpotenzial.",
-        "reasons": [
-          "Angeboten wird ein Industriekühler, nicht nur ein Sensor."
-        ],
-        "risks": [
-          "Kältemittel, Leistungsdaten, Dichtheit und Funktion unbekannt."
-        ],
-        "next_checks": [
-          "Typenschild, Leistung, Kältemittel und Probelauf prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|336870569293|0"
-      ],
-      "assessment": {
-        "scalp_score": 76,
-        "useability_score": 55,
-        "useability_reason": "Abhängig von Kabine, Luftführung, Filtern und ausreichender elektrischer Versorgung; einbau- und genehmigungsrelevant.",
-        "dependencies": [
-          "Passende Absaugkanäle/Spritzkabine",
-          "Filterkonzept und elektrische Versorgung"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "Absauganlage für eine Spritzkabine kann als großes Industrie-Lufttechnikgerät erheblichen Nutzwert haben.",
-        "reasons": [
-          "Absauganlage statt vollständiger Spritzkabine."
-        ],
-        "risks": [
-          "Explosionsschutz, Filterzustand und Förderleistung ungeprüft."
-        ],
-        "next_checks": [
-          "Typ, Volumenstrom, ATEX-Eignung und Lieferumfang prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|820296062604|0"
-      ],
-      "assessment": {
-        "scalp_score": 43,
-        "useability_score": 91,
-        "useability_reason": "Als vollständige Schneefräse mit üblicher Energieversorgung grundsätzlich eigenständig nutzbar; der Defekt betrifft den Funktionsstatus.",
-        "dependencies": [
-          "Passender Treibstoff bzw. Antrieb und Wartungsmaterial"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "TORO 3521 ist eine komplette Schneefräsen-Bauart mit nutzbaren Baugruppen; der als defekt gemeldete Zustand mindert das Potenzial.",
-        "reasons": [
-          "Titel bezeichnet eine Schneefräse, kein einzelnes Ersatzteil."
-        ],
-        "risks": [
-          "Defektes Gerät, Fehlerbild, Motor und Antrieb nicht geprüft."
-        ],
-        "next_checks": [
-          "Fehlerursache, Vollständigkeit, Messer-/Fräsmechanik und Transport prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|840084671616|0"
-      ],
-      "assessment": {
-        "scalp_score": 40,
-        "useability_score": 91,
-        "useability_reason": "Mit passenden Steckern und innerhalb der Nennleistung direkt zur Versorgung geeigneter 110-V-Geräte nutzbar.",
-        "dependencies": [
-          "Passende Steckernormen und geeignete Last"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "300-W-Spannungswandler von 220 auf 110 V hat überschaubares, aber universell plausibles Nutzpotenzial.",
-        "reasons": [
-          "Eigenständiger Spannungswandler, kein nackter Transformatorbaustein."
-        ],
-        "risks": [
-          "Schutzleiter, Dauerlast und tatsächliche Spannungsrichtung unbekannt."
-        ],
-        "next_checks": [
-          "Steckertyp, Ausgangsspannung und Lasttest prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|327430473819|0"
-      ],
-      "assessment": {
-        "scalp_score": 48,
-        "useability_score": 15,
-        "useability_reason": "Nur in einem DN700-Rohrsystem mit geeigneter Molchschleuse, Medium und Prozess einsetzbar.",
-        "dependencies": [
-          "DN700-Rohrleitung und Molchschleuse",
-          "Kompatibler Betriebsprozess"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "low",
-        "product_kind": "component",
-        "value_reason": "Zwei Rohrleitungsmolche DN700 sind spezialisierte Industrieartikel; der Nutzmarkt ist eng.",
-        "reasons": [
-          "Großkalibrige Rohrmolche, keine eigenständige Reinigungseinrichtung."
-        ],
-        "risks": [
-          "Werkstoff, Bauart und Gebrauchszustand fehlen."
-        ],
-        "next_checks": [
-          "Durchmesser, Material und Einsatzzweck prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|227594061199|0",
-        "v1|227594061570|0",
-        "v1|227594061808|0"
-      ],
-      "assessment": {
-        "scalp_score": 58,
-        "useability_score": 22,
-        "useability_reason": "Benötigt ein passendes Promodul-Steuerungssystem, Baugruppenträger und elektrische Peripherie.",
-        "dependencies": [
-          "Passende Schleicher-Promodul-SPS",
-          "Kompatibler Baugruppenträger und Verdrahtung"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Schleicher-Promodul-P P02-A16/1 ist ein industrielles Steuerungs-/Ausgangsmodul mit Ersatzteilpotenzial.",
-        "reasons": [
-          "Ein Modul, keine vollständige SPS."
-        ],
-        "risks": [
-          "Gebrauchter Zustand und interne Funktion unbekannt."
-        ],
-        "next_checks": [
-          "Exakte Modulkennung, Kontaktzustand und Prüfung im System klären."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|168832744772|0"
-      ],
-      "assessment": {
-        "scalp_score": 42,
-        "useability_score": 79,
-        "useability_reason": "Bei grundsätzlich vollständiger Einheit mit Strom, Patronen und kompatiblem Rechner selbstständig druckfähig; Defekt getrennt zu prüfen.",
-        "dependencies": [
-          "Geeignete Patronen und Druckmedien",
-          "Kompatibler Treiber bzw. Host"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "HP-DesignJet-800-Großformatdrucker samt Ständer hat Geräte- und Teilepotenzial, ist jedoch als defekt angeboten.",
-        "reasons": [
-          "Plotter mit Ständer, nicht nur Zubehör."
-        ],
-        "risks": [
-          "Als Ersatzteil/defekt bezeichnet; Druckkopf, Mechanik und Ersatzteilversorgung ungeklärt."
-        ],
-        "next_checks": [
-          "Drucktest, Rollenzufuhr, Maße und Defekt prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|860098093309|0"
-      ],
-      "assessment": {
-        "scalp_score": 55,
-        "useability_score": 82,
-        "useability_reason": "Als Trommeln nach Bestückung mit Schlauch oder Kabel weitgehend direkt einsetzbar; keine Spezialanlage nötig.",
-        "dependencies": [
-          "Passender Schlauch oder Kabel je Ausführung"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "low",
-        "product_kind": "accessory",
-        "value_reason": "Fünf Schlauch- oder Kabeltrommeln bilden ein nützliches Werkstattkonvolut, genaue Bauarten sind unklar.",
-        "reasons": [
-          "Mehrfachposten praktischer Aufrollhilfen."
-        ],
-        "risks": [
-          "Titel unterscheidet Schlauch- und Kabeltrommeln nicht; Zustand der Mechanik offen."
-        ],
-        "next_checks": [
-          "Typen, Durchmesser, Material und Anzahl im Original prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|237157719275|0"
-      ],
-      "assessment": {
-        "scalp_score": 45,
-        "useability_score": 16,
-        "useability_reason": "Nur mit passender SIMATIC-Baugruppenfamilie und Verdrahtungs-/Montagekonzept sinnvoll.",
-        "dependencies": [
-          "Kompatibler SIMATIC-Baugruppenträger",
-          "Passende SPS und Anschlussbelegung"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Siemens-SIMATIC-6ES7-392-Baugruppe kann als SPS-Zubehör professionellen Ersatzteilnutzen haben.",
-        "reasons": [
-          "Eine Automatisierungs-Baugruppe, nicht die ganze Steuerung."
-        ],
-        "risks": [
-          "Artikelnummer allein sichert die Funktion und Vollständigkeit nicht."
-        ],
-        "next_checks": [
-          "Exakte Variante und Zubehör prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|840075313157|0"
-      ],
-      "assessment": {
-        "scalp_score": 72,
-        "useability_score": 90,
-        "useability_reason": "Mit üblicher Stromversorgung, Matratze und Aufstellraum als Bett nutzbar; kein proprietäres Steuerungssystem nötig.",
-        "dependencies": [
-          "Passende Matratze und ausreichender Aufstellraum"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "Burmeier-Pflegebett ist ein umfangreiches, potenziell eigenständig nutzbares Pflegegerät mit hohem Sachanteil.",
-        "reasons": [
-          "Angeboten wird ein Seniorenbett als Gesamtgerät."
-        ],
-        "risks": [
-          "Verstellung, Seitengitter, Hygienezustand und Liegeflächengröße nicht geprüft."
-        ],
-        "next_checks": [
-          "Maße, Verstellfunktionen, Traglast und Transport prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|940060104820|0"
-      ],
-      "assessment": {
-        "scalp_score": 28,
+        "scalp_score": 10,
         "useability_score": 94,
-        "useability_reason": "Mit normalem Stromanschluss und Lötmaterial sofort für passende Lötarbeiten einsetzbar.",
-        "dependencies": [],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "tool",
-        "value_reason": "80-W-Lötpistole mit Lötzinnrolle ist ein einfaches vollständiges Handwerkzeug von begrenztem Potenzial.",
-        "reasons": [
-          "Lötpistole statt nur einer Heizspitze; Lötzinn wird genannt."
-        ],
-        "risks": [
-          "Temperaturführung und Isolierung ungeprüft."
-        ],
-        "next_checks": [
-          "Heizfunktion, Spitze und Spannungsangabe prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|960153906661|0"
-      ],
-      "assessment": {
-        "scalp_score": 76,
-        "useability_score": 27,
-        "useability_reason": "Erfordert geeigneten Servoumrichter, Geberauswertung, Montage und Maschinenintegration.",
+        "useability_reason": "Das Heft ist ohne Spezialhardware lesbar, liefert aber keine eigenständige Erdbewegungsfunktion.",
         "dependencies": [
-          "Passender Servo-Drive und Geberkabel",
-          "Mechanische Aufnahme und Steuerung"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "KUKA/Siemens-Servomotor 1FK7081 ist ein hochwertiges industrielles Antriebsteil, sofern technisch intakt.",
-        "reasons": [
-          "Servomotor, keine komplette Roboterachse."
-        ],
-        "risks": [
-          "Lager, Bremse, Encoder und Wicklung ungeprüft."
-        ],
-        "next_checks": [
-          "Typenschild, Gebervariante, Wellenzustand und Prüfprotokoll prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|960153949016|0",
-        "v1|960153970134|0"
-      ],
-      "assessment": {
-        "scalp_score": 77,
-        "useability_score": 18,
-        "useability_reason": "Nur in kompatiblem SIMODRIVE-611-Verbund mit Einspeisung, Steuerung und Motoren nutzbar.",
-        "dependencies": [
-          "Passendes SIMODRIVE-611-Rack samt Einspeisung",
-          "Kompatible Steuerung und Motoren"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Siemens-SIMODRIVE-611-LT-Leistungsmodul 80 A ist eine spezialisierte professionelle Antriebsbaugruppe.",
-        "reasons": [
-          "Ein LT-Modul, keine betriebsfertige Antriebsanlage."
-        ],
-        "risks": [
-          "Gebrauchter Zustand; Leistungselektronik kann unbemerkt beschädigt sein."
-        ],
-        "next_checks": [
-          "Exakte Teilenummer, Revision und Teststatus prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|960154004216|0"
-      ],
-      "assessment": {
-        "scalp_score": 72,
-        "useability_score": 19,
-        "useability_reason": "Braucht ein kompatibles Heidenhain-Steuerungssystem, passende Ein-/Ausgänge und Verdrahtung.",
-        "dependencies": [
-          "Passende CNC-Steuerung und Backplane",
-          "Maschinenspezifische Verdrahtung"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Heidenhain PL410B I/O-Einheit ist eine spezialisierte CNC-Steuerungskomponente mit Ersatzteilpotenzial.",
-        "reasons": [
-          "Ein-/Ausgabemodul statt fertiger PLC-Anlage."
-        ],
-        "risks": [
-          "Gebraucht und älter beobachtet; Kompatibilität und Funktion ungeklärt."
-        ],
-        "next_checks": [
-          "ID-Nummer, Firmware-/Hardwarestand und Anschlussprüfung klären."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|960154008703|0"
-      ],
-      "assessment": {
-        "scalp_score": 78,
-        "useability_score": 15,
-        "useability_reason": "Nur mit kompatiblen Heidenhain-Peripherie-, Anzeige- und Maschinensystemen sinnvoll.",
-        "dependencies": [
-          "Passende Heidenhain-CNC-Peripherie",
-          "Maschinenspezifische Konfiguration und Kabel"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Heidenhain LE407A-Recheneinheit ist ein spezielles Kernmodul einer CNC-Steuerung mit möglichem Teilewert.",
-        "reasons": [
-          "Steuerungsrechner, keine selbstständige Werkzeugmaschine."
-        ],
-        "risks": [
-          "Altbeobachtung; Speicher, Elektronik und Softwarestand ungeprüft."
-        ],
-        "next_checks": [
-          "Teilenummer, Systemkompatibilität und Boot-Test prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|960154036835|0"
-      ],
-      "assessment": {
-        "scalp_score": 70,
-        "useability_score": 24,
-        "useability_reason": "Erfordern kompatible PNOZmulti-Steuerung, korrekte Einbindung und sicherheitsgerechte Prüfung.",
-        "dependencies": [
-          "Kompatibler PNOZmulti-Basiskontroller",
-          "Validierte Sicherheitsverdrahtung"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Fünf Pilz-PNOZ-mi1p-Baugruppen sind ein professionelles Mehrfachkonvolut für Sicherheitssteuerungen.",
-        "reasons": [
-          "Fünf Erweiterungsmodule, keine vollständige Sicherheitsanlage."
-        ],
-        "risks": [
-          "Sicherheitskritische Gebrauchtteile ohne Funktionsnachweis."
-        ],
-        "next_checks": [
-          "Exakte Teilenummer und zulässige Systemkonfiguration prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|128170821050|0"
-      ],
-      "assessment": {
-        "scalp_score": 45,
-        "useability_score": 62,
-        "useability_reason": "Als Pumpe prinzipiell eigenständig nach Anschluss an Drehstrom und Rohrsystem nutzbar; angegebener Defekt ist ein separates Funktionsrisiko.",
-        "dependencies": [
-          "Drehstromversorgung",
-          "Passende DN65-Rohrleitungen und Medium"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "low",
-        "product_kind": "apparatus",
-        "value_reason": "Dreiphasige 3-kW-Pumpe DN65 ist ein substantielles Aggregat; der Defektvermerk reduziert den wirtschaftlichen Ansatz.",
-        "reasons": [
-          "Titel bezeichnet ein Pumpenaggregat statt nur ein Laufrad."
-        ],
-        "risks": [
-          "Defekt, Motorschaden, Dichtheit und tatsächlich vorhandene Komponenten unbekannt."
-        ],
-        "next_checks": [
-          "Motordaten, Laufrad, Flansche und Fehlerbild prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|880062510469|0"
-      ],
-      "assessment": {
-        "scalp_score": 28,
-        "useability_score": 94,
-        "useability_reason": "Für passend dimensionierte Kunststoffrohre ohne weitere Maschine einsetzbar.",
-        "dependencies": [],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "tool",
-        "value_reason": "HDX-Ratschenrohrschneider für PVC ist ein unmittelbar nutzbares Handwerkzeug mit begrenztem Einzelwert.",
-        "reasons": [
-          "Ein komplettes Rohrschneidewerkzeug."
-        ],
-        "risks": [
-          "Klingenstand und maximaler Rohrdurchmesser nicht genannt."
-        ],
-        "next_checks": [
-          "Schnittkapazität und Klingenzustand prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|206663878614|0"
-      ],
-      "assessment": {
-        "scalp_score": 57,
-        "useability_score": 43,
-        "useability_reason": "Nur in Elektronikfertigung oder konkreten Schaltungen nutzbar; SMD-Verarbeitung nötig.",
-        "dependencies": [
-          "Geeignete Leiterplatte und SMD-Bestückung"
+          "Keine Geräte für das Lesen; für tatsächlichen Baggereinsatz separate Großmaschine nötig"
         ],
         "value_band": "around_50",
         "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "2.000 Keramikkondensatoren 1812/4,7 nF auf Rolle bilden einen großen, standardisierbaren Elektronikposten.",
+        "product_kind": "media",
+        "value_reason": "Zwölf Seiten einer älteren Zaxis-225-USR-Broschüre; wirtschaftlich eine Drucksache und kein Bagger oder Ersatzteil.",
         "reasons": [
-          "Eindeutige Rolle mit Kapazität, Bauform und Stückzahl."
+          "Zaxis 225 USR ist nur das Broschürenthema, der Lieferumfang wird als „12 SEITEN“ bezeichnet."
         ],
         "risks": [
-          "Bauteilspezifikation und Feuchtigkeits-/Lagerzustand ungeprüft."
+          "Papierzustand und tatsächliche Ausgabe nicht unabhängig belegt."
         ],
         "next_checks": [
-          "Hersteller, Dielektrikum und Verpackungszustand klären."
+          "Seitenzahl, Jahrgang und Papierzustand im Original prüfen."
         ]
       }
     },
     {
       "ids": [
-        "v1|407327558154|0"
+        "v1|377606642716|0"
       ],
       "assessment": {
-        "scalp_score": 70,
-        "useability_score": 78,
-        "useability_reason": "Wenn die genannte Reinigungsmaschine vollständig ist, wäre sie mit üblicher Energieversorgung, Wasser und Verbrauchsmitteln weitgehend eigenständig nutzbar.",
-        "dependencies": [
-          "Geeignete Strom-/Akkuversorgung",
-          "Bürsten, Wasser und Reinigungsmittel je Ausstattung"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "low",
-        "product_kind": "apparatus",
-        "value_reason": "Nennung von Hako/Hakomatic B90 legt eine größere Bodenreinigungsmaschine nahe; der tatsächliche Lieferumfang ist im knappen Titel nicht eindeutig.",
-        "reasons": [
-          "Titel nennt eine Maschine, aber auch mehrere werbende Suchbegriffe."
-        ],
-        "risks": [
-          "Modell, Akku, Saugeinheit und Vollständigkeit fehlen; Versandangabe ungewöhnlich."
-        ],
-        "next_checks": [
-          "Originalfotos, Modell, Funktion und tatsächlichen Versand ausdrücklich verifizieren."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|287709915897|0"
-      ],
-      "assessment": {
-        "scalp_score": 44,
-        "useability_score": 66,
-        "useability_reason": "Mit kompatiblem Händlerkonto, Dienstanbindung und Internetverbindung einsetzbar, also nicht völlig unabhängig.",
-        "dependencies": [
-          "Unterstütztes SumUp-Händlerkonto",
-          "Netz- oder Mobilfunkverbindung"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "SumUp-NFC-Kartenterminal ist ein kompaktes vollständiges Zahlungsgerät mit begrenztem Gebrauchtpotenzial.",
-        "reasons": [
-          "Ganzes Kartenterminal, keine bloße Hülle."
-        ],
-        "risks": [
-          "Registrierbarkeit, Modell und mögliche Kontobindung ungeprüft."
-        ],
-        "next_checks": [
-          "Aktivierungsfähigkeit und Gebühren-/Dienstkompatibilität prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|820307737946|0"
-      ],
-      "assessment": {
-        "scalp_score": 39,
+        "scalp_score": 5,
         "useability_score": 92,
-        "useability_reason": "Als Gerät mit Netzstrom und Sägeblatt direkt nutzbar, falls repariert; Defekt ist keine Abhängigkeit von einer anderen Maschine.",
+        "useability_reason": "Als kurze technische Lektüre eigenständig nutzbar, für praktische Ölanalyse wären Labor- oder Testmittel unabhängig nötig.",
         "dependencies": [
-          "Passendes Sägeblatt und üblicher Netzanschluss"
+          "Für echte Ölprüfung Testkit oder Labor; zum Lesen selbst keine Spezialteile"
         ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "tool",
-        "value_reason": "Metabo-Handkreissäge KSE1668 ist ein kräftiges vollständiges Elektrowerkzeug, der ausdrücklich defekte Zustand begrenzt das Potenzial.",
-        "reasons": [
-          "Handkreissäge selbst, nicht ein einzelner Ersatzmotor."
-        ],
-        "risks": [
-          "Defekt kann Motor, Mechanik oder Schutzfunktionen betreffen."
-        ],
-        "next_checks": [
-          "Fehlerbild, Schutzhaube, Blattaufnahme und Kabel prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|336870839884|0"
-      ],
-      "assessment": {
-        "scalp_score": 55,
-        "useability_score": 41,
-        "useability_reason": "Nur mit unterstützten Phoenix-Contact-Geräten, Software und PC verwendbar.",
-        "dependencies": [
-          "Kompatibles IFS-Gerät",
-          "PC mit passender Konfigurationssoftware"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "accessory",
-        "value_reason": "Phoenix-Contact-IFS-USB-PROG ist ein spezialisierter Programmieradapter für industrielle Komponenten.",
-        "reasons": [
-          "Programmieradapter, kein universelles Messgerät."
-        ],
-        "risks": [
-          "Kabel, Treibersupport und Funktion unbekannt."
-        ],
-        "next_checks": [
-          "Unterstützte Geräte und Lieferumfang prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|860106661609|0"
-      ],
-      "assessment": {
-        "scalp_score": 69,
-        "useability_score": 91,
-        "useability_reason": "Als Handwerkzeugset ohne weitere Spezialmaschine verwendbar, jedoch für das passende Rohrsystem ausgelegt.",
-        "dependencies": [
-          "Passende Rohrdurchmesser für die jeweilige Montage"
-        ],
-        "value_band": "around_500",
-        "assessment_confidence": "medium",
-        "product_kind": "tool",
-        "value_reason": "Prevost-PPS-CT1650-Rohrwerkzeug-Set ist ein professioneller Werkzeugkoffer für Rohr-/Druckluftmontage.",
-        "reasons": [
-          "Ein benanntes Set, nicht ein einzelner Rohrverbinder."
-        ],
-        "risks": [
-          "Vollständigkeit der Einsätze und Schneidwerkzeugverschleiß unklar."
-        ],
-        "next_checks": [
-          "Setinhalt, Durchmesserbereich und Schneidkanten prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|147658355581|0"
-      ],
-      "assessment": {
-        "scalp_score": 30,
-        "useability_score": 93,
-        "useability_reason": "Mit Strom und passenden Filtern als Sauger eigenständig nutzbar, sofern repariert; kein anderes System erforderlich.",
-        "dependencies": [
-          "Passender Filter und Saugerzubehör"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "apparatus",
-        "value_reason": "Einhell-AS1400-Nass-Trockensauger ist als ganzes Gerät potenziell brauchbar; der Defektvermerk senkt den wirtschaftlichen Wert.",
-        "reasons": [
-          "Der Titel bezeichnet einen ganzen Sauger als Teileträger."
-        ],
-        "risks": [
-          "Defektursache und Vollständigkeit offen."
-        ],
-        "next_checks": [
-          "Motor, Behälter, Dichtung und Fehlerbild kontrollieren."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|198766157764|0"
-      ],
-      "assessment": {
-        "scalp_score": 19,
-        "useability_score": 95,
-        "useability_reason": "Mit üblichem Netzanschluss und Lötmaterial direkt verwendbar.",
-        "dependencies": [],
         "value_band": "around_5",
         "assessment_confidence": "medium",
-        "product_kind": "tool",
-        "value_reason": "Kleiner PEBARO-6-W-Lötkolben mit mehreren Spitzen ist ein einfaches Handwerkzeug ohne hohes Sachpotenzial.",
+        "product_kind": "media",
+        "value_reason": "Vierseitige Liebherr-Serviceinformation zu Ölanalyse von Erdbewegungsgeräten; kein Ölprüfgerät und keine Maschine.",
         "reasons": [
-          "Lötkolben und zusätzliche Spitzen werden genannt."
+          "„SERVICE-INFORMATION ... ÖLANALYSE 4 SEITEN“ beschreibt den Inhalt einer vierseitigen Unterlage."
         ],
         "risks": [
-          "Gebrauchte Spitze und elektrische Sicherheit nicht geprüft."
+          "Technischer Inhalt und Aktualität für heutige Maschinen unbekannt."
         ],
         "next_checks": [
-          "Heiztest und Spitzenzustand prüfen."
+          "Dokumenttitel und Erscheinungsjahr sowie Original/Reproduktion prüfen."
         ]
       }
     },
     {
       "ids": [
-        "v1|227590436050|0"
+        "v1|377606642738|0"
       ],
       "assessment": {
-        "scalp_score": 45,
-        "useability_score": 89,
-        "useability_reason": "Als vollständiges Messgerät voraussichtlich mit üblicher Versorgung und passendem Messzubehör nutzbar; Einsatzzweck noch unklar.",
-        "dependencies": [
-          "Passende Messleitungen/Sensoren je Gerätetyp"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "low",
-        "product_kind": "apparatus",
-        "value_reason": "SERD-DM8300 ist ein als ganzes digitales Messgerät angebotenes Gerät; ohne Messart und Ausstattung ist nur mittleres Potenzial plausibel.",
-        "reasons": [
-          "Titel bezeichnet ein Messgerät, nicht eine einzelne Platine."
-        ],
-        "risks": [
-          "Messfunktion, Zubehör und Kalibrierung aus dem Kurztext nicht belegbar."
-        ],
-        "next_checks": [
-          "Gerätetyp, Display, Messbereich und Funktion prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|840075962354|0"
-      ],
-      "assessment": {
-        "scalp_score": 56,
-        "useability_score": 32,
-        "useability_reason": "Erfordert Entwickler-PC, passende Software, Stromversorgung und Kenntnisse der Plattform; kein fertiges Endgerät.",
-        "dependencies": [
-          "Kompatible Entwicklungssoftware und Host",
-          "Versorgung und passende Schnittstellen"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "low",
-        "product_kind": "component",
-        "value_reason": "UC-Dragon-AT91SAM9G20-Evaluierungsboard ist ein spezielles Entwicklungsmodul mit Elektronik- und Lernpotenzial.",
-        "reasons": [
-          "Evaluierungsplatine, kein vollständiger Rechner."
-        ],
-        "risks": [
-          "Defektkennzeichnung, Zubehör und Firmware unklar."
-        ],
-        "next_checks": [
-          "Boardversion, Bootfähigkeit und Schnittstellen prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|128171070246|0"
-      ],
-      "assessment": {
-        "scalp_score": 61,
-        "useability_score": 17,
-        "useability_reason": "Einzelnes Ersatzteil nur in kompatibler VLT-Anlage mit fachgerechter Integration nutzbar.",
-        "dependencies": [
-          "Kompatibler Danfoss-VLT-Umrichter",
-          "Elektrotechnischer Einbau"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "component",
-        "value_reason": "Danfoss-VLT-Ersatzteil 175H2864 kann in einem Frequenzumrichter relevant sein, aber seine genaue Rolle ist offen.",
-        "reasons": [
-          "Ersatzteil, kein vollständiger Frequenzumrichter."
-        ],
-        "risks": [
-          "Kompatibilität und Funktionszustand ungeprüft."
-        ],
-        "next_checks": [
-          "Vollständige Teilenummer und Einbauort klären."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|147658449355|0"
-      ],
-      "assessment": {
-        "scalp_score": 25,
+        "scalp_score": 9,
         "useability_score": 94,
-        "useability_reason": "Mit üblichem Netzstrom direkt als Wärmequelle verwendbar.",
-        "dependencies": [],
-        "value_band": "around_50",
-        "assessment_confidence": "low",
-        "product_kind": "apparatus",
-        "value_reason": "Ein unbestimmter Heizlüfter hat als vollständiges Kleingerät begrenztes, aber praktisches Potenzial.",
-        "reasons": [
-          "Heizlüfter als Gesamtgerät angegeben."
-        ],
-        "risks": [
-          "Leistung, Sicherheitszustand und Modell nicht beschrieben."
-        ],
-        "next_checks": [
-          "Überhitzungsschutz und Probelauf prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|257830748909|0"
-      ],
-      "assessment": {
-        "scalp_score": 30,
-        "useability_score": 68,
-        "useability_reason": "Durch Anschrauben an passende Plattformen verwendbar, nicht als selbstständiges Gerät.",
+        "useability_reason": "Ohne Zusatzgeräte als Broschüre nutzbar, aber nicht als eigenständiges Industriemaschinengerät.",
         "dependencies": [
-          "Passende Montageplatte und belastbare Konstruktion"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "low",
-        "product_kind": "accessory",
-        "value_reason": "Vier größere Transportrollen, zwei mit Bremse, sind nützliches Werkstatt- und Möbelbauzubehör.",
-        "reasons": [
-          "Vier Rollen mit zwei Feststellern sind konkret benannt."
-        ],
-        "risks": [
-          "Traglast und Lagerzustand unbekannt."
-        ],
-        "next_checks": [
-          "Lochbild, Rollendurchmesser und Tragfähigkeit prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|327435949075|0"
-      ],
-      "assessment": {
-        "scalp_score": 28,
-        "useability_score": 8,
-        "useability_reason": "Praktisch nur für kompatible Rotoren/Zentrifugen mit passender Verriegelung nutzbar.",
-        "dependencies": [
-          "Kompatible Eppendorf-Zentrifuge bzw. Rotor"
+          "Leser; optional weitere Unterlagen für technische Detailinformationen"
         ],
         "value_band": "around_50",
         "assessment_confidence": "medium",
-        "product_kind": "accessory",
-        "value_reason": "Eppendorf-Rotorschlüssel ist ein spezifisches Original-Zentrifugenwerkzeug, aber kein universelles Werkzeug.",
+        "product_kind": "media",
+        "value_reason": "Alter zwölfseitiger Prospekt über den Hitachi Zaxis 160 LC; eine einzelne Papierpublikation statt Bagger.",
         "reasons": [
-          "Rotorschlüssel, keine Zentrifuge."
+          "Die expliziten „12 SEITEN 06/03“ sind die angebotene Drucksache; Modellname bezeichnet bloß das Thema."
         ],
         "risks": [
-          "Kompatibilität aus der Artikelnummer noch zu bestätigen."
+          "Inhalt, Papierzustand und Nachdruckstatus ungeklärt."
         ],
         "next_checks": [
-          "Zugehörige Rotor-/Gerätenummer prüfen."
+          "Im Original bestätigen, dass ausschließlich die zwölf Seiten versendet werden."
         ]
       }
     },
     {
       "ids": [
-        "v1|820324031663|0"
+        "v1|377606656754|0"
       ],
       "assessment": {
-        "scalp_score": 64,
-        "useability_score": 65,
-        "useability_reason": "Mit verbreiteten Gestellen oder Wagen durch Montage nutzbar, aber nicht alleine transportfähig.",
+        "scalp_score": 11,
+        "useability_score": 95,
+        "useability_reason": "Ein Produktkatalog ist allein lesbar, erzeugt aber keine Funktion von Baumaschinen-Anbaugeräten.",
         "dependencies": [
-          "Geeignete Wagen-/Gestellkonstruktion",
-          "Passendes Schraubenlochbild"
+          "Keine Maschine für das Lesen; für tatsächliche Gerätefunktion Anbaugerät und passende Trägermaschine separat nötig"
         ],
         "value_band": "around_50",
         "assessment_confidence": "medium",
-        "product_kind": "accessory",
-        "value_reason": "Sechzehn große Transportrollen, darunter acht mit Bremsen, sind ein substantielles Werkstattbau-Konvolut.",
+        "product_kind": "media",
+        "value_reason": "24-seitige Cangini-Broschüre über Anbaugeräte; der Titel nennt keine tatsächlichen Schaufeln oder Werkzeuge im Lieferumfang.",
         "reasons": [
-          "Großes Set aus Bock- und Lenkrollen."
+          "„TOOLS FOR STRONG CHALLENGES ... 24 SEITEN“ bezieht sich auf einen gedruckten Katalog über Anbaugeräte."
         ],
         "risks": [
-          "Traglast, Rollenmaterial und Bremsenzustand ungeklärt."
+          "Weder Katalogzustand noch angebotene Ausgabe direkt überprüft."
         ],
         "next_checks": [
-          "Lochbild, Belastbarkeit, Vollständigkeit und Versand prüfen."
+          "Papierlieferumfang und Erscheinungsdatum im Original abgleichen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|377606656776|0"
+      ],
+      "assessment": {
+        "scalp_score": 10,
+        "useability_score": 94,
+        "useability_reason": "Als historische technische Broschüre unmittelbar nutzbar, nicht zum Maschinenbetrieb.",
+        "dependencies": [
+          "Keine Spezialteile zum Lesen; Betrieb des Baggers völlig anderer Lieferumfang"
+        ],
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "product_kind": "media",
+        "value_reason": "Zwölfseitiger alter Hitachi-Zaxis-280-Prospekt, kein komplettes Großgerät; Marktpotenzial einer Drucksache unsicher.",
+        "reasons": [
+          "Die Auslobung „12 SEITEN 07/03 ALT & RAR“ macht den Papierartikel zum Gegenstand."
+        ],
+        "risks": [
+          "Seltenheit nur Verkäuferbehauptung; Zustand und Vollständigkeit offen."
+        ],
+        "next_checks": [
+          "Papierumfang und Originaldruck anhand Fotos prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|377606656781|0"
+      ],
+      "assessment": {
+        "scalp_score": 8,
+        "useability_score": 94,
+        "useability_reason": "Ohne ergänzende Hardware als Broschüre lesbar; praktische Maschine ist nicht enthalten.",
+        "dependencies": [
+          "Keine weiteren Geräte zum Lesen"
+        ],
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "product_kind": "media",
+        "value_reason": "Achtseitige Druckunterlage zum Hitachi Zaxis 240, nicht ein Hydraulikbagger oder eine Baugruppe.",
+        "reasons": [
+          "„8 SEITEN 05/03 ALT & RAR“ beschreibt eine frühe Broschüre mit Maschinenbezug."
+        ],
+        "risks": [
+          "Druckjahrgang, Erhaltungszustand und tatsächlich gelieferte Seiten ungeprüft."
+        ],
+        "next_checks": [
+          "Abgebildeten Heftumfang prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|377606656828|0"
+      ],
+      "assessment": {
+        "scalp_score": 8,
+        "useability_score": 94,
+        "useability_reason": "Als Nachschlage- oder Sammlerpapiersache eigenständig verwendbar, keine industrielle Gerätefunktion.",
+        "dependencies": [
+          "Kein Maschinenzubehör zum Lesen notwendig"
+        ],
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "product_kind": "media",
+        "value_reason": "Achtseitiger älterer Prospekt zum Hitachi Zaxis 210; kein Maschinenangebot.",
+        "reasons": [
+          "Maschinenmodell im Titel ist ein Broschürenthema; die Produktangabe endet auf „8 SEITEN“."
+        ],
+        "risks": [
+          "Originalität und Seitenzustand ohne Belege."
+        ],
+        "next_checks": [
+          "Fotos und Seitenumfang am Originalangebot verifizieren."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|377606656838|0"
+      ],
+      "assessment": {
+        "scalp_score": 4,
+        "useability_score": 91,
+        "useability_reason": "Als Lesedokument unmittelbar nutzbar, technische oder rechtliche Aktualität begrenzt und nicht belegt.",
+        "dependencies": [
+          "Keine Spezialhardware zum Lesen; Garantiebezug auf konkrete Maschinen nicht mitgeliefert"
+        ],
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "product_kind": "media",
+        "value_reason": "Vierseitiges altes Liebherr-Komponenten-Garantieblatt über Planierraupen, kein Ersatzteil, keine Planierraupe.",
+        "reasons": [
+          "„KOMPONENTEN-GARANTIE 4 SEITEN“ verweist auf eine Unterlage über Maschinen, nicht auf Maschinenkomponenten im Lieferumfang."
+        ],
+        "risks": [
+          "Garantierelevanz, Ausgabe und Papierzustand ungeklärt."
+        ],
+        "next_checks": [
+          "Ob Originaldruck, vier Blätter oder Faltblatt angeboten werden, klären."
         ]
       }
     }
