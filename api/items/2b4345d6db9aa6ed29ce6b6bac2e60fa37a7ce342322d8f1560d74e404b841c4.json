@@ -1,5 +1,19 @@
 {
-  "generated_at": "2026-11-08T07:25:03Z",
+  "freshness": {
+    "active_window_hours": 72,
+    "description_maximum_age_hours": 24,
+    "direct_ebay_verification": false,
+    "evaluated_at": "2026-11-08T08:03:21Z",
+    "maximum_source_age_hours": null,
+    "observation_is_not_condition_verification": true,
+    "recheck_at_read_time": true,
+    "retention_basis": "auction_end",
+    "retention_not_revalidation": true,
+    "source_currentness_guaranteed": false,
+    "source_warning_after_hours": 2,
+    "upstream_cache_age_is_provider_claim": true
+  },
+  "generated_at": "2026-11-08T08:03:21Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "high",
@@ -19,9 +33,11 @@
     "distance_km": null,
     "eligibility": "review",
     "eligibility_reasons": [
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
+    "eligibility_without_time_window": "review",
     "ends_at": "2026-11-08T13:53:47Z",
     "id": "v1|206661309427|0",
     "image": "https://i.ebayimg.com/images/g/8TIAAeSwgtRq408P/s-l1600.jpg",
@@ -41,18 +57,20 @@
     "price_kind": "auction_price",
     "product_kind": "media",
     "reasons": [
-      "Aktueller Auktionspreis höchstens 1 €",
+      "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
       "Prospekt oder alte Dokumentation, nicht die abgebildete Maschine."
     ],
     "reserve_status": "unknown",
     "risks": [
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Spezielle Sammlerwerte sind nicht recherchiert.",
+      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 2,
@@ -67,6 +85,7 @@
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": true,
+    "time_window_eligible": true,
     "title": "Original GINAF Prospekt. Das HydroAxle System.",
     "total_eur": null,
     "total_known_eur": 3.0,
@@ -80,7 +99,7 @@
   },
   "kind": "item",
   "provider": "auktionen-ohne-gebot",
-  "schema_version": 2,
+  "schema_version": 3,
   "scoring": {
     "additional_fact_bonus": 0,
     "category_caps": false,
@@ -121,7 +140,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:1ce111c3ca81d631ce8e1b7fe1a527c5fb4b5d44c9863c3c026d6303a00167fa",
+  "snapshot_id": "sha256:89058b12836dac49c62f34215e35e9aef52da8759c2de6f74e6c6443017cfe2e",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",

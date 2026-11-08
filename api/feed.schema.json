@@ -59,6 +59,7 @@
               "items": {
                 "$ref": "#/$defs/item"
               },
+              "maxItems": 800,
               "type": "array"
             },
             "kind": {
@@ -157,6 +158,18 @@
         },
         "freshness": {
           "properties": {
+            "active_window_hours": {
+              "description": "Active only when read-time now < ends_at < now + this window; default 72 hours, upper boundary excluded.",
+              "exclusiveMinimum": 0,
+              "maximum": 744,
+              "type": "number"
+            },
+            "description_maximum_age_hours": {
+              "description": "Independent description TTL; missing/future/too-old text timestamps remove the text, not candidate metadata.",
+              "exclusiveMinimum": 0,
+              "maximum": 24,
+              "type": "number"
+            },
             "direct_ebay_verification": {
               "type": "boolean"
             },
@@ -165,10 +178,8 @@
               "type": "string"
             },
             "maximum_source_age_hours": {
-              "description": "Configured source-buffer retention limit; not a guarantee of current price, bids or availability.",
-              "exclusiveMinimum": 0,
-              "maximum": 24,
-              "type": "number"
+              "const": null,
+              "description": "V3 does not expire candidate metadata by source age. Null is not zero and is not a promise of currentness."
             },
             "observation_is_not_condition_verification": {
               "const": true
@@ -176,18 +187,29 @@
             "recheck_at_read_time": {
               "const": true
             },
+            "retention_basis": {
+              "const": "auction_end"
+            },
             "retention_not_revalidation": {
               "const": true
             },
             "source_currentness_guaranteed": {
               "const": false
             },
+            "source_warning_after_hours": {
+              "const": 2,
+              "description": "Observations older than this are visibly stale/carried, not removed by age alone."
+            },
             "upstream_cache_age_is_provider_claim": {
               "type": "boolean"
             }
           },
           "required": [
+            "retention_basis",
             "maximum_source_age_hours",
+            "active_window_hours",
+            "source_warning_after_hours",
+            "description_maximum_age_hours",
             "evaluated_at",
             "recheck_at_read_time"
           ],
@@ -241,7 +263,7 @@
           "$ref": "#/$defs/nullableText"
         },
         "schema_version": {
-          "const": 2
+          "const": 3
         },
         "scoring": {
           "$ref": "#/$defs/scoring"
@@ -291,7 +313,8 @@
         "snapshot_id",
         "generated_at",
         "source_status",
-        "untrusted_listing_text"
+        "untrusted_listing_text",
+        "freshness"
       ],
       "type": "object"
     },
@@ -536,6 +559,15 @@
           "maxItems": 20,
           "type": "array"
         },
+        "eligibility_without_time_window": {
+          "description": "Optional backend-derived eligibility from all non-window facts. Combine with the current time window to allow later entry; missing/null must not overturn an exclusion by guessing from human-readable reasons.",
+          "enum": [
+            "eligible",
+            "review",
+            "excluded",
+            null
+          ]
+        },
         "ends_at": {
           "format": "date-time",
           "type": "string"
@@ -669,7 +701,7 @@
           ]
         },
         "score_version": {
-          "description": "Per-item assessment version. Version 1 has no assessed Useability or new Interest; the snapshot schema remains version 2.",
+          "description": "Per-item assessment version, independent of feed schema 3. Version 1 has no assessed Useability or new Interest.",
           "enum": [
             1,
             2
@@ -714,6 +746,10 @@
         "stale": {
           "type": "boolean"
         },
+        "time_window_eligible": {
+          "description": "Time-window membership at generation time only; recompute against the current clock.",
+          "type": "boolean"
+        },
         "title": {
           "maxLength": 500,
           "minLength": 1,
@@ -737,6 +773,7 @@
           "description": "Practical independence from additional equipment, software, accessories or infrastructure; not probability of working condition. Null means not assessed."
         },
         "valid_until": {
+          "description": "V3 equals ends_at; not a current-price/bid guarantee. Recheck auction end and active time window when reading.",
           "format": "date-time",
           "type": "string"
         },
@@ -771,6 +808,7 @@
         "valid_until",
         "detail_path",
         "eligibility",
+        "time_window_eligible",
         "reserve_status",
         "score",
         "interest_score",
@@ -858,6 +896,7 @@
                   "type": "integer"
                 },
                 "total": {
+                  "maximum": 800,
                   "minimum": 0,
                   "type": "integer"
                 }
@@ -1157,7 +1196,7 @@
   },
   "$id": "https://pogoner.github.io/fundgrube/api/feed.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Read-only observations and uncertain personal-interest classifications, not a live feed, appraisal or transaction API.",
+  "description": "V3 read-only observations retained until auction end, with a separate strict remaining-time window and description TTL. Not a live feed, appraisal or transaction API. Score version 2 is independent.",
   "oneOf": [
     {
       "$ref": "#/$defs/dashboard"
