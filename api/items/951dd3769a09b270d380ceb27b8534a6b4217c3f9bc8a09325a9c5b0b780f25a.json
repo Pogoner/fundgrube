@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T20:35:32Z",
+    "evaluated_at": "2026-11-08T21:05:02Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,9 +13,9 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T20:35:32Z",
+  "generated_at": "2026-11-08T21:05:02Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
@@ -25,9 +25,9 @@
     "content_updated_at": "2026-11-08T20:13:03Z",
     "country": "",
     "dependencies": [
-      "Passende externe Komponenten",
-      "Versorgung und Verdrahtung",
-      "Konkrete Integrationsaufgabe"
+      "Passende Signale",
+      "Versorgung",
+      "Programmierung"
     ],
     "description": "",
     "description_status": "missing",
@@ -46,13 +46,13 @@
     "ends_at": "2026-11-14T19:55:42Z",
     "id": "v1|287712396873|0",
     "image": "https://i.ebayimg.com/images/g/kB8AAeSw0jpqmro4/s-l1600.jpg",
-    "interest_score": 13,
+    "interest_score": 4,
     "is_auction": true,
     "last_seen_at": "2026-11-08T20:13:03Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Schaltungsunterlagen und vorhandene Programmierung klären."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -67,7 +67,7 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Technische Systembaugruppe mit möglicher substanzieller Bedeutung; Modell, Umfang und Nachfrage sind ungeklärt."
+      "Semantische Einordnung des vorliegenden Titels und Zustandslabels."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -75,13 +75,16 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 58,
-    "score": 13,
+    "scalp_score": 18,
+    "score": 4,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 58,
+    "semantic_assessed_at": "2026-11-08T20:29:29.286769Z",
+    "semantic_interest": 18,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.0,
     "source_observed_at": "2026-11-08T20:13:03Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -92,11 +95,11 @@
     "total_eur": null,
     "total_known_eur": 6.0,
     "url": "https://www.ebay.de/itm/287712396873?hash=item42fcfec649%3Ag%3AkB8AAeSw0jpqmro4&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Die Baugruppe benötigt externe Komponenten, Verdrahtung und eine passende Anwendung; sie erledigt allein noch keine vollständige Aufgabe.",
-    "useability_score": 22,
+    "useability_reason": "Benötigt Passende Signale, Versorgung, Programmierung.",
+    "useability_score": 24,
     "valid_until": "2026-11-14T19:55:42Z",
-    "value_band": "unknown",
-    "value_reason": "Technische Systembaugruppe mit möglicher substanzieller Bedeutung; Modell, Umfang und Nachfrage sind ungeklärt.",
+    "value_band": "around_50",
+    "value_reason": "Zwei programmierbare Steuerplatinen mit offenem Einsatzzweck.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -153,10 +156,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:3e2b2cab7551e5decb3d1d704cbbc0bd171f3980670071e64b6b988b717048cb",
+  "snapshot_id": "sha256:418f8f314f215a9acbda9c36cbed96bf0925576a4d66680dbff4e31d6bcdee8f",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
