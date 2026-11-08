@@ -169,6 +169,17 @@ bleiben; die 48 Stunden sind eine Anwendungsfrist, keine historische Löschung.
 
 ## Warum Pages einmalig aktiviert werden muss
 
+### Frontend-Updates und Browsercache
+
+`site/index.html` und `site/info.html` referenzieren lokale CSS-/JavaScript-Dateien
+mit einer gemeinsamen Versionskennung im Query-String. Bei inkompatiblen
+DOM-/Script-Änderungen diese Kennung in beiden Seiten erhöhen. Sonst kann der
+Browser bereits neues HTML mit noch gecachtem altem JavaScript kombinieren.
+Nicht nur einen frischen Tab, sondern auch das Neuladen einer zuvor geöffneten
+Version prüfen. Der Datenabruf selbst verwendet weiterhin `cache: no-store`.
+
+### Einmalige Pages-Aktivierung
+
 Der reguläre `GITHUB_TOKEN` kann mit `pages: write` und `id-token: write` eine
 bereits eingerichtete Pages-Site veröffentlichen. Er kann Pages nicht erstmals
 aktivieren. `actions/configure-pages` verlangt für `enablement: true` einen

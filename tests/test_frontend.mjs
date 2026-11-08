@@ -132,7 +132,7 @@ test("home is a compact radar; long documentation lives on a real linked Info pa
   assert.doesNotMatch(home, /class="hero|id="interface"|id="coverage-details"|id="copy-instructions"|id="tool-instructions"|class="footnote"/);
   assert(home.indexOf('id="minimum-interest"') < home.indexOf('id="cards"'));
   assert.match(info, /id="home-link"[^>]*href="\.\/"/);
-  assert.match(info, /src="\.\/info\.js"/);
+  assert.match(info, /src="\.\/info\.js\?v=[^"]+"/);
   for (const path of ["manifest.json", "openapi.json", "guide.md"]) assert(info.includes(`href="./api/${path}"`));
   for (const anchor of ["0–9", "10–24", "25–44", "45–64", "65–79", "80–89", "90–100"]) assert(info.includes(anchor));
   assert.match(info, /Interest = ⌊\(Scalp × Useability \+ 50\) \/ 100⌋/);
@@ -140,6 +140,29 @@ test("home is a compact radar; long documentation lives on a real linked Info pa
   assert.match(info, /defektes, aber eigenständig nutzbares Gerät/);
   assert.match(info, /Sensoren, Verdrahtung und eine konkrete Messaufgabe/);
   assert.match(info, /kein laufender MCP-Server/);
+});
+
+test("both pages use one shared asset version and reference existing local CSS and JS", () => {
+  const versions = new Set();
+  for (const [name, page] of Object.entries(pages)) {
+    const assets = [...page.html.matchAll(/<(link|script)\b[^>]*>/g)].flatMap(match => {
+      const attrs = attributes(match[0]);
+      return match[1] === "script" && attrs.src ? [attrs.src]
+        : match[1] === "link" && attrs.rel === "stylesheet" ? [attrs.href] : [];
+    });
+    assert.equal(assets.length, 2, `${name} has one stylesheet and one script`);
+    const filenames = [];
+    for (const asset of assets) {
+      assert.match(asset, /^\.\/[a-z]+\.(css|js)\?v=[a-zA-Z0-9.-]+$/);
+      const resolved = new URL(asset, site);
+      versions.add(resolved.searchParams.get("v"));
+      resolved.search = "";
+      filenames.push(resolved.pathname.split("/").at(-1));
+      assert(readFileSync(resolved, "utf8").length > 0, `${asset} exists and is not empty`);
+    }
+    assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
+  }
+  assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
 });
 
 test("loading, missing source, blockers and refresh failure remain visible on the lean home", async () => {

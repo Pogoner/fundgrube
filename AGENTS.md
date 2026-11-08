@@ -202,6 +202,11 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
 - Pflege `schema_version`, Schema, OpenAPI, Manifest und Dokumentation bei
   Schnittstellenänderungen gemeinsam. Erzeuge API-Dateien über `hunter.feed`,
   statt reale Angebotsdaten von Hand in den Quellcode einzubauen.
+- Bei inkompatiblen Änderungen an HTML, DOM-IDs oder Frontend-Code die
+  Versionskennung der lokalen CSS-/JavaScript-URLs in beiden HTML-Seiten
+  gemeinsam ändern. GitHub Pages und Browser können alte Assets im Cache
+  behalten; neue HTML-Dateien dürfen nicht mit inkompatiblem altem Script
+  starten. Auch den Übergang von einer bereits geöffneten alten Version prüfen.
 - Produktionsläufe nur auf `main`, PR-Tests ohne Secrets oder Deployment.
   Kein `pull_request_target`, kein Force-Push, keine umgangenen Branch-/Pages-
   Freigaben. Bei konkurrierenden Snapshot-Änderungen neu laden, nicht überschreiben.
