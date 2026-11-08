@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T13:14:36Z",
+    "evaluated_at": "2026-11-08T13:48:21Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T13:14:36Z",
+  "generated_at": "2026-11-08T13:48:21Z",
   "item": {
     "assessment_basis": "heuristic",
     "assessment_confidence": "low",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-08T12:57:08Z",
+    "content_updated_at": "2026-11-08T13:18:04Z",
     "country": "",
     "dependencies": [
       "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -36,7 +36,7 @@
     "eligibility": "excluded",
     "eligibility_reasons": [
       "Ablauf außerhalb des Suchfensters",
-      "Weder Versandkosten noch passende Abholung bestätigt",
+      "Standort und Abholbedingungen im Original prüfen; Nähe laut Umkreissuche der Quelle",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -47,7 +47,7 @@
     "image": "https://i.ebayimg.com/images/g/XIYAAeSw-bJq3x5G/s-l1600.jpg",
     "interest_score": 18,
     "is_auction": true,
-    "last_seen_at": "2026-11-08T12:57:08Z",
+    "last_seen_at": "2026-11-08T13:18:04Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -55,9 +55,12 @@
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
-    "pickup_available": null,
+    "pickup_available": true,
     "pickup_radius_km": 50,
-    "pickup_search_confirmed": false,
+    "pickup_search_confirmed": true,
+    "pickup_search_observed_at": "2026-11-08T13:18:04Z",
+    "pickup_search_postcode": "69121",
+    "pickup_search_radius_km": 50.0,
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
@@ -65,12 +68,13 @@
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
+      "Nähe laut Umkreissuche der Quelle",
       "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
     ],
     "reserve_status": "unknown",
     "risks": [
       "Ablauf außerhalb des Suchfensters",
-      "Weder Versandkosten noch passende Abholung bestätigt",
+      "Standort und Abholbedingungen im Original prüfen; Nähe laut Umkreissuche der Quelle",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -82,7 +86,7 @@
     "semantic_assessed": true,
     "semantic_interest": 35,
     "shipping_eur": null,
-    "source_observed_at": "2026-11-08T12:57:08Z",
+    "source_observed_at": "2026-11-08T13:18:04Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
@@ -152,10 +156,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:118b0084b7dc028591d2c3cf341ab2b17dca90eb2a93dd6ab6acea5e6c3cb846",
+  "snapshot_id": "sha256:8ab6d1f31ca6235a18207ce30fd97aff57a315efed00b25a072b3012455cb007",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"

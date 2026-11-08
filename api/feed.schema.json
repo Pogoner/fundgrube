@@ -170,6 +170,10 @@
               "minimum": 0,
               "type": "integer"
             },
+            "reported_nonempty_but_no_records": {
+              "description": "At least one enabled search reported positive totals but returned no records; successful full-scan timestamps must not be renewed.",
+              "type": "boolean"
+            },
             "requests_this_run": {
               "minimum": 0,
               "type": "integer"
@@ -226,7 +230,7 @@
               ]
             },
             "traversal_completed": {
-              "description": "All enabled aggregator searches reached their then-reported ends in this run. Does not guarantee stable pagination or all-eBay coverage.",
+              "description": "All enabled aggregator searches visited offsets through their then-reported ends. Does not guarantee records for every position, stable pagination or all-eBay coverage.",
               "type": "boolean"
             },
             "unique_records": {
@@ -1333,10 +1337,18 @@
     "sourceTraversal": {
       "description": "A bounded walk through one changing aggregator search, not an atomic market snapshot.",
       "properties": {
+        "absence_is_evidence": {
+          "const": false,
+          "description": "Missing IDs from mutable aggregator lists never disprove an older observation."
+        },
         "completed_at": {
           "$ref": "#/$defs/nullableTime"
         },
         "duplicate_records": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "empty_pages": {
           "minimum": 0,
           "type": "integer"
         },
@@ -1369,7 +1381,20 @@
           "minimum": 0,
           "type": "integer"
         },
+        "reported_nonempty_but_no_records": {
+          "description": "Positive reported totals but no records returned; offset completion is not a successful source refresh.",
+          "type": "boolean"
+        },
         "short_pages": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sparse_pages": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sparse_slots_estimate": {
+          "description": "Estimated unfilled reported positions, not a known count of missing unique auctions.",
           "minimum": 0,
           "type": "integer"
         },
