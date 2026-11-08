@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T08:45:24Z",
+    "evaluated_at": "2026-11-08T09:14:08Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T08:45:24Z",
+  "generated_at": "2026-11-08T09:14:08Z",
   "items": [
     {
       "assessment_basis": "llm",
@@ -23,7 +23,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-08T08:30:24Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [
         "Passende Stromversorgung",
@@ -47,7 +47,7 @@
       "image": "https://i.ebayimg.com/images/g/H6kAAeSwcPhqwj9R/s-l1600.jpg",
       "interest_score": 79,
       "is_auction": true,
-      "last_seen_at": "2026-11-08T08:30:24Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -87,7 +87,7 @@
       "semantic_interest": 83,
       "semantic_review_mode": "interactive",
       "shipping_eur": null,
-      "source_observed_at": "2026-11-08T08:30:24Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -108,7 +108,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-08T08:30:24Z",
@@ -275,7 +275,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-08T08:30:24Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [
         "Kompressor mit ausreichender Luftleistung",
@@ -299,7 +299,7 @@
       "image": "https://i.ebayimg.com/images/g/4FAAAeSw4-Zq3dV3/s-l1600.jpg",
       "interest_score": 53,
       "is_auction": true,
-      "last_seen_at": "2026-11-08T08:30:24Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -334,7 +334,7 @@
       "semantic_interest": 72,
       "semantic_review_mode": "interactive",
       "shipping_eur": 6.99,
-      "source_observed_at": "2026-11-08T08:30:24Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -434,6 +434,82 @@
       "valid_until": "2026-11-08T15:56:19Z",
       "value_band": "around_50",
       "value_reason": "Ein älteres Ohmmeter ist ein echtes Messgerät, aber der Titel belegt keine hochwertige moderne Präzisionsausrüstung oder besondere Seltenheit.",
+      "verification_level": "aggregator"
+    },
+    {
+      "assessment_basis": "heuristic",
+      "assessment_confidence": "low",
+      "bid_count": 0,
+      "buying_options": [],
+      "carried": false,
+      "city": "",
+      "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
+      "content_updated_at": "2026-11-08T08:59:08Z",
+      "country": "",
+      "dependencies": [],
+      "description": "",
+      "description_status": "missing",
+      "description_truncated": false,
+      "detail_path": "api/items/a75ce33b0b42cc2092fda4884411cac50d67bbc801472c9654fab1e5f190ca28.json",
+      "details_fetched": false,
+      "distance_km": null,
+      "eligibility": "review",
+      "eligibility_reasons": [
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
+      ],
+      "eligibility_without_time_window": "review",
+      "ends_at": "2026-11-08T21:00:16Z",
+      "id": "v1|377606626301|0",
+      "image": "https://i.ebayimg.com/images/g/Xj4AAOSwQoxdRckr/s-l1600.jpg",
+      "interest_score": 45,
+      "is_auction": true,
+      "last_seen_at": "2026-11-08T08:59:08Z",
+      "local_pickup_confirmed": false,
+      "minimum_bid_eur": null,
+      "next_checks": [
+        "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      ],
+      "pickup_available": null,
+      "pickup_radius_km": 50,
+      "pickup_search_confirmed": false,
+      "postcode": "",
+      "price_eur": 1.0,
+      "price_kind": "auction_price",
+      "product_kind": "tool",
+      "reasons": [
+        "Beobachteter Auktionspreis höchstens 1 €",
+        "Zum Abrufzeitpunkt keine Gebote",
+        "Ausgewiesene Versandkosten im Suchlimit",
+        "Nennenswertes Werkzeug denkbar; Modell, Qualität und Umfang können die Größenordnung stark ändern."
+      ],
+      "reserve_status": "unknown",
+      "risks": [
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
+      ],
+      "scalp_score": 50,
+      "score": 45,
+      "score_version": 2,
+      "semantic_assessed": true,
+      "semantic_interest": 50,
+      "shipping_eur": 2.0,
+      "source_observed_at": "2026-11-08T08:59:08Z",
+      "source_provider": "auktionen-ohne-gebot",
+      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+      "stale": false,
+      "time_window_eligible": true,
+      "title": "KAESER FAHRBARE BAUKOMPRESSOREN MOBILAIR M 27 / M 31 BROSCHÜRE 12 Seiten RAR",
+      "total_eur": null,
+      "total_known_eur": 3.0,
+      "url": "https://www.ebay.de/itm/377606626301?hash=item57eb1bdbfd%3Ag%3AXj4AAOSwQoxdRckr&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
+      "useability_reason": "Werkzeugtyp mit eigenem unmittelbarem Anwendungszweck; konkrete Versorgung und Lieferumfang sind noch zu klären.",
+      "useability_score": 90,
+      "valid_until": "2026-11-08T21:00:16Z",
+      "value_band": "around_50",
+      "value_reason": "Nennenswertes Werkzeug denkbar; Modell, Qualität und Umfang können die Größenordnung stark ändern.",
       "verification_level": "aggregator"
     },
     {
@@ -785,7 +861,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-08T08:30:24Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [
         "Passendes Ausbauprojekt",
@@ -810,7 +886,7 @@
       "image": "https://i.ebayimg.com/images/g/JP8AAeSwptdqhZKe/s-l1600.jpg",
       "interest_score": 37,
       "is_auction": true,
-      "last_seen_at": "2026-11-08T08:30:24Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -849,7 +925,7 @@
       "semantic_interest": 70,
       "semantic_review_mode": "interactive",
       "shipping_eur": null,
-      "source_observed_at": "2026-11-08T08:30:24Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -969,6 +1045,7 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -999,9 +1076,12 @@
       ],
       "reserve_status": "unknown",
       "risks": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 30,
@@ -1034,7 +1114,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-08T08:30:24Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [
         "Geeignete Aufgabe und Schutzmaßnahmen"
@@ -1056,7 +1136,7 @@
       "image": "https://i.ebayimg.com/images/g/LAkAAeSw8Z9qQjAV/s-l640.jpg",
       "interest_score": 28,
       "is_auction": true,
-      "last_seen_at": "2026-11-08T08:30:24Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1091,7 +1171,7 @@
       "semantic_interest": 29,
       "semantic_review_mode": "interactive",
       "shipping_eur": 2.7,
-      "source_observed_at": "2026-11-08T08:30:24Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1112,10 +1192,10 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": true,
+      "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-07T22:14:15Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [
         "Passende Brennstoffkartusche",
@@ -1129,7 +1209,6 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -1139,7 +1218,7 @@
       "image": "https://i.ebayimg.com/images/g/v7sAAeSw7x5pbOGS/s-l1600.jpg",
       "interest_score": 28,
       "is_auction": true,
-      "last_seen_at": "2026-11-07T22:14:15Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1160,13 +1239,10 @@
       ],
       "reserve_status": "unknown",
       "risks": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
         "Dichtheit und Brennerzustand unbekannt.",
-        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 32,
@@ -1177,10 +1253,10 @@
       "semantic_interest": 32,
       "semantic_review_mode": "interactive",
       "shipping_eur": 5.79,
-      "source_observed_at": "2026-11-07T22:14:15Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": true,
+      "stale": false,
       "time_window_eligible": true,
       "title": "Lötbrenner, Anwärmbrenner, Grillanzünder Rothenberger für Einwegkartuschen",
       "total_eur": null,
@@ -1968,10 +2044,10 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": true,
+      "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-07T22:14:15Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [],
       "description": "",
@@ -1982,7 +2058,6 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -1992,7 +2067,7 @@
       "image": "https://i.ebayimg.com/images/g/1XYAAeSwZbdq7Ej9/s-l1600.jpg",
       "interest_score": 23,
       "is_auction": true,
-      "last_seen_at": "2026-11-07T22:14:15Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2013,14 +2088,11 @@
       ],
       "reserve_status": "unknown",
       "risks": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
         "Hygiene und Zustand sind nicht geprüft.",
         "Keine Aussage zur diagnostischen Eignung.",
-        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 24,
@@ -2031,10 +2103,10 @@
       "semantic_interest": 24,
       "semantic_review_mode": "interactive",
       "shipping_eur": 4.0,
-      "source_observed_at": "2026-11-07T22:14:15Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": true,
+      "stale": false,
       "time_window_eligible": true,
       "title": "STEHTOSKOP MADE IN GERMANY MESSING FLACHKOPF STETHOSKOP WIE NEU!",
       "total_eur": null,
@@ -2055,7 +2127,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-08T08:30:24Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [
         "Passendes Ausbauprojekt",
@@ -2079,7 +2151,7 @@
       "image": "https://i.ebayimg.com/images/g/jAgAAOSwPQNllR57/s-l1600.jpg",
       "interest_score": 23,
       "is_auction": true,
-      "last_seen_at": "2026-11-08T08:30:24Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2114,7 +2186,7 @@
       "semantic_interest": 45,
       "semantic_review_mode": "interactive",
       "shipping_eur": null,
-      "source_observed_at": "2026-11-08T08:30:24Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2905,7 +2977,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-08T08:30:24Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [],
       "description": "",
@@ -2925,7 +2997,7 @@
       "image": "https://i.ebayimg.com/images/g/SykAAeSwZXNqBGmJ/s-l1600.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-08T08:30:24Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2961,7 +3033,7 @@
       "semantic_interest": 20,
       "semantic_review_mode": "interactive",
       "shipping_eur": 6.19,
-      "source_observed_at": "2026-11-08T08:30:24Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2985,7 +3057,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-08T08:30:24Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3007,7 +3079,7 @@
       "image": "https://i.ebayimg.com/images/g/GvcAAeSwpRNpZRsM/s-l1600.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-08T08:30:24Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3039,7 +3111,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.9,
-      "source_observed_at": "2026-11-08T08:30:24Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3063,7 +3135,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-08T08:30:24Z",
+      "content_updated_at": "2026-11-08T08:59:08Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3085,7 +3157,7 @@
       "image": "https://i.ebayimg.com/images/g/DOAAAeSwCldpRrMd/s-l960.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-08T08:30:24Z",
+      "last_seen_at": "2026-11-08T08:59:08Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3117,7 +3189,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.9,
-      "source_observed_at": "2026-11-08T08:30:24Z",
+      "source_observed_at": "2026-11-08T08:59:08Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3323,6 +3395,7 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3353,9 +3426,12 @@
       ],
       "reserve_status": "unknown",
       "risks": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3402,6 +3478,7 @@
       "eligibility": "review",
       "eligibility_reasons": [
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3432,9 +3509,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3480,6 +3560,7 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3510,9 +3591,12 @@
       ],
       "reserve_status": "unknown",
       "risks": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3559,6 +3643,7 @@
       "eligibility": "review",
       "eligibility_reasons": [
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3589,9 +3674,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3637,6 +3725,7 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3667,9 +3756,12 @@
       ],
       "reserve_status": "unknown",
       "risks": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3715,6 +3807,7 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3745,9 +3838,12 @@
       ],
       "reserve_status": "unknown",
       "risks": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3793,6 +3889,7 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3823,9 +3920,12 @@
       ],
       "reserve_status": "unknown",
       "risks": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3871,6 +3971,7 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3901,9 +4002,12 @@
       ],
       "reserve_status": "unknown",
       "risks": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3949,6 +4053,7 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3979,9 +4084,12 @@
       ],
       "reserve_status": "unknown",
       "risks": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -4027,6 +4135,7 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -4057,9 +4166,12 @@
       ],
       "reserve_status": "unknown",
       "risks": [
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -4083,89 +4195,11 @@
       "value_band": "unknown",
       "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
       "verification_level": "aggregator"
-    },
-    {
-      "assessment_basis": "heuristic",
-      "assessment_confidence": "low",
-      "bid_count": 0,
-      "buying_options": [],
-      "carried": true,
-      "city": "",
-      "condition": "Gebraucht",
-      "content_updated_at": "2026-11-08T07:01:47Z",
-      "country": "",
-      "dependencies": [
-        "Benötigtes Umfeld und Lieferumfang noch unbekannt"
-      ],
-      "description": "",
-      "description_status": "missing",
-      "description_truncated": false,
-      "detail_path": "api/items/4b7e4db88935abda23e2eadaaa242fe5e2d12a764d4c448e49bfae636512d8d2.json",
-      "details_fetched": false,
-      "distance_km": null,
-      "eligibility": "review",
-      "eligibility_reasons": [
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
-      ],
-      "eligibility_without_time_window": "review",
-      "ends_at": "2026-11-08T16:28:40Z",
-      "id": "v1|227592930367|0",
-      "image": "https://i.ebayimg.com/images/g/adkAAeSwz2ZpkRMX/s-l1600.jpg",
-      "interest_score": 18,
-      "is_auction": true,
-      "last_seen_at": "2026-11-08T07:01:47Z",
-      "local_pickup_confirmed": false,
-      "minimum_bid_eur": null,
-      "next_checks": [
-        "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
-      ],
-      "pickup_available": null,
-      "pickup_radius_km": 50,
-      "pickup_search_confirmed": false,
-      "postcode": "",
-      "price_eur": 1.0,
-      "price_kind": "auction_price",
-      "product_kind": "unknown",
-      "reasons": [
-        "Beobachteter Auktionspreis höchstens 1 €",
-        "Zum Abrufzeitpunkt keine Gebote",
-        "Ausgewiesene Versandkosten im Suchlimit",
-        "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
-      ],
-      "reserve_status": "unknown",
-      "risks": [
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
-      ],
-      "scalp_score": 35,
-      "score": 18,
-      "score_version": 2,
-      "semantic_assessed": true,
-      "semantic_interest": 35,
-      "shipping_eur": 3.0,
-      "source_observed_at": "2026-11-08T07:01:47Z",
-      "source_provider": "auktionen-ohne-gebot",
-      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": true,
-      "time_window_eligible": true,
-      "title": "Pipette aus Glas",
-      "total_eur": null,
-      "total_known_eur": 4.0,
-      "url": "https://www.ebay.de/itm/227592930367?hash=item34fd98843f%3Ag%3AadkAAeSwz2ZpkRMX&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-      "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-      "useability_score": 50,
-      "valid_until": "2026-11-08T16:28:40Z",
-      "value_band": "unknown",
-      "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
-      "verification_level": "aggregator"
     }
   ],
   "kind": "candidate-page",
   "next_path": "api/candidates/page-002.json",
-  "page_count": 13,
+  "page_count": 15,
   "page_index": 1,
   "provider": "auktionen-ohne-gebot",
   "schema_version": 3,
@@ -4209,12 +4243,12 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:dd439cb0ae5ec9e9d0ec38080ed891d6b7afeed3df3b58528893b65e640b3b13",
+  "snapshot_id": "sha256:0e0abeff25589bdc140c7ad868c7616a061919b60b68b84548d5df5e6bbcc224",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-  "total": 642,
+  "total": 730,
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
 }

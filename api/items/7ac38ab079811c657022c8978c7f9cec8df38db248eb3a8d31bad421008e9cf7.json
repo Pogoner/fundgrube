@@ -1,0 +1,145 @@
+{
+  "freshness": {
+    "active_window_hours": 72,
+    "description_maximum_age_hours": 24,
+    "direct_ebay_verification": false,
+    "evaluated_at": "2026-11-08T09:14:08Z",
+    "maximum_source_age_hours": null,
+    "observation_is_not_condition_verification": true,
+    "recheck_at_read_time": true,
+    "retention_basis": "auction_end",
+    "retention_not_revalidation": true,
+    "source_currentness_guaranteed": false,
+    "source_warning_after_hours": 2,
+    "upstream_cache_age_is_provider_claim": true
+  },
+  "generated_at": "2026-11-08T09:14:08Z",
+  "item": {
+    "assessment_basis": "heuristic",
+    "assessment_confidence": "low",
+    "bid_count": 0,
+    "buying_options": [],
+    "carried": false,
+    "city": "",
+    "condition": "Gebraucht",
+    "content_updated_at": "2026-11-08T08:59:08Z",
+    "country": "",
+    "dependencies": [
+      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+    ],
+    "description": "",
+    "description_status": "missing",
+    "description_truncated": false,
+    "detail_path": "api/items/7ac38ab079811c657022c8978c7f9cec8df38db248eb3a8d31bad421008e9cf7.json",
+    "details_fetched": false,
+    "distance_km": null,
+    "eligibility": "review",
+    "eligibility_reasons": [
+      "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
+    ],
+    "eligibility_without_time_window": "review",
+    "ends_at": "2026-11-08T21:00:16Z",
+    "id": "v1|377606626302|0",
+    "image": "https://i.ebayimg.com/images/g/DB4AAeSw4cVpNKGC/s-l1600.jpg",
+    "interest_score": 18,
+    "is_auction": true,
+    "last_seen_at": "2026-11-08T08:59:08Z",
+    "local_pickup_confirmed": false,
+    "minimum_bid_eur": null,
+    "next_checks": [
+      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+    ],
+    "pickup_available": null,
+    "pickup_radius_km": 50,
+    "pickup_search_confirmed": false,
+    "postcode": "",
+    "price_eur": 1.0,
+    "price_kind": "auction_price",
+    "product_kind": "unknown",
+    "reasons": [
+      "Beobachteter Auktionspreis höchstens 1 €",
+      "Zum Abrufzeitpunkt keine Gebote",
+      "Ausgewiesene Versandkosten im Suchlimit",
+      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+    ],
+    "reserve_status": "unknown",
+    "risks": [
+      "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+      "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
+    ],
+    "scalp_score": 35,
+    "score": 18,
+    "score_version": 2,
+    "semantic_assessed": true,
+    "semantic_interest": 35,
+    "shipping_eur": 2.0,
+    "source_observed_at": "2026-11-08T08:59:08Z",
+    "source_provider": "auktionen-ohne-gebot",
+    "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+    "stale": false,
+    "time_window_eligible": true,
+    "title": "HITACHI ZAXIS 250 HYDRAULIKBAGGER 12 SEITEN DATENBLATT 2003 ALT & RAR",
+    "total_eur": null,
+    "total_known_eur": 3.0,
+    "url": "https://www.ebay.de/itm/377606626302?hash=item57eb1bdbfe%3Ag%3ADB4AAeSw4cVpNKGC&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
+    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
+    "useability_score": 50,
+    "valid_until": "2026-11-08T21:00:16Z",
+    "value_band": "unknown",
+    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "verification_level": "aggregator"
+  },
+  "kind": "item",
+  "provider": "auktionen-ohne-gebot",
+  "schema_version": 3,
+  "scoring": {
+    "additional_fact_bonus": 0,
+    "category_caps": false,
+    "condition_verified": false,
+    "eligibility_is_separate": true,
+    "fields": {
+      "interest_score": {
+        "alias": "score",
+        "label": "Interest",
+        "meaning": "Aus beiden Faktoren abgeleitete Sichtungspriorität; null solange ein Faktor fehlt."
+      },
+      "scalp_score": {
+        "label": "Scalp",
+        "maximum": 100,
+        "meaning": "Semantisches wirtschaftliches Interesse; keine konkrete Wertermittlung.",
+        "minimum": 0,
+        "reason_field": "value_reason"
+      },
+      "semantic_interest": {
+        "alias": "scalp_score",
+        "deprecated": true,
+        "label": "Legacy alias"
+      },
+      "useability_score": {
+        "dependencies_field": "dependencies",
+        "label": "Useability",
+        "maximum": 100,
+        "meaning": "Praktische Eigenständigkeit und Abhängigkeit von zusätzlicher Anlage, Software, Zubehör oder Infrastruktur.",
+        "minimum": 0,
+        "reason_field": "useability_reason"
+      }
+    },
+    "formula": "round_half_up(scalp_score * useability_score / 100)",
+    "interest_score_is_derived": true,
+    "is_appraisal": false,
+    "legacy_policy": "Items with score_version 1 retain a known old overall score as Scalp; Useability and Interest stay null until reassessed. No missing factor is invented.",
+    "rounding": "half_up",
+    "score_version": 2,
+    "useability_is_condition_probability": false
+  },
+  "snapshot_id": "sha256:0e0abeff25589bdc140c7ad868c7616a061919b60b68b84548d5df5e6bbcc224",
+  "source": "auktionen-ohne-gebot",
+  "source_provider": "auktionen-ohne-gebot",
+  "source_status": "partial",
+  "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+  "untrusted_listing_text": true,
+  "verification_level": "aggregator"
+}
