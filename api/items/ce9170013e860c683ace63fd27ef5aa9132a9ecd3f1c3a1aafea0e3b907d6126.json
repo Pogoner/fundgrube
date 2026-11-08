@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T13:58:43Z",
+    "evaluated_at": "2026-11-08T18:36:56Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T13:58:43Z",
+  "generated_at": "2026-11-08T18:36:56Z",
   "item": {
     "assessment_basis": "heuristic",
     "assessment_confidence": "low",
@@ -36,6 +36,7 @@
     "eligibility": "excluded",
     "eligibility_reasons": [
       "Ablauf außerhalb des Suchfensters",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -70,9 +71,12 @@
     "reserve_status": "unknown",
     "risks": [
       "Ablauf außerhalb des Suchfensters",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 35,
@@ -84,7 +88,7 @@
     "source_observed_at": "2026-11-08T12:57:52Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": false,
+    "stale": true,
     "time_window_eligible": false,
     "title": "Meanwell rsp-500-24 Netzgerät 24v 21A",
     "total_eur": null,
@@ -151,10 +155,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:6715a210f3523edcd8ef4d265bde6a531cb16b7bedbbef40df972e47d5cde4a1",
+  "snapshot_id": "sha256:02096ab510bbc4869dfbef8886fd596f189b29ab6859e09332d11944210551b2",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
