@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-08T18:36:56Z",
+    "evaluated_at": "2026-11-08T19:30:24Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-08T18:36:56Z",
+  "generated_at": "2026-11-08T19:30:24Z",
   "item": {
     "assessment_basis": "heuristic",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-08T18:12:26Z",
+    "content_updated_at": "2026-11-08T19:04:55Z",
     "country": "",
     "dependencies": [],
     "description": "",
@@ -31,12 +31,10 @@
     "detail_path": "api/items/074fab2ad05974c9be1b73d0673fb9881f31b3125073da3b4fd618db0d6980c2.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-11T19:26:03Z",
@@ -44,7 +42,7 @@
     "image": "https://i.ebayimg.com/images/g/8ksAAOSwcGhk6cCJ/s-l1600.jpg",
     "interest_score": 4,
     "is_auction": true,
-    "last_seen_at": "2026-11-08T18:12:26Z",
+    "last_seen_at": "2026-11-08T19:04:55Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -67,7 +65,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -79,11 +76,11 @@
     "semantic_assessed": true,
     "semantic_interest": 4,
     "shipping_eur": 1.8,
-    "source_observed_at": "2026-11-08T18:12:26Z",
+    "source_observed_at": "2026-11-08T19:04:55Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Prospekt Drago Hydraulikhammer für Hydraulikbagger 2001",
     "total_eur": null,
     "total_known_eur": 2.8,
@@ -149,7 +146,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:02096ab510bbc4869dfbef8886fd596f189b29ab6859e09332d11944210551b2",
+  "snapshot_id": "sha256:1839cf8b1b3a17e3bd93eacaa6ebe24635da98037234b4d2f43e954bcf861b7d",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
