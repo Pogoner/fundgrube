@@ -3,7 +3,7 @@ import unittest
 from datetime import datetime, timedelta, timezone
 
 from hunter.models import euro, iso_time, normalize_item, parse_time, plain_text, safe_url
-from hunter.ranking import apply_semantic, assess_item
+from hunter.ranking import apply_interest_profile, apply_semantic, assess_item
 
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
@@ -107,6 +107,110 @@ class RankingTests(unittest.TestCase):
         manual = self.rank(raw(title="Tisch-Autoklav Bedienungsanleitung"))
         self.assertEqual(manual["product_kind"], "media")
         self.assertLess(manual["score"], 30)
+
+    def test_explicit_glass_part_beats_referenced_instrument_keywords(self):
+        for title in (
+            "Glas - Teil E1 für Carl Zeiss Jena Refraktometer Mikroskop Objektiv Okular Tubus",
+            "Glas - Teil E1 fuer Carl Zeiss Jena Refraktometer Mikroskop Objektiv Okular Tubus",
+            "Teil E1 für Carl Zeiss Jena",
+            "Ersatzteile für Mikroskop Carl Zeiss",
+        ):
+            with self.subTest(title=title):
+                result = self.rank(raw(title=title))
+                self.assertEqual(result["product_kind"], "component")
+                self.assertLessEqual(result["useability_score"], 10)
+                self.assertNotEqual(result["value_band"], "around_500")
+                self.assertIn("ausdrücklich ein Teil", result["value_reason"])
+                self.assertFalse(result["personal_interest_excluded"])
+                self.assertEqual(result["assessment_basis"], "heuristic")
+
+    def test_brochure_not_compressor_and_standalone_media_is_personally_excluded(self):
+        for title in (
+            "KAESER FAHRBARE BAUKOMPRESSOREN MOBILAIR M 27 / M 31 BROSCHÜRE 12 Seiten RAR",
+            "Kaeser Mobilair M27 Broschuere 12 Seiten",
+            "5 Broschüren und Prospekte zu Kompressoren",
+            "Prospekte Carl Zeiss Jena Mikroskop",
+            "Kataloge für Autoklaven",
+            "Handbücher für Mikroskope",
+            "Handbuecher fuer Mikroskope",
+            "Betriebsanleitung Tisch-Autoklav",
+            "Prospekt mit Bedienungsanleitung Kompressor",
+        ):
+            with self.subTest(title=title):
+                result = self.rank(raw(title=title))
+                self.assertEqual(result["product_kind"], "media")
+                self.assertEqual(result["scalp_score"], 4)
+                self.assertEqual(result["useability_score"], 95)
+                self.assertEqual(result["interest_score"], 4)
+                self.assertTrue(result["personal_interest_excluded"])
+                self.assertIn("persönlichen Suchprofil", result["personal_interest_reason"])
+                self.assertEqual(result["eligibility"], "eligible")
+                self.assertEqual(result["assessment_basis"], "heuristic")
+
+    def test_bundled_or_missing_manual_does_not_turn_a_tool_into_media(self):
+        for title in (
+            "Bohrmaschine mit Bedienungsanleitung", "Bohrmaschine inkl. Anleitung",
+            "Bohrmaschine inklusive deutscher Betriebsanleitung",
+            "Bohrmaschine mit Koffer und Bedienungsanleitung",
+            "Bohrmaschine samt Handbuch", "Bohrmaschine + Bedienungsanleitung",
+            "Bohrmaschine ohne Bedienungsanleitung", "Bohrmaschine Anleitung fehlt",
+            "Bohrmaschine Anleitung nicht dabei", "Bohrmaschine mit Ersatzteilen für die Spindel",
+        ):
+            with self.subTest(title=title):
+                result = self.rank(raw(title=title))
+                self.assertEqual(result["product_kind"], "tool")
+                self.assertGreaterEqual(result["useability_score"], 75)
+                self.assertFalse(result["personal_interest_excluded"])
+                self.assertIsNone(result["personal_interest_reason"])
+
+    def test_physical_media_holders_are_not_paper(self):
+        for title in (
+            "Prospekthalter DIN A4", "Broschürenständer Metall", "Broschuerenstaender Metall",
+            "Prospekt-Ständer DIN A4", "Prospekt Halter DIN A4", "Halter für Prospekte",
+            "Ständer fuer Broschueren", "Zeitschriftenregal",
+        ):
+            with self.subTest(title=title):
+                result = self.rank(raw(title=title))
+                self.assertNotEqual(result["product_kind"], "media")
+                self.assertFalse(result["personal_interest_excluded"])
+                self.assertIsNone(result["personal_interest_reason"])
+
+    def test_media_profile_cannot_be_overridden_by_high_or_wrong_semantic_scores(self):
+        item = self.rank(raw(title="KAESER MOBILAIR Broschüre 12 Seiten RAR"))
+        before = copy.deepcopy(item)
+        for kind in ("media", "apparatus", "tool"):
+            with self.subTest(kind=kind):
+                result = apply_semantic(item, assessment(
+                    scalp_score=99, useability_score=99, product_kind=kind,
+                    personal_interest_excluded=False, personal_interest_reason=None))
+                self.assertTrue(result["personal_interest_excluded"])
+                self.assertEqual(result["scalp_score"], 99)
+                self.assertEqual(result["useability_score"], 99)
+                self.assertEqual(result["interest_score"], 98)
+                self.assertEqual(result["assessment_basis"], "llm")
+                self.assertEqual(result["product_kind"], kind)
+                self.assertEqual(result["eligibility"], before["eligibility"])
+                self.assertEqual(result["eligibility_reasons"], before["eligibility_reasons"])
+                self.assertEqual(result["last_seen_at"], before["last_seen_at"])
+                self.assertEqual(result["price_eur"], before["price_eur"])
+        self.assertEqual(item, before)
+
+    def test_profile_uses_semantic_media_kind_but_preserves_provenance_and_bundle_context(self):
+        reviewed = {**self.rank(raw(title="KAESER Unterlagen alt")), "product_kind": "media",
+                    "assessment_basis": "llm", "scalp_score": 22, "useability_score": 99,
+                    "semantic_assessed_at": "2026-11-01T12:00:00Z", "semantic_review_mode": "chatgpt-interactive",
+                    "personal_interest_excluded": False, "personal_interest_reason": "old"}
+        original = copy.deepcopy(reviewed)
+        result = apply_interest_profile(reviewed)
+        self.assertTrue(result["personal_interest_excluded"])
+        for field in set(reviewed) - {"personal_interest_excluded", "personal_interest_reason"}:
+            self.assertEqual(result[field], reviewed[field], field)
+        self.assertEqual(reviewed, original)
+        for title in ("Bohrmaschine mit Bedienungsanleitung", "Prospekthalter", "Halter für Prospekte"):
+            with self.subTest(title=title):
+                result = apply_interest_profile({**reviewed, "title": title, "personal_interest_excluded": True})
+                self.assertFalse(result["personal_interest_excluded"])
+                self.assertIsNone(result["personal_interest_reason"])
 
     def test_transistor_tester_not_discarded_as_transistor(self):
         tester = self.rank(raw(title="Transistor Tester Messgerät"))

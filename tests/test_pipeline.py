@@ -150,21 +150,22 @@ class TestConfiguration(unittest.TestCase):
         self.assertNotIn("max_freshness_hours", settings)
         self.assertEqual(settings["max_records"], 5000)
         self.assertEqual(settings["refresh_after_minutes"], 90)
-        self.assertEqual(settings["schedule_interval_minutes"], 10)
-        self.assertEqual(settings["aog_max_requests_per_run"], 4)
+        self.assertEqual(settings["schedule_interval_minutes"], 30)
+        self.assertEqual(settings["aog_max_requests_per_run"], 160)
+        self.assertEqual(settings["aog_max_run_seconds"], 1500)
         self.assertEqual(validate_settings({"max_freshness_hours": 24})["description_max_age_hours"], 24)
         self.assertEqual(validate_settings({"max_freshness_hours": 0.5})["description_max_age_hours"], 0.5)
         self.assertEqual(validate_settings({"max_freshness_hours": 1, "description_max_age_hours": 12})["description_max_age_hours"], 12)
 
-    def test_retention_capacity_is_reported_without_increasing_request_budgets(self):
+    def test_retention_capacity_is_reported_separately_from_full_scan_budgets(self):
         for capacity in (5000, 2):
             with self.subTest(capacity=capacity):
                 feed, _ = run({"max_records": capacity}, source="json", raw_items=[])
                 self.assertEqual(feed["coverage"]["retention_capacity"], capacity)
                 self.assertFalse(feed["coverage"]["complete"])
         settings = validate_settings({"max_records": 5000})
-        self.assertEqual(settings["aog_max_requests_per_run"], 4)
-        self.assertEqual(settings["schedule_interval_minutes"], 10)
+        self.assertEqual(settings["aog_max_requests_per_run"], 160)
+        self.assertEqual(settings["schedule_interval_minutes"], 30)
         self.assertEqual(settings["browse_daily_budget"], 4500)
 
     def test_pipeline_retains_5000_records_and_reports_the_next_omission(self):

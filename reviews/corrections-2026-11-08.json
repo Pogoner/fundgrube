@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "source_snapshot_id": "sha256:03e6352fbab8965fcbfd7d2d6b8ad071b4855be07dba84f9de5db4dce3835361",
+  "reviewed_at": "2026-11-08T12:50:08Z",
+  "reviewer": "ChatGPT",
+  "groups": [
+    {
+      "ids": [
+        "v1|128124733501|0"
+      ],
+      "assessment": {
+        "scalp_score": 28,
+        "useability_score": 8,
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "component",
+        "value_reason": "Angeboten wird laut Titel ein Glas-Teil E1 für ein Carl-Zeiss-Gerät, nicht ein Refraktometer oder Mikroskop. Ein spezielles Ersatzteil kann für passende Geräte nützlich sein; Material, genaue Funktion und Nachfrage sind hier aber unbelegt. Der Wert der erwähnten Hauptgeräte darf nicht übertragen werden.",
+        "useability_reason": "Das Einzelteil erfüllt ohne das passende Hauptgerät und die korrekte Einbaustelle voraussichtlich keine eigenständige Aufgabe. Die Bezeichnungen Objektiv, Okular und Tubus belegen weder ein vollständiges Gerät noch einen universell verwendbaren Aufbau.",
+        "dependencies": [
+          "Genau passendes Carl-Zeiss-Hauptgerät und Ausführung",
+          "Identifizierte Funktion und Einbaustelle des Teils"
+        ],
+        "reasons": [
+          "Der angebotene Gegenstand ist ausdrücklich ein Teil für ein anderes Gerät.",
+          "Geringe Priorität ohne bereits vorhandenes passendes Hauptgerät."
+        ],
+        "risks": [
+          "Nur Titel und Zustandsangabe vorliegend; keine Maße, Modellzuordnung oder Prüfung.",
+          "Beschädigungen und optischer Zustand sind nicht belegt."
+        ],
+        "next_checks": [
+          "Teilnummer E1, Abmessungen und kompatibles Hauptgerät im Originalangebot prüfen.",
+          "Nur bei konkret passendem eigenem Bedarf weiterverfolgen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|377606626301|0"
+      ],
+      "assessment": {
+        "scalp_score": 3,
+        "useability_score": 98,
+        "value_band": "around_5",
+        "assessment_confidence": "medium",
+        "product_kind": "media",
+        "value_reason": "Der Titel verkauft eine zwölfseitige KAESER-MOBILAIR-Broschüre, keinen fahrbaren Baukompressor. Die grobe Einordnung betrifft gewöhnliches Werbematerial; für einen erheblichen Sammlerwert liefert die Bezeichnung RAR keinen Beleg.",
+        "useability_reason": "Eine gedruckte Broschüre ist als Lektüre ohne zusätzliche Maschine verwendbar. Diese praktische Unabhängigkeit macht sie für das persönliche Geräte-Suchprofil nicht interessant; eigenständig angebotene Drucksachen sind separat ausgeschlossen.",
+        "dependencies": [],
+        "reasons": [
+          "BROSCHÜRE 12 Seiten beschreibt eindeutig den Liefergegenstand, die Maschinenbezeichnung nur das Thema.",
+          "Kein Beleg für ein angebotenes Werkzeug oder Gerät."
+        ],
+        "risks": [
+          "Ein möglicher besonderer Sammlerwert wurde nicht recherchiert.",
+          "Vollständigkeit und Zustand der Seiten sind aus den Kurzangaben nicht verifiziert."
+        ],
+        "next_checks": [
+          "Für dieses persönliche Suchprofil nicht weiter priorisieren."
+        ]
+      }
+    }
+  ]
+}

@@ -1,13 +1,14 @@
 """Polite, read-only adapter for the verified public Auktionen-ohne-Gebot API.
 
 This is an aggregator, not a direct eBay verification. No outgoing item/image
-link is requested. Each scan checks robots.txt, refreshes general page zero,
-rotates bounded general tail pages, and optionally reads pickup page zero.
+link is requested. Each scan checks robots.txt and traverses the general and
+optional pickup searches from offset zero, interleaving them fairly. It stops
+at the reported ends, on anomalies, or at explicit request/time safety caps.
 The public search UI uses pages of 48 and the query parameters below. Its
 "Auch später endende Auktionen anzeigen" option sends ``endet=alle``; there is
 no three-day server filter. The strict active window is evaluated locally.
 
-Publication is planned every ten minutes. The nine-minute safety debounce
+Publication is planned every thirty minutes. The twenty-nine-minute debounce
 allows modest scheduler jitter; it is not the requested schedule. Existing
 cooldowns, HTTP Retry-After and access-denial pauses are never shortened.
 
@@ -42,17 +43,18 @@ PROVIDER = "auktionen-ohne-gebot"
 PRODUCT_TOKEN = "FundgrubeBot"
 USER_AGENT = PRODUCT_TOKEN + "/1.0 (+https://github.com/Pogoner/fundgrube)"
 PAGE_SIZE = 48
-MAX_API_REQUESTS = 6
-DEFAULT_API_REQUESTS = 4
+MAX_API_REQUESTS = 160
+DEFAULT_API_REQUESTS = 160
 MAX_SOURCE_ITEMS = 9600
 MIN_REQUEST_GAP = 10.0
-PLANNED_SCAN_INTERVAL = 600
-MIN_SCAN_INTERVAL = 540
+PLANNED_SCAN_INTERVAL = 1800
+MIN_SCAN_INTERVAL = 1740
+MAX_RUN_SECONDS = 1500
 DEFAULT_RATE_LIMIT_BACKOFF = 1800
 SOURCE_CACHE_SECONDS = 900
 MAX_JSON_BYTES = 2 * 1024 * 1024
 MAX_ROBOTS_BYTES = 256 * 1024
-MAX_DAILY_REQUESTS = 750
+MAX_DAILY_REQUESTS = 8000
 
 
 @dataclass(frozen=True)
@@ -288,7 +290,7 @@ def _parse_page(response: HttpResponse, at: datetime, *, page_size: int, offset:
             or any(payload.get(key) is False for key in ("success", "erfolg", "ok"))):
         raise SourceError("source_payload_warning", "Die Quelle meldet einen Fehler oder eine Warnung; Filterergebnisse werden nicht als bestätigt übernommen.")
     total, articles = payload["gesamt"], payload["artikel"]
-    if total < len(articles) or (offset == 0 and total > 0 and not articles):
+    if total < len(articles) or (total > offset and not articles):
         raise SourceError("invalid_payload", "Leere Artikeldaten widersprechen der gemeldeten Trefferzahl.")
     observed, cache_age = _cache_observation(response.headers, at)
     items = []
@@ -317,6 +319,7 @@ def _parse_page(response: HttpResponse, at: datetime, *, page_size: int, offset:
             "local_pickup_confirmed": False, "pickup_search_confirmed": confirmed,
             "pickup_search_postcode": postcode if confirmed else None,
             "pickup_search_radius_km": radius if confirmed else None,
+            "pickup_search_observed_at": iso_time(observed) if confirmed else None,
             "source_provider": PROVIDER, "source_url": SOURCE_URL, "verification_level": "aggregator",
             "source_observed_at": iso_time(observed), "last_seen_at": iso_time(observed),
             "source_cache_age_seconds": cache_age,
@@ -337,14 +340,21 @@ def _query(*, offset: int, page_size: int, maximum: float, pickup: bool, postcod
 
 def _source_state(value: Any, at: datetime, page_size: int) -> dict:
     value = value if isinstance(value, dict) else {}
-    state = {"schema_version": 1, "general_next_offset": page_size, "request_day": at.date().isoformat(), "requests_today": 0}
-    for key in ("last_attempt_at", "last_success_at", "next_allowed_at", "robots_checked_at"):
+    state = {"schema_version": 2, "general_next_offset": 0, "request_day": at.date().isoformat(), "requests_today": 0,
+             "last_successful_traversals": {}}
+    for key in ("last_attempt_at", "last_success_at", "next_allowed_at", "robots_checked_at",
+                "last_successful_full_scan_at", "last_full_scan_started_at"):
         parsed = parse_time(value.get(key))
         if parsed and (key == "next_allowed_at" or parsed <= at):
             state[key] = iso_time(parsed)
-    offset = value.get("general_next_offset")
-    if type(offset) is int and page_size <= offset < MAX_SOURCE_ITEMS and offset % page_size == 0:
-        state["general_next_offset"] = offset
+    # Legacy rotating offsets are deliberately not resumed: a full traversal
+    # always starts at zero. Its source is mutable, not a resumable snapshot.
+    previous_searches = value.get("last_successful_traversals", {})
+    if isinstance(previous_searches, dict):
+        for key in ("general", "pickup"):
+            parsed = parse_time(previous_searches.get(key))
+            if parsed and parsed <= at:
+                state["last_successful_traversals"][key] = iso_time(parsed)
     if value.get("request_day") == state["request_day"] and type(value.get("requests_today")) is int:
         state["requests_today"] = max(0, min(value["requests_today"], MAX_DAILY_REQUESTS))
     return state
@@ -355,42 +365,44 @@ def _merge(items: dict[str, dict], row: dict) -> None:
     if not old:
         items[row["id"]] = row
         return
-    # Prefer fresher facts, but label the combined observation with the oldest
-    # source age. Pickup evidence cannot make all merged fields look younger.
-    newer, older = (row, old) if row["source_observed_at"] >= old["source_observed_at"] else (old, row)
+    # General facts and radius-search evidence have independent observation
+    # clocks. Neither can make the other look newly verified.
+    newer = row if row["source_observed_at"] >= old["source_observed_at"] else old
     merged = dict(newer)
-    if old["pickup_search_confirmed"] or row["pickup_search_confirmed"]:
-        evidence = row if row["pickup_search_confirmed"] else old
-        for key in ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km", "pickup_available"):
+    candidates = [value for value in (old, row) if value["pickup_search_confirmed"]]
+    if candidates and newer.get("pickup_available") is not False:
+        evidence = max(candidates, key=lambda value: value["pickup_search_observed_at"])
+        for key in ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km",
+                    "pickup_search_observed_at", "pickup_available"):
             merged[key] = evidence[key]
-    merged["source_observed_at"] = merged["last_seen_at"] = older["source_observed_at"]
-    merged["source_cache_age_seconds"] = max(old["source_cache_age_seconds"], row["source_cache_age_seconds"])
     items[row["id"]] = merged
 
 
 def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None, *,
-            transport: Callable | None = None, sleep: Callable[[float], None] | None = None) -> dict:
-    """Fetch a bounded aggregator snapshot. All network boundaries are injectable.
+            transport: Callable | None = None, sleep: Callable[[float], None] | None = None,
+            monotonic: Callable[[], float] | None = None) -> dict:
+    """Traverse both mutable source lists, not an atomic or all-eBay snapshot.
 
-    transport receives keyword url/headers/timeout and returns HttpResponse.
-    settings accepts aog_page_size (12 or 48), aog_max_requests_per_run (1..6, default 4),
-    aog_pickup_enabled (boolean), max_price_eur, postcode, pickup_radius_km,
-    lookahead_hours (default72, filtered locally rather than invented upstream).
-    The internal API cap excludes the robots request; coverage counts both.
-    Planned cadence is ten minutes, with a nine-minute duplicate-run debounce.
-    The 750-request daily cap includes robots (144 default runs use 720 requests).
+    Network and clock boundaries are injectable. A run permits at most 160
+    data requests plus robots and 25 minutes; 8,000 HTTP requests/day bound
+    the 48 half-hour runs. Those are safety ceilings, never target counts.
+    At 4,200 general + 260 pickup rows, normal page-size-48 traversal needs
+    94 data requests. Every enabled search starts at zero; no legacy cursor
+    is mistaken for a complete current scan. Partial results are reusable.
     """
     if not isinstance(at, datetime) or at.tzinfo is None or at.utcoffset() is None:
         raise ValueError("at must be timezone-aware")
     at = at.astimezone(timezone.utc).replace(microsecond=0)
     page_size = settings.get("aog_page_size", PAGE_SIZE)
     limit = settings.get("aog_max_requests_per_run", DEFAULT_API_REQUESTS)
+    duration = settings.get("aog_max_run_seconds", MAX_RUN_SECONDS)
     pickup_enabled = settings.get("aog_pickup_enabled", True)
     maximum, radius = settings.get("max_price_eur", 1), settings.get("pickup_radius_km", 50)
-    lookahead = settings.get("lookahead_hours", 72)
-    postcode = settings.get("postcode", "69121")
-    if type(page_size) is not int or page_size not in (12, 48) or type(limit) is not int or not 1 <= limit <= MAX_API_REQUESTS:
+    lookahead, postcode = settings.get("lookahead_hours", 72), settings.get("postcode", "69121")
+    if type(page_size) is not int or page_size != PAGE_SIZE or type(limit) is not int or not 1 <= limit <= MAX_API_REQUESTS:
         raise ValueError("unsupported AOG page/request limit")
+    if type(duration) is not int or not 30 <= duration <= MAX_RUN_SECONDS:
+        raise ValueError("unsupported AOG time limit")
     if type(pickup_enabled) is not bool or not isinstance(postcode, str) or not re.fullmatch(r"[0-9]{5}", postcode):
         raise ValueError("invalid AOG pickup settings")
     if (any(type(value) not in (int, float) for value in (maximum, radius))
@@ -401,48 +413,123 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
         raise ValueError("invalid AOG lookahead")
     end_filter = "alle" if lookahead > 24 else "24h"
     state = _source_state(source_state, at, page_size)
-    send, pause = transport or _transport, sleep or time.sleep
-    started, waited_seconds = time.monotonic(), 0.0
+    send, pause, clock = transport or _transport, sleep or time.sleep, monotonic or time.monotonic
+    started, virtual_wait_seconds = clock(), 0.0
     warnings, items, observations = [], {}, []
-    coverage = {"requests_this_run": 0, "api_requests_this_run": 0, "pages_fetched": 0, "page_size": page_size,
-                "source_total_reported": None, "source_cache_max_age_minutes": 15, "complete": False,
-                "next_offset": state["general_next_offset"], "source_claims_only": True,
-                "pickup_search_count": 0, "pickup_total_reported": None, "pagination_is_stable": False,
-                "upstream_end_filter": end_filter, "local_active_window_hours": lookahead,
-                "planned_interval_minutes": PLANNED_SCAN_INTERVAL // 60,
-                "debounce_seconds": MIN_SCAN_INTERVAL, "daily_request_budget": MAX_DAILY_REQUESTS}
+    searches = {}
+    seen_ids, page_signatures = {}, {}
+    for name, enabled in (("general", True), ("pickup", pickup_enabled)):
+        searches[name] = {
+            "enabled": enabled, "status": "not_started" if enabled else "disabled",
+            "traversal_completed": False, "started_at": None, "completed_at": None,
+            "last_successful_traversal_at": state["last_successful_traversals"].get(name),
+            "pages_fetched": 0, "records_read": 0, "unique_records": 0, "duplicate_records": 0,
+            "total_reported_initial": None, "total_reported_latest": None,
+            "total_reported_min": None, "total_reported_max": None, "total_changed": False,
+            "next_offset": 0, "remaining_reported": None, "unobserved_estimate": None,
+            "short_pages": 0, "repeated_pages": 0, "stop_reason": "not_started" if enabled else "disabled",
+        }
+        seen_ids[name], page_signatures[name] = set(), set()
+    coverage = {
+        "requests_this_run": 0, "api_requests_this_run": 0, "pages_fetched": 0, "page_size": page_size,
+        "source_total_reported": None, "source_cache_max_age_minutes": 15, "complete": False,
+        "next_offset": 0, "source_claims_only": True, "pickup_search_count": 0, "pickup_total_reported": None,
+        "pagination_is_stable": False, "upstream_end_filter": end_filter, "local_active_window_hours": lookahead,
+        "planned_interval_minutes": PLANNED_SCAN_INTERVAL // 60, "debounce_seconds": MIN_SCAN_INTERVAL,
+        "daily_request_budget": MAX_DAILY_REQUESTS, "max_api_requests_per_run": limit,
+        "max_run_seconds": duration, "max_source_items_per_search": MAX_SOURCE_ITEMS,
+        "traversal_completed": False, "scan_started_at": None, "scan_finished_at": None, "scan_completed_at": None,
+        "last_successful_full_scan_at": state.get("last_successful_full_scan_at"),
+        "records_read": 0, "unique_records": 0, "duplicate_records": 0, "searches": searches,
+    }
+
+    def elapsed() -> float:
+        # No-sleep test transports still model requested gaps, without losing
+        # independently simulated network latency or counting real sleep twice.
+        return max(0.0, clock() - started) + virtual_wait_seconds
+
+    def current_time() -> datetime:
+        return at + timedelta(seconds=int(elapsed()))
+
     def warning(code: str, message: str):
         if not any(value["code"] == code for value in warnings):
             warnings.append({"code": code, "message": message})
+
+    def stop_search(name: str, reason: str, *, completed: bool = False):
+        meta = searches[name]
+        meta["status"] = "completed" if completed else "partial" if meta["pages_fetched"] else "error"
+        meta["stop_reason"] = reason
+        meta["traversal_completed"] = completed
+        if completed:
+            meta["completed_at"] = iso_time(current_time())
+            meta["last_successful_traversal_at"] = meta["completed_at"]
+            state["last_successful_traversals"][name] = meta["completed_at"]
+
     def result(status: str):
-        coverage["next_offset"] = state["general_next_offset"]
+        finished = iso_time(current_time())
+        if coverage["scan_started_at"] is not None:
+            coverage["scan_finished_at"] = finished
+        coverage["elapsed_seconds"] = int(elapsed())
+        coverage["requests_today"] = state["requests_today"]
+        coverage["next_offset"] = state["general_next_offset"] = searches["general"]["next_offset"]
+        coverage["records_read"] = sum(meta["records_read"] for meta in searches.values())
+        coverage["unique_records"] = len(items)
+        coverage["duplicate_records"] = coverage["records_read"] - len(items)
+        coverage["traversal_completed"] = all(meta["traversal_completed"] for meta in searches.values() if meta["enabled"])
+        if observations:
+            state["last_success_at"] = finished
+        if coverage["traversal_completed"]:
+            coverage["scan_completed_at"] = finished
+            state["last_successful_full_scan_at"] = finished
+            state["last_full_scan_started_at"] = coverage["scan_started_at"]
+        coverage["last_successful_full_scan_at"] = state.get("last_successful_full_scan_at")
+        if coverage["scan_started_at"] is not None:
+            warning("aggregator_claims_only", "Drittanbieter-Daten, keine direkte eBay-Liveprüfung und kein atomarer Snapshot; die Trefferliste kann sich während des Durchlaufs verändern.")
+            if not coverage["traversal_completed"]:
+                warning("bounded_coverage", "Der Durchlauf hat nicht beide Quellenlisten bis zum gemeldeten Ende erreicht; erhaltene Angebote und frühere Beobachtungen bleiben erhalten.")
         return {"items": sorted(items.values(), key=lambda row: (row["ends_at"] or "", row["id"])),
                 "source_state": state, "coverage": coverage, "warnings": warnings, "status": status,
-                "observed_at": iso_time(min(observations)) if observations else None}
-    next_allowed = parse_time(state.get("next_allowed_at"))
-    previous = parse_time(state.get("last_attempt_at"))
+                "finished_at": finished, "observed_at": iso_time(min(observations)) if observations else None}
+
+    next_allowed, previous = parse_time(state.get("next_allowed_at")), parse_time(state.get("last_attempt_at"))
     if next_allowed and at < next_allowed or previous and at - previous < timedelta(seconds=MIN_SCAN_INTERVAL):
         warning("source_cooldown", "Die schonende Abrufpause ist noch nicht abgelaufen.")
         return result("cooldown")
     if state["requests_today"] >= MAX_DAILY_REQUESTS:
         state["next_allowed_at"] = iso_time((at + timedelta(days=1)).replace(hour=0, minute=0, second=0))
-        warning("source_daily_budget", "Das vorsichtige Tageslimit für diese Quelle ist erreicht.")
+        warning("source_daily_budget", "Das Tageslimit für diese Quelle ist erreicht.")
         return result("cooldown")
-    state["last_attempt_at"] = iso_time(at)
+    state["last_attempt_at"] = coverage["scan_started_at"] = iso_time(at)
     state["next_allowed_at"] = iso_time(at + timedelta(seconds=MIN_SCAN_INTERVAL))
     gap = MIN_REQUEST_GAP
+
     def request(url: str, *, robots: bool = False) -> HttpResponse:
-        nonlocal waited_seconds
+        nonlocal virtual_wait_seconds
         _check_url(url)
-        if coverage["requests_this_run"]:
-            if gap > 60:
-                raise SourceError("robots_delay", "Die robots.txt-Verzögerung überschreitet den begrenzten Einzelabruf.", cooldown=gap)
-            pause(gap)
-            waited_seconds += gap
+        # Budget/deadline checks precede any sleep, so a finished run never
+        # waits or sends an unnecessary extra page merely to discover its cap.
+        request_day = current_time().date().isoformat()
+        if state["request_day"] < request_day:
+            state["request_day"], state["requests_today"] = request_day, 0
         if state["requests_today"] >= MAX_DAILY_REQUESTS:
-            raise SourceError("source_daily_budget", "Das vorsichtige Tageslimit für diese Quelle ist erreicht.", cooldown=86400)
+            until_midnight = ((current_time() + timedelta(days=1)).replace(hour=0, minute=0, second=0) - current_time()).total_seconds()
+            raise SourceError("source_daily_budget", "Das Tageslimit für diese Quelle ist erreicht.", cooldown=until_midnight)
         if not robots and coverage["api_requests_this_run"] >= limit:
-            raise SourceError("source_run_budget", "Das Seitenlimit dieses Laufs ist erreicht.")
+            raise SourceError("source_run_budget", "Die Quellenliste überschreitet das Seitenbudget dieses Durchlaufs.")
+        delay = gap if coverage["requests_this_run"] else 0
+        if delay > 60:
+            raise SourceError("robots_delay", "Die robots.txt-Verzögerung überschreitet den begrenzten Einzelabruf.", cooldown=delay)
+        if elapsed() + delay + 20 > duration:
+            raise SourceError("source_run_deadline", "Der Durchlauf endet am Zeitlimit; verbleibende Seiten werden nicht als gelesen ausgegeben.")
+        if delay:
+            before_pause = clock()
+            pause(delay)
+            virtual_wait_seconds += max(0.0, delay - max(0.0, clock() - before_pause))
+        # Waiting itself can cross midnight. Account the following request to
+        # its actual UTC day rather than quietly dropping it on the next run.
+        request_day = current_time().date().isoformat()
+        if state["request_day"] < request_day:
+            state["request_day"], state["requests_today"] = request_day, 0
         coverage["requests_this_run"] += 1
         state["requests_today"] += 1
         if not robots:
@@ -457,83 +544,100 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
         if not isinstance(response.body, bytes) or len(response.body) > maximum_bytes:
             raise SourceError("response_too_large", "Die Antwort der Quelle überschreitet die sichere Größenbegrenzung.")
         if response.status == 429:
-            raise SourceError("source_rate_limited", "Die Quelle begrenzt weitere Abrufe; Retry-After wird beachtet.", cooldown=_retry_after(response.headers, at))
+            raise SourceError("source_rate_limited", "Die Quelle begrenzt weitere Abrufe; Retry-After wird beachtet.", cooldown=_retry_after(response.headers, current_time()))
         if response.status in (401, 403):
             raise SourceError("source_access_denied", "Die Quelle verweigert den Zugriff; keine Umgehung und kein erneuter Versuch in diesem Lauf.", cooldown=86400)
         if response.status != 200:
             raise SourceError("robots_unavailable" if robots else "source_http_error", "Die Quelle hat keinen erfolgreichen, unveränderten HTTPS-Abruf erlaubt.")
         return response
+
     try:
         robots_response = request(ROBOTS_URL, robots=True)
         body = robots_response.body.decode("utf-8-sig", errors="strict")
         if re.search(r"<!doctype\s+html|<html\b|<script\b", body, re.I) or "text/html" in _headers(robots_response.headers).get("content-type", "").lower():
             raise SourceError("robots_invalid", "Statt robots.txt wurde eine HTML- oder Schutzseite geliefert.")
         policy = RobotsPolicy(body)
-        state["robots_checked_at"] = iso_time(at)
+        state["robots_checked_at"] = iso_time(current_time())
         gap = policy.delay
-        general_slots = max(1, limit - (1 if pickup_enabled and limit > 1 else 0))
-        total = None
-        offsets = [0]
-        for page_number in range(general_slots):
-            if page_number:
-                if total is None or total <= page_size:
-                    break
-                offset = state["general_next_offset"]
-                if offset >= min(total, MAX_SOURCE_ITEMS):
-                    offset = page_size
-                if offset in offsets:
-                    break
-                offsets.append(offset)
-            else:
-                offset = 0
-            url = _query(offset=offset, page_size=page_size, maximum=maximum, pickup=False, postcode=postcode, radius=radius,
-                         end_filter=end_filter)
+        pending = [name for name, meta in searches.items() if meta["enabled"]]
+        while pending:
+            # Round-robin only while both lists have remaining pages. Small
+            # pickup results finish quickly; general then receives every slot.
+            name = pending.pop(0)
+            meta, pickup = searches[name], name == "pickup"
+            offset = meta["next_offset"]
+            if offset >= MAX_SOURCE_ITEMS:
+                stop_search(name, "source_growth_limit")
+                warning("source_growth_limit", "Die Quellenliste ist über die begrenzte Traversierungsgröße gewachsen; Abdeckung bleibt ausdrücklich unvollständig.")
+                continue
+            url = _query(offset=offset, page_size=page_size, maximum=maximum, pickup=pickup, postcode=postcode, radius=radius, end_filter=end_filter)
             if not policy.allowed(url):
                 raise SourceError("robots_disallowed", "robots.txt erlaubt den vorgesehenen API-Pfad nicht.")
+            if meta["started_at"] is None:
+                meta["started_at"] = iso_time(current_time())
             response = request(url)
-            rows, total, observed = _parse_page(response, at, page_size=page_size, offset=offset, pickup=False, postcode=postcode, radius=radius)
+            rows, total, observed = _parse_page(response, current_time(), page_size=page_size, offset=offset,
+                                               pickup=pickup, postcode=postcode, radius=radius)
             observations.append(observed)
+            coverage["source_cache_max_age_minutes"] = max(coverage["source_cache_max_age_minutes"],
+                                                           math.ceil((current_time() - observed).total_seconds() / 60))
             coverage["pages_fetched"] += 1
-            coverage["source_total_reported"] = total
+            coverage["pickup_search_count"] += int(pickup)
+            coverage["pickup_total_reported" if pickup else "source_total_reported"] = total
+            meta["pages_fetched"] += 1
+            meta["records_read"] += len(rows)
+            if meta["total_reported_initial"] is None:
+                meta["total_reported_initial"] = meta["total_reported_min"] = meta["total_reported_max"] = total
+            meta["total_reported_latest"] = total
+            meta["total_reported_min"] = min(meta["total_reported_min"], total)
+            meta["total_reported_max"] = max(meta["total_reported_max"], total)
+            meta["total_changed"] = meta["total_reported_min"] != meta["total_reported_max"]
+            ids = tuple(row["id"] for row in rows)
+            signature = frozenset(ids)
+            repeated = bool(rows and signature in page_signatures[name])
+            page_signatures[name].add(signature)
+            seen_ids[name].update(ids)
+            meta["unique_records"] = len(seen_ids[name])
+            meta["duplicate_records"] = meta["records_read"] - meta["unique_records"]
+            meta["next_offset"] = offset + page_size if rows else offset
+            meta["remaining_reported"] = max(0, total - meta["next_offset"])
+            meta["unobserved_estimate"] = max(0, total - meta["unique_records"])
+            meta["short_pages"] += int(len(rows) < page_size)
             for row in rows:
                 _merge(items, row)
-            if offset:
-                candidate = offset + page_size
-                state["general_next_offset"] = candidate if candidate < min(total, MAX_SOURCE_ITEMS) else page_size
-            if not rows:
-                state["general_next_offset"] = page_size
-                break
-        if pickup_enabled and coverage["api_requests_this_run"] < limit:
-            url = _query(offset=0, page_size=page_size, maximum=maximum, pickup=True, postcode=postcode, radius=radius,
-                         end_filter=end_filter)
-            if not policy.allowed(url):
-                raise SourceError("robots_disallowed", "robots.txt erlaubt die ergänzende Abholsuche nicht.")
-            response = request(url)
-            rows, pickup_total, observed = _parse_page(response, at, page_size=page_size, offset=0, pickup=True, postcode=postcode, radius=radius)
-            observations.append(observed)
-            coverage["pages_fetched"] += 1
-            coverage["pickup_search_count"] += 1
-            coverage["pickup_total_reported"] = pickup_total
-            for row in rows:
-                _merge(items, row)
-        state["last_success_at"] = iso_time(at)
-        warning("aggregator_claims_only", "Drittanbieter-Snapshot, keine direkte eBay-Liveprüfung; Versand, Mindestpreis und tatsächlicher Standort können unbekannt sein.")
-        warning("bounded_coverage", "Seite eins wird erneut geprüft; weitere Seiten rotieren begrenzt. Die veränderliche Ergebnismenge ist nicht vollständig erfasst.")
-        return result("partial")
+            if total > MAX_SOURCE_ITEMS:
+                warning("source_growth_limit", "Die gemeldete Quellenliste überschreitet die Traversierungsgrenze; ein vollständiger Durchlauf ist mit diesen Schutzgrenzen nicht möglich.")
+            if repeated:
+                meta["repeated_pages"] += 1
+                stop_search(name, "repeated_page")
+                warning("repeated_page", "Die Quelle hat dieselbe Seite erneut geliefert; diese Suche wird nicht endlos fortgesetzt.")
+            elif not rows and offset:
+                stop_search(name, "empty_page")
+                warning("empty_page", "Eine spätere Quellenseite war leer; das wird nicht als bestätigter vollständiger Durchlauf gewertet.")
+            elif len(rows) < page_size and offset + len(rows) < total:
+                stop_search(name, "short_page")
+                warning("short_page", "Eine verkürzte Quellenseite widerspricht der Trefferzahl; die fehlenden Datensätze bleiben als Lücke sichtbar.")
+            elif meta["next_offset"] >= total:
+                stop_search(name, "reported_end", completed=True)
+            else:
+                meta["status"], meta["stop_reason"] = "partial", "not_finished"
+                pending.append(name)
+        completed = all(meta["traversal_completed"] for meta in searches.values() if meta["enabled"])
+        return result("live" if completed else "partial")
     except (SourceError, UnicodeError) as error:
+        code = error.code if isinstance(error, SourceError) else "robots_invalid"
         if isinstance(error, SourceError):
-            warning(error.code, error.message)
+            warning(code, error.message)
             if error.cooldown is not None:
-                elapsed = max(time.monotonic() - started, waited_seconds)
                 try:
-                    next_time = at + timedelta(seconds=math.ceil(elapsed) + max(MIN_SCAN_INTERVAL, error.cooldown))
+                    next_time = at + timedelta(seconds=math.ceil(elapsed()) + max(MIN_SCAN_INTERVAL, error.cooldown))
                 except OverflowError:
                     next_time = datetime.max.replace(tzinfo=timezone.utc, microsecond=0)
                 state["next_allowed_at"] = iso_time(next_time)
-            limited = error.code in {"source_rate_limited", "source_daily_budget", "robots_delay"}
         else:
-            warning("robots_invalid", "robots.txt konnte nicht sicher als UTF-8 gelesen werden.")
-            limited = False
-        if observations:
-            state["last_success_at"] = iso_time(at)
+            warning(code, "robots.txt konnte nicht sicher als UTF-8 gelesen werden.")
+        for name, meta in searches.items():
+            if meta["enabled"] and not meta["traversal_completed"] and meta["stop_reason"] in {"not_started", "not_finished"}:
+                stop_search(name, code)
+        limited = code in {"source_rate_limited", "source_daily_budget", "robots_delay"}
         return result("partial" if observations else "cooldown" if limited else "error")

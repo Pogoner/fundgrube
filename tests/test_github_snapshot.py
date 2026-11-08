@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import base64
 import contextlib
+import copy
+import hashlib
 import io
 import json
 import tempfile
@@ -32,6 +34,12 @@ class FakeGitHub:
         self.on_commit = None
         self.state = {"items": [], "cursor": 3}
         self.ref_error = None
+        self.blob_error = None
+        self.fail_tree_at = None
+        self.created_trees = []
+        self.trees = {OTHER: {"api/obsolete.json": {"content": "old generated data"}},
+                      MAIN: {"not-generated.txt": {"content": "must never be inherited"}}}
+        self.blobs = {}
 
     def head(self, branch):
         return MAIN if branch == "main" else self.data_head
@@ -40,8 +48,24 @@ class FakeGitHub:
         self.calls.append((method, path, body))
         if method == "GET" and path.startswith("/contents/state.json?ref="):
             return {"type": "file", "encoding": "base64", "content": base64.b64encode(json.dumps(self.state).encode()).decode()}
+        if path == "/git/blobs":
+            if self.blob_error:
+                raise self.blob_error
+            assert body["encoding"] == "base64"
+            value = base64.b64decode(body["content"], validate=True)
+            blob_sha = hashlib.sha1(b"blob " + str(len(value)).encode() + b"\0" + value).hexdigest()
+            self.blobs[blob_sha] = value
+            return {"sha": blob_sha}
         if path == "/git/trees":
-            return {"sha": TREE}
+            if self.fail_tree_at == len(self.created_trees) + 1:
+                raise snapshot.GitHubError(503)
+            files = dict(self.trees[body["base_tree"]]) if "base_tree" in body else {}
+            for entry in body["tree"]:
+                files[entry["path"]] = entry
+            tree_sha = TREE if not self.created_trees else f"{len(self.created_trees):040x}"
+            self.trees[tree_sha] = files
+            self.created_trees.append(tree_sha)
+            return {"sha": tree_sha}
         if path == "/git/commits":
             if self.on_commit:
                 self.on_commit()
@@ -52,6 +76,20 @@ class FakeGitHub:
             self.data_head = body["sha"]
             return {"ref": "refs/heads/data", "object": {"type": "commit", "sha": self.data_head}}
         raise AssertionError(f"Unexpected API request: {method} {path}")
+
+
+class FakeTime:
+    def __init__(self):
+        self.now = 0.0
+        self.sleeps = []
+
+    def monotonic(self):
+        return self.now
+
+    def sleep(self, seconds):
+        assert seconds > 0
+        self.sleeps.append(seconds)
+        self.now += seconds
 
 
 class SnapshotTests(unittest.TestCase):
@@ -68,6 +106,10 @@ class SnapshotTests(unittest.TestCase):
         self.write(self.site / "data" / "deals.json", {"items": []})
         (self.site / "api" / "overview.md").write_text("# Keine Angebote\n", encoding="utf-8")
         self.api = FakeGitHub()
+        self.clock = FakeTime()
+        patcher = patch.object(snapshot, "time", self.clock)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def tearDown(self):
         self.temp.cleanup()
@@ -128,6 +170,99 @@ class SnapshotTests(unittest.TestCase):
         self.assertIn(("PATCH", "/git/refs/heads/data", {"sha": NEW, "force": False}), self.api.calls)
         commit_body = next(body for _, path, body in self.api.calls if path == "/git/commits")
         self.assertEqual(commit_body["parents"], [OLD])
+
+    def test_batched_tree_uses_only_new_bases_and_leaves_no_obsolete_files(self):
+        self.prepared()
+        for number in range(12):
+            self.write(self.site / "api" / "pages" / f"part-{number}.json", {"text": "x" * 500})
+        self.write(self.site / "api" / "pages" / "large.json", {"text": "\"é\n" * 2000})
+        expected_entries = snapshot.collect_files(self.site, self.state)
+        with patch.object(snapshot, "MAX_TREE_REQUEST_BYTES", 1024):
+            result = snapshot.publish(self.api, self.state, self.site)
+        bodies = [body for _, path, body in self.api.calls if path == "/git/trees"]
+        self.assertGreater(len(bodies), 2)
+        self.assertNotIn("base_tree", bodies[0])
+        for index, body in enumerate(bodies):
+            self.assertLessEqual(len(snapshot._json_bytes(body)), 1024)
+            if index:
+                self.assertEqual(body["base_tree"], self.api.created_trees[index - 1])
+                self.assertNotIn(body["base_tree"], {OLD, MAIN, OTHER})
+        final_tree = self.api.trees[self.api.created_trees[-1]]
+        self.assertEqual(set(final_tree), {entry["path"] for entry in expected_entries})
+        self.assertNotIn("api/obsolete.json", final_tree)
+        self.assertNotIn("not-generated.txt", final_tree)
+        for expected in expected_entries:
+            actual = final_tree[expected["path"]]
+            if "sha" in actual:
+                self.assertNotIn("content", actual)
+                self.assertEqual(self.api.blobs[actual["sha"]], expected["content"].encode("utf-8"))
+            else:
+                self.assertEqual(actual["content"], expected["content"])
+        self.assertEqual(result["tree_batches"], len(bodies))
+        self.assertGreater(result["large_blobs"], 0)
+        self.assertEqual(result["write_requests"], len(bodies) + result["large_blobs"] + 2)
+        self.assertIn(("PATCH", "/git/refs/heads/data", {"sha": NEW, "force": False}), self.api.calls)
+
+    def test_planning_does_not_mutate_entries_and_accounts_for_json_escaping(self):
+        entries = [{"path": f"api/pages/{number}.json", "type": "blob", "mode": "100644",
+                    "content": json.dumps({"text": "\"\\\né" * 100}, ensure_ascii=False)} for number in range(5)]
+        original = copy.deepcopy(entries)
+        with patch.object(snapshot, "MAX_TREE_REQUEST_BYTES", 1024):
+            batches, blobs = snapshot.plan_tree_batches(entries)
+        self.assertEqual(entries, original)
+        self.assertEqual(len(blobs), 5)
+        self.assertEqual(sum(len(batch) for batch in batches), 5)
+        for batch in batches:
+            self.assertLessEqual(len(snapshot._json_bytes({"base_tree": TREE, "tree": batch})), 1024)
+
+    def test_second_tree_batch_failure_never_creates_commit_or_updates_ref(self):
+        self.prepared()
+        for number in range(8):
+            self.write(self.site / "api" / "pages" / f"part-{number}.json", {"text": "x" * 500})
+        self.api.fail_tree_at = 2
+        with patch.object(snapshot, "MAX_TREE_REQUEST_BYTES", 1024), self.assertRaises(snapshot.GitHubError):
+            snapshot.publish(self.api, self.state, self.site)
+        self.assertEqual(self.api.data_head, OLD)
+        self.assertEqual(sum(path == "/git/trees" for _, path, _ in self.api.calls), 2)
+        self.assertFalse(any(path in {"/git/commits", "/git/refs", "/git/refs/heads/data"}
+                             for _, path, _ in self.api.calls))
+
+    def test_blob_failure_never_creates_tree_or_updates_ref(self):
+        self.prepared()
+        self.write(self.site / "api" / "pages" / "large.json", {"text": "x" * 3000})
+        self.api.blob_error = snapshot.GitHubError(403)
+        with patch.object(snapshot, "MAX_TREE_REQUEST_BYTES", 1024), self.assertRaises(snapshot.GitHubError):
+            snapshot.publish(self.api, self.state, self.site)
+        self.assertEqual(self.api.data_head, OLD)
+        self.assertEqual([path for _, path, _ in self.api.calls], ["/git/blobs"])
+
+    def test_request_budget_is_checked_before_any_remote_write(self):
+        self.prepared()
+        with patch.object(snapshot, "MAX_WRITE_REQUESTS", 2), self.assertRaisesRegex(snapshot.SnapshotError, "request budget"):
+            snapshot.publish(self.api, self.state, self.site)
+        self.assertEqual(self.api.calls, [])
+        self.assertEqual(self.api.data_head, OLD)
+
+    def test_many_tree_batches_are_spaced_below_sixty_writes_per_minute(self):
+        self.prepared()
+        for number in range(120):
+            self.write(self.site / "api" / "pages" / f"part-{number}.json", {"text": "x" * 300})
+        starts = []
+        original_request = self.api.request
+        def timed_request(method, path, body=None):
+            if method in {"POST", "PATCH"}:
+                starts.append(self.clock.monotonic())
+            return original_request(method, path, body)
+        self.api.request = timed_request
+        with patch.object(snapshot, "MAX_TREE_REQUEST_BYTES", 512):
+            result = snapshot.publish(self.api, self.state, self.site)
+        self.assertGreater(result["write_requests"], 60)
+        self.assertLessEqual(result["write_requests"], snapshot.MAX_WRITE_REQUESTS)
+        for earlier, later in zip(starts, starts[1:]):
+            self.assertGreaterEqual(later - earlier, snapshot.MIN_WRITE_GAP_SECONDS - 1e-9)
+        for beginning in starts:
+            self.assertLessEqual(sum(beginning <= stamp < beginning + 60 for stamp in starts), 60)
+        self.assertEqual(result["write_requests"], len(starts))
 
     def test_new_branch_has_main_parent_and_ref_is_created(self):
         self.api.data_head = None
@@ -222,7 +357,7 @@ class SnapshotTests(unittest.TestCase):
             with self.assertRaisesRegex(snapshot.SnapshotError, "too many files"):
                 snapshot.collect_files(self.site, self.state)
 
-    def test_5000_observed_items_and_old_reviews_fit_offline_snapshot_bounds(self):
+    def _large_snapshot(self, item_count):
         # Representative aggregator records: no full descriptions, but detailed
         # durable semantic reasons and explicitly unverified source facts.
         at, observed, reviewed = "2026-11-08T09:00:00Z", "2026-11-08T08:45:00Z", "2026-11-04T09:00:00Z"
@@ -253,7 +388,7 @@ class SnapshotTests(unittest.TestCase):
         }
         items = [{**base, "id": f"v1|{100000000000 + number}|0",
                   "title": f"Fiktive eigenständige Laborapparatur {number} mit Zubehör – ungeprüft",
-                  "url": f"https://www.ebay.de/itm/{100000000000 + number}"} for number in range(5000)]
+                  "url": f"https://www.ebay.de/itm/{100000000000 + number}"} for number in range(item_count)]
         feed = {
             "schema_version": 3, "generated_at": at, "last_successful_scan_at": at,
             "source_status": "partial", "source": publisher.AOG_PROVIDER, "provider": publisher.AOG_PROVIDER,
@@ -269,10 +404,10 @@ class SnapshotTests(unittest.TestCase):
             entries = snapshot.collect_files(site, state)
             github.assert_not_called()
         manifest = json.loads((site / "api" / "manifest.json").read_text())
-        self.assertEqual(manifest["counts"], {"total": 5000, "pages": 100, "page_size": 50})
+        self.assertEqual(manifest["counts"], {"total": item_count, "pages": item_count // 50, "page_size": 50})
         self.assertEqual(manifest["stats"]["omitted_by_capacity"], 0)
         self.assertFalse(manifest["coverage"]["complete"])
-        self.assertEqual(len(entries), 5107)
+        self.assertEqual(len(entries), item_count + item_count // 50 + 7)
         sizes = {entry["path"]: len(entry["content"].encode("utf-8")) for entry in entries}
         self.assertLess(max(sizes.values()), snapshot.MAX_FILE_BYTES)
         self.assertLess(sum(sizes.values()), snapshot.MAX_TOTAL_BYTES)
@@ -288,6 +423,31 @@ class SnapshotTests(unittest.TestCase):
         self.capacity_metrics = {"files": len(entries), "total_bytes": sum(sizes.values()),
                                  "largest_bytes": max(sizes.values()),
                                  "dashboard_bytes": sizes["data/deals.json"], "state_bytes": sizes["state.json"]}
+        # Exercise the actual publisher too: local file bounds alone do not
+        # prove that a huge inline-content POST will succeed in production.
+        self.write(state / snapshot.MARKER, {"repository": REPOSITORY, "branch": "data", "head": OLD, "base": OLD})
+        api = FakeGitHub()
+        result = snapshot.publish(api, state, site)
+        trees = [body for _, path, body in api.calls if path == "/git/trees"]
+        self.assertGreater(len(trees), 1)
+        self.assertGreater(result["large_blobs"], 0)
+        self.assertNotIn("base_tree", trees[0])
+        peak_tree_bytes = max(len(snapshot._json_bytes(body)) for body in trees)
+        self.assertLessEqual(peak_tree_bytes, snapshot.MAX_TREE_REQUEST_BYTES)
+        self.assertLessEqual(result["write_requests"], snapshot.MAX_WRITE_REQUESTS)
+        final_tree = api.trees[api.created_trees[-1]]
+        self.assertEqual(set(final_tree), set(sizes))
+        self.assertNotIn("api/obsolete.json", final_tree)
+        for index, body in enumerate(trees[1:], 1):
+            self.assertEqual(body["base_tree"], api.created_trees[index - 1])
+        self.capacity_metrics.update({"tree_batches": result["tree_batches"], "large_blobs": result["large_blobs"],
+                                      "write_requests": result["write_requests"], "peak_tree_bytes": peak_tree_bytes})
+
+    def test_4400_items_publish_with_bounded_tree_requests_and_large_blobs(self):
+        self._large_snapshot(4400)
+
+    def test_5000_observed_items_and_old_reviews_fit_offline_snapshot_bounds(self):
+        self._large_snapshot(5000)
 
     def test_validate_is_offline(self):
         self.prepared()

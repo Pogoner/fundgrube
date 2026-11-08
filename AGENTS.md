@@ -211,27 +211,52 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
   Quellcache (bis 15 Minuten) sind unterschiedliche Dinge. AOG unterstützt über
   seine öffentliche Suche `endet=alle` für spätere Enden; für unser größeres
   Fenster diesen belegten Filter plus lokale Zeitprüfung nutzen, keinen
-  erfundenen 72h-Parameter. Abrufbudgets nicht erhöhen. Verlängere keine
+  erfundenen 72h-Parameter. Seit dem ausdrücklich beauftragten Vollscan gilt
+  das unten dokumentierte 30-Minuten-Profil; dessen Schutzgrenzen nicht
+  beiläufig erhöhen. Verlängere keine
   echten Beobachtungszeitstempel und entferne keine Aktualitätswarnungen.
   AOG exportiert nur Kurzmetadaten, keine Verkäufer-Volltexte. Vor Erweiterungen
   die Rechte und Löschpflichten berücksichtigen, keine Lizenzzusage erfinden.
-- Erhalte den Zehn-Minuten-Zeitplan `3,13,23,33,43,53 * * * *` (UTC) und
+- Erhalte den 30-Minuten-Zeitplan `7,37 * * * *` (UTC) und
   `cancel-in-progress: false`. GitHub kann Läufe verzögern oder aufreihen; der
   Anbieter-Cache von bis zu 15 Minuten verhindert eine Zusage neuer Fakten
-  alle zehn Minuten.
-- AOG-Standard: vier Daten-API-Anfragen plus eine Robots-Anfrage je Lauf;
-  allgemeine Seite 0 plus zwei rotierende Folgeseiten und Abholseite 0 mit
-  jeweils höchstens 48 Einträgen. Das ergibt bis zu 144 allgemeine plus 48
-  Abholsuchtreffer vor Deduplizierung und Filterung. Technisch sind maximal sechs
-  Datenabrufe unterstützt, der Standard bleibt vier. Nominal höchstens 720 HTTP-
-  Anfragen pro Tag; die anwendungsseitige Tagesgrenze von 750 schließt Robots-
-  und zusätzliche manuelle Abrufe ein.
+  alle 30 Minuten.
+- AOG-Standard: nach einer Robots-Prüfung beide aktivierten Suchlisten ab
+  Offset 0 bis zu ihrem jeweils gemeldeten Ende ablaufen; allgemeine Suche
+  und Abholsuche solange nötig abwechseln, jeweils höchstens 48 Einträge.
+  Keine rotierende Vier-Seiten-Stichprobe mehr. Harte Grenzen: höchstens 160
+  Datenanfragen pro Lauf, 25 Minuten Scanzeit und 8.000 HTTP-Anfragen je
+  UTC-Tag einschließlich Robots und manueller Starts. Dies sind Sicherheits-
+  grenzen, keine Sollmengen: am tatsächlichen Ende ohne Zusatzabruf stoppen.
+  Leere/zu kurze/wiederholte Seiten, veränderte Trefferzahlen, Duplikate und
+  abgebrochene Teilscans ehrlich dokumentieren; kein Endlos-Nachholen.
+  `coverage.traversal_completed` beschreibt den Durchlauf aller aktivierten
+  Quellensuchen. `coverage.complete` bleibt für AOG `false`: veränderliche
+  Offset-Listen sind weder atomar noch eine Garantie vollständiger eBay-Daten.
+  Fehlende IDs aus einem Teilscan sind kein Löschbeweis. Die Speicherkapazität
+  bleibt 5.000; ausgelassene Datensätze ausdrücklich zählen.
 - Erhalte mindestens zehn Sekunden Anfrageabstand und den gespeicherten
-  neunminütigen Doppelstartschutz. Echte längere `Retry-After`-/Sicherheitspausen
-  sowie eine noch laufende ältere 30-Minuten-Pause nicht verkürzen oder umgehen.
+  29-minütigen Doppelstartschutz ab Scanbeginn. Echte längere
+  `Retry-After`-/Sicherheitspausen nicht verkürzen oder umgehen.
   Sperren, Rate-Limits,
   Login-Anforderungen und andere Zugriffsgrenzen
   nicht durch zusätzliche Endpunkte, Accounts oder engere Takte umgehen.
+- Bei längeren Scans pro Seite den tatsächlichen Beobachtungszeitpunkt
+  konservativ um Cache-Alter berichtigen; am Scanende exportieren und erst
+  dann Restlaufzeit/abgelaufene Auktionen bewerten. Allgemeine Aktualisierungen
+  erneuern `pickup_search_observed_at` nicht. Bei nur teilweise gelesener
+  Abholsuche darf älterer Suchbeleg separat datiert erhalten bleiben; eine
+  ausdrückliche gegenteilige Abholangabe ist kein bestätigter Suchbeleg.
+- Der tatsächlich angebotene Gegenstand bestimmt die Einordnung: „Teil E1
+  für Mikroskop“ ist ein Teil, „Kompressor Broschüre“ eine Drucksache. Nicht
+  den Wert oder die Eigenständigkeit der erwähnten Hauptmaschine übertragen.
+  Ein Gesamtgerät „mit Bedienungsanleitung“ oder „als Ersatzteil/defekt“
+  dagegen nicht allein deshalb als Drucksache oder Einzelbauteil behandeln.
+  Eigenständig angebotene Prospekte, Broschüren und ähnliche Medien sind
+  über `personal_interest_excluded` in Hauptliste und beiden Top-10-Listen
+  ausgeschlossen. Dies ist ein persönlicher Filter, keine Umdeutung der
+  Useability-Achse oder bereits verfasster Scores. Nach jedem Review-/Cache-
+  Overlay das Profil neu anwenden; Rohbestand und Herkunft weiterhin erhalten.
 - Pflege `schema_version`, Schema, OpenAPI, Manifest und Dokumentation bei
   Schnittstellenänderungen gemeinsam. Erzeuge API-Dateien über `hunter.feed`,
   statt reale Angebotsdaten von Hand in den Quellcode einzubauen.

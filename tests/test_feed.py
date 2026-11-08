@@ -1089,6 +1089,93 @@ class FeedTests(unittest.TestCase):
         self.assertFalse(item["pickup_search_confirmed"])
         self.assertNotIn("pickup_search_postcode", item)
 
+    def test_personal_profile_reaches_every_interface_without_rewriting_scores(self):
+        media = deal(1, title="KAESER BAUKOMPRESSOR BROSCHÜRE 12 Seiten RAR",
+                     scalp_score=99, useability_score=99, interest_score=98,
+                     product_kind="tool", assessment_basis="llm",
+                     semantic_review_mode="interactive", semantic_assessed_at=iso(NOW - timedelta(hours=1)),
+                     personal_interest_excluded=False)
+        machine = deal(2, title="Bohrmaschine mit Bedienungsanleitung", product_kind="tool")
+        original = copy.deepcopy(media)
+        publisher.write_feed(self.site, sample([media, machine]))
+        dashboard = self.read("data/deals.json")
+        manifest = self.read("api/manifest.json")
+        self.assertEqual(media, original)
+        self.assertEqual(manifest["counts"]["total"], 2)
+        self.assertEqual(manifest["stats"]["personal_interest_excluded"], 1)
+        self.assertEqual(manifest["stats"]["shortlisted"], 1)
+        self.assertEqual(manifest["stats"]["review"], 2)
+        page = self.read(manifest["pages"][0]["path"])
+        for document in (dashboard, manifest, page):
+            self.assertSchema(document)
+        for row in (dashboard["deals"][0], page["items"][0]):
+            self.assertTrue(row["personal_interest_excluded"])
+            self.assertIn("Drucksache", row["personal_interest_reason"])
+            self.assertEqual((row["scalp_score"], row["useability_score"], row["interest_score"]), (99, 99, 98))
+            self.assertEqual(row["semantic_assessed_at"], original["semantic_assessed_at"])
+            self.assertEqual(row["assessment_basis"], "llm")
+            self.assertEqual(row["eligibility"], "review")
+        detail = self.read(dashboard["deals"][0]["detail_path"])
+        self.assertSchema(detail)
+        self.assertTrue(detail["item"]["personal_interest_excluded"])
+        self.assertFalse(dashboard["deals"][1]["personal_interest_excluded"])
+        self.assertIsNone(dashboard["deals"][1]["personal_interest_reason"])
+
+    def test_independent_old_pickup_clock_does_not_age_fresh_general_observation(self):
+        old = iso(NOW - timedelta(hours=5))
+        publisher.write_feed(self.site, sample([aggregator_deal(
+            pickup_search_confirmed=True, pickup_search_postcode="69121", pickup_search_radius_km=50,
+            pickup_search_observed_at=old, pickup_available=True,
+        )]))
+        item = self.read("data/deals.json")["deals"][0]
+        self.assertEqual(item["source_observed_at"], iso(NOW))
+        self.assertEqual(item["pickup_search_observed_at"], old)
+        self.assertEqual(item["last_seen_at"], iso(NOW - timedelta(minutes=15)))
+        self.assertFalse(item["stale"])
+        self.assertTrue(any("Umkreissuche älter" in risk for risk in item["risks"]))
+        self.assertSchema(self.read(item["detail_path"]))
+
+    def test_invalid_or_refuted_pickup_clock_cannot_survive_export(self):
+        for changes in ({"pickup_search_observed_at": iso(NOW + timedelta(seconds=1))},
+                        {"pickup_search_observed_at": None}, {"pickup_search_observed_at": "bad"},
+                        {"pickup_available": False}, {"pickup_search_radius_km": 201},
+                        {"pickup_search_confirmed": False}):
+            with self.subTest(changes=changes):
+                fields = {"pickup_search_confirmed": True, "pickup_search_postcode": "69121",
+                          "pickup_search_radius_km": 50, "pickup_available": True, **changes}
+                publisher.write_feed(self.site, sample([aggregator_deal(**fields)]))
+                item = self.read("data/deals.json")["deals"][0]
+                self.assertFalse(item["pickup_search_confirmed"])
+                for key in ("pickup_search_postcode", "pickup_search_radius_km", "pickup_search_observed_at"):
+                    self.assertNotIn(key, item)
+
+    def test_full_source_traversal_metadata_is_not_market_completeness(self):
+        search = {"enabled": True, "status": "completed", "traversal_completed": True,
+                  "started_at": iso(NOW - timedelta(minutes=16)), "completed_at": iso(NOW),
+                  "pages_fetched": 88, "records_read": 4200, "unique_records": 4177,
+                  "duplicate_records": 23, "total_reported_initial": 4200,
+                  "total_reported_latest": 4177, "total_reported_min": 4177,
+                  "total_reported_max": 4200, "total_changed": True, "next_offset": 4224,
+                  "remaining_reported": 0, "unobserved_estimate": 0, "short_pages": 0,
+                  "repeated_pages": 0, "stop_reason": None}
+        coverage = {"complete": True, "traversal_completed": True,
+                    "scan_started_at": search["started_at"], "scan_finished_at": iso(NOW),
+                    "scan_completed_at": iso(NOW), "last_successful_full_scan_at": iso(NOW),
+                    "planned_interval_minutes": 30, "schedule_interval_minutes": 30,
+                    "pagination_is_stable": False, "searches": {"general": search,
+                    "pickup": {"enabled": False, "status": "disabled", "traversal_completed": False}}}
+        publisher.write_feed(self.site, sample([aggregator_deal()], provider="auktionen-ohne-gebot", coverage=coverage))
+        for path in ("api/manifest.json", "data/deals.json"):
+            document = self.read(path)
+            self.assertSchema(document)
+            self.assertTrue(document["coverage"]["traversal_completed"])
+            self.assertFalse(document["coverage"]["complete"])
+            self.assertEqual(document["coverage"]["searches"]["general"], search)
+        guide = (self.site / "api/guide.md").read_text(encoding="utf-8")
+        for phrase in ("alle 30 Minuten", "traversal_completed", "personal_interest_excluded",
+                       "pickup_search_observed_at", "Teil E1", "BROSCHÜRE 12 Seiten"):
+            self.assertIn(phrase, guide)
+
 
 if __name__ == "__main__":
     unittest.main()

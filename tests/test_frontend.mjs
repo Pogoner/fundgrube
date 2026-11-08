@@ -199,7 +199,7 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
-  assert(versions.has("design-v3.3"), "new design cannot reuse an older asset cache key");
+  assert(versions.has("design-v3.4"), "new design cannot reuse an older asset cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {
@@ -329,7 +329,7 @@ test("routine partial scans are compact while real blockers and aged partial sna
   const current = harness(data); await flush();
   assert.match(current.nodes.get("notice").className, /compact-notice/);
   assert.match(current.nodes.get("notice").innerHTML, /Begrenzter Teilscan/);
-  assert.match(current.nodes.get("notice").innerHTML, /info\.html#source/);
+  assert.match(current.nodes.get("notice").innerHTML, /info\.html#coverage/);
   assert.doesNotMatch(current.nodes.get("notice").innerHTML, /Long routine/);
   const blocked = harness({...data, blockers: [...standard, {code: "upstream_error", message: "Source returned an error"}]}); await flush();
   assert.doesNotMatch(blocked.nodes.get("notice").className, /compact-notice/);
@@ -337,6 +337,11 @@ test("routine partial scans are compact while real blockers and aged partial sna
   const aged = harness({...data, last_successful_scan_at: iso(-3 * hour)}); await flush();
   assert.doesNotMatch(aged.nodes.get("notice").className, /compact-notice/);
   assert.match(aged.nodes.get("notice").innerHTML, /Datenstand prüfen/);
+  const completed = harness({...data, source_status: "live", blockers: standard.slice(0, 1), coverage: {complete: false, traversal_completed: true}}); await flush();
+  assert.match(completed.nodes.get("notice").className, /compact-notice/);
+  assert.match(completed.nodes.get("notice").innerHTML, /Quellenlisten durchlaufen/);
+  assert.match(completed.nodes.get("notice").innerHTML, /keine direkte eBay-Prüfung/);
+  assert.doesNotMatch(completed.nodes.get("notice").innerHTML, /Begrenzter Teilscan/);
 });
 
 test("actual seven-item demo is fictitious and starts at Interest 40", async () => {
@@ -469,6 +474,71 @@ test("browsing follows the current Interest slider, computes the dual score and 
   assert.match(h.nodes.get("browse-summary").textContent, /Bei Interest 0/);
   await h.click("reset-filters");
   assert.deepEqual(h.browseIds("scalp"), ["under", "at", "half-up"]);
+});
+
+test("personal exclusions suppress even high LLM scores in the main list and both Top 10 lists", async () => {
+  const excluded = values => offer({assessment_basis: "llm", semantic_review_mode: "interactive", semantic_assessed_at: iso(-hour), title: "Historische Drucksache", personal_interest_excluded: true, personal_interest_reason: "Kein gewünschtes Gerät", ...values});
+  const rows = [
+    excluded({id: "media-main", scalp_score: 95, useability_score: 99}),
+    excluded({id: "media-scalp", scalp_score: 99, useability_score: 30}),
+    excluded({id: "media-useability", scalp_score: 20, useability_score: 99}),
+    excluded({id: "media-debug", scalp_score: 100, useability_score: 100, ends_at: iso(-hour), last_seen_at: null, eligibility: "excluded"}),
+    offer({id: "machine", personal_interest_excluded: false}),
+    offer({id: "component", title: "Glas - Teil E1 für Carl Zeiss Jena Refraktometer Mikroskop Objektiv Okular Tubus", scalp_score: 90, useability_score: 20, personal_interest_excluded: false}),
+    offer({id: "tool", scalp_score: 20, useability_score: 95, personal_interest_excluded: false})
+  ];
+  const h = harness(fixture({deals: rows})); await flush();
+  assert.deepEqual(h.ids, ["machine"]);
+  assert.deepEqual(h.browseIds("scalp"), ["component", "tool"]);
+  assert.deepEqual(h.browseIds("useability"), ["tool", "component"]);
+  assert.equal(h.nodes.get("metric-candidates").textContent, "3");
+  assert.equal(h.nodes.get("metric-highvalue").textContent, "1");
+  assert.doesNotMatch(h.nodes.get("browse-useability-list").innerHTML, /media-useability|Historische Drucksache/);
+  await h.click("show-all-interest");
+  await h.check("show-expired", true); await h.check("show-stale", true);
+  assert.deepEqual(h.ids, ["machine", "tool", "component"]);
+  await h.value("eligibility", "excluded"); assert.deepEqual(h.ids, []);
+  assert.equal(rows[0].useability_score, 99, "personal selection never rewrites the authored score");
+  assert.equal(rows[0].assessment_basis, "llm");
+  assert.equal(rows[0].semantic_assessed_at, iso(-hour));
+  const info = harness(fixture({deals: rows}), {page: "info"}); await flush();
+  assert.match(info.nodes.get("info-profile").textContent, /4 von 7 gespeicherten Angeboten/);
+  assert.match(info.nodes.get("info-profile").textContent, /unveränderten Scores/);
+});
+
+test("old snapshots exclude offered brochures, not real machines bundled with manuals or media holders", async () => {
+  const excludedTitles = [
+    "KAESER FAHRBARE BAUKOMPRESSOREN MOBILAIR M 27 / M 31 BROSCHÜRE 12 Seiten RAR",
+    "Altes BMW Heft 1998", "Handbuch für Carl Zeiss Mikroskop", "Prospekt mit Bedienungsanleitung",
+    "Baumaschinen Broschuere", "Betriebsanleitung Drehmaschine", "Werkzeug Katalog", "BMW Aufkleber"
+  ];
+  const allowedTitles = [
+    "Bohrmaschine mit Koffer und Bedienungsanleitung", "Autoklav inkl. gedrucktem Handbuch",
+    "Bohrmaschine ohne Bedienungsanleitung", "Tischbohrmaschine Betriebsanleitung fehlt",
+    "Laborgerät Bedienungsanleitung nicht vorhanden", "Stabiler Prospekthalter",
+    "Broschürenständer aus Stahl", "Prospekt-Ständer fahrbar", "Halter für Prospekte",
+    "Glas - Teil E1 für Carl Zeiss Jena Refraktometer Mikroskop Objektiv Okular Tubus",
+    "Schmelzpunktgerät defekt als Ersatzteil"
+  ];
+  const rows = [
+    ...excludedTitles.map((title, i) => offer({id: `unwanted-${i}`, title, scalp_score: i % 2 ? 20 : 95, useability_score: 99, assessment_basis: "llm"})),
+    ...allowedTitles.map((title, i) => offer({id: `wanted-${String(i).padStart(2, "0")}`, title}))
+  ];
+  const h = harness(fixture({deals: rows})); await flush();
+  const expected = allowedTitles.map((_, i) => `wanted-${String(i).padStart(2, "0")}`);
+  assert.deepEqual(h.ids, expected);
+  for (const axis of ["scalp", "useability"]) assert.deepEqual(h.browseIds(axis), []);
+  await h.click("show-all-interest"); assert.deepEqual(h.ids, expected);
+  await h.check("show-expired", true); await h.check("show-stale", true);
+  assert.deepEqual(h.ids, expected);
+  const info = harness(fixture({deals: rows}), {page: "info"}); await flush();
+  assert.match(info.nodes.get("info-profile").textContent, /8 von 19 gespeicherten Angeboten/);
+});
+
+test("dashboard and Info share the same conservative legacy profile guard", () => {
+  const guard = script => script.match(/  function personalInterestExcluded\(item\) \{[\s\S]*?\n  \}/)?.[0];
+  assert(guard(pages.index.script));
+  assert.equal(guard(pages.index.script), guard(pages.info.script));
 });
 
 test("browsing shares search, transport, value and eligible/review filters but never factual exclusions", async () => {
@@ -682,6 +752,24 @@ test("aggregator pickup claims are provisional, scoped and independently aged", 
   aging.tick(120000); assert.match(aging.nodes.get("cards").innerHTML, /Abholsuche · 50 km/);
   assert(aging.nodes.get("cards").querySelectorAll("[data-last-seen]").some(node => /ältere Beobachtung, nicht aktuell bestätigt/.test(node.textContent)));
   aging.tick(4 * hour); assert.equal(aging.count, 0);
+});
+
+test("older pickup-search evidence never ages a fresh price observation or masquerades as new evidence", async () => {
+  const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [aggregate({
+    id: "independent-pickup", pickup_available: true, pickup_search_confirmed: true,
+    pickup_search_postcode: "69121", pickup_search_radius_km: 50,
+    pickup_search_observed_at: iso(-2 * hour + 60000), source_observed_at: iso(-60000),
+    eligibility: "review", detail_path: null
+  })]})); await flush();
+  assert.doesNotMatch(h.nodes.get("cards").innerHTML, /Umkreissuchstand:/);
+  h.tick(120000);
+  assert.match(h.nodes.get("cards").innerHTML, /Umkreissuchstand: .*älter als 2 Std\.; nicht aktuell bestätigt/);
+  const sourceAges = h.nodes.get("cards").querySelectorAll("[data-last-seen]").map(node => node.textContent);
+  assert(sourceAges.some(value => value === "Quellenstand: vor 3 Min."));
+  assert(!sourceAges.some(value => /ältere Beobachtung/.test(value)));
+  await h.detail("independent-pickup");
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Abholsuchstand \(Berlin\)<\/small><strong>.*älter als 2 Std/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Beim Aggregator beobachtet: 02\.01\.30, 12:59/);
 });
 
 test("crossing two hours changes a candidate to review without hiding it from the normal list", async () => {

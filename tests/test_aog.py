@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from urllib.parse import parse_qs, urlsplit
 
 from hunter.aog import (
-    API_PATH, MAX_JSON_BYTES, MAX_ROBOTS_BYTES, ORIGIN, PROVIDER, ROBOTS_URL,
+    API_PATH, MAX_API_REQUESTS, MAX_DAILY_REQUESTS, MAX_JSON_BYTES, MAX_ROBOTS_BYTES, ORIGIN, PROVIDER, ROBOTS_URL,
     SOURCE_URL, USER_AGENT, HttpResponse, RobotsPolicy, _NoRedirect, collect,
 )
 from hunter.models import normalize_item
@@ -51,8 +51,29 @@ class FakeTransport:
 
 def run(values, *, settings=None, state=None, at=NOW):
     fake, delays = FakeTransport(values), []
-    result = collect({**SETTINGS, **(settings or {})}, at, state, transport=fake, sleep=delays.append)
+    result = collect({**SETTINGS, **(settings or {})}, at, state, transport=fake, sleep=delays.append, monotonic=lambda: 0)
     return result, fake, delays
+
+
+def rows(start=0, count=48, **changes):
+    return [article(str(336872000000 + index), **changes) for index in range(start, start + count)]
+
+
+class PagedTransport:
+    """A complete deterministic source; never performs an HTTP request."""
+
+    def __init__(self, general=4200, pickup=260):
+        self.general, self.pickup, self.requests = general, pickup, []
+
+    def __call__(self, **request):
+        self.requests.append(request)
+        if request["url"] == ROBOTS_URL:
+            return robots()
+        query = parse_qs(urlsplit(request["url"]).query)
+        offset, page_size = int(query["ab"][0]), int(query["anzahl"][0])
+        pickup = "abholung" in query
+        total = self.pickup if pickup else self.general
+        return api(rows(offset, min(page_size, max(0, total - offset)), abholung=pickup), total=total)
 
 
 class RobotsTests(unittest.TestCase):
@@ -93,7 +114,7 @@ class RobotsTests(unittest.TestCase):
     def test_crawl_delay_and_request_rate_honored(self):
         result, _, delays = run([robots("User-agent: *\nAllow: /\nCrawl-delay: 12\nRequest-rate: 1/15\n"), api(), api([])])
         self.assertEqual(delays, [15, 15])
-        self.assertEqual(result["status"], "partial")
+        self.assertEqual(result["status"], "live")
 
     def test_robots_disallow_means_no_api_requests(self):
         result, fake, _ = run([robots("User-agent: *\nDisallow: /api/*\n")])
@@ -121,7 +142,7 @@ class ParsingTests(unittest.TestCase):
         self.assertEqual(row["source_provider"], PROVIDER)
         self.assertEqual(row["verification_level"], "aggregator")
         self.assertEqual(row["source_url"], SOURCE_URL)
-        self.assertEqual(row["source_observed_at"], "2026-11-07T11:43:00Z")
+        self.assertEqual(row["source_observed_at"], "2026-11-07T11:43:10Z")
         self.assertEqual(row["last_seen_at"], row["source_observed_at"])
         self.assertEqual(row["price_eur"], 1)
         self.assertEqual(row["shipping_eur"], 1.9)
@@ -136,6 +157,7 @@ class ParsingTests(unittest.TestCase):
     def test_date_age_and_max_age_choose_conservative_oldest_bound(self):
         result, _, _ = run([robots(), api(headers={"Age": "10", "Date": "Sat, 07 Nov 2026 11:55:00 GMT", "Cache-Control": "max-age=1800"}), api([])])
         self.assertEqual(result["items"][0]["source_observed_at"], "2026-11-07T11:25:00Z")
+        self.assertEqual(result["coverage"]["source_cache_max_age_minutes"], 36)
 
     def test_unknown_shipping_bids_price_and_end_not_invented(self):
         raw = article(versand=None, gebote=None, preis=None, ende=None)
@@ -166,12 +188,25 @@ class ParsingTests(unittest.TestCase):
         result, _, _ = run([robots(), api([general]), api([pickup])])
         self.assertTrue(all(not row["pickup_search_confirmed"] for row in result["items"]))
 
-    def test_pickup_dedup_preserves_oldest_observation_and_query_evidence(self):
+    def test_pickup_dedup_preserves_independent_observation_and_query_evidence(self):
         result, _, _ = run([robots(), api([article()], headers={"Age": "120"}), api([article(abholung=True, versand=None)])])
         self.assertEqual(len(result["items"]), 1)
         row = result["items"][0]
         self.assertTrue(row["pickup_search_confirmed"])
-        self.assertEqual(row["last_seen_at"], "2026-11-07T11:43:00Z")
+        self.assertEqual(row["last_seen_at"], "2026-11-07T11:45:20Z")
+        self.assertEqual(row["pickup_search_observed_at"], "2026-11-07T11:45:20Z")
+
+    def test_older_pickup_claim_does_not_age_fresh_general_facts(self):
+        result, _, _ = run([robots(), api([article()]), api([article(abholung=True)], headers={"Age": "120"})])
+        row = result["items"][0]
+        self.assertEqual(row["source_observed_at"], "2026-11-07T11:45:10Z")
+        self.assertEqual(row["pickup_search_observed_at"], "2026-11-07T11:43:20Z")
+        self.assertTrue(row["pickup_search_confirmed"])
+
+    def test_new_explicit_no_pickup_refutes_older_pickup_claim(self):
+        result, _, _ = run([robots(), api([article(abholung=False)]), api([article(abholung=True)], headers={"Age": "120"})])
+        self.assertFalse(result["items"][0]["pickup_search_confirmed"])
+        self.assertIsNone(result["items"][0]["pickup_search_observed_at"])
 
     def test_slug_item_link_parsed_offline(self):
         raw = article(link="https://www.ebay.de/itm/Laborgeraet/336872529492?campaign=original")
@@ -202,12 +237,13 @@ class ParsingTests(unittest.TestCase):
         self.assertEqual(result["status"], "error")
         self.assertEqual(result["items"], [])
         self.assertEqual(result["warnings"][0]["code"], "invalid_payload")
-        self.assertEqual(result["source_state"]["next_allowed_at"], "2026-11-07T12:09:00Z")
+        self.assertEqual(result["source_state"]["next_allowed_at"], "2026-11-07T12:29:00Z")
         self.assertEqual(len(fake.requests), 2)
 
     def test_explicit_empty_distinguished_from_invalid_envelope(self):
         result, _, _ = run([robots(), api([]), api([])])
-        self.assertEqual(result["status"], "partial")
+        self.assertEqual(result["status"], "live")
+        self.assertTrue(result["coverage"]["traversal_completed"])
         self.assertEqual(result["coverage"]["source_total_reported"], 0)
         self.assertEqual(result["coverage"]["pages_fetched"], 2)
         for payload in ({}, {"gesamt": 5, "artikel": []}, {"gesamt": 0, "artikel": "bad"}, {"gesamt": True, "artikel": []}):
@@ -231,27 +267,32 @@ class ParsingTests(unittest.TestCase):
         normalized = normalize_item(source_result["items"][0], NOW)
         self.assertIsNotNone(normalized)
         self.assertEqual(normalized["verification_level"], "aggregator")
-        self.assertEqual(normalized["last_seen_at"], "2026-11-07T11:45:00Z")
+        self.assertEqual(normalized["last_seen_at"], "2026-11-07T11:45:10Z")
         self.assertEqual(normalized["price_kind"], "auction_price")
         feed, state = run_pipeline(SETTINGS, source="aog", at=NOW,
             environ={"HUNTER_PUBLISH_LIVE_DATA": "true", "HUNTER_LLM_ENABLED": "false"},
             aog_collect=lambda settings, at, source_state: source_result)
         self.assertEqual(len(feed["deals"]), 1)
         self.assertEqual(feed["deals"][0]["verification_level"], "aggregator")
-        self.assertEqual(state["records"][0]["last_seen_at"], "2026-11-07T11:45:00Z")
+        self.assertEqual(state["records"][0]["last_seen_at"], "2026-11-07T11:45:10Z")
 
 
 class SchedulingTests(unittest.TestCase):
-    def test_six_api_requests_max_plus_robots_with_identifying_user_agent(self):
-        pages = [api([article(str(336872529490 + i))], total=1128) for i in range(5)] + [api([])]
+    def test_small_explicit_request_budget_is_fair_and_uses_identifying_agent(self):
+        pages = [api(rows(48 * i), total=1128) for i in range(6)]
         result, fake, delays = run([robots()] + pages, settings={"aog_max_requests_per_run": 6})
         self.assertEqual(len(fake.requests), 7)
         self.assertEqual(delays, [10] * 6)
         self.assertEqual(result["coverage"]["api_requests_this_run"], 6)
-        self.assertEqual(result["coverage"]["next_offset"], 240)
-        self.assertEqual([parse_qs(urlsplit(req["url"]).query)["ab"][0] for req in fake.requests[1:]], ["0", "48", "96", "144", "192", "0"])
+        self.assertEqual(result["coverage"]["next_offset"], 144)
+        self.assertEqual([parse_qs(urlsplit(req["url"]).query)["ab"][0] for req in fake.requests[1:]], ["0", "0", "48", "48", "96", "96"])
         self.assertTrue(all(req["headers"]["User-Agent"] == USER_AGENT for req in fake.requests))
         self.assertFalse(result["coverage"]["complete"])
+        self.assertFalse(result["coverage"]["traversal_completed"])
+        for search in result["coverage"]["searches"].values():
+            self.assertEqual(search["stop_reason"], "source_run_budget")
+            self.assertEqual(search["pages_fetched"], 3)
+            self.assertEqual(search["remaining_reported"], 984)
 
     def test_general_and_pickup_queries_match_observed_public_ui(self):
         result, fake, _ = run([robots(), api([]), api([])])
@@ -279,29 +320,29 @@ class SchedulingTests(unittest.TestCase):
                     self.assertEqual(parse_qs(urlsplit(request["url"]).query)["endet"], [end_filter])
                 self.assertEqual(result["coverage"]["local_active_window_hours"], lookahead)
 
-    def test_next_run_refreshes_zero_and_rotates_tail(self):
-        pages = [api([article()], total=1128)] * 5 + [api([])]
+    def test_next_run_restarts_both_lists_at_zero_not_a_mutable_offset(self):
+        pages = [api(rows(48 * i), total=1128) for i in range(6)]
         result, _, _ = run([robots()] + pages, settings={"aog_max_requests_per_run": 6})
         _, fake, _ = run([robots()] + pages, settings={"aog_max_requests_per_run": 6}, state=result["source_state"], at=NOW + timedelta(minutes=31))
         offsets = [parse_qs(urlsplit(req["url"]).query)["ab"][0] for req in fake.requests[1:]]
-        self.assertEqual(offsets, ["0", "240", "288", "336", "384", "0"])
+        self.assertEqual(offsets, ["0", "0", "48", "48", "96", "96"])
 
-    def test_debounce_before_nine_minutes_makes_zero_network_calls(self):
+    def test_debounce_before_twenty_nine_minutes_makes_zero_network_calls(self):
         first, _, _ = run([robots(), api([]), api([])])
-        second, fake, _ = run([], state=first["source_state"], at=NOW + timedelta(minutes=8, seconds=59))
+        second, fake, _ = run([], state=first["source_state"], at=NOW + timedelta(minutes=28, seconds=59))
         self.assertEqual(second["status"], "cooldown")
         self.assertEqual(fake.requests, [])
         self.assertEqual(second["items"], [])
 
-    def test_nine_minute_boundary_and_planned_ten_minute_cadence_are_allowed(self):
+    def test_debounce_boundary_and_planned_half_hour_cadence_are_allowed(self):
         first, _, _ = run([robots(), api([]), api([])])
-        for minutes in (9, 10):
+        for minutes in (29, 30):
             with self.subTest(minutes=minutes):
                 result, fake, _ = run([robots(), api([]), api([])], state=first["source_state"], at=NOW + timedelta(minutes=minutes))
-                self.assertEqual(result["status"], "partial")
+                self.assertEqual(result["status"], "live")
                 self.assertEqual(len(fake.requests), 3)
-                self.assertEqual(result["coverage"]["planned_interval_minutes"], 10)
-                self.assertEqual(result["coverage"]["debounce_seconds"], 540)
+                self.assertEqual(result["coverage"]["planned_interval_minutes"], 30)
+                self.assertEqual(result["coverage"]["debounce_seconds"], 1740)
 
     def test_legacy_thirty_minute_pause_is_not_shortened(self):
         legacy = {"last_attempt_at": "2026-11-07T12:00:00Z", "next_allowed_at": "2026-11-07T12:30:00Z"}
@@ -312,41 +353,70 @@ class SchedulingTests(unittest.TestCase):
                 self.assertEqual(result["source_state"]["next_allowed_at"], legacy["next_allowed_at"])
                 self.assertEqual(fake.requests, [])
         result, fake, _ = run([robots(), api([]), api([])], state=legacy, at=NOW + timedelta(minutes=30))
-        self.assertEqual(result["status"], "partial")
+        self.assertEqual(result["status"], "live")
         self.assertEqual(len(fake.requests), 3)
 
-    def test_default_is_four_api_requests_plus_robots_with_ten_second_gaps(self):
-        pages = [api([article(str(336872529490 + i))], total=1128) for i in range(3)] + [api([])]
-        fake, delays = FakeTransport([robots()] + pages), []
-        result = collect({"max_price_eur": 1, "postcode": "69121", "pickup_radius_km": 50}, NOW, None,
-                         transport=fake, sleep=delays.append)
-        self.assertEqual(result["coverage"]["api_requests_this_run"], 4)
-        self.assertEqual(result["coverage"]["requests_this_run"], 5)
-        self.assertEqual(delays, [10] * 4)
-        self.assertEqual([parse_qs(urlsplit(req["url"]).query)["ab"][0] for req in fake.requests[1:]], ["0", "48", "96", "0"])
+    def test_normal_full_scan_fetches_all_general_and_pickup_pages_without_overfetch(self):
+        fake, delays = PagedTransport(), []
+        result = collect({"max_price_eur": 1}, NOW, None, transport=fake, sleep=delays.append, monotonic=lambda: 0)
+        coverage = result["coverage"]
+        self.assertEqual(result["status"], "live")
+        self.assertTrue(coverage["traversal_completed"])
+        self.assertFalse(coverage["complete"])
+        self.assertFalse(coverage["pagination_is_stable"])
+        self.assertEqual(coverage["api_requests_this_run"], 94)
+        self.assertEqual(coverage["requests_this_run"], 95)
+        self.assertEqual(coverage["pages_fetched"], 94)
+        self.assertEqual(coverage["records_read"], 4460)
+        self.assertEqual(coverage["unique_records"], 4200)
+        self.assertEqual(coverage["duplicate_records"], 260)
+        self.assertEqual(len(result["items"]), 4200)
+        self.assertEqual(sum(row["pickup_search_confirmed"] for row in result["items"]), 260)
+        self.assertEqual(delays, [10] * 94)
+        self.assertEqual(coverage["scan_started_at"], "2026-11-07T12:00:00Z")
+        self.assertEqual(coverage["scan_completed_at"], "2026-11-07T12:15:40Z")
+        self.assertEqual(coverage["last_successful_full_scan_at"], coverage["scan_completed_at"])
+        for name, count, pages in (("general", 4200, 88), ("pickup", 260, 6)):
+            search = coverage["searches"][name]
+            self.assertEqual(search["unique_records"], count)
+            self.assertEqual(search["pages_fetched"], pages)
+            self.assertEqual(search["remaining_reported"], 0)
+            self.assertEqual(search["unobserved_estimate"], 0)
+            self.assertEqual(search["stop_reason"], "reported_end")
+        self.assertTrue(all(req["headers"]["User-Agent"] == USER_AGENT for req in fake.requests))
 
-    def test_144_default_runs_fit_daily_budget_at_ten_minute_intervals(self):
+    def test_48_half_hour_runs_fit_daily_budget(self):
         state = None
         start = NOW.replace(hour=0)
-        for index in range(144):
-            pages = [api([article()], total=1128)] * 3 + [api([])]
-            result, fake, _ = run([robots()] + pages, settings={"aog_max_requests_per_run": 4},
-                                  state=state, at=start + timedelta(minutes=10 * index))
-            self.assertEqual(result["status"], "partial")
-            self.assertEqual(len(fake.requests), 5)
+        for index in range(48):
+            fake = PagedTransport(general=96, pickup=48)
+            result = collect({}, start + timedelta(minutes=30 * index), state,
+                             transport=fake, sleep=lambda _: None, monotonic=lambda: 0)
+            self.assertEqual(result["status"], "live")
+            self.assertEqual(len(fake.requests), 4)
             state = result["source_state"]
-        self.assertEqual(state["requests_today"], 720)
-        self.assertEqual(result["coverage"]["daily_request_budget"], 750)
+        self.assertEqual(state["requests_today"], 192)
+        self.assertEqual(result["coverage"]["daily_request_budget"], 8000)
+        self.assertLessEqual(48 * (MAX_API_REQUESTS + 1), MAX_DAILY_REQUESTS)
 
-    def test_daily_limit_stops_before_request_751(self):
-        state = {"request_day": "2026-11-07", "requests_today": 749}
+    def test_daily_limit_stops_before_request_8001(self):
+        state = {"request_day": "2026-11-07", "requests_today": 7999}
         result, fake, _ = run([robots()], state=state)
         self.assertEqual(len(fake.requests), 1)
-        self.assertEqual(result["source_state"]["requests_today"], 750)
+        self.assertEqual(result["source_state"]["requests_today"], 8000)
         self.assertEqual(result["status"], "cooldown")
-        result, fake, _ = run([], state={"request_day": "2026-11-07", "requests_today": 750})
+        result, fake, _ = run([], state={"request_day": "2026-11-07", "requests_today": 8000})
         self.assertEqual(fake.requests, [])
         self.assertEqual(result["status"], "cooldown")
+
+    def test_request_ledger_tracks_midnight_crossed_during_a_long_run(self):
+        result, fake, _ = run([robots(), api(), api([])],
+                              state={"request_day": "2026-11-07", "requests_today": 79},
+                              at=NOW.replace(hour=23, minute=59, second=45))
+        self.assertEqual(len(fake.requests), 3)
+        self.assertEqual(result["source_state"]["request_day"], "2026-11-08")
+        self.assertEqual(result["source_state"]["requests_today"], 1)
+        self.assertEqual(result["finished_at"], "2026-11-08T00:00:05Z")
 
     def test_small_result_set_does_not_repeat_pages_to_fill_budget(self):
         result, fake, _ = run([robots(), api(), api([])], settings={"aog_max_requests_per_run": 6})
@@ -358,15 +428,112 @@ class SchedulingTests(unittest.TestCase):
         result, _, _ = run([robots(), api([]), api([])], state=state)
         self.assertNotIn("private", json.dumps(result))
         self.assertNotIn("secret document", json.dumps(result))
-        self.assertEqual(result["source_state"]["general_next_offset"], 48)
+        self.assertEqual(result["source_state"]["general_next_offset"], 0)
 
     def test_page_budget_cannot_be_raised_above_verified_bound(self):
-        for settings in ({"aog_max_requests_per_run": 7}, {"aog_page_size": 1000}, {"max_price_eur": float("inf")},
+        for settings in ({"aog_max_requests_per_run": 161}, {"aog_page_size": 1000}, {"aog_page_size": 12}, {"max_price_eur": float("inf")},
                          {"max_price_eur": 10**400}, {"pickup_radius_km": 10**400}, {"postcode": "69121,evil"},
                          {"lookahead_hours": True}, {"lookahead_hours": float("inf")}, {"lookahead_hours": 10**400},
-                         {"lookahead_hours": 0}):
+                         {"lookahead_hours": 0}, {"aog_max_run_seconds": 1501}, {"aog_max_run_seconds": True}):
             with self.subTest(settings=settings), self.assertRaises(ValueError):
                 run([], settings=settings)
+
+    def test_disabled_pickup_does_not_prevent_general_completion(self):
+        result, fake, _ = run([robots(), api(rows(0, 48), total=49), api(rows(48, 1), total=49)],
+                              settings={"aog_max_requests_per_run": 5, "aog_pickup_enabled": False})
+        self.assertEqual(len(fake.requests), 3)
+        self.assertTrue(result["coverage"]["traversal_completed"])
+        self.assertEqual(result["coverage"]["searches"]["pickup"]["status"], "disabled")
+        self.assertIsNone(result["coverage"]["searches"]["pickup"]["started_at"])
+
+    def test_time_limit_stops_before_sleep_or_another_request(self):
+        fake, delays = PagedTransport(general=96, pickup=96), []
+        result = collect({"aog_max_run_seconds": 45}, NOW, None, transport=fake, sleep=delays.append, monotonic=lambda: 0)
+        self.assertEqual(len(fake.requests), 3)
+        self.assertEqual(delays, [10, 10])
+        self.assertEqual(result["status"], "partial")
+        self.assertEqual(result["coverage"]["elapsed_seconds"], 20)
+        self.assertIsNone(result["coverage"]["scan_completed_at"])
+        self.assertTrue(all(meta["stop_reason"] == "source_run_deadline" for meta in result["coverage"]["searches"].values()))
+
+    def test_previous_full_scan_timestamp_survives_partial_and_cooldown(self):
+        first, _, _ = run([robots(), api(), api([])])
+        complete_at = first["coverage"]["scan_completed_at"]
+        second, _, _ = run([robots(), api(rows(), total=96), api([])], state=first["source_state"], at=NOW + timedelta(minutes=30))
+        self.assertFalse(second["coverage"]["traversal_completed"])
+        self.assertIsNone(second["coverage"]["scan_completed_at"])
+        self.assertEqual(second["coverage"]["last_successful_full_scan_at"], complete_at)
+        third, fake, _ = run([], state=second["source_state"], at=NOW + timedelta(minutes=35))
+        self.assertEqual(fake.requests, [])
+        self.assertIsNone(third["coverage"]["scan_started_at"])
+        self.assertEqual(third["coverage"]["last_successful_full_scan_at"], complete_at)
+
+    def test_dynamic_total_growth_is_followed_until_actual_reported_end(self):
+        result, fake, _ = run([robots(), api(rows(), total=96), api([]), api(rows(48), total=120), api(rows(96, 24), total=120)],
+                              settings={"aog_max_requests_per_run": 10})
+        self.assertEqual(len(fake.requests), 5)
+        search = result["coverage"]["searches"]["general"]
+        self.assertTrue(result["coverage"]["traversal_completed"])
+        self.assertTrue(search["total_changed"])
+        self.assertEqual((search["total_reported_initial"], search["total_reported_latest"]), (96, 120))
+        self.assertEqual((search["total_reported_min"], search["total_reported_max"]), (96, 120))
+        self.assertEqual(search["unique_records"], 120)
+
+    def test_shrinking_total_ends_without_fetching_obsolete_extra_offsets(self):
+        result, fake, _ = run([robots(), api(rows(), total=144), api([]), api(rows(48, 12), total=60)],
+                              settings={"aog_max_requests_per_run": 10})
+        self.assertEqual(len(fake.requests), 4)
+        self.assertTrue(result["coverage"]["traversal_completed"])
+        search = result["coverage"]["searches"]["general"]
+        self.assertTrue(search["total_changed"])
+        self.assertEqual(search["total_reported_latest"], 60)
+
+    def test_offset_duplicates_are_deduplicated_and_reported_not_hidden_as_complete(self):
+        result, _, _ = run([robots(), api(rows(), total=96), api([]), api(rows(40), total=96)],
+                          settings={"aog_max_requests_per_run": 4})
+        search = result["coverage"]["searches"]["general"]
+        self.assertTrue(search["traversal_completed"])
+        self.assertFalse(result["coverage"]["complete"])
+        self.assertEqual(search["records_read"], 96)
+        self.assertEqual(search["unique_records"], 88)
+        self.assertEqual(search["duplicate_records"], 8)
+        self.assertEqual(search["unobserved_estimate"], 8)
+        self.assertEqual(len(result["items"]), 88)
+
+    def test_repeated_page_stops_search_instead_of_burning_remaining_budget(self):
+        result, fake, _ = run([robots(), api(rows(), total=144), api([]), api(list(reversed(rows())), total=144)],
+                              settings={"aog_max_requests_per_run": 10})
+        self.assertEqual(len(fake.requests), 4)
+        self.assertEqual(result["status"], "partial")
+        search = result["coverage"]["searches"]["general"]
+        self.assertEqual(search["repeated_pages"], 1)
+        self.assertEqual(search["stop_reason"], "repeated_page")
+        self.assertEqual(search["unique_records"], 48)
+        self.assertEqual(search["unobserved_estimate"], 96)
+
+    def test_short_nonfinal_page_is_an_explicit_gap_not_successful_end(self):
+        result, fake, _ = run([robots(), api(rows(0, 1), total=144), api([])], settings={"aog_max_requests_per_run": 10})
+        self.assertEqual(len(fake.requests), 3)
+        self.assertEqual(result["status"], "partial")
+        self.assertEqual(result["coverage"]["searches"]["general"]["stop_reason"], "short_page")
+        self.assertEqual(result["coverage"]["searches"]["general"]["unobserved_estimate"], 143)
+
+    def test_empty_tail_fails_closed_even_if_total_shrank(self):
+        for total, reason in ((96, "invalid_payload"), (48, "empty_page")):
+            with self.subTest(total=total):
+                result, fake, _ = run([robots(), api(rows(), total=96), api([]), api([], total=total)],
+                                      settings={"aog_max_requests_per_run": 10})
+                self.assertEqual(len(fake.requests), 4)
+                self.assertEqual(result["status"], "partial")
+                self.assertFalse(result["coverage"]["traversal_completed"])
+                self.assertEqual(result["coverage"]["searches"]["general"]["stop_reason"], reason)
+                self.assertEqual(len(result["items"]), 48)
+
+    def test_source_growth_beyond_cap_is_reported_without_bulk_endpoint(self):
+        result, fake, _ = run([robots(), api(rows(), total=10000), api([])])
+        self.assertFalse(result["coverage"]["traversal_completed"])
+        self.assertIn("source_growth_limit", [value["code"] for value in result["warnings"]])
+        self.assertTrue(all(urlsplit(request["url"]).path in ("/robots.txt", API_PATH) for request in fake.requests))
 
 
 class HttpSafetyTests(unittest.TestCase):
@@ -378,6 +545,16 @@ class HttpSafetyTests(unittest.TestCase):
         second, fake, _ = run([], state=result["source_state"], at=NOW + timedelta(hours=1))
         self.assertEqual(second["status"], "cooldown")
         self.assertEqual(fake.requests, [])
+
+    def test_date_retry_after_is_relative_to_response_time_not_scan_start(self):
+        result, fake, _ = run([robots(), api(rows(), total=96), api([]),
+                              api(status=429, headers={"Retry-After": "Sat, 07 Nov 2026 14:00:00 GMT"})],
+                              settings={"aog_max_requests_per_run": 5})
+        self.assertEqual(len(fake.requests), 4)
+        self.assertEqual(result["status"], "partial")
+        self.assertEqual(result["source_state"]["next_allowed_at"], "2026-11-07T14:00:00Z")
+        self.assertIsNone(result["coverage"]["scan_completed_at"])
+        self.assertEqual(result["coverage"]["searches"]["general"]["stop_reason"], "source_rate_limited")
 
     def test_403_and_challenge_html_are_not_retried(self):
         for response in (api(status=403), HttpResponse(200, {"Content-Type": "text/html"}, b"<html>captcha</html>")):

@@ -193,11 +193,15 @@ def normalize_item(raw: dict[str, Any], at: datetime, *, local_pickup_confirmed:
             return None
         search_postcode = raw.get("pickup_search_postcode")
         search_radius = finite_number(raw.get("pickup_search_radius_km"))
+        # Pickup evidence may predate a fresh general-search observation. A
+        # refresh of price/bids must not rejuvenate that independent claim.
+        pickup_observed = parse_time(raw.get("pickup_search_observed_at", raw.get("source_observed_at")))
         pickup_search = (raw.get("pickup_search_confirmed") is True
                          and raw.get("pickup_available") is True
                          and isinstance(search_postcode, str)
                          and re.fullmatch(r"[0-9]{5}", search_postcode) is not None
-                         and search_radius is not None and 0 < search_radius <= 200)
+                         and search_radius is not None and 0 < search_radius <= 200
+                         and pickup_observed is not None and pickup_observed <= at)
         result.update({
             "source_provider": "auktionen-ohne-gebot",
             "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
@@ -214,5 +218,6 @@ def normalize_item(raw: dict[str, Any], at: datetime, *, local_pickup_confirmed:
             "pickup_search_confirmed": pickup_search,
         })
         if pickup_search:
-            result.update(pickup_search_postcode=search_postcode, pickup_search_radius_km=search_radius)
+            result.update(pickup_search_postcode=search_postcode, pickup_search_radius_km=search_radius,
+                          pickup_search_observed_at=iso_time(pickup_observed))
     return result

@@ -16,6 +16,7 @@ import os
 import re
 import sys
 import tempfile
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -30,6 +31,12 @@ MAX_TOTAL_BYTES = 128 * 1024 * 1024
 MAX_FILES = 6000
 # A maximal restored state arrives as base64 (4/3 of its decoded byte size).
 MAX_RESPONSE_BYTES = 48 * 1024 * 1024
+# A full 4,400-row snapshot can encode to >80 MiB with inline tree content.
+# Keep each tree request small; individually large files use the blob endpoint.
+# These are our safety limits, not a claim about an undocumented upstream cap.
+MAX_TREE_REQUEST_BYTES = 2 * 1024 * 1024
+MAX_WRITE_REQUESTS = 160
+MIN_WRITE_GAP_SECONDS = 1.05
 SHA_PATTERN = re.compile(r"[0-9a-f]{40}")
 REPO_PATTERN = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+")
 PATH_PATTERN = re.compile(r"[A-Za-z0-9_-][A-Za-z0-9_./-]*")
@@ -62,6 +69,11 @@ def sha(value: Any) -> str:
     return value
 
 
+def _json_bytes(value: Any) -> bytes:
+    """One encoding for planning and sending exact bounded request sizes."""
+    return json.dumps(value, ensure_ascii=False, allow_nan=False, separators=(",", ":")).encode("utf-8")
+
+
 class GitHub:
     def __init__(self, repository: str, token: str):
         if not REPO_PATTERN.fullmatch(repository) or any(part in {".", ".."} for part in repository.split("/")):
@@ -78,7 +90,7 @@ class GitHub:
             raise SnapshotError("Refusing an unexpected GitHub API path.")
         request = urllib.request.Request(
             self.base + path,
-            data=json.dumps(body, ensure_ascii=False).encode("utf-8") if body is not None else None,
+            data=_json_bytes(body) if body is not None else None,
             method=method,
             headers={
                 "Authorization": f"Bearer {self.token}",
@@ -248,7 +260,69 @@ def collect_files(site_dir: Path, state_dir: Path, token: str = "") -> list[dict
     return entries
 
 
-def publish(api: GitHub, state_dir: Path, site_dir: Path) -> dict[str, Any]:
+def plan_tree_batches(entries: list[dict[str, str]]) -> tuple[list[list[dict[str, str]]], list[dict[str, str]]]:
+    """Plan before writes, with blob references standing in for large files.
+
+    Account for a base_tree even in the first batch, where it will be omitted.
+    A fixed-width SHA placeholder has the exact size of the eventual blob SHA.
+    The plan never inherits an earlier snapshot's tree or mutates its inputs.
+    """
+    placeholder = "0" * 40
+    overhead = len(_json_bytes({"base_tree": placeholder, "tree": []}))
+    batches, blobs, current = [], [], []
+    size = overhead
+    for original in entries:
+        entry = dict(original)
+        encoded_size = len(_json_bytes(entry))
+        if overhead + encoded_size > MAX_TREE_REQUEST_BYTES:
+            blobs.append(dict(entry))
+            entry.pop("content")
+            entry["sha"] = placeholder
+            encoded_size = len(_json_bytes(entry))
+        if overhead + encoded_size > MAX_TREE_REQUEST_BYTES:
+            raise SnapshotError("A generated path exceeded the bounded tree request size.")
+        addition = encoded_size + int(bool(current))
+        if current and size + addition > MAX_TREE_REQUEST_BYTES:
+            batches.append(current)
+            current, size, addition = [], overhead, encoded_size
+        current.append(entry)
+        size += addition
+    if current:
+        batches.append(current)
+    if not batches:
+        raise SnapshotError("Refusing an empty generated snapshot tree.")
+    # Commit and final ref update are writes too; fail before making any blob
+    # or tree objects if the whole publication cannot fit the request budget.
+    if len(batches) + len(blobs) + 2 > MAX_WRITE_REQUESTS:
+        raise SnapshotError("Generated snapshot exceeded the safe publication request budget.")
+    return batches, blobs
+
+
+class _WritePacer:
+    """Space all mutating requests; never retry rejected or ambiguous writes."""
+
+    def __init__(self, api: GitHub, *, sleep=None, monotonic=None):
+        self.api = api
+        self.sleep = sleep or time.sleep
+        self.clock = monotonic or time.monotonic
+        self.last_started = None
+        self.requests = 0
+
+    def request(self, method: str, path: str, body: dict[str, Any]) -> dict[str, Any]:
+        if method not in {"POST", "PATCH"}:
+            raise SnapshotError("Only publication writes may enter the paced writer.")
+        if self.requests >= MAX_WRITE_REQUESTS:
+            raise SnapshotError("Publication exceeded its safe write request budget.")
+        if self.last_started is not None:
+            delay = self.last_started + MIN_WRITE_GAP_SECONDS - self.clock()
+            if delay > 0:
+                self.sleep(delay)
+        self.last_started = self.clock()
+        self.requests += 1
+        return self.api.request(method, path, body)
+
+
+def publish(api: GitHub, state_dir: Path, site_dir: Path, *, sleep=None, monotonic=None) -> dict[str, Any]:
     marker_path = state_dir / MARKER
     if not marker_path.is_file():
         raise SnapshotError("Run restore before publish so concurrent updates can be detected.")
@@ -262,13 +336,35 @@ def publish(api: GitHub, state_dir: Path, site_dir: Path) -> dict[str, Any]:
     if expected and base != expected:
         raise SnapshotError("Restore marker has an inconsistent parent commit.")
     entries = collect_files(site_dir, state_dir, api.token)
+    batches, blobs = plan_tree_batches(entries)
     if api.head(DATA_BRANCH) != expected:
         raise SnapshotError("The data branch changed after restore. Nothing was overwritten; start a fresh run.")
-    # Deliberately no base_tree: old generated pages disappear from the current
-    # snapshot, and source files/secrets can never be copied from main.
-    tree = api.request("POST", "/git/trees", {"tree": entries})
-    tree_sha = sha(tree.get("sha"))
-    commit = api.request("POST", "/git/commits", {
+    writer = _WritePacer(api, sleep=sleep, monotonic=monotonic)
+    blob_shas = {}
+    for entry in blobs:
+        # Base64 has predictable 4/3 expansion, unlike quoted JSON source text.
+        # Decoded bytes have already passed the unchanged per-file/total guards.
+        blob = writer.request("POST", "/git/blobs", {
+            "content": base64.b64encode(entry["content"].encode("utf-8")).decode("ascii"),
+            "encoding": "base64",
+        })
+        blob_shas[entry["path"]] = sha(blob.get("sha"))
+    tree_sha = None
+    for batch in batches:
+        for entry in batch:
+            if "sha" in entry:
+                entry["sha"] = blob_shas[entry["path"]]
+        body = {"tree": batch}
+        if tree_sha is not None:
+            # Only OUR freshly generated previous batch is a base. Starting
+            # without a base_tree removes obsolete generated files and cannot
+            # carry source files or secrets over from main/the old data tree.
+            body["base_tree"] = tree_sha
+        if len(_json_bytes(body)) > MAX_TREE_REQUEST_BYTES:
+            raise SnapshotError("A planned tree request exceeded its safe size limit.")
+        tree = writer.request("POST", "/git/trees", body)
+        tree_sha = sha(tree.get("sha"))
+    commit = writer.request("POST", "/git/commits", {
         "message": "Update generated Fundgrube snapshot",
         "tree": tree_sha,
         "parents": [base],
@@ -277,13 +373,14 @@ def publish(api: GitHub, state_dir: Path, site_dir: Path) -> dict[str, Any]:
     if api.head(DATA_BRANCH) != expected:
         raise SnapshotError("The data branch changed during publication. Nothing was overwritten; start a fresh run.")
     if expected:
-        result = api.request("PATCH", "/git/refs/heads/data", {"sha": commit_sha, "force": False})
+        result = writer.request("PATCH", "/git/refs/heads/data", {"sha": commit_sha, "force": False})
     else:
         # A concurrent creation returns 422. It is never converted to a force update.
-        result = api.request("POST", "/git/refs", {"ref": "refs/heads/data", "sha": commit_sha})
+        result = writer.request("POST", "/git/refs", {"ref": "refs/heads/data", "sha": commit_sha})
     if result.get("object", {}).get("sha") != commit_sha:
         raise SnapshotError("GitHub did not confirm the new data branch head; inspect it before retrying.")
-    return {"published": True, "branch": DATA_BRANCH, "head": commit_sha, "files": len(entries)}
+    return {"published": True, "branch": DATA_BRANCH, "head": commit_sha, "files": len(entries),
+            "tree_batches": len(batches), "large_blobs": len(blobs), "write_requests": writer.requests}
 
 
 def main(argv: list[str] | None = None) -> int:

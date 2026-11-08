@@ -19,7 +19,7 @@ from typing import Any, Callable, Mapping
 
 from .ebay import ApiError, BudgetExceeded, CredentialsMissing, EbayClient, RateLimitError
 from .models import iso_time, normalize_item, parse_time
-from .ranking import assess_item
+from .ranking import apply_interest_profile, assess_item
 
 ROOT = Path(__file__).resolve().parents[1]
 SETTINGS_PATH = ROOT / "config" / "settings.json"
@@ -37,7 +37,8 @@ DEFAULTS = {
     "detail_limit_per_run": 35, "description_max_age_hours": 24,
     "refresh_after_minutes": 90, "max_records": MAX_RETAINED_RECORDS,
     "max_ai_items_per_run": 20, "api_page_size": 50,
-    "schedule_interval_minutes": 10, "aog_max_requests_per_run": 4,
+    "schedule_interval_minutes": 30, "aog_max_requests_per_run": 160,
+    "aog_max_run_seconds": 1500,
 }
 # State contains normalized records, never seller identities or raw payloads.
 RECORD_FIELDS = frozenset({
@@ -53,6 +54,7 @@ RECORD_FIELDS = frozenset({
     "stale", "carried", "pickup_verified_at",
     "source_provider", "source_url", "source_observed_at", "verification_level", "pickup_available",
     "pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km",
+    "pickup_search_observed_at", "personal_interest_excluded", "personal_interest_reason",
     "semantic_review_mode",
 })
 
@@ -106,7 +108,8 @@ def validate_settings(settings: Mapping[str, Any]) -> dict[str, Any]:
         "categories_per_run": (1, 1000), "max_pages_per_category": (1, 50),
         "detail_limit_per_run": (0, 1000), "max_records": (1, MAX_RETAINED_RECORDS),
         "max_ai_items_per_run": (0, 100), "api_page_size": (1, 100), "max_bids": (0, 1000000),
-        "schedule_interval_minutes": (5, 1440), "aog_max_requests_per_run": (1, 6),
+        "schedule_interval_minutes": (5, 1440), "aog_max_requests_per_run": (1, 160),
+        "aog_max_run_seconds": (30, 1500),
     }.items():
         _count(result[key], key, *bounds)
     for key, bounds in {
@@ -201,7 +204,8 @@ def _reviewed_capacity_order(rows: list[dict[str, Any]], review_doc: dict | None
     if review_doc is not None:
         from .reviews import apply_reviews
         rows, _ = apply_reviews(rows, review_doc, at)
-    return sorted(rows, key=_sort_key)
+    return sorted((apply_interest_profile(row) for row in rows),
+                  key=lambda row: (row.get("personal_interest_excluded") is True, _sort_key(row)))
 
 
 def _clear_stale_description(item: dict, at: datetime, settings: Mapping) -> dict:
@@ -513,18 +517,43 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
             from .aog import collect as aog_collect
         result = aog_collect(settings, at, state.get("aog"))
         if (not isinstance(result, dict) or result.get("status") not in {"live", "partial", "error", "cooldown"}
-                or not isinstance(result.get("items"), list) or len(result["items"]) > 1000
+                or not isinstance(result.get("items"), list) or len(result["items"]) > 160 * 48
                 or not isinstance(result.get("source_state"), dict) or not isinstance(result.get("coverage"), dict)):
             raise ConfigurationError("Public source returned an invalid result contract.")
+        finished = parse_time(result.get("finished_at"))
+        if result.get("finished_at") is not None:
+            if finished is None or not at <= finished <= at + timedelta(seconds=settings["aog_max_run_seconds"] + 120):
+                raise ConfigurationError("Public source returned an invalid scan completion time.")
+            # A full source traversal takes minutes. Evaluate facts and auction
+            # endings at completion, not the old start timestamp. Individual
+            # observations retain their independently cached response times.
+            at = finished
+            for item_id in list(records):
+                old = records[item_id]
+                if not _retained(old, at):
+                    records.pop(item_id)
+                    continue
+                _clear_stale_description(old, at, settings)
+                old.update(stale=at - parse_time(old["last_seen_at"]) >= timedelta(minutes=settings["refresh_after_minutes"]))
+                records[item_id] = _public_record(assess(old, settings, at))
         state["aog"] = result["source_state"]
         if checkpoint is not None:
             # Persist the crawl cooldown even if a later processing step fails.
             checkpoint(state)
         source_coverage = result["coverage"]
         scan["received"] = len(result["items"])
-        scan["searches_succeeded"] = _count(source_coverage.get("pages_fetched", 0), "aog.pages_fetched", 0, 6)
+        scan["searches_succeeded"] = _count(source_coverage.get("pages_fetched", 0), "aog.pages_fetched", 0, 160)
+        attempted = _count(source_coverage.get("api_requests_this_run", scan["searches_succeeded"]), "aog.api_requests_this_run", 0, 160)
+        if attempted < scan["searches_succeeded"]:
+            raise ConfigurationError("Public source reports more successful pages than attempted requests.")
+        scan["searches_failed"] = attempted - scan["searches_succeeded"]
         scan["categories_scanned"] = int(scan["searches_succeeded"] > 0)
         scan["categories_total"] = scan["categories_planned"] = 1
+        scan["categories_completed"] = int(source_coverage.get("traversal_completed") is True)
+        searches = source_coverage.get("searches", {})
+        pickup_scan = searches.get("pickup", {}) if isinstance(searches, dict) else {}
+        incomplete_pickup = (isinstance(pickup_scan, dict) and pickup_scan.get("enabled") is True
+                             and pickup_scan.get("traversal_completed") is not True)
         for raw in result["items"]:
             if not isinstance(raw, dict):
                 raise ConfigurationError("Public source item is not an object.")
@@ -533,9 +562,24 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                 continue
             item = normalize(raw, at, local_pickup_confirmed=False, pickup_radius_km=settings["pickup_radius_km"])
             if item is not None:
+                previous = records.get(item["id"], {})
+                old_pickup_at = parse_time(previous.get("pickup_search_observed_at") or previous.get("source_observed_at"))
+                if (incomplete_pickup and not item.get("pickup_search_confirmed") and item.get("pickup_available") is not False
+                        and previous.get("pickup_search_confirmed") is True and old_pickup_at and old_pickup_at <= at
+                        and previous.get("pickup_search_postcode") == settings["postcode"]
+                        and previous.get("pickup_search_radius_km") == settings["pickup_radius_km"]):
+                    # A failed/unvisited pickup page is not evidence that an
+                    # older radius-search claim disappeared. Preserve its own
+                    # clock, never relabel it as this general-page observation.
+                    for key in ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km"):
+                        item[key] = previous[key]
+                    item["pickup_search_observed_at"] = iso_time(old_pickup_at)
+                    item["pickup_available"] = True
                 _upsert(records, item, at, settings, assess)
         for warning in result.get("warnings", []):
             if isinstance(warning, dict) and isinstance(warning.get("code"), str) and isinstance(warning.get("message"), str):
+                if warning["code"] in {"source_run_budget", "source_run_deadline", "source_daily_budget", "source_growth_limit"}:
+                    scan["budget_limited"] = True
                 _block(blockers, warning["code"], warning["message"],
                        "Quellenstand und Abdeckung beachten; vor einem Gebot das Originalangebot prüfen. Der nächste geplante Lauf berücksichtigt Wartezeiten.")
         source_status = result["status"]
@@ -543,7 +587,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         if scan["searches_succeeded"]:
             state["last_successful_scan_at"] = iso_time(at)
         if source_status == "error":
-            scan["searches_failed"] = 1
+            scan["searches_failed"] = max(1, scan["searches_failed"])
         if checkpoint is not None:
             checkpoint(state)
     elif source == "json":
@@ -611,7 +655,10 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         interactive_review["status"] = {"ok": "applied", "partial": "applied", "absent": "none",
                                         "future": "invalid"}.get(review_meta.get("status"), review_meta.get("status", "invalid"))
         interactive_review["available"] = review_meta.get("total", 0)
-    rows = sorted((_public_record(row) for row in rows if _retained(row, at)), key=_sort_key)
+    # Personal exclusions are a separate filter, not rewritten historical LLM
+    # evidence. Apply after every annotation/review overlay, including legacy
+    # cached reviews that predate the preference rule.
+    rows = sorted((_public_record(apply_interest_profile(row)) for row in rows if _retained(row, at)), key=_sort_key)
     state["records"], state["updated_at"] = rows[:settings["max_records"]], iso_time(at)
     rows = state["records"]
     # V1 can contain an authentic LLM review without an independent Useability
@@ -635,15 +682,16 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
     if source == "json" and status == "live":
         messages["live"] = "Lokaler JSON-Import abgeschlossen; keine erneute Liveprüfung bei eBay."
     if source == "aog":
-        messages["live"] = "Öffentliche Angebotsübersicht abgerufen; Angaben stammen von auktionen-ohne-gebot.de, nicht aus einer eigenen eBay-Prüfung."
-        messages["partial"] = "Öffentliche Quelle aktiv: begrenzter Ausschnitt mit zwischengespeicherten Angaben von auktionen-ohne-gebot.de."
+        messages["live"] = "Quellenlisten bis zum gemeldeten Ende durchlaufen; veränderliche Aggregator-Daten, kein atomarer Snapshot und keine eigene eBay-Prüfung."
+        messages["partial"] = "Unvollständiger Quelldurchlauf; bestätigte Teilbeobachtungen und ältere gespeicherte Angebote bleiben erhalten."
     feed = {
         "schema_version": FEED_VERSION, "generated_at": iso_time(at), "last_successful_scan_at": state.get("last_successful_scan_at"),
         "source_status": status, "status_message": messages[status], "blockers": blockers, "source": provider, "provider": provider,
         "site_url": settings.get("site_url", "https://pogoner.github.io/fundgrube/"),
         "location": {"postcode": settings["postcode"], "city": settings.get("city", "Heidelberg"), "country": "DE", "pickup_radius_km": settings["pickup_radius_km"]},
         "criteria": {key: settings[key] for key in ("max_price_eur", "max_shipping_eur", "max_bids", "lookahead_hours", "description_max_age_hours", "refresh_after_minutes")},
-        "stats": {**scan, "shortlisted": counts["eligible"] + counts["review"], "active": active,
+        "stats": {**scan, "shortlisted": sum(row.get("eligibility") != "excluded" and not row.get("personal_interest_excluded") for row in rows),
+                  "personal_interest_excluded": sum(row.get("personal_interest_excluded") is True for row in rows), "active": active,
                   "retained": len(rows), "outside_active_window": len(rows) - active, **counts,
                   "stale": sum(bool(row.get("stale")) for row in rows), "carried": sum(bool(row.get("carried")) for row in rows), "omitted_records": omitted_records},
         "coverage": {"categories_total": categories_total, "categories_scanned": scan["categories_scanned"], "categories_completed": scan["categories_completed"],
@@ -664,7 +712,9 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
             "cycle_estimate_hours": None, "manual_leaf_override": False,
             "browse_calls_this_run": 0, "browse_calls_today": 0, "daily_budget": None,
             "price_filter_applied": True,
-            "pagination_caveat": "Begrenzter Ausschnitt aus einer veränderlichen, zwischengespeicherten Ergebnisliste. Die Trefferzahl der Quelle ist keine garantierte vollständige Abdeckung.",
+            "pagination_caveat": "Ein abgeschlossener Durchlauf besucht die zu diesem Zeitpunkt gemeldeten Seiten beider aktivierten Suchen. Offset-Seiten und Trefferzahlen verändern sich: keine atomare Momentaufnahme und keine garantierte vollständige eBay-Abdeckung.",
+            "retention_omitted_records": omitted_records,
+            "all_collected_records_retained": omitted_records == 0,
         })
     json.dumps(feed, allow_nan=False)
     json.dumps(state, allow_nan=False)

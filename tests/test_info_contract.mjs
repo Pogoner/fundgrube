@@ -87,6 +87,100 @@ test("storage capacity is bounded metadata, not a source coverage fraction", asy
   }
 });
 
+test("completed source traversal is distinct from stable pagination or full eBay coverage", async () => {
+  const ui = await render({source_status: "live", coverage: {
+    complete: false, pagination_is_stable: false, traversal_completed: true,
+    source_total_reported: 4174, planned_interval_minutes: 30, pages_fetched: 93,
+    elapsed_seconds: 940, max_run_seconds: 1500, max_api_requests_per_run: 160,
+    requests_today: 95, daily_request_budget: 8000,
+    scan_started_at: "2026-11-08T08:44:00Z", scan_finished_at: latest, scan_completed_at: latest,
+    last_successful_full_scan_at: latest, source_cache_max_age_minutes: 15,
+    searches: {
+      general: {enabled: true, traversal_completed: true, pages_fetched: 87, unique_records: 4160, duplicate_records: 14, total_reported_initial: 4177, total_reported_latest: 4174, total_changed: true, stop_reason: "reported_end"},
+      pickup: {enabled: true, traversal_completed: true, pages_fetched: 6, unique_records: 260, duplicate_records: 0, total_reported_initial: 260, total_reported_latest: 260, total_changed: false, stop_reason: "reported_end"}
+    }
+  }});
+  const text = ui.nodes.get("info-coverage").innerHTML;
+  assert.match(text, /Alle aktivierten Suchlisten bis zum gemeldeten Ende durchlaufen/);
+  assert.match(text, /Beginn \/ Ende des Quellenlaufs/);
+  assert.match(text, /08\.11\.26, 09:44 \/ 08\.11\.26, 10:00 \(Berlin\)/);
+  assert.match(text, /Letzter vollständiger Quellenlauf<\/small><strong>08\.11\.26, 10:00/);
+  assert.match(text, /Allgemeine Suche<\/small><strong>Listenende erreicht · 87 Seiten · 4160 unterschiedliche Treffer · 14 wiederholte Treffer/);
+  assert.match(text, /4177 bei Start \/ 4174 zuletzt · während des Laufs verändert/);
+  assert.match(text, /Abholsuche<\/small><strong>Listenende erreicht · 6 Seiten · 260 unterschiedliche Treffer/);
+  assert.match(text, /30 Min\.; Ausführung kann sich verzögern/);
+  assert.match(text, /Angesetzter Cache-Abstand<\/small><strong>bis 15 Min\. in diesem Lauf; keine eBay-Frischegarantie/);
+  assert.match(text, /Tatsächliche Laufdauer<\/small><strong>15 Min\. 40 Sek\./);
+  assert.match(text, /Limit der Datenanfragen pro Lauf<\/small><strong>160/);
+  assert.match(text, /95 \/ 8000; einschließlich robots\.txt/);
+  assert.match(text, /1500 Sekunden; kein zugesicherter Abschluss/);
+  assert.match(text, /Quellenlisten durchlaufen; veränderliche Pagination, keine eBay-Vollabdeckung/);
+  assert.doesNotMatch(text, /Begrenzter Ausschnitt|Keine Datenlücken|100\s*%/);
+});
+
+test("partial traversals keep the last completed scan and explain per-search interruption", async () => {
+  const ui = await render({coverage: {
+    traversal_completed: false, complete: false, scan_started_at: "2026-11-08T08:44:00Z", scan_finished_at: latest,
+    scan_completed_at: null, last_successful_full_scan_at: oldest,
+    searches: {
+      general: {enabled: true, traversal_completed: false, pages_fetched: 3, unique_records: 96, total_reported_initial: 4174, total_reported_latest: 4200, total_changed: true, unobserved_estimate: 4104, stop_reason: "repeated_page"},
+      pickup: {enabled: true, traversal_completed: true, pages_fetched: 1, unique_records: 12, total_reported_initial: 12, total_reported_latest: 12, stop_reason: "reported_end"}
+    }
+  }});
+  const text = ui.nodes.get("info-coverage").innerHTML;
+  assert.match(text, /Nicht vollständig durchlaufen; Teilstände möglich/);
+  assert.match(text, /Letzter vollständiger Quellenlauf<\/small><strong>03\.11\.26, 08:30/);
+  assert.match(text, /Allgemeine Suche · Unterbrechung<\/small><strong>Wiederholte Quellseite/);
+  assert.match(text, /4104 laut Schätzung; veränderliche Ergebnisliste/);
+  assert.match(text, /Abholsuche<\/small><strong>Listenende erreicht/);
+  assert.doesNotMatch(text, /Alle aktivierten Suchlisten bis zum gemeldeten Ende durchlaufen/);
+});
+
+test("a completed traversal cannot hide records omitted by the storage bound", async () => {
+  const ui = await render({coverage: {
+    complete: false, traversal_completed: true, retention_capacity: 5000,
+    retention_omitted_records: 74, all_collected_records_retained: false
+  }});
+  const text = ui.nodes.get("info-coverage").innerHTML;
+  assert.match(text, /Alle aktivierten Suchlisten bis zum gemeldeten Ende durchlaufen/);
+  assert.match(text, /Durch Speichergrenze ausgelassen<\/small><strong>74 Datensätze; getrennt vom Quellenlauf/);
+  const unknown = await render({coverage: {retention_omitted_records: -1, all_collected_records_retained: false}});
+  assert.match(unknown.nodes.get("info-coverage").innerHTML, /Speicherübernahme unvollständig/);
+  assert.doesNotMatch(unknown.nodes.get("info-coverage").innerHTML, /-1 Datensätze/);
+});
+
+test("invalid traversal fields cannot imply completion or inject HTML", async () => {
+  const ui = await render({coverage: {
+    traversal_completed: false, planned_interval_minutes: -30,
+    scan_started_at: "invalid", scan_finished_at: "<script>bad</script>", last_successful_full_scan_at: null,
+    searches: {
+      general: {enabled: true, traversal_completed: "true", pages_fetched: -1, unique_records: "100", duplicate_records: 1.5, total_reported_initial: -1, unobserved_estimate: -5, stop_reason: "<img src=x onerror=bad()>"},
+      pickup: {enabled: false, traversal_completed: true}
+    }
+  }});
+  const text = ui.nodes.get("info-coverage").innerHTML;
+  assert.match(text, /Noch nicht belegt/);
+  assert.match(text, /unbekannt \/ unbekannt/);
+  assert.match(text, /Allgemeine Suche<\/small><strong>Nicht vollständig durchlaufen/);
+  assert.match(text, /Abholsuche<\/small><strong>Nicht aktiviert/);
+  assert.match(text, /&lt;img src=x/);
+  assert.doesNotMatch(text, /<script>|<img |-1 Seiten|-5 laut|100 unterschiedliche|1\.5 wiederholte|Geplanter Startabstand|Listenende erreicht/);
+});
+
+test("personal-profile counts do not reinterpret stored LLM scores", async () => {
+  const ui = await render({deals: [
+    {title: "Ungewöhnliche Drucksache", personal_interest_excluded: true, assessment_basis: "llm", scalp_score: 90, useability_score: 99},
+    {title: "KAESER MOBILAIR M 27 BROSCHÜRE 12 Seiten RAR", assessment_basis: "llm", scalp_score: 90, useability_score: 99},
+    {title: "Bohrmaschine mit Bedienungsanleitung", personal_interest_excluded: false, scalp_score: 80, useability_score: 90},
+    {title: "Prospekthalter aus Metall", scalp_score: 30, useability_score: 95}
+  ]});
+  const text = ui.nodes.get("info-profile").textContent;
+  assert.match(text, /2 von 4 gespeicherten Angeboten durch das persönliche Profil ausgeblendet/);
+  assert.match(text, /Hauptliste und beide Top 10, unabhängig von der Interest-Schwelle/);
+  assert.match(text, /unveränderten Scores/);
+  assert.match(text, /personal_interest_excluded/);
+});
+
 test("copied triage instructions preserve absolute scores and separate source freshness", async () => {
   const ui = await render();
   await ui.copy();
@@ -96,6 +190,10 @@ test("copied triage instructions preserve absolute scores and separate source fr
   assert.match(ui.copied, /nicht relativ zu den anderen Funden/);
   assert.match(ui.copied, /Ein neues gutes Angebot senkt keine vorhandene Bewertung/);
   assert.match(ui.copied, /Preis, Gebote und Verfügbarkeit separat/);
+  assert.match(ui.copied, /coverage\.traversal_completed/);
+  assert.match(ui.copied, /30-Minuten-Takt ist keine Aktualitätszusage/);
+  assert.match(ui.copied, /personal_interest_excluded unabhängig von Scores/);
+  assert.match(ui.copied, /Verändere für diesen Profilausschluss keine gespeicherten LLM-Scores/);
   assert.match(ui.copied, /Keine Gebote, Käufe oder externen Schreibaktionen/);
   assert.doesNotMatch(ui.copied, /Bewertungen haben separate Fristen|48.Stunden.Frist/);
 });
@@ -108,4 +206,13 @@ test("static Info explains incremental merge without a semantic age expiry", () 
   assert.match(html, /nicht nach einer pauschalen Stundenfrist/);
   assert.doesNotMatch(html, /Kapazitätsgrenze ist 800|eigene Frist von 48 Stunden/);
   assert.match(html, /kein Nachweis für deinen Browser/);
+  assert.match(html, /alle 30 Minuten/);
+  assert.match(html, /Minute 07 und 37/);
+  const workflow = readFileSync(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
+  assert.match(workflow, /cron: "7,37 \* \* \* \*"/);
+  assert.match(html, /abgeschlossenen Quellenlauf/);
+  assert.match(html, /kein atomarer Snapshot und keine garantierte Vollabdeckung/);
+  assert.match(html, /Separat angebotene Prospekte, Broschüren/);
+  assert.match(html, /Ein echtes Gerät mit beiliegender Anleitung bleibt dagegen im Profil/);
+  assert.doesNotMatch(html, /alle zehn Minuten|13, 23, 33|rotierende Folgeseiten|vier Daten-API/);
 });

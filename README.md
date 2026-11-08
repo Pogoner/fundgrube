@@ -105,30 +105,35 @@ Such-PLZ und Radius dokumentieren diese Herkunft. Solche Kandidaten bleiben
 prüfbedürftig; genaue Nähe, Abholbedingungen und Mindestpreis sind im Original
 zu klären. Auch Versandangaben müssen dort nochmals bestätigt werden.
 
-Der AOG-Sammler verwendet standardmäßig **höchstens vier Daten-API-Anfragen je
-Lauf** plus **eine Robots-Prüfung**, also höchstens fünf Quellenanfragen. Er liest
-die erste allgemeine Seite und bis zu zwei rotierende Folgeseiten mit je 48
-Einträgen sowie die erste Abholseite mit höchstens 48 Einträgen: bis zu **144
-allgemeine plus 48 Abholsuchtreffer** vor Deduplizierung und Filterung, häufig
-weniger. Das belegt die Quellensuche, keinen verifizierten Ort. Es gelten
-mindestens **10 Sekunden Abstand** zwischen Anfragen und eine gespeicherte
-**Doppelstart-Sperre von neun Minuten**. Längere echte `Retry-After`- oder
-Sicherheitspausen werden nicht verkürzt. Technisch sind bis zu sechs Datenabrufe
-konfigurierbar; der Produktionsstandard ist vier. Der Zehn-Minuten-Takt ergibt
-nominal höchstens **720 HTTP-Anfragen pro Tag** einschließlich Robots-Prüfungen;
-bei **750 je UTC-Tag** stoppt die anwendungsseitige Tagesbegrenzung weitere
-Quellenanfragen. Keine Verkäufer-Volltexte werden nachgeladen; der Feed
-verspricht keine vollständige Abdeckung aller eBay-Auktionen.
+Der AOG-Sammler beginnt **alle 30 Minuten einen vollständigen Durchlauf der
+vorhandenen Quellensuchen**: allgemeine Suche und Abholsuche starten jeweils bei
+Offset 0 und werden bis zu ihrem aktuell gemeldeten Ende mit höchstens 48
+Einträgen pro Seite gelesen. Beide Suchen werden zunächst abwechselnd bedient;
+nach dem Ende einer Suche läuft nur die andere weiter. Es gibt keine feste
+Vier-Seiten-Stichprobe mehr und keine zusätzlichen eBay-Einzelabrufe.
+
+Eine Robots-Prüfung geht jedem tatsächlichen Scan voraus. Es gelten mindestens
+**10 Sekunden Abstand**, **29 Minuten Doppelstartschutz ab Beginn**, maximal
+**160 Datenanfragen / 25 Minuten Scanzeit** und **8.000 HTTP-Anfragen je UTC-Tag**
+einschließlich Robots-Prüfungen. Grenzen sind keine Sollmengen: am Ende der
+Quelle wird gestoppt. Längere echte `Retry-After`- und Sicherheitspausen bleiben
+erhalten. Bei beispielhaft 4.177 allgemeinen und 258 Abholtreffern sind etwa
+94 Datenseiten plus Robots nötig: ungefähr 16 Minuten bei zehn Sekunden Abstand.
+Treffer können sich währenddessen verändern; Duplikate, schwankende Gesamtzahlen,
+vorzeitige Seitenenden und Teilabbrüche bleiben in `coverage.searches` sichtbar.
+`traversal_completed` meldet den erreichten Quellendurchlauf, nicht eine
+vollständige oder atomare eBay-Marktabdeckung. Verkäufer-Volltexte werden nicht
+nachgeladen.
 
 Für den optionalen eBay-Adapter gelten **4.500 Browse-Aufrufe pro UTC-Tag**, höchstens **85 pro
 Lauf**, bis zu **20 Kategorien**, **2 Suchseiten je Kategorie und Suchmodus**
 sowie **35 Detailabrufe**. Das Gesamtbudget begrenzt diese Maxima; es garantiert
 nicht, dass jeder Lauf alle davon ausschöpft. Maximal 5.000 aufbewahrte Datensätze
 und Seiten mit 50 Kandidaten begrenzen die Datenmenge. Geplant ist ein Lauf alle
-zehn Minuten, auf Minute **03, 13, 23, 33, 43 und 53** jeder Stunde (UTC).
+30 Minuten, auf Minute **07 und 37** jeder Stunde (UTC).
 GitHub kann Läufe verzögern, aufreihen oder auslassen; der Takt ist keine
 Echtzeitgarantie. Der Anbieter nennt einen Cache von bis zu 15 Minuten: Ein neuer
-Workflow alle zehn Minuten bedeutet nicht zwangsläufig neue Quellenfakten.
+Workflow alle 30 Minuten bedeutet nicht zwangsläufig neue Quellenfakten.
 Abdeckung, Abrufzeit und Budgetstatus stehen im Feed.
 
 Die Tageszähler sind eine anwendungsseitige Bremse, kein kontoweiter harter
@@ -153,7 +158,8 @@ Es gibt keine zusätzlichen Preis-, Gebots- oder Transportpunkte mehr. Diese
 Fakten bleiben gesonderte Eignungsfilter. Der Interest-Score ist **keine
 Schnäppchenwahrscheinlichkeit** und keine Gewinn- oder Funktionsgarantie.
 Die Startseite zeigt standardmäßig Interest ab **40**; der Grenzwert ist
-änderbar, **0** zeigt auch noch unvollständig bewertete Einträge. Sortiert
+änderbar, **0** zeigt auch noch unvollständig bewertete Einträge, aber keine
+persönlich ausgeschlossenen Medien. Sortiert
 werden kann getrennt nach Interest, Scalp und Useability. Ausführliche Regeln,
 Quellenstatus und die LLM-Schnittstelle stehen auf der [Info-Unterseite](https://pogoner.github.io/fundgrube/info.html).
 
@@ -169,6 +175,16 @@ Potenzial senken; fehlende wesentliche Teile können zusätzlich die Eigenständ
 senken. Ein Prozessmessumformer braucht dagegen Sensorik, Verdrahtung und einen
 Anwendungsfall. Ein einzelner Handschuh oder Prospekt ist zwar eigenständig
 verwendbar, hat aber einen sehr niedrigen Scalp-Score.
+
+Eigenständig angebotene **Prospekte, Broschüren, Zeitschriften, Anleitungen und
+ähnliche Medien** passen nicht zum persönlichen Suchprofil und erscheinen weder
+in der Hauptliste noch in den beiden Top-10-Stöberlisten. Der separate Filter
+`personal_interest_excluded` ändert keine bereits verfassten Scores und lässt
+die Quellendaten zur Nachvollziehbarkeit im API-Bestand. „Bohrmaschine mit
+Bedienungsanleitung“ und Prospekthalter sind keine eigenständigen Drucksachen.
+Ebenso bewertet „Teil E1 für Carl Zeiss …“ das **Teil**, nicht das im Titel
+erwähnte Gesamtgerät. Diese Gegenstandsprüfung gilt vor Maschinen-Schlagwörtern
+in der Heuristik und ist ausdrücklich im LLM-Prompt verankert.
 
 `value_band` bedeutet nur **eher um 5, 50, 500 Euro oder unbekannt**. Diese groben
 Größenordnungen helfen, vollständige interessante Geräte von Zubehör,
@@ -371,7 +387,7 @@ externen JSON-Feed.
 | `hunter/ranking.py` | Eignung, getrennte Scalp-/Useability-Einordnung und abgeleiteter Interest |
 | `hunter/semantic.py` | optionale KI-Einordnung, striktes Schema, Cache und Tagesbudgets |
 | `hunter/reviews.py` | interaktive Einordnungen an Inhalt binden und befristet anwenden |
-| `hunter/pipeline.py` | Quellenfreigabe, rotierender Scan, Zustand und Ablauf |
+| `hunter/pipeline.py` | Quellenfreigabe, Quellenabgleich, Zustand und Ablauf |
 | `hunter/feed.py` | versioniertes Manifest, Kandidatenseiten, Details und Spezifikationen |
 | `scripts/github_snapshot.py` | atomare Snapshots im Zweig `data`, ohne Force-Push |
 | `scripts/pack_reviews.py` | echte interaktive Bewertungen prüfen und an Snapshot/Inhalt binden |

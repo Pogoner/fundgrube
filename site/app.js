@@ -74,6 +74,23 @@
     return {scalp, useability, interest: complete ? Math.floor((scalp * useability + 50) / 100) : null, complete, legacy: !modern};
   }
   const interest = item => scores(item).interest;
+  // New snapshots carry the separate personal-profile decision. The title
+  // guard only bridges older snapshots; it never alters a stored score.
+  function personalInterestExcluded(item) {
+    if (typeof item.personal_interest_excluded === "boolean") return item.personal_interest_excluded;
+    const title = String(item.title || "").toLocaleLowerCase("de-DE").replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss");
+    const media = /\b(?:zeitschrift(?:en)?|prospekt(?:e|en|s)?|katalog(?:e|en|s)?|broschuere(?:n)?|(?:bedienungs|betriebs|gebrauchs|wartungs|reparatur|montage|bau)?anleitung(?:en)?|ersatzteilkatalog(?:e|en|s)?|handb(?:uch|uecher)(?:s|n)?|magazin(?:e)?|heft(?:e|en)?|werbebl(?:att|aetter)|aufkleber|sticker)\b/g;
+    const hardware = [...title.matchAll(/\b(?:prospekt(?:e|en)?|broschuere(?:n)?|katalog(?:e|en)?|zeitschrift(?:en)?)[\s-]*(?:halter\w*|staender\w*|regal\w*|spender\w*|display\w*)\b/g)];
+    for (const mention of title.matchAll(media)) {
+      const prefix = title.slice(0, mention.index), suffix = title.slice(mention.index + mention[0].length);
+      if (hardware.some(match => match.index <= mention.index && mention.index < match.index + match[0].length)) continue;
+      if (/\b(?:halter\w*|staender\w*|regal\w*|spender\w*|display\w*)\s+(?:fuer)\s*$/.test(prefix)) continue;
+      if (/(?:\b(?:mit|inkl(?:usive)?\.?|einschliesslich|samt|plus|ohne)|[+&])(?:\s+[\w.-]+){0,5}\s*$/.test(prefix)) continue;
+      if (/^\s+(?:fehlt|fehlen|nicht\s+(?:dabei|vorhanden|enthalten))\b/.test(suffix)) continue;
+      return true;
+    }
+    return false;
+  }
   function minimumInterest() {
     const value = els["minimum-interest"].value.trim();
     const parsed = value === "" ? 40 : Number(value);
@@ -179,8 +196,12 @@
   function nearby(item) {
     return confirmedNearby(item) || matchingPickupSearch(item);
   }
+  function pickupObservationState(item) {
+    const observed = timestamp(item.pickup_search_observed_at);
+    return !Number.isFinite(observed) || observed > Date.now() ? "unknown" : Date.now() - observed > 7200000 ? "old" : "current";
+  }
   function visibleSignature(items) {
-    return JSON.stringify(items.map(item => [item.id, outsideWindow(item), unknownTime(item), eligibility(item), matchingPickupSearch(item)]));
+    return JSON.stringify(items.map(item => [item.id, outsideWindow(item), unknownTime(item), eligibility(item), matchingPickupSearch(item), pickupObservationState(item)]));
   }
   function cheapShipping(item) {
     const max = number(feed?.criteria?.max_shipping_eur);
@@ -197,6 +218,7 @@
     } else if (matchingPickupSearch(item)) {
       parts.push(`Abholsuche · ${item.pickup_search_radius_km} km`);
       parts.push("Nähe laut Quelle; Standort im Original prüfen");
+      if (pickupObservationState(item) === "old") parts.push(`Umkreissuchstand: ${dateText(item.pickup_search_observed_at)} (Berlin), älter als 2 Std.; nicht aktuell bestätigt`);
     } else if (item.pickup_available === true) parts.push("Abholung möglich · Nähe ungeklärt");
     if (item.city) parts.push(String(item.city));
     return parts.join(" · ");
@@ -265,12 +287,13 @@
     const notices = [];
     const blockers = array(feed?.blockers).filter(blocker => blocker && typeof blocker === "object");
     const routineCodes = ["aggregator_claims_only", "bounded_coverage"];
-    const routinePartial = !loadError && !aged && status === "partial" && aggregatorFeed()
+    const completedTraversal = feed?.coverage?.traversal_completed === true;
+    const routinePartial = !loadError && !aged && (status === "partial" || status === "live" && completedTraversal) && aggregatorFeed()
       && blockers.length > 0 && blockers.every(blocker => routineCodes.includes(blocker.code));
     if (loadError) notices.push(`<strong>Abruf fehlgeschlagen</strong><p>${esc(loadError)}${feed ? " Der zuletzt geladene Snapshot bleibt sichtbar; sein Datenstand ist unverändert." : ""}</p>`);
     if (isDemo) notices.push("<strong>DEMO · Keine echten Angebote</strong><p>Fiktive Artikel, Preise und Scores. Keine echten Auktionslinks.</p>");
     else if (routinePartial) {
-      notices.push('<p><strong>Begrenzter Teilscan.</strong> Aggregator-Cache, keine direkte eBay-Prüfung. Vor einem Gebot im Original prüfen. <a href="./info.html#source">Quelle &amp; Status ↗</a></p>');
+      notices.push(`<p><strong>${completedTraversal ? "Quellenlisten durchlaufen." : "Begrenzter Teilscan."}</strong> Aggregator-Cache, keine direkte eBay-Prüfung. Vor einem Gebot im Original prüfen. <a href="./info.html#coverage">Quelle &amp; Status ↗</a></p>`);
     } else if (feed && (status !== "live" || aged || blockers.length)) {
       const defaults = {unconfigured: "Die Datenquelle ist noch nicht vollständig eingerichtet.", partial: "Der Scan ist nur teilweise abgeschlossen; Hinweise unten beachten.", error: "Der letzte Import ist fehlgeschlagen. Bereits gespeicherte Angebote können veraltet sein.", disabled: "Der automatische Import ist derzeit deaktiviert."};
       notices.push(`<strong>${esc(aged ? "Datenstand prüfen" : statuses[status] || "Unbekannter Quellenstatus")}</strong><p>${esc(String(feed.status_message || defaults[status] || "Dieser Snapshot ist keine Echtzeit-Abfrage.").slice(0, 240))}${aged ? " Abrufstand älter als zwei Stunden oder ungeklärt." : ""} <a href="./info.html#source">Statusdetails ↗</a></p>`);
@@ -295,7 +318,7 @@
     if (number(loc.pickup_radius_km) !== null) badges.push(`Abholsuche ${loc.pickup_radius_km} km`);
     badges.push(`Ende < ${activeWindowHours()} Std.`);
     els.criteria.innerHTML = (badges.length ? badges : ["Suchkriterien offen"]).map(value => `<span>${esc(value)}</span>`).join("");
-    const buffered = feed.deals.filter(item => active(item) && eligibility(item) !== "excluded");
+    const buffered = feed.deals.filter(item => !personalInterestExcluded(item) && active(item) && eligibility(item) !== "excluded");
     const pending = buffered.filter(item => !scores(item).complete).length;
     const review = buffered.filter(item => eligibility(item) === "review").length;
     const minimum = minimumInterest();
@@ -315,6 +338,9 @@
   }
 
   function matchesFilters(item, strictActive = false) {
+    // Personal categories apply to every list, including score 0 and debug.
+    // They do not mutate intrinsic score axes or factual source eligibility.
+    if (personalInterestExcluded(item)) return false;
     const query = els.search.value.trim().toLocaleLowerCase("de-DE");
     const state = eligibility(item);
     // Browsing is an alternative score order, not a way around factual or
@@ -454,8 +480,8 @@
     const minimum = minimumInterest();
     els.browse.hidden = false;
     els["browse-summary"].textContent = minimum
-      ? `${selections.total} vollständig bewertete Angebote mit Interest < ${minimum} · nur im aktiven Zeitfenster · übrige Filter gelten · Überschneidungen möglich. Titel öffnen die Details.`
-      : "Bei Interest 0 stehen alle Score-Stände in der Hauptliste; darunter gibt es keine Stöbertreffer.";
+      ? `${selections.total} vollständig bewertete Angebote mit Interest < ${minimum} · nur im aktiven Zeitfenster · Suchprofil und übrige Filter gelten · Überschneidungen möglich. Titel öffnen die Details.`
+      : "Bei Interest 0 stehen alle Score-Stände deines Suchprofils in der Hauptliste; darunter gibt es keine Stöbertreffer.";
     for (const axis of ["scalp", "useability"]) {
       const list = selections[axis];
       els[`browse-${axis}-count`].textContent = `(${list.length})`;
@@ -476,14 +502,15 @@
     els.cards.innerHTML = list.map(card).join("");
     initializeImages();
     renderBrowse(browsing);
-    const hiddenOutside = feed.deals.filter(outsideWindow).length;
-    const hiddenUnknown = feed.deals.filter(item => unknownTime(item) && (els["show-expired"].checked || !outsideWindow(item))).length;
-    const pending = feed.deals.filter(item => active(item) && !scores(item).complete).length;
+    const profileDeals = feed.deals.filter(item => !personalInterestExcluded(item));
+    const hiddenOutside = profileDeals.filter(outsideWindow).length;
+    const hiddenUnknown = profileDeals.filter(item => unknownTime(item) && (els["show-expired"].checked || !outsideWindow(item))).length;
+    const pending = profileDeals.filter(item => active(item) && !scores(item).complete).length;
     const minimum = minimumInterest();
     els["result-summary"].textContent = `${list.length} von ${feed.deals.length} gespeicherten Angeboten sichtbar · Bestand bis Auktionsende · aktiv: Restlaufzeit < ${activeWindowHours()} Std. · ${minimum ? `Interest ≥ ${minimum}` : "alle Score-Stände"}${pending ? ` · ${pending} duale Bewertungen offen` : ""}${!els["show-expired"].checked && hiddenOutside ? ` · ${hiddenOutside} außerhalb Zeitfenster` : ""}${!els["show-stale"].checked && hiddenUnknown ? ` · ${hiddenUnknown} Zeitstempel ungeklärt` : ""}${els["show-stale"].checked || els["show-expired"].checked ? " · ACHTUNG: Debug-Filter lässt ungültige Zeitstände zu" : ""}${isDemo ? " · fiktive Beispiele" : ""}`;
     els.empty.hidden = list.length > 0;
     els["empty-show-all-interest"].hidden = minimum === 0 || !feed.deals.length;
-    els["empty-description"].textContent = feed.deals.length ? `Kein Angebot erfüllt diese Filter${minimum ? ` und Interest ≥ ${minimum}` : ""}. „Alles (0)“ zeigt auch unvollständige Bewertungen. Aktives Zeitfenster: ${windowLabel().toLowerCase()}; bereits abgelaufene Angebote bleiben ausgeblendet.` : "Noch keine Angebote im Snapshot. Den Quellenstatus oben prüfen; die Demo enthält ausschließlich fiktive Beispiele.";
+    els["empty-description"].textContent = feed.deals.length ? `Kein Angebot erfüllt diese Filter${minimum ? ` und Interest ≥ ${minimum}` : ""}. „Alles (0)“ zeigt auch unvollständige Bewertungen; dein Suchprofil gilt weiter. Aktives Zeitfenster: ${windowLabel().toLowerCase()}; bereits abgelaufene Angebote bleiben ausgeblendet.` : "Noch keine Angebote im Snapshot. Den Quellenstatus oben prüfen; die Demo enthält ausschließlich fiktive Beispiele.";
     if (activeId) (detailButton(activeId, activeListId) || els.search).focus({preventScroll: true});
   }
   function render() {
@@ -512,6 +539,7 @@
       ["Basis / Konfidenz", `${basisText(item)} / ${confidenceText(item)}`, false]
     ];
     if (interactiveAssessed(item)) fields.push(["ChatGPT-Sichtung (Berlin)", dateText(item.semantic_assessed_at), !Number.isFinite(timestamp(item.semantic_assessed_at))]);
+    if (isAggregator(item) && item.pickup_search_confirmed === true) fields.push(["Abholsuchstand (Berlin)", `${dateText(item.pickup_search_observed_at)}${pickupObservationState(item) === "old" ? " · älter als 2 Std.; nicht aktuell bestätigt" : pickupObservationState(item) === "unknown" ? " · Zeitpunkt nicht belegt" : ""}`, pickupObservationState(item) !== "current"]);
     els["dialog-content"].innerHTML = `${isDemo ? '<p class="demo-stamp">FIKTIVES BEISPIEL · KEINE ECHTE AUKTION</p>' : ""}
       <p class="detail-disclaimer">${isDemo ? "Alle folgenden Angaben sind erfunden und dienen nur zur Demonstration." : `${isAggregator(item) ? "Beim Aggregator beobachtet" : "Quellenstand"}: ${esc(dateText(observedAt(item)))} (Berlin). ${isAggregator(item) ? "Zwischengespeicherte Drittquelle, nicht direkt bei eBay verifiziert. " : ""}${stale(item) ? "Ältere Quellenbeobachtung oder Datenalter nicht belegt: nicht aktuell bestätigt. " : ""}${outsideWindow(item) || unknownTime(item) ? "Außerhalb des aktiven Zeitfensters oder Zeitstempel ungeklärt. " : ""}Metadaten bleiben bis zum Auktionsende erhalten; ihr Quellenalter wird dadurch nicht erneuert. Aktive Auswahl: ${esc(windowLabel().toLowerCase())}. Vor jedem Gebot Preise, Mitbieter, Zustand, Versand und Mindestpreis bei eBay kontrollieren.`}</p>
       <div class="detail-grid">${fields.map(([label, value, warning]) => `<div class="detail-cell${warning ? " warning" : ""}"><small>${esc(label)}</small><strong>${esc(value)}</strong></div>`).join("")}</div>

@@ -5,7 +5,7 @@ import unittest
 from datetime import datetime, timedelta, timezone
 
 from hunter.models import iso_time, normalize_item
-from hunter.pipeline import new_state, run_pipeline
+from hunter.pipeline import ConfigurationError, new_state, run_pipeline
 from hunter.reviews import content_fingerprint
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
@@ -66,6 +66,55 @@ class PublicSourcePipelineTests(unittest.TestCase):
         self.assertIsNone(feed["coverage"]["cycle_estimate_hours"])
         self.assertFalse(feed["coverage"]["complete"])
 
+    def test_full_source_traversal_contract_is_separate_from_global_completeness(self):
+        result = response(status="live", pages=94)
+        result["coverage"].update(traversal_completed=True, scan_started_at=iso_time(NOW),
+                                   scan_completed_at=iso_time(NOW + timedelta(minutes=16)),
+                                   last_successful_full_scan_at=iso_time(NOW + timedelta(minutes=16)))
+        result["finished_at"] = iso_time(NOW + timedelta(minutes=16))
+        feed, state = run(result)
+        self.assertEqual(feed["source_status"], "live")
+        self.assertTrue(feed["coverage"]["traversal_completed"])
+        self.assertFalse(feed["coverage"]["complete"])
+        self.assertEqual(feed["stats"]["searches_succeeded"], 94)
+        self.assertEqual(feed["stats"]["categories_completed"], 1)
+        self.assertEqual(feed["generated_at"], result["finished_at"])
+        self.assertEqual(feed["last_successful_scan_at"], result["finished_at"])
+        self.assertEqual(state["updated_at"], result["finished_at"])
+
+    def test_more_than_one_thousand_collected_rows_are_accepted(self):
+        collected = [item(id=f"v1|{123456780000 + number}|0", url=f"https://www.ebay.de/itm/{123456780000 + number}")
+                     for number in range(1200)]
+        feed, state = run(response(collected, status="live", pages=26))
+        self.assertEqual(len(feed["deals"]), 1200)
+        self.assertEqual(len(state["records"]), 1200)
+        self.assertEqual(feed["stats"]["omitted_records"], 0)
+        self.assertTrue(feed["coverage"]["all_collected_records_retained"])
+
+    def test_completion_time_accepts_late_observations_and_prunes_ended_during_scan(self):
+        _, previous = run(response([item(ends_at=iso_time(NOW + timedelta(minutes=5)))]))
+        late = item(id="v1|123456789013|0", url="https://www.ebay.de/itm/123456789013",
+                    source_observed_at=iso_time(NOW + timedelta(minutes=1)))
+        expired = item(id="v1|123456789014|0", url="https://www.ebay.de/itm/123456789014",
+                       ends_at=iso_time(NOW + timedelta(minutes=10)))
+        result = response([late, expired], finished_at=iso_time(NOW + timedelta(minutes=16)))
+        feed, state = run(result, state=previous)
+        self.assertEqual([row["id"] for row in feed["deals"]], [late["id"]])
+        self.assertEqual(feed["deals"][0]["source_observed_at"], late["source_observed_at"])
+        self.assertEqual(state["records"], feed["deals"])
+
+    def test_completion_time_cannot_be_before_start_or_unbounded_future(self):
+        for value in (iso_time(NOW - timedelta(seconds=1)), iso_time(NOW + timedelta(hours=1)), "invalid"):
+            with self.subTest(value=value), self.assertRaises(ConfigurationError):
+                run(response(finished_at=value))
+
+    def test_carried_observation_becomes_stale_during_long_scan(self):
+        _, previous = run(response([item(source_observed_at=iso_time(NOW - timedelta(minutes=80)))]))
+        feed, _ = run(response([], pages=0, status="error", finished_at=iso_time(NOW + timedelta(minutes=16))), state=previous)
+        self.assertTrue(feed["deals"][0]["carried"])
+        self.assertTrue(feed["deals"][0]["stale"])
+        self.assertEqual(feed["deals"][0]["last_seen_at"], iso_time(NOW - timedelta(minutes=80)))
+
     def test_explicit_publication_switch_still_disables_network(self):
         called = []
         feed, _ = run(environ={}, aog_collect=lambda *args: called.append(args))
@@ -113,6 +162,29 @@ class PublicSourcePipelineTests(unittest.TestCase):
                 normalized = normalize_item(item(**changes), NOW)
                 self.assertFalse(normalized["pickup_search_confirmed"])
                 self.assertNotIn("pickup_search_postcode", normalized)
+
+    def test_invalid_independent_pickup_time_drops_only_radius_claim(self):
+        for value in (None, "invalid", iso_time(NOW + timedelta(seconds=1))):
+            with self.subTest(value=value):
+                source = item(pickup_search_observed_at=value)
+                normalized = normalize_item(source, NOW)
+                self.assertIsNotNone(normalized)
+                self.assertFalse(normalized["pickup_search_confirmed"])
+                self.assertNotIn("pickup_search_postcode", normalized)
+                self.assertNotIn("pickup_search_observed_at", normalized)
+                self.assertEqual(normalized["source_observed_at"], iso_time(OBSERVED))
+                self.assertEqual(normalized["price_eur"], 1)
+                self.assertEqual(normalized["bid_count"], 0)
+                self.assertEqual(normalized["title"], source["title"])
+
+    def test_legacy_pickup_clock_migrates_only_when_field_absent(self):
+        legacy = normalize_item(item(), NOW)
+        self.assertTrue(legacy["pickup_search_confirmed"])
+        self.assertEqual(legacy["pickup_search_observed_at"], iso_time(OBSERVED))
+        separate = normalize_item(item(pickup_search_observed_at=iso_time(NOW - timedelta(hours=3))), NOW)
+        self.assertTrue(separate["pickup_search_confirmed"])
+        self.assertEqual(separate["pickup_search_observed_at"], iso_time(NOW - timedelta(hours=3)))
+        self.assertEqual(separate["source_observed_at"], iso_time(OBSERVED))
 
     def test_future_or_missing_source_timestamp_is_not_current(self):
         for value in (None, "not-a-time", iso_time(NOW + timedelta(minutes=1))):
@@ -211,6 +283,41 @@ class PublicSourcePipelineTests(unittest.TestCase):
         feed, _ = run(response([general]), state=previous, at=NOW + timedelta(minutes=30))
         self.assertFalse(feed["deals"][0]["pickup_search_confirmed"])
         self.assertNotIn("pickup_search_postcode", feed["deals"][0])
+
+    def test_partial_pickup_traversal_preserves_separately_dated_old_radius_evidence(self):
+        _, previous = run()
+        general = item(pickup_search_confirmed=False, pickup_available=None,
+                       source_observed_at=iso_time(NOW + timedelta(minutes=15)))
+        result = response([general])
+        result["coverage"]["searches"] = {"pickup": {"enabled": True, "traversal_completed": False}}
+        feed, _ = run(result, state=previous, at=NOW + timedelta(minutes=30))
+        row = feed["deals"][0]
+        self.assertTrue(row["pickup_search_confirmed"])
+        self.assertEqual(row["source_observed_at"], general["source_observed_at"])
+        self.assertEqual(row["pickup_search_observed_at"], iso_time(OBSERVED))
+        self.assertEqual(row["last_seen_at"], general["source_observed_at"])
+
+    def test_completed_pickup_search_or_explicit_no_pickup_does_not_reuse_old_claim(self):
+        _, previous = run()
+        for completed, available in ((True, None), (False, False)):
+            with self.subTest(completed=completed, available=available):
+                general = item(pickup_search_confirmed=False, pickup_available=available,
+                               source_observed_at=iso_time(NOW + timedelta(minutes=15)))
+                result = response([general])
+                result["coverage"]["searches"] = {"pickup": {"enabled": True, "traversal_completed": completed}}
+                feed, _ = run(result, state=previous, at=NOW + timedelta(minutes=30))
+                self.assertFalse(feed["deals"][0]["pickup_search_confirmed"])
+                self.assertNotIn("pickup_search_observed_at", feed["deals"][0])
+
+    def test_absence_from_a_partial_page_never_deletes_still_running_records(self):
+        _, previous = run()
+        result = response([], status="partial", pages=1)
+        result["coverage"].update(traversal_completed=False, last_successful_full_scan_at=iso_time(NOW - timedelta(hours=1)))
+        feed, _ = run(result, state=previous, at=NOW + timedelta(minutes=30))
+        self.assertEqual(len(feed["deals"]), 1)
+        self.assertTrue(feed["deals"][0]["carried"])
+        self.assertEqual(feed["deals"][0]["source_observed_at"], iso_time(OBSERVED))
+        self.assertEqual(feed["coverage"]["last_successful_full_scan_at"], iso_time(NOW - timedelta(hours=1)))
 
     def test_older_cached_page_cannot_restore_obsolete_zero_bid_price(self):
         _, previous = run(response([item(price_eur=5, bid_count=1)]))
@@ -318,9 +425,9 @@ class PublicSourcePipelineTests(unittest.TestCase):
                 self.assertFalse(feed["ai_enabled"])
                 self.assertEqual(row, state["records"][0])
 
-    def test_published_schedule_metadata_matches_ten_minute_config(self):
+    def test_published_schedule_metadata_matches_half_hour_config(self):
         feed, _ = run()
-        self.assertEqual(feed["coverage"]["schedule_interval_minutes"], 10)
+        self.assertEqual(feed["coverage"]["schedule_interval_minutes"], 30)
 
 
 if __name__ == "__main__":

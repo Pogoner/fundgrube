@@ -32,6 +32,14 @@ unbekannte Bewertungen sind keine Nullwerte. Einträge dürfen in beiden Listen
 vorkommen. Rang, Titel, alle drei Scores, Herkunft und wesentliche Kosten/Risiken
 bleiben ohne ein zweites Raster aus zwanzig großen Bildkarten erkennbar.
 
+Ein separates persönliches Profil blendet allein angebotene Prospekte,
+Broschüren, Kataloge, Anleitungen und Zeitschriften aus Haupt- und Stöberlisten
+aus, auch bei Interest 0 und Diagnosefiltern. Die Anzeige verändert dafür keine
+gespeicherten Scalp-/Useability-Werte und keine Bewertungsherkunft. Zahl und
+Begründung der Profilausschlüsse stehen auf der Info-Seite, nicht in einer neuen
+Filterreihe. Maschinen mit beiliegenden Unterlagen und echte Gerätekomponenten
+werden nicht allein wegen ähnlicher Titelwörter ausgeschlossen.
+
 Auf schmalen Bildschirmen bilden Karten und Filter eine gut bedienbare Spalte.
 Kein horizontales Scrollen der gesamten Seite. Wichtige Handlungen funktionieren
 ohne Hover; Fokus, Touch-Ziele und Dialogbedienung bleiben sichtbar.
@@ -48,11 +56,24 @@ Die GUI berechnet den Zeithorizont auch bei einer länger geöffneten Seite neu.
 Ältere Quellenstände bleiben als solche markiert. Ein Fund wird durch
 Wiederanzeige oder Neubau nicht erneut verifiziert. „0 Gebote“ und Preise
 bezeichnen den Quellenstand; die 50-km-Abholsuche ist kein bestätigter Standort.
+Die Abholsuche hat einen eigenen Beobachtungszeitpunkt: Ein neuer allgemeiner
+Preis-/Gebotsstand darf alte Radius-Evidenz nicht verjüngen. Details zeigen beide
+Zeitbezüge getrennt; ein über zwei Stunden alter Umkreissuchstand wird auch in
+der Transportzeile der Karte ausdrücklich markiert.
 Scores, LLM-/Heuristik-Herkunft und tatsächliche Eignungsfilter bleiben getrennt.
 Scalp und Useability sind am festen Rubrikmaßstab orientierte Einschätzungen,
 keine relativen Rangplätze: Neue Angebote verändern bestehende Scores nicht.
 Jeder Artikel behält den Zeitpunkt seiner tatsächlichen Bewertung. Die Anzeige
 eines neuen Snapshots ist weder eine neue Bewertung noch eine Quellenprüfung.
+
+Der geplante 30-Minuten-Abgleich versucht, die allgemeine und die Abholsuche
+jedes Mal vollständig zu durchlaufen. Die Info-Seite zeigt den tatsächlichen
+Durchlaufstatus, Seitenfortschritt, Abbrüche und den letzten erfolgreichen
+vollständigen Quellenlauf. Das Erreichen aller gemeldeten Seiten ist weder ein
+atomarer Snapshot der veränderlichen Quelle noch eine eBay-Vollabdeckungszusage.
+Ein erfolgreiches Deployment ersetzt diesen Status nicht. Die Hauptseite bleibt
+kompakt; ein abgeschlossener Quellenlauf darf dort nicht als bloßer Teilscan
+bezeichnet werden, aber auch keine direkte eBay-Verifikation suggerieren.
 
 ## Bilder, Bewegung und Fehler
 
@@ -77,6 +98,9 @@ Score-Logik und Faktenintegrität unverändert testen; strikte 72-Stunden-Grenze
 ältere Beobachtungen, dynamischen Fenstereintritt und Bildfehler regressionsprüfen.
 Stöberlisten bei veränderter Interest-Schwelle, Sachfiltern und Zeitgrenzen
 mitprüfen; abgelaufene oder unvollständig bewertete Angebote nicht einschleusen.
+Profilausschlüsse auch bei hohen LLM-Scores und Interesse 0 in allen Listen
+prüfen; echte Geräte mit Anleitung dürfen dabei nicht verschwinden. Vollständige,
+unvollständige und ältere Quellenlauf-Metadaten müssen unterscheidbar bleiben.
 HTML/CSS/JS-Versionen in beiden Seiten gemeinsam anheben. Nach Deployment
 Dashboard, Info-Navigation, Filter, Detailabruf, Bilder und Daten-Snapshot prüfen.
 Nicht verfügbare Browser-/Viewport-Prüfungen ausdrücklich offenlassen.

@@ -5,8 +5,8 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # Alle 10 Minuten (UTC), abseits des Stundenanfangs; nicht echtzeitgarantiert.
-    - cron: "3,13,23,33,43,53 * * * *"
+    # Alle 30 Minuten (UTC), abseits des Stundenanfangs; keine Zeitgarantie.
+    - cron: "7,37 * * * *"
 
 permissions:
   contents: read

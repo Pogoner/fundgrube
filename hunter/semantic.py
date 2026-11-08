@@ -19,7 +19,10 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 
 ENDPOINT = "https://api.openai.com/v1/responses"
-PROMPT_VERSION = "fundgrube-semantic-v2"
+# Prompt revision only: score axes remain V2 and independent interactive reviews
+# keep their original provenance. Old API cache entries are not replayed under
+# the clarified offered-object instructions.
+PROMPT_VERSION = "fundgrube-semantic-v2-object-scope-1"
 CACHE_VERSION = 2
 PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "semantic-screening.md"
 DOCUMENTATION_MARKER = "<!-- Betriebshinweis:"
@@ -298,7 +301,7 @@ def _reservation(payload: dict[str, Any]) -> int:
 
 
 def _apply(item: dict[str, Any], assessment: dict[str, Any], assessed_at: str) -> dict[str, Any]:
-    from hunter.ranking import apply_semantic
+    from hunter.ranking import apply_interest_profile, apply_semantic
 
     enriched = apply_semantic(item, assessment)
     result = dict(item)
@@ -307,7 +310,7 @@ def _apply(item: dict[str, Any], assessment: dict[str, Any], assessed_at: str) -
     result.update({key: enriched[key] for key in ANNOTATION_FIELDS if key in enriched})
     result.pop("semantic_review_mode", None)
     result["semantic_assessed_at"] = assessed_at
-    return result
+    return apply_interest_profile(result)
 
 
 def enrich_semantics(

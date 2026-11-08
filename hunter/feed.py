@@ -19,6 +19,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
+from hunter.ranking import apply_interest_profile
+
 
 SCHEMA_VERSION = 3
 SCORE_VERSION = 2
@@ -70,6 +72,7 @@ DEAL_FIELDS = (
     "category_id", "category_name", "model", "completeness", "condition_claim",
     "source_provider", "source_url", "source_observed_at", "verification_level", "pickup_available",
     "pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km",
+    "pickup_search_observed_at", "personal_interest_excluded", "personal_interest_reason",
     "semantic_review_mode",
     "score_version", "scalp_score", "useability_score", "useability_reason", "dependencies",
     "eligibility_without_time_window",
@@ -135,6 +138,13 @@ def _scoring_contract() -> dict[str, Any]:
         },
         "legacy_policy": "Items with score_version 1 retain a known old overall score as Scalp; Useability and Interest stay null until reassessed. No missing factor is invented.",
         "eligibility_is_separate": True,
+        "personal_interest_filter": {
+            "excluded_field": "personal_interest_excluded",
+            "reason_field": "personal_interest_reason",
+            "excludes_standalone_media": True,
+            "changes_scores": False,
+            "applies_to": ["main", "top_scalp", "top_useability"],
+        },
         "is_appraisal": False,
         "condition_verified": False,
         "useability_is_condition_probability": False,
@@ -230,7 +240,11 @@ def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, act
     # become legitimate facts merely because an auction is still running.
     if seen is None or end is None or end <= at or seen > at:
         return None
-    item = {key: copy.deepcopy(raw[key]) for key in DEAL_FIELDS if key in raw}
+    # Apply the personal profile at the publication boundary as well, so an old
+    # or externally supplied review cannot reintroduce an explicit brochure.
+    # This never rewrites semantic scores, review timestamps or source facts.
+    profiled = apply_interest_profile(raw)
+    item = {key: copy.deepcopy(profiled[key]) for key in DEAL_FIELDS if key in profiled}
     item["id"] = identifier
     if observed is not None:
         item["source_observed_at"] = _iso(observed)
@@ -240,17 +254,25 @@ def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, act
         # A match from an aggregator radius query is not a verified physical
         # location. Keep the stronger eBay/radius-verification flag false.
         item["local_pickup_confirmed"] = False
-    pickup_fields = ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km")
+    pickup_observed = None
+    pickup_fields = ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km", "pickup_search_observed_at")
     if any(key in item for key in pickup_fields):
         postcode, radius = item.get("pickup_search_postcode"), item.get("pickup_search_radius_km")
+        pickup_observed = _timestamp(item.get("pickup_search_observed_at", item.get("source_observed_at")))
         valid_context = (
             aggregator and observed is not None and isinstance(postcode, str)
-            and re.fullmatch(r"[0-9]{5}", postcode) is not None and _number(radius) and radius > 0
+            and re.fullmatch(r"[0-9]{5}", postcode) is not None and _number(radius) and 0 < radius <= 200
+            and pickup_observed is not None and pickup_observed <= at
+            and item.get("pickup_available") is not False
         )
         item["pickup_search_confirmed"] = item.get("pickup_search_confirmed") is True and valid_context
-        if not valid_context:
+        if item["pickup_search_confirmed"]:
+            item["pickup_search_observed_at"] = _iso(pickup_observed)
+        else:
             item.pop("pickup_search_postcode", None)
             item.pop("pickup_search_radius_km", None)
+            item.pop("pickup_search_observed_at", None)
+            pickup_observed = None
     for key in ("title", "description", "url", "image", "city", "postcode", "condition", "value_reason"):
         value = item.get(key)
         if value is not None and not isinstance(value, str):
@@ -336,6 +358,8 @@ def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, act
         notices.append("Beschreibung nicht veröffentlicht: eigener Text-Zeitstempel fehlt oder liegt außerhalb der separaten Textfrist.")
     if aggregator:
         notices.append("Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft.")
+    if pickup_observed is not None and at - pickup_observed > timedelta(hours=SOURCE_WARNING_AFTER_HOURS):
+        notices.append("Umkreissuche älter als 2 Stunden; eine neuere allgemeine Preisbeobachtung bestätigt die frühere Abholmöglichkeit nicht erneut.")
     item["risks"] = [value for value in item["risks"] if value not in notices][:20 - len(notices)] + notices
     item["last_seen_at"], item["ends_at"] = _iso(seen), _iso(end)
     # This is a description-observation time, not the seller's modification time.
@@ -462,7 +486,8 @@ def _prepare(feed: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]]
         retained=len(items),
         active=active_count,
         outside_active_window=len(items) - active_count,
-        shortlisted=sum(item["eligibility"] != "excluded" for item in items),
+        shortlisted=sum(item["eligibility"] != "excluded" and not item["personal_interest_excluded"] for item in items),
+        personal_interest_excluded=sum(item["personal_interest_excluded"] for item in items),
         eligible=sum(item["eligibility"] == "eligible" for item in items),
         review=sum(item["eligibility"] == "review" for item in items),
         excluded=sum(item["eligibility"] == "excluded" for item in items),
@@ -538,7 +563,7 @@ Review-Store Version 3 speichert Bewertung und ursprünglichen Zeitpunkt pro Art
 7. Beobachtete Angebotsdaten von Einschätzungen trennen. `null` heißt unbekannt, nicht null Euro, null Gebote, kostenloser Versand oder kein Mindestpreis. `reserve_status: met` ist nicht `none`. Ein bestätigter Suchradius ist keine genaue Entfernung.
 8. Scoring V2: `scalp_score` und `useability_score` sind ganze Zahlen 0–100. `interest_score = {INTEREST_FORMULA}`; `score` ist nur dessen Alias. Keine Faktenpunkte, Kategorie-Caps oder zusätzlichen Wahrscheinlichkeitsfaktoren auf diese Formel anwenden. `value_reason` begründet Scalp, `useability_reason` und `dependencies` erklären praktische Abhängigkeiten. Useability ist **keine Wahrscheinlichkeit der Funktionsfähigkeit**. Bei einem fehlenden Faktor ist Interest `null`, nicht null Punkte.
 9. Pro Angebot `score_version` lesen. Version 1 (einschließlich unversionierter Altwerte) darf nur einen belegten früheren Gesamtscore als Scalp-Anhaltspunkt behalten; Useability und neuer Interest bleiben `null` bis zur tatsächlichen neuen Bewertung. Den alten Gesamtscore nicht als neuen Interest ausgeben und fehlende Useability weder auf 0 noch 100 setzen. `semantic_interest` ist nur ein veralteter Alias von Scalp. `value_band` bleibt eine grobe, unsichere Größenordnung, keine konkrete Wertermittlung.
-10. `assessment_basis` und `assessment_confidence` mitnennen; ohne Belege keine technische Funktionsfähigkeit garantieren. `semantic_review_mode: interactive` kennzeichnet eine inhaltlich gebundene ChatGPT-Sichtung, nicht einen automatischen API-Aufruf. `interactive_review` zählt angewendete und noch ungesichtete Angebote. Nur gültige V2-Einordnungen mit beiden Faktoren als vollständige neue Bewertung wiederverwenden; Altwerte benötigen die fehlende Useability-Sichtung. Preis, Gebote, Ablauf, Quellenalter und Transport separat prüfen; ein hoher Interest überstimmt `eligibility` nicht.
+10. `assessment_basis` und `assessment_confidence` mitnennen; ohne Belege keine technische Funktionsfähigkeit garantieren. `semantic_review_mode: interactive` kennzeichnet eine inhaltlich gebundene ChatGPT-Sichtung, nicht einen automatischen API-Aufruf. `interactive_review` zählt angewendete und noch ungesichtete Angebote. Nur gültige V2-Einordnungen mit beiden Faktoren als vollständige neue Bewertung wiederverwenden; Altwerte benötigen die fehlende Useability-Sichtung. Preis, Gebote, Ablauf, Quellenalter und Transport separat prüfen; ein hoher Interest überstimmt `eligibility` nicht. `personal_interest_excluded: true` schließt eigenständig angebotene Medien aus dem persönlichen Profil aus, auch aus beiden Top-10-Stöberlisten und unabhängig von hohen Einzel-Scores. Den Rohdatensatz oder dessen ursprüngliche Bewertung deshalb nicht löschen oder verändern.
 11. Für die Shortlist kurze Gründe, Abhängigkeiten, fehlende Informationen, Versand/Abholung und Ablauf nennen. Originalangebote vor jedem Gebot kontrollieren. Der Feed ist weder vollständig noch in Echtzeit und führt niemals selbst Transaktionen aus.
 
 ## Scoring ist keine Funktions- oder Preisgarantie
@@ -550,6 +575,20 @@ Zubehör oder besondere Infrastruktur? Das ist eine andere Frage als die nach
 Defekten, Echtheit oder einer erfolgreichen Inbetriebnahme. `dependencies: []`
 bedeutet nur, dass keine Abhängigkeiten notiert wurden, nicht dass völlige
 Unabhängigkeit bewiesen ist. Auch `product_kind: component` ist zulässig.
+
+Zuerst den tatsächlich angebotenen Gegenstand bestimmen. „Glas - Teil E1 für
+Carl Zeiss … Mikroskop“ ist ein Teil für ein Gerät, nicht das Gesamtgerät.
+„KAESER … BROSCHÜRE 12 Seiten“ ist eine Drucksache über Kompressoren, kein
+Kompressor. Wert und Eigenständigkeit einer nur erwähnten Hauptmaschine nicht
+auf den Liefergegenstand übertragen. Ein Gerät **mit** Bedienungsanleitung oder
+ein Prospekthalter ist dagegen keine eigenständig angebotene Drucksache. Die
+persönliche Medienauswahl ist über `personal_interest_excluded` und
+`personal_interest_reason` separat dokumentiert; ein als Lektüre unabhängiger
+Prospekt wird nicht durch eine künstlich geänderte Useability verborgen.
+`stats.personal_interest_excluded` zählt diese Einträge im gesamten Bestand;
+`stats.shortlisted` berücksichtigt Fakten-/Zeitfilter und Profil, noch nicht
+den veränderbaren Interest-Grenzwert der GUI. `eligible`, `review` und
+`excluded` bleiben davon unabhängige Eignungszählungen.
 
 Der Export berechnet gültige V2-Faktoren kanonisch neu; ein mitgelieferter veralteter
 Interest wird nicht blind übernommen. Gerundet wird exakt half-up, beispielsweise
@@ -587,7 +626,9 @@ Das Quellenalter allein entfernt also keine laufende Auktion. Vor einer
 Entscheidung ist der tatsächliche Angebotsstand erneut im Original zu prüfen.
 Die Quelle wird über den öffentlich vorhandenen Filter „später endend“ gelesen;
 72 Stunden werden lokal geprüft, nicht als vorgelagerter Anbieterfilter behauptet.
-Anfragebudget, Rotation und Kapazität begrenzen weiterhin die Abdeckung.
+Anfrage-/Zeitbudgets, veränderliche Quellseiten und Kapazität begrenzen weiterhin
+die Abdeckung; die frühere Vier-Seiten-Rotation wurde durch einen vollständigen
+Durchlauf beider aktivierter Quellensuchen ersetzt.
 Schema-2-Leser dürfen `null` nicht in eine 0-Stunden-Frist umwandeln oder ihre
 alte `last_seen_at + 24h`-Regel weiterverwenden; sie benötigen ein Vertragsupdate.
 
@@ -608,15 +649,46 @@ Funktionsprüfung und keinen fehlenden Mindestpreis ableiten. `pickup_available`
 ist höchstens eine Abholmöglichkeit laut Quelle, nicht die Bestätigung eines
 Abholorts im Suchradius; `null` heißt unbekannt. `coverage.source_claims_only`
 bleibt `true`, `coverage.complete` bleibt `false`; `source_total_reported` zählt
-nur laut Anbieter vorhandene Treffer. `partial` kennzeichnet einen verwendbaren,
-aber nur teilweise gelesenen Ausschnitt. Alle tatsächlich gelieferten Seiten
+nur laut Anbieter vorhandene Treffer. Alle tatsächlich gelieferten Seiten
 lesen, ohne daraus vollständige Markt-Abdeckung abzuleiten.
+
+## Vollständiger Quellendurchlauf alle 30 Minuten
+
+Der GitHub-Zeitplan plant Starts um Minute 07 und 37 jeder UTC-Stunde. GitHub kann
+sie verzögern, aufreihen oder auslassen; ein Zeitplan ist kein Betriebsnachweis.
+Nach der Robots-Prüfung laufen allgemeine Suche und aktivierte Abholsuche ab
+Offset 0 mit je höchstens 48 Einträgen bis zum jeweils gemeldeten Ende. Solange
+beide offen sind, werden Seiten abwechselnd gelesen. Keine zusätzlichen
+eBay-Einzelabrufe oder Verkäufertexte. Harte Grenzen: 160 Datenanfragen, 25
+Minuten Scanzeit, mindestens zehn Sekunden Anfrageabstand, 29 Minuten
+Doppelstartschutz ab Beginn und 8.000 HTTP-Anfragen je UTC-Tag. Längere echte
+Warte-/Sperrzeiten bleiben bestehen; leere, kurze oder wiederholte Seiten
+werden nicht durch unbegrenztes Nachladen kaschiert.
+
+`coverage.traversal_completed` bedeutet, dass alle aktivierten Quellensuchen
+in diesem Lauf ihr damals gemeldetes Ende erreicht haben. Es ist **nicht**
+`coverage.complete`: Offset-Listen bewegen sich und sind keine atomare eBay-Sicht.
+`scan_started_at`, `scan_finished_at`, `scan_completed_at` und
+`last_successful_full_scan_at` trennen Versuch, Laufende und zuletzt gelungenen
+Durchlauf. `searches.general` / `searches.pickup` nennen Seiten, eindeutige und
+doppelte Datensätze, Anfangs-/End-Trefferzahlen, verbleibende bzw. nicht gesehene
+Schätzmengen und Abbruchgründe. `traversal_completed: false` darf auch bei
+neuem `generated_at` nicht als Vollscan berichtet werden. Fehlende alte IDs
+bleiben ohne neuen Gegenbeleg nur alte Beobachtungen, keine frisch bestätigten
+Angebote. Speicherauslassungen sind zusätzlich zu prüfen.
+
+Jede Seite behält ihren eigenen konservativen Beobachtungszeitpunkt. Das
+abschließende `generated_at` und die Endzeitprüfung liegen am Scanende; früh
+gelesene Angebote werden dadurch nicht erneut bestätigt.
 
 Eine getrennte Umkreissuche kann vorläufige Abhol-Kandidaten liefern.
 `pickup_search_confirmed: true` bedeutet nur, dass der Aggregator das Angebot
 für `pickup_search_postcode` und `pickup_search_radius_km` zurückgegeben hat.
-`source_observed_at` datiert auch diese Beobachtung. Das beweist weder tatsächliche
-Nähe noch eine genaue Entfernung; `local_pickup_confirmed` bleibt `false`.
+`pickup_search_observed_at` datiert diese unabhängige Beobachtung. Eine spätere
+allgemeine Preis-/Gebotsbeobachtung erneuert sie nicht. Bei älteren Datensätzen
+ohne eigenen Zeitpunkt wird nur deren vorhandener Quellenzeitpunkt übernommen,
+nicht die neue Exportzeit. Das beweist weder tatsächliche Nähe noch eine genaue
+Entfernung; `local_pickup_confirmed` bleibt `false`.
 Als Prüffall formulieren: „Abholung laut Umkreissuche; Standort im Original prüfen“.
 Ungültige Postleitzahlen oder Radien verlieren die Suchbestätigung.
 
