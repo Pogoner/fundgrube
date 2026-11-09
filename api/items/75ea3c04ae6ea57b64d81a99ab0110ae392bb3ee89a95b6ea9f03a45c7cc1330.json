@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-09T09:48:49Z",
+    "evaluated_at": "2026-11-09T13:47:59Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-09T09:48:49Z",
+  "generated_at": "2026-11-09T13:47:59Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "New",
-    "content_updated_at": "2026-11-09T09:27:28Z",
+    "content_updated_at": "2026-11-09T13:24:19Z",
     "country": "",
     "dependencies": [
       "Möbelprojekt"
@@ -35,6 +35,7 @@
     "distance_km": null,
     "eligibility": "review",
     "eligibility_reasons": [
+      "Weder Versandkosten noch passende Abholung bestätigt",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
@@ -44,7 +45,7 @@
     "image": "https://i.ebayimg.com/images/g/Mk8AAeSwTmRq6oFw/s-l400.jpg",
     "interest_score": 3,
     "is_auction": true,
-    "last_seen_at": "2026-11-09T09:27:28Z",
+    "last_seen_at": "2026-11-09T13:24:19Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -61,11 +62,11 @@
     "product_kind": "consumable",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
-      "Zum Abrufzeitpunkt keine Gebote",
-      "Ausgewiesene Versandkosten im Suchlimit"
+      "Zum Abrufzeitpunkt keine Gebote"
     ],
     "reserve_status": "unknown",
     "risks": [
+      "Weder Versandkosten noch passende Abholung bestätigt",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -80,15 +81,15 @@
     "semantic_assessed_at": "2026-11-08T20:16:25.874335Z",
     "semantic_interest": 5,
     "semantic_review_mode": "interactive",
-    "shipping_eur": 12.7,
-    "source_observed_at": "2026-11-09T09:27:28Z",
+    "shipping_eur": null,
+    "source_observed_at": "2026-11-09T13:24:19Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
     "time_window_eligible": true,
     "title": "Kanten Banderolierleiste Roteiche",
     "total_eur": null,
-    "total_known_eur": 13.3,
+    "total_known_eur": null,
     "url": "https://www.ebay.de/itm/860110978557?hash=itemc8429bfdfd%3Ag%3AMk8AAeSwTmRq6oFw&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
     "useability_reason": "Benötigt passendes Möbelprojekt und Befestigung/Leim.",
     "useability_score": 57,
@@ -151,7 +152,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:18cff51577f584e36862ed4275ce55f2c7fbbad1390b56dc424a9b3372bc8d45",
+  "snapshot_id": "sha256:64c9671a0bbf3a2bb2103cb8b5c1efcde39f804dab20fa93ec0cfc33b9cf1995",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",

@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-09T09:48:49Z",
+    "evaluated_at": "2026-11-09T13:47:59Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,19 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-09T09:48:49Z",
+  "generated_at": "2026-11-09T13:47:59Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": false,
     "city": "",
     "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-    "content_updated_at": "2026-11-09T09:28:56Z",
+    "content_updated_at": "2026-11-09T13:25:35Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Netzstecker und zulässige Last"
     ],
     "description": "",
     "description_status": "missing",
@@ -44,11 +44,11 @@
     "image": "https://i.ebayimg.com/images/g/I2AAAeSw7FFpILaH/s-l400.jpg",
     "interest_score": 18,
     "is_auction": true,
-    "last_seen_at": "2026-11-09T09:28:56Z",
+    "last_seen_at": "2026-11-09T13:25:35Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Stecker und Funktionsnachweis prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -58,27 +58,30 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "apparatus",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Elektrische Kenndaten sprechen für ein komplettes Schutzgerät."
     ],
     "reserve_status": "unknown",
     "risks": [
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Schutzwirkung und Steckerversion sind ungeprüft.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
+    "scalp_score": 19,
     "score": 18,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-09T13:29:04.022000Z",
+    "semantic_interest": 19,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.99,
-    "source_observed_at": "2026-11-09T09:28:56Z",
+    "source_observed_at": "2026-11-09T13:25:35Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
@@ -87,11 +90,11 @@
     "total_eur": null,
     "total_known_eur": 6.99,
     "url": "https://www.ebay.de/itm/147672307735?hash=item2261f49817%3Ag%3AI2AAAeSw7FFpILaH&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Ein vollständiger Netzschutz-Zwischenstecker ist mit einem passenden Stromanschluss eigenständig verwendbar.",
+    "useability_score": 94,
     "valid_until": "2026-11-11T21:49:08Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_5",
+    "value_reason": "Ein einzelner Uni-Elektra FR 101 Überspannungsschutz 250 V und 16 A hat begrenztes Wertpotenzial.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -148,7 +151,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:18cff51577f584e36862ed4275ce55f2c7fbbad1390b56dc424a9b3372bc8d45",
+  "snapshot_id": "sha256:64c9671a0bbf3a2bb2103cb8b5c1efcde39f804dab20fa93ec0cfc33b9cf1995",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
