@@ -243,6 +243,12 @@ KI an den Anbieter übertragen. Ohne Freigabe erfolgen keine solchen API-Aufrufe
 Details zu Berechtigungen, Veröffentlichung und Fehlern:
 [docs/deployment.md](docs/deployment.md).
 
+Für einen ausdrücklich beauftragten Start aus dem Work-Modus genügt ein
+regulärer GitHub-Commit des Startvermerks `.github/fundgrube-refresh.json`.
+Echte Bewertungen können bei fehlendem lokalen Pack-Lauf über
+`reviews/pending.json` im Workflow validiert werden. Ablauf, Auftragsformat und
+Erfolgskontrolle: [Work-Modus](docs/work-mode.md). Leseaufträge bleiben ohne Commit.
+
 ### Datenrechte und öffentliche Historie
 
 Der Standardfeed nennt Auktionen ohne Gebot als Quelle und verlinkt die
@@ -326,6 +332,10 @@ er erzeugt selbst keine LLM-Bewertungen. Nach dem ausdrücklich beauftragten
 Commit der Review-Dateien auf `main` liest der nächste Workflow optional
 `reviews/current.json` ein und berechnet Interest aus beiden Achsen. Die
 Quellenfakten und Eignungsfilter werden unabhängig davon frisch ausgewertet.
+
+Ohne lokalen Runner übernimmt der [validierte Review-Eingang](docs/work-mode.md#echte-bewertungen-ohne-lokalen-pack-lauf-speichern)
+denselben Pack-Schritt in GitHub Actions. Dafür den zugehörigen Daten-Commit
+und das echte V2-Batch-Objekt einreichen; keinen vorhandenen Auftrag überschreiben.
 
 Der Helfer ergänzt die bereits vorhandene Ausgabedatei standardmäßig
 **inkrementell**. Der dauerhafte Store verwendet `schema_version: 3`: Jede

@@ -139,6 +139,13 @@ es ist kein zusätzlicher Delta-Endpunkt implementiert.
 python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/ratings.json --output reviews/current.json
 ```
 
+- Ist kein lokaler Pack-Lauf verfügbar, nutze bei demselben ausdrücklichen
+  Speicherauftrag den validierten Eingang `reviews/pending.json` nach
+  [docs/work-mode.md](docs/work-mode.md). Er enthält einen unveränderlichen
+  Daten-Commit und echte vollständige V2-Bewertungen; der Workflow führt den
+  unveränderten Pack-Helfer aus. Einen belegten Eingang nie überschreiben.
+  `status: packed` in der Auftragsbestätigung bestätigt nur die Speicherung;
+  Workflow, Quellenstatus und Anwendung im neuen Snapshot zusätzlich prüfen.
 - Snapshot-Abweichungen, doppelte/unbekannte IDs oder exakte Preisfelder sind
   Fehler, keine Einladung, die Validierung abzuschalten. Der Helfer bindet ID
   und Titel-/Beschreibungs-/Zustands-Hash; er bewertet nicht selbst. Keine
@@ -177,6 +184,20 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
   fortlaufende unbeaufsichtigte LLM-Sichtung. Die getrennte automatische API
   benötigt weiterhin Freigabe, Modell und Schlüssel. Bereinigung entfernt alte
   Reviews nicht aus der öffentlichen Git-Historie.
+
+## Wenn ein Quellenlauf ausdrücklich beauftragt ist
+
+- Ein Lese-/Shortlist-Auftrag bleibt schreibgeschützt. Bei einem ausdrücklichen
+  Aktualisierungsauftrag darfst du nach [docs/work-mode.md](docs/work-mode.md)
+  `.github/fundgrube-refresh.json` auf `main` mit einer eindeutigen Kennung und
+  aktueller UTC-Zeit aktualisieren. Der reguläre Push startet den vorhandenen
+  Produktionsworkflow auch ohne `workflow_dispatch`-Tool oder lokalen Runner.
+- Prüfe zuerst laufende Aktionen; vermeide Doppelstarts. Dateiversionen und
+  bestehende fremde Aufträge erhalten. Rechte, Branch-Freigaben, Abschaltungen,
+  Anfragegrenzen und Wartezeiten bleiben verbindlich. Keine leeren oder
+  erfundenen Reviews als Startsignal verwenden. Ordne den Lauf dem Commit zu
+  und verifiziere den neuen Quellenstand im Datenmanifest; ein Commit oder
+  grüner Build allein belegt keinen vollständigen Quellenabgleich.
 
 ## Wenn du Code änderst
 

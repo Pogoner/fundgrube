@@ -295,6 +295,14 @@ Der Ablauf ist:
    Der nächste Workflow lädt optional `reviews/current.json`, berechnet die
    Quellen- und Eignungsfakten erneut und exportiert passende Einordnungen.
 
+Ohne lokalen Pack-Lauf kann derselbe ausdrückliche Speicherauftrag den
+[Review-Eingang im Work-Modus](work-mode.md#echte-bewertungen-ohne-lokalen-pack-lauf-speichern)
+verwenden: `reviews/pending.json` trägt den unveränderlichen Daten-Commit und
+das echte V2-Batch-Objekt. GitHub Actions prüft Manifest/Feed und führt den
+unveränderten Pack-Helfer aus, bevor der Store gemeinsam mit geleertem
+Eingang und Bestätigung atomar gespeichert wird. Der öffentliche Pages-Vertrag
+bleibt lesend; dies ist kein neuer HTTP-Schreibendpunkt und keine LLM-API.
+
 Der Pack-Helfer prüft die Snapshot-Zuordnung. Doppelte IDs, IDs außerhalb dieses
 Feeds und exakte Preisfelder werden zurückgewiesen. Er verknüpft jede Bewertung
 mit Angebots-ID und Hash von **Titel, Beschreibung und Zustand**; er macht keine

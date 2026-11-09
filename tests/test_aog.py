@@ -514,6 +514,56 @@ class SchedulingTests(unittest.TestCase):
         self.assertEqual(search["stop_reason"], "repeated_page")
         self.assertEqual(search["unique_records"], 48)
         self.assertEqual(search["unobserved_estimate"], 96)
+        message = next(value["message"] for value in result["warnings"] if value["code"] == "repeated_page")
+        self.assertIn("Allgemeine Suche", message)
+        self.assertIn("Offset 48", message)
+        self.assertIn("Offset 0", message)
+
+    def test_nonadjacent_repeated_ids_preserve_stop_and_success_timestamps(self):
+        previous_success = "2026-11-07T11:00:00Z"
+        state = {"last_successful_full_scan_at": previous_success,
+                 "last_successful_traversals": {"general": previous_success, "pickup": previous_success}}
+        result, fake, delays = run([
+            robots(),
+            api(rows(0), total=240), api(rows(1000, abholung=True), total=192),
+            api(rows(48), total=240), api(rows(1048, abholung=True), total=192),
+            api(rows(96), total=240), api(rows(1096, abholung=True), total=192),
+            api(list(reversed(rows(48, preis=0.5))), total=240),
+            api(rows(1144, abholung=True), total=192),
+        ], state=state, settings={"aog_max_requests_per_run": 10})
+        # Changed ordering/facts do not hide a repeated ID set. The remaining
+        # pickup page is still read, without retrying or skipping general pages.
+        self.assertEqual(len(fake.requests), 9)
+        self.assertEqual(delays, [10] * 8)
+        general = result["coverage"]["searches"]["general"]
+        pickup = result["coverage"]["searches"]["pickup"]
+        self.assertEqual(general["stop_reason"], "repeated_page")
+        self.assertEqual(general["next_offset"], 192)
+        self.assertEqual(general["unique_records"], 144)
+        self.assertTrue(pickup["traversal_completed"])
+        self.assertEqual(result["status"], "partial")
+        self.assertFalse(result["coverage"]["traversal_completed"])
+        self.assertIsNone(result["coverage"]["scan_completed_at"])
+        self.assertEqual(result["source_state"]["last_successful_full_scan_at"], previous_success)
+        self.assertEqual(result["source_state"]["last_successful_traversals"]["general"], previous_success)
+        message = next(value["message"] for value in result["warnings"] if value["code"] == "repeated_page")
+        self.assertIn("Allgemeine Suche", message)
+        self.assertIn("Offset 144", message)
+        self.assertIn("Offset 48", message)
+
+    def test_repeated_pickup_page_diagnostic_identifies_the_affected_search(self):
+        result, fake, _ = run([
+            robots(), api(rows(0), total=96), api(rows(200, abholung=True), total=144),
+            api(rows(48), total=96), api(list(reversed(rows(200, abholung=True))), total=144),
+        ], settings={"aog_max_requests_per_run": 10})
+        self.assertEqual(len(fake.requests), 5)
+        self.assertTrue(result["coverage"]["searches"]["general"]["traversal_completed"])
+        self.assertEqual(result["coverage"]["searches"]["pickup"]["stop_reason"], "repeated_page")
+        self.assertEqual(result["status"], "partial")
+        message = next(value["message"] for value in result["warnings"] if value["code"] == "repeated_page")
+        self.assertIn("Abholsuche", message)
+        self.assertIn("Offset 48", message)
+        self.assertIn("Offset 0", message)
 
     def test_short_nonfinal_pages_advance_requested_offsets_without_claiming_missing_articles(self):
         result, fake, _ = run([robots(), api(rows(0, 1), total=144), api([]),
