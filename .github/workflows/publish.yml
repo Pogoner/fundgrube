@@ -2,6 +2,8 @@ name: Fundgrube aktualisieren und veröffentlichen
 
 on:
   push:
+    # Also accepts explicit connector starts via .github/fundgrube-refresh.json
+    # and authored review requests via reviews/pending.json (see docs/work-mode.md).
     branches: [main]
   workflow_dispatch:
   schedule:
@@ -26,6 +28,7 @@ jobs:
       - name: Quellcode laden
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
       - name: Python bereitstellen
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -41,6 +44,17 @@ jobs:
         run: |
           node tests/test_frontend.mjs
           node tests/test_info_contract.mjs
+      - name: Beauftragte interaktive Bewertungen validieren und packen
+        id: review_request
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/process_review_request.py
+      - name: Nicht bestätigten Review-Auftrag kenntlich machen
+        if: steps.review_request.outcome == 'failure'
+        run: |
+          echo '::warning::Die Verarbeitung des Review-Auftrags ist nicht bestätigt. Prüfe reviews/pending.json, reviews/last-request-result.json und das Schrittprotokoll. Der Quellenlauf wird fortgesetzt; die Pipeline prüft den lokal verfügbaren Review-Store.'
+          printf '%s\n' '### Interaktive Bewertungen' '' 'Die Verarbeitung des Review-Auftrags ist nicht bestätigt. Prüfe `reviews/pending.json`, `reviews/last-request-result.json` und das Schrittprotokoll. Der Quellenlauf wird fortgesetzt; die Pipeline prüft den lokal verfügbaren Review-Store. Dieser Hinweis bestätigt weder einen fehlenden noch einen erfolgreichen Review-Commit.' '' >> "$GITHUB_STEP_SUMMARY"
       - name: Dauerhaften Zustand wiederherstellen
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -58,6 +72,8 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
         run: python -m hunter.pipeline --state-dir runtime --site-dir site
+      - name: Quellenstatus zusammenfassen
+        run: python scripts/report_source_status.py --manifest site/api/manifest.json
       - name: Datensnapshot unabhängig von Pages veröffentlichen
         env:
           GITHUB_TOKEN: ${{ github.token }}

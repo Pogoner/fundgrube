@@ -431,7 +431,7 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
             "absence_is_evidence": False, "reported_nonempty_but_no_records": False,
             "repeated_pages": 0, "stop_reason": "not_started" if enabled else "disabled",
         }
-        seen_ids[name], page_signatures[name] = set(), set()
+        seen_ids[name], page_signatures[name] = set(), {}
     coverage = {
         "requests_this_run": 0, "api_requests_this_run": 0, "pages_fetched": 0, "page_size": page_size,
         "source_total_reported": None, "source_cache_max_age_minutes": 15, "complete": False,
@@ -605,8 +605,12 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
             meta["total_changed"] = meta["total_reported_min"] != meta["total_reported_max"]
             ids = tuple(row["id"] for row in rows)
             signature = frozenset(ids)
-            repeated = bool(rows and signature in page_signatures[name])
-            page_signatures[name].add(signature)
+            # Remember the first requested offset for a matching ID set. The
+            # stop criterion stays order-independent; the diagnostic can now
+            # identify the source pagination failure without exposing listings.
+            previous_offset = page_signatures[name].get(signature)
+            repeated = bool(rows and previous_offset is not None)
+            page_signatures[name].setdefault(signature, offset)
             seen_ids[name].update(ids)
             meta["unique_records"] = len(seen_ids[name])
             meta["duplicate_records"] = meta["records_read"] - meta["unique_records"]
@@ -633,7 +637,8 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
             if repeated:
                 meta["repeated_pages"] += 1
                 stop_search(name, "repeated_page")
-                warning("repeated_page", "Die Quelle hat dieselbe Seite erneut geliefert; diese Suche wird nicht endlos fortgesetzt.")
+                search_label = "Abholsuche" if pickup else "Allgemeine Suche"
+                warning("repeated_page", f"{search_label}: Die Quelle hat bei Offset {offset} dieselben Angebots-IDs wie bei Offset {previous_offset} geliefert; diese Suche wird sicherheitshalber beendet.")
             elif meta["next_offset"] >= total:
                 stop_search(name, "reported_end", completed=True)
             else:

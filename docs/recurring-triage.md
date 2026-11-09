@@ -116,7 +116,11 @@ GitHub-Anbindung. Verwende den genau zugehörigen Snapshot und das validierte
 Review-Format; keine Quellenfakten, Konfiguration, Zeitpläne oder fremden
 Änderungen überschreiben. Bewahre gültige bestehende Bewertungen mit ihren
 ursprünglichen Zeitstempeln. Führe die neue Batch-Eingabe mit dem aktuellen
-Review-Store über scripts/pack_reviews.py inkrementell zusammen. Bei einem
+Review-Store über scripts/pack_reviews.py inkrementell zusammen. Wenn dafür
+kein lokaler Runner verfügbar ist, verwende nach docs/work-mode.md den
+validierten Eingang reviews/pending.json mit genau dem festgehaltenen
+Daten-Commit und den echten V2-Bewertungen. Einen belegten Eingang niemals
+überschreiben; leere oder erfundene Reviews sind kein Startsignal. Bei einem
 zwischenzeitlich geänderten main zuerst den neuen Store lesen und erneut
 zusammenführen; kein erzwungenes Überschreiben. Gleichzeitige widersprüchliche
 Bewertungen oder Validierungsfehler melden, keine Prüfungen abschalten.
@@ -143,6 +147,30 @@ Die ausgeschlossenen Medien bleiben zur Nachvollziehbarkeit im API-Bestand.
 berücksichtigt das persönliche Profil, ist aber kein Zähler für die aktuell
 im Browser gewählte Interest-Schwelle. Keine dieser Zahlen belegt vollständige
 eBay-Abdeckung oder unbeaufsichtigte LLM-Sichtung neuer Angebote.
+
+## Optional: einen Quellenlauf ausdrücklich anfordern
+
+Nur wenn die Aufgabe zusätzlich den Sammler starten soll, den folgenden
+Auftrag ergänzen. Der reine Leseauftrag bleibt ohne diese Freigabe unverändert;
+dieser Text richtet keine Automation ein. Bei Kombination mit der GUI-Pflege
+erledigt ein bereits nötiger Review-Commit den Start, ohne zusätzlichen Startvermerk.
+
+```text
+Aktualisiere auch den Quellenbestand über den bestehenden Produktionsworkflow.
+Prüfe zuerst, ob bereits ein passender Lauf aktiv ist. Falls kein direkter
+workflow_dispatch-Aufruf verfügbar ist, aktualisiere den Startvermerk
+.github/fundgrube-refresh.json auf main gemäß docs/work-mode.md mit einer neuen
+eindeutigen request_id und der tatsächlichen aktuellen UTC-Zeit. Dieser Auftrag
+erlaubt diesen Start-Commit; weitere externe Schreibaktionen benötigen einen
+eigenen ausdrücklichen Auftrag. Bestehende Rechte, Abschaltschalter, Wartezeiten
+und Crawl-Grenzen erhalten. Keine leeren Reviews oder Konfigurationsänderungen
+als Ersatz verwenden. Ordne den neuen Actions-Lauf dem Commit zu und prüfe danach
+den Daten-Snapshot samt Quellenstatus und Abdeckung. Ein erfolgreicher Build
+ist kein erfolgreicher Vollscan. Ein repeated_page-Abbruch bleibt als
+Quellenproblem sichtbar; keine Seiten überspringen oder Schutzgrenzen umgehen.
+Danach die beauftragte Sichtung am neu festgehaltenen konsistenten Daten-Snapshot
+fortsetzen.
+```
 
 Referenzen:
 

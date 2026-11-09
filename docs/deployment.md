@@ -204,6 +204,11 @@ ausgeschlossen; ihre Abhängigkeiten gehören in die Useability-Einordnung.
 
 ### Interaktive Bewertungen veröffentlichen
 
+Für GitHub-Anbindungen ohne `workflow_dispatch` oder lokalen Python-Runner
+beschreibt [Work-Modus](work-mode.md) den ausdrücklich beauftragten Start per
+Datei-Commit und den geprüften Review-Eingang. Beide verwenden den vorhandenen
+Produktionsworkflow und erhalten seine Berechtigungen und Schutzgrenzen.
+
 Bei einem ausdrücklichen Auftrag, ChatGPT-Bewertungen in der GUI zu speichern,
 liest der Assistent alle Seiten eines einzigen Daten-Commit-SHAs und erstellt
 `reviews/ratings.json` mit `schema_version: 2` für genau diesen Snapshot.
@@ -434,13 +439,22 @@ python scripts/github_snapshot.py validate --state-dir runtime-test --site-dir s
 Die Live-Schritte laufen im Workflow in dieser Reihenfolge:
 
 ```bash
+python scripts/process_review_request.py
 python scripts/github_snapshot.py restore --state-dir runtime
 python -m hunter.pipeline --state-dir runtime --site-dir site
+python scripts/report_source_status.py --manifest site/api/manifest.json
 python scripts/github_snapshot.py publish --state-dir runtime --site-dir site
 ```
 
-`restore` und `publish` brauchen `GITHUB_REPOSITORY` und `GITHUB_TOKEN` in ihrer
-Umgebung. `validate` ist vollständig offline. Tokens nicht in CLI-Argumente,
+Der Review-Schritt benötigt `GITHUB_REF=refs/heads/main` und bei belegtem Eingang
+zusätzlich `GITHUB_SHA`, `GITHUB_REPOSITORY` und `GITHUB_TOKEN`. `restore` und
+`publish` brauchen `GITHUB_REPOSITORY` und `GITHUB_TOKEN` in ihrer Umgebung.
+Die Quellenzusammenfassung schreibt in `GITHUB_STEP_SUMMARY`; `partial` bleibt
+eine sichtbare Quellenwarnung, auch wenn der Snapshot veröffentlicht wird.
+Fehler im Review-Auftrag werden getrennt angezeigt; sie halten den Quellenlauf
+mit dem verfügbaren gültigen Review-Store nicht auf. Bei unklarem Schreibausgang
+den tatsächlichen Stand auf `main` prüfen, bevor derselbe Auftrag erneut gesendet wird.
+`validate` ist vollständig offline. Tokens nicht in CLI-Argumente,
 Shell-History oder Logausgaben schreiben.
 
 Bei HTTP 403 zuerst Berechtigungen, Actions-Richtlinien und Branch-Regeln
