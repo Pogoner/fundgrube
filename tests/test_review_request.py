@@ -10,7 +10,9 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-from hunter.reviews import ReviewsError, content_fingerprint
+from hunter.models import normalize_item
+from hunter.pipeline import run_pipeline
+from hunter.reviews import ReviewsError, content_fingerprint, load_reviews
 from scripts.github_snapshot import GitHubError, SnapshotError
 from scripts import process_review_request as worker
 
@@ -93,6 +95,32 @@ class FakeGitHub:
 
     def raw_feed(self):
         return self.feed_bytes if self.feed_bytes is not None else json.dumps(self.feed).encode()
+
+
+class StoreGitHub:
+    """A read-only API that exposes exactly one pinned current review store."""
+
+    def __init__(self, content, *, use_blob=False, error=None):
+        self.content, self.use_blob, self.error = content, use_blob, error
+        self.calls = []
+
+    def head(self, branch):
+        self.calls.append(("HEAD", branch, None))
+        assert branch == "main"
+        return COMMIT
+
+    def request(self, method, path, body=None):
+        self.calls.append((method, path, body))
+        assert method == "GET" and body is None
+        if self.error:
+            raise self.error
+        if path == f"/contents/reviews/current.json?ref={COMMIT}":
+            if self.use_blob:
+                return {"type": "file", "encoding": "none", "sha": BLOB}
+            return FakeGitHub.encoded(self.content)
+        if self.use_blob and path == f"/git/blobs/{BLOB}":
+            return FakeGitHub.encoded(self.content)
+        raise AssertionError(path)
 
 
 class ReviewRequestTests(unittest.TestCase):
@@ -286,7 +314,104 @@ class ReviewRequestTests(unittest.TestCase):
 
     def test_main_guard_rejects_pull_request_environment(self):
         with patch.dict(os.environ, {"GITHUB_REF": "refs/pull/12/merge"}), redirect_stderr(io.StringIO()):
-            self.assertEqual(worker.main(), 2)
+            self.assertEqual(worker.main([]), 2)
+
+    def test_sync_pins_main_once_and_preserves_exact_new_store_text(self):
+        newer = json.loads(self.initial_store)
+        newer["reviews"][0]["assessment"]["scalp_score"] = 86
+        newer["reviews"][0]["reviewed_at"] = self.ratings["reviewed_at"]
+        content = (json.dumps(newer, ensure_ascii=False, indent=2).replace("\n", "\r\n") + "\r\n").encode()
+        api = StoreGitHub(content)
+        # A bad request does not prevent the independent current-store read.
+        (self.root / worker.PENDING_PATH).write_text("invalid pending request")
+        result = worker.sync_current_store(api, self.root)
+        self.assertEqual(result, {"status": "synced", "store_commit": COMMIT, "stored_reviews": 1})
+        self.assertEqual((self.root / worker.STORE_PATH).read_bytes(), content)
+        self.assertEqual((self.root / worker.PENDING_PATH).read_text(), "invalid pending request")
+        self.assertFalse((self.root / worker.RECEIPT_PATH).exists())
+        self.assertEqual(api.calls, [("HEAD", "main", None),
+                                     ("GET", f"/contents/reviews/current.json?ref={COMMIT}", None)])
+
+    def test_sync_large_store_uses_only_the_pinned_contents_and_blob(self):
+        api = StoreGitHub(self.initial_store, use_blob=True)
+        worker.sync_current_store(api, self.root)
+        self.assertEqual(api.calls, [("HEAD", "main", None),
+                                     ("GET", f"/contents/reviews/current.json?ref={COMMIT}", None),
+                                     ("GET", f"/git/blobs/{BLOB}", None)])
+        self.assert_untouched()
+
+    def test_sync_rejects_invalid_full_store_without_changing_local_bytes(self):
+        invalid_score = json.loads(self.initial_store)
+        invalid_score["reviews"][0]["assessment"]["scalp_score"] = 101
+        duplicate_id = json.loads(self.initial_store)
+        duplicate_id["reviews"] *= 2
+        for content in (b"not JSON", b"[]", b"\xff", b'{"schema_version":3,"schema_version":3}',
+                        json.dumps(invalid_score).encode(), json.dumps(duplicate_id).encode()):
+            with self.subTest(content=content[:60]):
+                api = StoreGitHub(content)
+                with self.assertRaises(ReviewsError):
+                    worker.sync_current_store(api, self.root)
+                self.assert_untouched()
+                self.assertTrue(all(method in {"HEAD", "GET"} for method, _, _ in api.calls))
+
+    def test_sync_failed_download_and_size_limit_leave_local_store_untouched(self):
+        with self.assertRaises(GitHubError):
+            worker.sync_current_store(StoreGitHub(self.initial_store, error=GitHubError(403)), self.root)
+        self.assert_untouched()
+        with patch.object(worker, "MAX_REVIEW_BYTES", 10), self.assertRaises(SnapshotError):
+            worker.sync_current_store(StoreGitHub(self.initial_store, use_blob=True), self.root)
+        self.assert_untouched()
+
+    def test_sync_cli_is_independent_of_pending_request_processing(self):
+        result = {"status": "synced", "store_commit": COMMIT, "stored_reviews": 1}
+        env = {"GITHUB_REF": "refs/heads/main", "GITHUB_REPOSITORY": "Pogoner/fundgrube", "GITHUB_TOKEN": "fake"}
+        with (patch.dict(os.environ, env, clear=True), patch.object(worker, "GitHub") as client,
+              patch.object(worker, "read_request", side_effect=AssertionError("pending must not be read")),
+              patch.object(worker, "sync_current_store", return_value=result) as sync,
+              redirect_stdout(io.StringIO())):
+            self.assertEqual(worker.main(["--sync-current-store"]), 0)
+            sync.assert_called_once_with(client.return_value, Path(worker.__file__).resolve().parents[1])
+
+    def test_sync_prevents_queued_old_checkout_from_reverting_newer_review(self):
+        raw = {**offer(1), "url": "https://www.ebay.de/itm/100000000001", "price_eur": 1,
+               "price_kind": "auction_price", "bid_count": 0, "is_auction": True,
+               "source_provider": "auktionen-ohne-gebot", "source_observed_at": stamp(NOW - timedelta(minutes=10)),
+               "source_url": "https://auktionen-ohne-gebot.de/business-industrie/", "verification_level": "aggregator"}
+        normalized = normalize_item(raw, NOW)
+        latest = {"schema_version": 3, "reviewer": "ChatGPT", "reviews": [{
+            "id": raw["id"], "content_fingerprint": content_fingerprint(normalized), "score_version": 2,
+            "assessment": {**assessment(), "scalp_score": 86, "useability_score": 80},
+            "reviewed_at": stamp(NOW - timedelta(minutes=1)), "source_snapshot_id": SNAPSHOT,
+            "ends_at": normalized["ends_at"],
+        }]}
+        old = copy.deepcopy(latest)
+        old["reviews"][0]["assessment"]["scalp_score"] = 25
+        old["reviews"][0]["reviewed_at"] = stamp(NOW - timedelta(hours=1))
+
+        def run(store, state=None, *, queued=False):
+            result = {"status": "cooldown" if queued else "live", "items": [] if queued else [raw],
+                      "source_state": {}, "coverage": {"pages_fetched": 0 if queued else 1,
+                                                        "api_requests_this_run": 0 if queued else 1}}
+            return run_pipeline({}, source="aog", state=copy.deepcopy(state),
+                                at=NOW + timedelta(minutes=30) if queued else NOW,
+                                environ={"HUNTER_PUBLISH_LIVE_DATA": "true"}, review_doc=store,
+                                aog_collect=lambda *args: result,
+                                enrich=lambda rows, *args, **kwargs: (rows, {"ai_enabled": False}))
+
+        initial, state = run(latest)
+        self.assertEqual(initial["deals"][0]["interest_score"], 69)
+        regressed, _ = run(old, state, queued=True)
+        self.assertEqual(regressed["deals"][0]["interest_score"], 20)
+        self.write(worker.STORE_PATH, old)
+        self.api.heads = [COMMIT]
+        with self.assertRaises(SnapshotError):
+            self.run_request()  # Old event SHA cannot rewrite the advanced main.
+        worker.sync_current_store(StoreGitHub(json.dumps(latest).encode()), self.root)
+        refreshed, _ = run(load_reviews(self.root / worker.STORE_PATH), state, queued=True)
+        current = refreshed["deals"][0]
+        self.assertEqual((current["scalp_score"], current["useability_score"], current["interest_score"]), (86, 80, 69))
+        self.assertEqual(current["semantic_assessed_at"], latest["reviews"][0]["reviewed_at"])
+        self.assertEqual(current["assessment_basis"], "llm")
 
 
 if __name__ == "__main__":

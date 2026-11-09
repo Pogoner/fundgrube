@@ -94,6 +94,16 @@ Der Workflow führt vor dem Sammeln `scripts/process_review_request.py` aus:
    Derselbe Workflow sammelt anschließend und veröffentlicht passende Reviews.
    Der interne Commit mit `GITHUB_TOKEN` löst keinen weiteren Push-Workflow aus.
 
+Vor jedem Quellenlauf liest ein unabhängiger Schritt den aktuellen
+`reviews/current.json`-Store von `main` neu: `--sync-current-store` löst `main`
+einmalig in einen SHA auf, lädt nur diesen festen Pfad und prüft das vollständige
+Review-Schema einschließlich Größenlimit und doppelter JSON-Felder. Danach
+ersetzt er die lokale Datei atomar mit dem unveränderten validierten Text;
+er schreibt nichts nach GitHub und erneuert keine Scores oder Zeitstempel.
+So verwendet auch ein bereits aufgereihter Lauf mit altem Checkout die inzwischen
+gespeicherten Bewertungen. Abruf- oder Validierungsfehler dieses Abgleichs stoppen
+den Lauf vor dem Crawl; ein veralteter lokaler Store wird dann nicht exportiert.
+
 Die Bestätigung in `reviews/last-request-result.json` enthält `status: packed`,
 `request_id`, den Digest des Auftrags, `source_commit`, `source_snapshot_id`,
 `request_commit`, `processed_at` sowie `submitted_reviews` und `stored_reviews`.
@@ -104,8 +114,8 @@ Prüfe diese Ergebnisse separat im Workflow und im neuen Datenmanifest, einschli
 
 Ungültige Eingaben oder Validierungsfehler lassen Eingang und bisherigen Store
 unverändert. Der Workflow zeigt einen getrennten Review-Fehler und setzt Crawl
-und Veröffentlichung mit dem verfügbaren gültigen Store fort; ein fehlerhafter
-Auftrag blockiert damit keine späteren Quellenläufe. Bei unklarem Ergebnis eines
+und Veröffentlichung nach dem erfolgreichen Store-Abgleich fort; ein fehlerhafter
+Auftrag allein blockiert damit keine späteren Quellenläufe. Bei unklarem Ergebnis eines
 Schreibaufrufs zuerst `main`, Eingang und Bestätigung prüfen: Ein Fehler nach dem
 Remote-Commit bedeutet nicht, dass auf GitHub nichts gespeichert wurde.
 Den eigenen autorisierten Auftrag mit aktuellem Datei-SHA korrigieren oder einen
