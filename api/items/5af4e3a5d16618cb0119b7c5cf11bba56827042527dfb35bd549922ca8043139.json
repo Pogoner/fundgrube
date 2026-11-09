@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-09T13:47:59Z",
+    "evaluated_at": "2026-11-09T20:39:01Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-09T13:47:59Z",
+  "generated_at": "2026-11-09T20:39:01Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-09T13:26:18Z",
+    "content_updated_at": "2026-11-09T20:13:35Z",
     "country": "",
     "dependencies": [
       "Passende Speicherkarten"
@@ -33,12 +33,10 @@
     "detail_path": "api/items/5af4e3a5d16618cb0119b7c5cf11bba56827042527dfb35bd549922ca8043139.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-12T14:51:13Z",
@@ -46,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/G44AAeSwYTJqorVq/s-l400.jpg",
     "interest_score": 3,
     "is_auction": true,
-    "last_seen_at": "2026-11-09T13:26:18Z",
+    "last_seen_at": "2026-11-09T20:13:35Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -69,7 +67,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -84,11 +81,11 @@
     "semantic_interest": 4,
     "semantic_review_mode": "interactive",
     "shipping_eur": 2.9,
-    "source_observed_at": "2026-11-09T13:26:18Z",
+    "source_observed_at": "2026-11-09T20:13:35Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Hama 3x Kunststoff Aufbewahrungsbox/Etui für Speicherkarten mit Fächern schwarz",
     "total_eur": null,
     "total_known_eur": 3.9,
@@ -154,7 +151,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:64c9671a0bbf3a2bb2103cb8b5c1efcde39f804dab20fa93ec0cfc33b9cf1995",
+  "snapshot_id": "sha256:dc258a472233ee92896f5103f1d0507e7612042f82384640a1bae896b4742c2e",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",

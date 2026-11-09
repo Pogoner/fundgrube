@@ -1,0 +1,159 @@
+{
+  "freshness": {
+    "active_window_hours": 72,
+    "description_maximum_age_hours": 24,
+    "direct_ebay_verification": false,
+    "evaluated_at": "2026-11-09T20:39:01Z",
+    "maximum_source_age_hours": null,
+    "observation_is_not_condition_verification": true,
+    "recheck_at_read_time": true,
+    "retention_basis": "auction_end",
+    "retention_not_revalidation": true,
+    "source_currentness_guaranteed": false,
+    "source_warning_after_hours": 2,
+    "upstream_cache_age_is_provider_claim": true
+  },
+  "generated_at": "2026-11-09T20:39:01Z",
+  "item": {
+    "assessment_basis": "heuristic",
+    "assessment_confidence": "low",
+    "bid_count": 0,
+    "buying_options": [],
+    "carried": false,
+    "city": "",
+    "condition": "Neu",
+    "content_updated_at": "2026-11-09T20:22:55Z",
+    "country": "",
+    "dependencies": [],
+    "description": "",
+    "description_status": "missing",
+    "description_truncated": false,
+    "detail_path": "api/items/ef41fe0c2ce8fc612878d8f866313fa6608e621b3955d951a7bd445af51344da.json",
+    "details_fetched": false,
+    "distance_km": null,
+    "eligibility": "excluded",
+    "eligibility_reasons": [
+      "Ablauf außerhalb des Suchfensters",
+      "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+    ],
+    "eligibility_without_time_window": "review",
+    "ends_at": "2026-11-16T15:28:11Z",
+    "id": "v1|287716555850|0",
+    "image": "https://i.ebayimg.com/images/g/BfEAAeSwMiBqTkbT/s-l400.jpg",
+    "interest_score": 45,
+    "is_auction": true,
+    "last_seen_at": "2026-11-09T20:22:55Z",
+    "local_pickup_confirmed": false,
+    "minimum_bid_eur": null,
+    "next_checks": [
+      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+    ],
+    "personal_interest_excluded": false,
+    "personal_interest_reason": null,
+    "pickup_available": null,
+    "pickup_radius_km": 50,
+    "pickup_search_confirmed": false,
+    "postcode": "",
+    "price_eur": 1.0,
+    "price_kind": "auction_price",
+    "product_kind": "tool",
+    "reasons": [
+      "Beobachteter Auktionspreis höchstens 1 €",
+      "Zum Abrufzeitpunkt keine Gebote",
+      "Ausgewiesene Versandkosten im Suchlimit",
+      "Nennenswertes Werkzeug denkbar; Modell, Qualität und Umfang können die Größenordnung stark ändern."
+    ],
+    "reserve_status": "unknown",
+    "risks": [
+      "Ablauf außerhalb des Suchfensters",
+      "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+      "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
+    ],
+    "scalp_score": 50,
+    "score": 45,
+    "score_version": 2,
+    "semantic_assessed": true,
+    "semantic_interest": 50,
+    "shipping_eur": 0.0,
+    "source_observed_at": "2026-11-09T20:22:55Z",
+    "source_provider": "auktionen-ohne-gebot",
+    "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+    "stale": false,
+    "time_window_eligible": false,
+    "title": "KERNBOHRGERÄT AGP TC402 NASS TROCKEN Ø 6-40 MM KERNBOHRER Fliesen Bohrmaschine",
+    "total_eur": null,
+    "total_known_eur": 1.0,
+    "url": "https://www.ebay.de/itm/287716555850?hash=item42fd3e3c4a%3Ag%3ABfEAAeSwMiBqTkbT&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
+    "useability_reason": "Werkzeugtyp mit eigenem unmittelbarem Anwendungszweck; konkrete Versorgung und Lieferumfang sind noch zu klären.",
+    "useability_score": 90,
+    "valid_until": "2026-11-16T15:28:11Z",
+    "value_band": "around_50",
+    "value_reason": "Nennenswertes Werkzeug denkbar; Modell, Qualität und Umfang können die Größenordnung stark ändern.",
+    "verification_level": "aggregator"
+  },
+  "kind": "item",
+  "provider": "auktionen-ohne-gebot",
+  "schema_version": 3,
+  "scoring": {
+    "additional_fact_bonus": 0,
+    "category_caps": false,
+    "condition_verified": false,
+    "eligibility_is_separate": true,
+    "fields": {
+      "interest_score": {
+        "alias": "score",
+        "label": "Interest",
+        "meaning": "Aus beiden Faktoren abgeleitete Sichtungspriorität; null solange ein Faktor fehlt."
+      },
+      "scalp_score": {
+        "label": "Scalp",
+        "maximum": 100,
+        "meaning": "Semantisches wirtschaftliches Interesse; keine konkrete Wertermittlung.",
+        "minimum": 0,
+        "reason_field": "value_reason"
+      },
+      "semantic_interest": {
+        "alias": "scalp_score",
+        "deprecated": true,
+        "label": "Legacy alias"
+      },
+      "useability_score": {
+        "dependencies_field": "dependencies",
+        "label": "Useability",
+        "maximum": 100,
+        "meaning": "Praktische Eigenständigkeit und Abhängigkeit von zusätzlicher Anlage, Software, Zubehör oder Infrastruktur.",
+        "minimum": 0,
+        "reason_field": "useability_reason"
+      }
+    },
+    "formula": "round_half_up(scalp_score * useability_score / 100)",
+    "interest_score_is_derived": true,
+    "is_appraisal": false,
+    "legacy_policy": "Items with score_version 1 retain a known old overall score as Scalp; Useability and Interest stay null until reassessed. No missing factor is invented.",
+    "personal_interest_filter": {
+      "applies_to": [
+        "main",
+        "top_scalp",
+        "top_useability"
+      ],
+      "changes_scores": false,
+      "excluded_field": "personal_interest_excluded",
+      "excludes_standalone_media": true,
+      "reason_field": "personal_interest_reason"
+    },
+    "rounding": "half_up",
+    "score_version": 2,
+    "useability_is_condition_probability": false
+  },
+  "snapshot_id": "sha256:dc258a472233ee92896f5103f1d0507e7612042f82384640a1bae896b4742c2e",
+  "source": "auktionen-ohne-gebot",
+  "source_provider": "auktionen-ohne-gebot",
+  "source_status": "partial",
+  "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+  "untrusted_listing_text": true,
+  "verification_level": "aggregator"
+}

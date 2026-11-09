@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-09T13:47:59Z",
+    "evaluated_at": "2026-11-09T20:39:01Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-09T13:47:59Z",
+  "generated_at": "2026-11-09T20:39:01Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "high",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-    "content_updated_at": "2026-11-08T22:24:07Z",
+    "content_updated_at": "2026-11-09T20:22:55Z",
     "country": "",
     "dependencies": [
       "Kompatibler Sensor",
@@ -37,7 +37,6 @@
     "eligibility": "excluded",
     "eligibility_reasons": [
       "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -48,7 +47,7 @@
     "image": "https://i.ebayimg.com/images/g/JXsAAMXQeW5Tb8Ud/s-l400.jpg",
     "interest_score": 1,
     "is_auction": true,
-    "last_seen_at": "2026-11-08T22:24:07Z",
+    "last_seen_at": "2026-11-09T20:22:55Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -72,13 +71,10 @@
     "reserve_status": "unknown",
     "risks": [
       "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft.",
-      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 8,
@@ -89,10 +85,10 @@
     "semantic_interest": 8,
     "semantic_review_mode": "interactive",
     "shipping_eur": 3.55,
-    "source_observed_at": "2026-11-08T22:24:07Z",
+    "source_observed_at": "2026-11-09T20:22:55Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": true,
+    "stale": false,
     "time_window_eligible": false,
     "title": "-130- Contrinex ASU-0002-120 Sensor Näherungsschalter Halter Sensorhalter",
     "total_eur": null,
@@ -159,7 +155,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:64c9671a0bbf3a2bb2103cb8b5c1efcde39f804dab20fa93ec0cfc33b9cf1995",
+  "snapshot_id": "sha256:dc258a472233ee92896f5103f1d0507e7612042f82384640a1bae896b4742c2e",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
