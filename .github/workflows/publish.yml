@@ -53,8 +53,12 @@ jobs:
       - name: Nicht bestätigten Review-Auftrag kenntlich machen
         if: steps.review_request.outcome == 'failure'
         run: |
-          echo '::warning::Die Verarbeitung des Review-Auftrags ist nicht bestätigt. Prüfe reviews/pending.json, reviews/last-request-result.json und das Schrittprotokoll. Der Quellenlauf wird fortgesetzt; die Pipeline prüft den lokal verfügbaren Review-Store.'
-          printf '%s\n' '### Interaktive Bewertungen' '' 'Die Verarbeitung des Review-Auftrags ist nicht bestätigt. Prüfe `reviews/pending.json`, `reviews/last-request-result.json` und das Schrittprotokoll. Der Quellenlauf wird fortgesetzt; die Pipeline prüft den lokal verfügbaren Review-Store. Dieser Hinweis bestätigt weder einen fehlenden noch einen erfolgreichen Review-Commit.' '' >> "$GITHUB_STEP_SUMMARY"
+          echo '::warning::Die Verarbeitung des Review-Auftrags ist nicht bestätigt. Prüfe reviews/pending.json, reviews/last-request-result.json und das Schrittprotokoll. Vor dem Quellenlauf wird der aktuelle Review-Store von main neu gelesen und geprüft.'
+          printf '%s\n' '### Interaktive Bewertungen' '' 'Die Verarbeitung des Review-Auftrags ist nicht bestätigt. Prüfe `reviews/pending.json`, `reviews/last-request-result.json` und das Schrittprotokoll. Vor dem Quellenlauf wird der aktuelle Review-Store von main neu gelesen und geprüft. Dieser Hinweis bestätigt weder einen fehlenden noch einen erfolgreichen Review-Commit.' '' >> "$GITHUB_STEP_SUMMARY"
+      - name: Aktuellen Review-Store von main übernehmen
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/process_review_request.py --sync-current-store
       - name: Dauerhaften Zustand wiederherstellen
         env:
           GITHUB_TOKEN: ${{ github.token }}

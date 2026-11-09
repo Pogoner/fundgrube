@@ -8,6 +8,7 @@ temporary directory before any remote or local review store is changed.
 
 from __future__ import annotations
 
+import argparse
 import base64
 import binascii
 import hashlib
@@ -22,7 +23,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from hunter.reviews import MAX_REVIEW_BYTES, ReviewsError, read_json_file
+from hunter.reviews import MAX_REVIEW_BYTES, ReviewsError, read_json_file, validate_reviews
 from scripts.github_snapshot import GitHub, SnapshotError, _WritePacer, atomic_write, sha
 from scripts.pack_reviews import main as pack_reviews
 
@@ -79,8 +80,8 @@ def read_request(root: Path) -> dict[str, Any] | None:
 
 
 def _download(api: GitHub, path: str, commit: str, limit: int) -> bytes:
-    if path not in {"api/manifest.json", "data/deals.json"}:
-        raise SnapshotError("Only the fixed manifest and full feed may be read.")
+    if path not in {"api/manifest.json", "data/deals.json", STORE_PATH}:
+        raise SnapshotError("Only the fixed manifest, feed and review store may be read.")
     result = api.request("GET", f"/contents/{path}?ref={sha(commit)}")
     if result.get("type") != "file":
         raise SnapshotError("The pinned source file is not a regular file.")
@@ -95,6 +96,27 @@ def _download(api: GitHub, path: str, commit: str, limit: int) -> bytes:
     if len(content) > limit:
         raise SnapshotError("The pinned source file exceeded the safe size limit.")
     return content
+
+
+def sync_current_store(api: GitHub, root: Path) -> dict[str, Any]:
+    """Read the current main store independently of an older queued checkout.
+
+    A successful pack uses GITHUB_TOKEN and does not trigger another run. A
+    queued event can therefore still have the previous checkout and store.
+    Pin main once, validate the full remote store, and preserve its exact text.
+    Any fetch/validation failure must stop publication of a stale local store.
+    """
+    target = root / STORE_PATH
+    _safe_target(target)
+    head = sha(api.head("main"))
+    content = _download(api, STORE_PATH, head, MAX_REVIEW_BYTES)
+    with tempfile.TemporaryDirectory(prefix="fundgrube-review-sync-") as temporary:
+        staged = Path(temporary) / "current.json"
+        staged.write_bytes(content)
+        document = validate_reviews(read_json_file(staged, max_bytes=MAX_REVIEW_BYTES))
+    _safe_target(target)
+    atomic_write(target, content.decode("utf-8"))
+    return {"status": "synced", "store_commit": head, "stored_reviews": len(document["reviews"])}
 
 
 def process_request(api: GitHub, root: Path, expected_head: str, *, sleep=None, monotonic=None) -> dict[str, Any]:
@@ -180,12 +202,19 @@ def process_request(api: GitHub, root: Path, expected_head: str, *, sleep=None, 
             "submitted_reviews": receipt["submitted_reviews"], "stored_reviews": receipt["stored_reviews"]}
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--sync-current-store", action="store_true",
+                        help="Read and validate the current main review store without processing a request.")
+    args = parser.parse_args(argv)
     try:
         if os.environ.get("GITHUB_REF") != "refs/heads/main":
             raise SnapshotError("Review requests may only be processed on main.")
         root = Path(__file__).resolve().parents[1]
-        if read_request(root) is None:
+        if args.sync_current_store:
+            api = GitHub(os.environ.get("GITHUB_REPOSITORY", ""), os.environ.get("GITHUB_TOKEN", ""))
+            result = sync_current_store(api, root)
+        elif read_request(root) is None:
             result = {"status": "idle"}
         else:
             api = GitHub(os.environ.get("GITHUB_REPOSITORY", ""), os.environ.get("GITHUB_TOKEN", ""))
@@ -194,7 +223,7 @@ def main() -> int:
         return 0
     except (SnapshotError, ReviewsError, OSError) as error:
         message = str(error) if isinstance(error, (SnapshotError, ReviewsError)) else "Review-Auftragsdatei konnte nicht verarbeitet werden."
-        print(f"Review-Auftrag fehlgeschlagen: {message}", file=sys.stderr)
+        print(f"Review-Verarbeitung fehlgeschlagen: {message}", file=sys.stderr)
         return 2
 
 

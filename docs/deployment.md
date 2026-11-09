@@ -440,6 +440,7 @@ Die Live-Schritte laufen im Workflow in dieser Reihenfolge:
 
 ```bash
 python scripts/process_review_request.py
+python scripts/process_review_request.py --sync-current-store
 python scripts/github_snapshot.py restore --state-dir runtime
 python -m hunter.pipeline --state-dir runtime --site-dir site
 python scripts/report_source_status.py --manifest site/api/manifest.json
@@ -447,12 +448,17 @@ python scripts/github_snapshot.py publish --state-dir runtime --site-dir site
 ```
 
 Der Review-Schritt benötigt `GITHUB_REF=refs/heads/main` und bei belegtem Eingang
-zusätzlich `GITHUB_SHA`, `GITHUB_REPOSITORY` und `GITHUB_TOKEN`. `restore` und
-`publish` brauchen `GITHUB_REPOSITORY` und `GITHUB_TOKEN` in ihrer Umgebung.
+zusätzlich `GITHUB_SHA`, `GITHUB_REPOSITORY` und `GITHUB_TOKEN`. Der unabhängige
+Store-Abgleich benötigt `GITHUB_REF=refs/heads/main`, `GITHUB_REPOSITORY` und
+`GITHUB_TOKEN`; er liest den aktuellen Store an einem einmalig festgehaltenen
+`main`-SHA auch für ältere aufgereihte Läufe. `restore` und `publish` brauchen
+`GITHUB_REPOSITORY` und `GITHUB_TOKEN` in ihrer Umgebung.
 Die Quellenzusammenfassung schreibt in `GITHUB_STEP_SUMMARY`; `partial` bleibt
 eine sichtbare Quellenwarnung, auch wenn der Snapshot veröffentlicht wird.
 Fehler im Review-Auftrag werden getrennt angezeigt; sie halten den Quellenlauf
-mit dem verfügbaren gültigen Review-Store nicht auf. Bei unklarem Schreibausgang
+nach erfolgreichem Store-Abgleich nicht auf. Scheitert dessen Abruf oder
+Validierung, stoppt der Lauf vor dem Crawl, damit kein veralteter Review-Stand
+veröffentlicht wird. Bei unklarem Schreibausgang
 den tatsächlichen Stand auf `main` prüfen, bevor derselbe Auftrag erneut gesendet wird.
 `validate` ist vollständig offline. Tokens nicht in CLI-Argumente,
 Shell-History oder Logausgaben schreiben.
