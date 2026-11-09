@@ -1,240 +1,529 @@
 {
   "schema_version": 2,
-  "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235",
-  "reviewed_at": "2026-11-08T20:07:42.772Z",
+  "source_snapshot_id": "sha256:18cff51577f584e36862ed4275ce55f2c7fbbad1390b56dc424a9b3372bc8d45",
+  "reviewed_at": "2026-11-09T13:29:04.022Z",
   "reviewer": "ChatGPT",
   "groups": [
     {
       "ids": [
-        "v1|377606637116|0"
+        "v1|900059081689|0"
       ],
       "assessment": {
-        "scalp_score": 10,
-        "useability_score": 94,
-        "useability_reason": "Als Lesematerial eigenständig verwendbar; zum Einsatz als Bagger müsste separat die Maschine beschafft werden, die ausdrücklich nicht zum Lieferumfang gehört.",
+        "scalp_score": 18,
+        "useability_score": 50,
+        "useability_reason": "Gerät, Teil oder Prüfdienst unklar; Eigenständigkeit nicht bestimmbar.",
         "dependencies": [
-          "Keine Maschine nötig zum Lesen; gegebenenfalls Zugang zu weiteren technischen Unterlagen für Reparaturarbeit"
+          "Geräteidentität und Lieferumfang"
         ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "media",
-        "value_reason": "Zwölfseitiger älterer Prospekt zum Hitachi Zaxis 225 US, kein verkaufter Hydraulikbagger; Sammlerwert einer einzelnen Drucksache begrenzt und unsicher.",
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "Festo SM-Test ist ohne Typ und Umfang nicht identifizierbar; höheres Wirtschaftspotenzial nicht belegt.",
         "reasons": [
-          "Die Angabe „12 SEITEN 07/03 ALT & RAR“ kennzeichnet ein eigenständig angebotenes Druckstück, nicht den Zaxis-Bagger."
+          "Genauen Gegenstand feststellen."
         ],
         "risks": [
-          "Originalität, Druckqualität, Vollständigkeit und Seiteninhalt ohne Bilder ungeprüft."
+          "Alter Quellenstand; Funktion unbekannt."
         ],
         "next_checks": [
-          "Originalangebot auf Blattformat und tatsächlichen Papier-Lieferumfang prüfen."
+          "Fotos und Typenschild prüfen."
         ]
       }
     },
     {
       "ids": [
-        "v1|377606642708|0"
+        "v1|327435573148|0"
       ],
       "assessment": {
         "scalp_score": 10,
-        "useability_score": 94,
-        "useability_reason": "Das Heft ist ohne Spezialhardware lesbar, liefert aber keine eigenständige Erdbewegungsfunktion.",
+        "useability_score": 24,
+        "useability_reason": "Eine vermutete Sicherung benötigt eine passend ausgelegte Schaltung.",
         "dependencies": [
-          "Keine Geräte für das Lesen; für tatsächlichen Baggereinsatz separate Großmaschine nötig"
+          "Kompatible Schaltung und Nennwerte"
         ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "media",
-        "value_reason": "Zwölf Seiten einer älteren Zaxis-225-USR-Broschüre; wirtschaftlich eine Drucksache und kein Bagger oder Ersatzteil.",
+        "value_band": "around_5",
+        "assessment_confidence": "low",
+        "product_kind": "component",
+        "value_reason": "Littelfuse deutet auf Sicherungstechnik, aber Typ und Anzahl fehlen.",
         "reasons": [
-          "Zaxis 225 USR ist nur das Broschürenthema, der Lieferumfang wird als „12 SEITEN“ bezeichnet."
+          "Marke benennt nicht den Verkaufsumfang."
         ],
         "risks": [
-          "Papierzustand und tatsächliche Ausgabe nicht unabhängig belegt."
+          "Nennwerte und Stückzahl unbekannt."
         ],
         "next_checks": [
-          "Seitenzahl, Jahrgang und Papierzustand im Original prüfen."
+          "Teilenummer prüfen."
         ]
       }
     },
     {
       "ids": [
-        "v1|377606642716|0"
+        "v1|147658352626|0"
       ],
       "assessment": {
-        "scalp_score": 5,
-        "useability_score": 92,
-        "useability_reason": "Als kurze technische Lektüre eigenständig nutzbar, für praktische Ölanalyse wären Labor- oder Testmittel unabhängig nötig.",
+        "scalp_score": 25,
+        "useability_score": 38,
+        "useability_reason": "Hardware benötigte Sensorik, Versorgung und Verdrahtung; eine Drucksache dagegen nicht.",
         "dependencies": [
-          "Für echte Ölprüfung Testkit oder Labor; zum Lesen selbst keine Spezialteile"
+          "Geräteart",
+          "Gegebenenfalls Sensorik und Versorgung"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "Analog-Devices-3B-Serie kann Hardware oder eine Publikation meinen; kein komplettes System belegt.",
+        "reasons": [
+          "Titel bezeichnet eine Produktreihe, nicht klar den Lieferumfang."
+        ],
+        "risks": [
+          "Mögliche Verwechslung von Gerät und Broschüre."
+        ],
+        "next_checks": [
+          "Objektart im Original verifizieren."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|128170993977|0"
+      ],
+      "assessment": {
+        "scalp_score": 15,
+        "useability_score": 83,
+        "useability_reason": "Einzelobjekte könnten unmittelbar nutzbar sein, ihr technischer Zweck ist offen.",
+        "dependencies": [
+          "Inhaltsliste"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "Etwa 22 Flohmarktartikel ohne Einzelaufstellung haben unsicheres Potenzial.",
+        "reasons": [
+          "Die Menge, nicht die Qualität, ist angegeben."
+        ],
+        "risks": [
+          "Art und Zustand der Einzelartikel ungeklärt."
+        ],
+        "next_checks": [
+          "Fotos des gesamten Konvoluts prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|206685252229|0"
+      ],
+      "assessment": {
+        "scalp_score": 76,
+        "useability_score": 94,
+        "useability_reason": "Eine vollständige Stoffschere arbeitet mit üblicher Stromversorgung und Klinge ohne zusätzliche Produktionsanlage.",
+        "dependencies": [
+          "Stromversorgung",
+          "Schneidklinge"
+        ],
+        "value_band": "around_500",
+        "assessment_confidence": "medium",
+        "product_kind": "tool",
+        "value_reason": "Eine elektrische KURIS BOM 100 Stoffschere ist ein spezialisiertes gewerbliches Schneidwerkzeug mit professionellem Potenzial.",
+        "reasons": [
+          "Angeboten wird laut Titel eine Profi-Schere, kein bloßes Ersatzmesser."
+        ],
+        "risks": [
+          "Motorlauf, Klinge und Vollständigkeit ungeprüft."
+        ],
+        "next_checks": [
+          "Typenschild, Probelauf und Schneidkopf prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|287706228841|0"
+      ],
+      "assessment": {
+        "scalp_score": 7,
+        "useability_score": 93,
+        "useability_reason": "Mit üblichen Küchenutensilien und Zutaten unmittelbar zubereitbar.",
+        "dependencies": [
+          "Übliche Zubereitungszutaten"
         ],
         "value_band": "around_5",
         "assessment_confidence": "medium",
-        "product_kind": "media",
-        "value_reason": "Vierseitige Liebherr-Serviceinformation zu Ölanalyse von Erdbewegungsgeräten; kein Ölprüfgerät und keine Maschine.",
+        "product_kind": "consumable",
+        "value_reason": "Sieben Packungen Backmischung sind normale Verbrauchsware, keine hochwertige Industrieausrüstung.",
         "reasons": [
-          "„SERVICE-INFORMATION ... ÖLANALYSE 4 SEITEN“ beschreibt den Inhalt einer vierseitigen Unterlage."
+          "Es sind sieben Portionen von jeweils 250 Gramm genannt."
         ],
         "risks": [
-          "Technischer Inhalt und Aktualität für heutige Maschinen unbekannt."
+          "MHD und versiegelte Verpackung unbestätigt."
         ],
         "next_checks": [
-          "Dokumenttitel und Erscheinungsjahr sowie Original/Reproduktion prüfen."
+          "Haltbarkeit und Packungszahl prüfen."
         ]
       }
     },
     {
       "ids": [
-        "v1|377606642738|0"
+        "v1|860108237029|0"
       ],
       "assessment": {
-        "scalp_score": 9,
+        "scalp_score": 0,
+        "useability_score": 0,
+        "useability_reason": "Ohne angebotenes Sachgut gibt es keine eigenständige Nutzbarkeit.",
+        "dependencies": [
+          "Tatsächlich verkaufte Ware unbekannt"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "medium",
+        "product_kind": "unknown",
+        "value_reason": "Ankauf von Hartmetall deutet auf ein Kaufgesuch, nicht auf ein verkäufliches Los von Bohrern.",
+        "reasons": [
+          "Der Titel beginnt mit Ankauf."
+        ],
+        "risks": [
+          "Der tatsächliche Transaktionstyp ist ungeprüft."
+        ],
+        "next_checks": [
+          "Prüfen, ob überhaupt Ware verkauft wird."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|920100059709|0"
+      ],
+      "assessment": {
+        "scalp_score": 1,
+        "useability_score": 5,
+        "useability_reason": "Ein konkret nutzbarer Liefergegenstand ist nicht beschrieben.",
+        "dependencies": [
+          "Übertragbarer Vertragsgegenstand"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "Eine Info-Domain ohne benanntes Industrieprodukt lässt kein belastbares Sachwertpotenzial erkennen.",
+        "reasons": [
+          "Der Titel verweist nur auf weitere Auktionstexte."
+        ],
+        "risks": [
+          "Übertragbares Gut und Rechte fehlen im Feed."
+        ],
+        "next_checks": [
+          "Verkaufsgegenstand klären."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|366781307056|0"
+      ],
+      "assessment": {
+        "scalp_score": 38,
+        "useability_score": 73,
+        "useability_reason": "Bei vollständiger Ausstattung eventuell eigenständig verwendbar; Montage und Anschlussbedarf unbekannt.",
+        "dependencies": [
+          "Bauart und mögliche Montage"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "Ein Restaurant-Buffet könnte gewerbliche Einrichtung sein, ist aber ohne Maße, Marke und Bauart nur vage einzuordnen.",
+        "reasons": [
+          "Ein Gastronomieobjekt ist wahrscheinlich, genaue Art offen."
+        ],
+        "risks": [
+          "Versand und tatsächlicher Standort nicht bestätigt."
+        ],
+        "next_checks": [
+          "Maße, Fotos und Ausstattung prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|168834868216|0"
+      ],
+      "assessment": {
+        "scalp_score": 33,
+        "useability_score": 51,
+        "useability_reason": "Eigenständigkeit hängt vom Gerätetyp, Messanschlüssen und notwendigen Adaptern ab.",
+        "dependencies": [
+          "Passende Prüfadapter"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "Ein LEO Sprinter Performance Tester könnte ein Prüfgerät oder lediglich Zubehör sein.",
+        "reasons": [
+          "Der Titel nennt eine mögliche Testfunktion."
+        ],
+        "risks": [
+          "Titel abgeschnitten; Modell und Lieferumfang unklar."
+        ],
+        "next_checks": [
+          "Modell und Adapter prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|147659609178|0"
+      ],
+      "assessment": {
+        "scalp_score": 29,
+        "useability_score": 24,
+        "useability_reason": "Passender Systemträger, Spannungsversorgung und Sensorik sind erforderlich.",
+        "dependencies": [
+          "4B-Systemträger",
+          "Sensorik und Versorgung"
+        ],
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "product_kind": "component",
+        "value_reason": "Grenzwertüberwachungsmodule der Analog-Devices-4B-Serie sind nützliche Messtechnik-Komponenten, kein komplett funktionsfähiges Messsystem.",
+        "reasons": [
+          "Die Bezeichnung lautet ausdrücklich Module."
+        ],
+        "risks": [
+          "Modultypen und Stückzahl sind unbekannt."
+        ],
+        "next_checks": [
+          "Teilenummern und Anschlüsse prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|198767665934|0"
+      ],
+      "assessment": {
+        "scalp_score": 24,
+        "useability_score": 67,
+        "useability_reason": "Bei Handgeräten meist selbstständig mit üblicher Versorgung; elektronische Trimmer wären Einbauteile.",
+        "dependencies": [
+          "Geräteidentität und Ladegeräte"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "Hochwertige Trimmer sind nur als unspezifizierte Sammlung bezeichnet, daher keine belastbare hohe Potenzialannahme.",
+        "reasons": [
+          "Der Gegenstand ist mehrdeutig."
+        ],
+        "risks": [
+          "Marken, Anzahl und Ladegeräte unbekannt."
+        ],
+        "next_checks": [
+          "Fotos und Produkttypen prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|257834104947|0"
+      ],
+      "assessment": {
+        "scalp_score": 32,
+        "useability_score": 68,
+        "useability_reason": "Einzelne vollständige Werkzeuge können nutzbar sein; der Defekthinweis beweist keine fehlende Baugruppe.",
+        "dependencies": [
+          "Art und Vollständigkeit der Werkzeuge"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "Ein Werkzeugrestposten kann nutzbare Einzelstücke enthalten, Umfang und Qualität bleiben offen.",
+        "reasons": [
+          "Ein Posten, kein eindeutig benanntes Einzelgerät."
+        ],
+        "risks": [
+          "Zustandsangabe defekt ohne konkrete Fehlerdiagnose."
+        ],
+        "next_checks": [
+          "Werkzeuge und Defekte einzeln identifizieren."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|407350251360|0"
+      ],
+      "assessment": {
+        "scalp_score": 43,
+        "useability_score": 81,
+        "useability_reason": "Vermutete Modeaccessoires sind ohne Spezialhardware nutzbar; konkretes Sortiment fehlt.",
+        "dependencies": [
+          "Genaues Sortiment"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "500 Haarmode-Artikel können als mengenstarker Restposten nützlich sein; genannte UVP ist kein Marktwertbeleg.",
+        "reasons": [
+          "Stückzahl 500 ist die wesentliche Potenzialquelle."
+        ],
+        "risks": [
+          "Sortiment und Liefermenge ungeprüft."
+        ],
+        "next_checks": [
+          "Artikelarten und Stückzahl prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|407350239295|0"
+      ],
+      "assessment": {
+        "scalp_score": 30,
+        "useability_score": 81,
+        "useability_reason": "Wahrscheinlich direkt nutzbare Accessoires, genaue Varianten unbekannt.",
+        "dependencies": [
+          "Genaues Sortiment"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "173 Haarmode-Artikel bieten begrenztes Mengenpotenzial ohne belastbare Qualitätsangaben.",
+        "reasons": [
+          "Ein gemischter Konsumgüterposten, keine Industriemaschine."
+        ],
+        "risks": [
+          "Angebliche UVP ist nicht verifiziert."
+        ],
+        "next_checks": [
+          "Stückliste prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|407350233276|0"
+      ],
+      "assessment": {
+        "scalp_score": 18,
+        "useability_score": 81,
+        "useability_reason": "Vermutete Accessoires benötigen keine Anlage; die konkrete Nutzung hängt vom Sortiment ab.",
+        "dependencies": [
+          "Genaues Sortiment"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "low",
+        "product_kind": "unknown",
+        "value_reason": "63 Haarmode-Artikel sind ein kleiner Konsumgüterrestposten ohne ausgewiesene besondere Qualität.",
+        "reasons": [
+          "Angegeben ist eine Stückzahl von 63."
+        ],
+        "risks": [
+          "Marke, Inhalt und Qualität unbekannt."
+        ],
+        "next_checks": [
+          "Sortiment prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|257843172722|0"
+      ],
+      "assessment": {
+        "scalp_score": 46,
+        "useability_score": 53,
+        "useability_reason": "Für einen konkreten Zweck sind meist Drehen, Bohren oder anderer Zuschnitt notwendig.",
+        "dependencies": [
+          "Materialbearbeitung"
+        ],
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "product_kind": "consumable",
+        "value_reason": "Zwei Messing-Rundmaterialstücke mit 60 mm Durchmesser und 210 mm Länge sind substanzielles Werkstatt-Halbzeug.",
+        "reasons": [
+          "Angeboten wird Rohmaterial, kein fertiges Gerät."
+        ],
+        "risks": [
+          "Legierung und Maßhaltigkeit unbestätigt."
+        ],
+        "next_checks": [
+          "Legierung, Maße und Versand prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|168840060042|0"
+      ],
+      "assessment": {
+        "scalp_score": 28,
+        "useability_score": 20,
+        "useability_reason": "Teile erfordern einen kompatiblen Linde-Stapler oder ein Reparaturprojekt.",
+        "dependencies": [
+          "Kompatibler Stapler"
+        ],
+        "value_band": "unknown",
+        "assessment_confidence": "medium",
+        "product_kind": "component",
+        "value_reason": "Linde E12 Stapler Teile Verkauf bezeichnet ausdrücklich Ersatzteile und keinen kompletten Stapler.",
+        "reasons": [
+          "Der Stapler ist nur das Bezugssystem der Einzelteile."
+        ],
+        "risks": [
+          "Welche Baugruppen enthalten sind, bleibt offen."
+        ],
+        "next_checks": [
+          "Teilenummern und Stückzahl prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|327447472938|0"
+      ],
+      "assessment": {
+        "scalp_score": 61,
+        "useability_score": 82,
+        "useability_reason": "Für zulässige Leiterverbindungen breit nutzbar, ohne Spezialanlage; passende Leitungen und fachgerechter Einbau nötig.",
+        "dependencies": [
+          "Passende Leiter und Installation"
+        ],
+        "value_band": "around_50",
+        "assessment_confidence": "medium",
+        "product_kind": "consumable",
+        "value_reason": "500 neue WAGO 2273-202 Verbindungsklemmen sind ein erheblicher Vorrat standardisierter Elektroinstallationsteile.",
+        "reasons": [
+          "Typnummer und Menge werden spezifisch genannt."
+        ],
+        "risks": [
+          "Originalität und tatsächliche Stückzahl ungeprüft."
+        ],
+        "next_checks": [
+          "Verpackung und 500 Stück prüfen."
+        ]
+      }
+    },
+    {
+      "ids": [
+        "v1|147672307735|0"
+      ],
+      "assessment": {
+        "scalp_score": 19,
         "useability_score": 94,
-        "useability_reason": "Ohne Zusatzgeräte als Broschüre nutzbar, aber nicht als eigenständiges Industriemaschinengerät.",
+        "useability_reason": "Ein vollständiger Netzschutz-Zwischenstecker ist mit einem passenden Stromanschluss eigenständig verwendbar.",
         "dependencies": [
-          "Leser; optional weitere Unterlagen für technische Detailinformationen"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "media",
-        "value_reason": "Alter zwölfseitiger Prospekt über den Hitachi Zaxis 160 LC; eine einzelne Papierpublikation statt Bagger.",
-        "reasons": [
-          "Die expliziten „12 SEITEN 06/03“ sind die angebotene Drucksache; Modellname bezeichnet bloß das Thema."
-        ],
-        "risks": [
-          "Inhalt, Papierzustand und Nachdruckstatus ungeklärt."
-        ],
-        "next_checks": [
-          "Im Original bestätigen, dass ausschließlich die zwölf Seiten versendet werden."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|377606656754|0"
-      ],
-      "assessment": {
-        "scalp_score": 11,
-        "useability_score": 95,
-        "useability_reason": "Ein Produktkatalog ist allein lesbar, erzeugt aber keine Funktion von Baumaschinen-Anbaugeräten.",
-        "dependencies": [
-          "Keine Maschine für das Lesen; für tatsächliche Gerätefunktion Anbaugerät und passende Trägermaschine separat nötig"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "media",
-        "value_reason": "24-seitige Cangini-Broschüre über Anbaugeräte; der Titel nennt keine tatsächlichen Schaufeln oder Werkzeuge im Lieferumfang.",
-        "reasons": [
-          "„TOOLS FOR STRONG CHALLENGES ... 24 SEITEN“ bezieht sich auf einen gedruckten Katalog über Anbaugeräte."
-        ],
-        "risks": [
-          "Weder Katalogzustand noch angebotene Ausgabe direkt überprüft."
-        ],
-        "next_checks": [
-          "Papierlieferumfang und Erscheinungsdatum im Original abgleichen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|377606656776|0"
-      ],
-      "assessment": {
-        "scalp_score": 10,
-        "useability_score": 94,
-        "useability_reason": "Als historische technische Broschüre unmittelbar nutzbar, nicht zum Maschinenbetrieb.",
-        "dependencies": [
-          "Keine Spezialteile zum Lesen; Betrieb des Baggers völlig anderer Lieferumfang"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "media",
-        "value_reason": "Zwölfseitiger alter Hitachi-Zaxis-280-Prospekt, kein komplettes Großgerät; Marktpotenzial einer Drucksache unsicher.",
-        "reasons": [
-          "Die Auslobung „12 SEITEN 07/03 ALT & RAR“ macht den Papierartikel zum Gegenstand."
-        ],
-        "risks": [
-          "Seltenheit nur Verkäuferbehauptung; Zustand und Vollständigkeit offen."
-        ],
-        "next_checks": [
-          "Papierumfang und Originaldruck anhand Fotos prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|377606656781|0"
-      ],
-      "assessment": {
-        "scalp_score": 8,
-        "useability_score": 94,
-        "useability_reason": "Ohne ergänzende Hardware als Broschüre lesbar; praktische Maschine ist nicht enthalten.",
-        "dependencies": [
-          "Keine weiteren Geräte zum Lesen"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "media",
-        "value_reason": "Achtseitige Druckunterlage zum Hitachi Zaxis 240, nicht ein Hydraulikbagger oder eine Baugruppe.",
-        "reasons": [
-          "„8 SEITEN 05/03 ALT & RAR“ beschreibt eine frühe Broschüre mit Maschinenbezug."
-        ],
-        "risks": [
-          "Druckjahrgang, Erhaltungszustand und tatsächlich gelieferte Seiten ungeprüft."
-        ],
-        "next_checks": [
-          "Abgebildeten Heftumfang prüfen."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|377606656828|0"
-      ],
-      "assessment": {
-        "scalp_score": 8,
-        "useability_score": 94,
-        "useability_reason": "Als Nachschlage- oder Sammlerpapiersache eigenständig verwendbar, keine industrielle Gerätefunktion.",
-        "dependencies": [
-          "Kein Maschinenzubehör zum Lesen notwendig"
-        ],
-        "value_band": "around_50",
-        "assessment_confidence": "medium",
-        "product_kind": "media",
-        "value_reason": "Achtseitiger älterer Prospekt zum Hitachi Zaxis 210; kein Maschinenangebot.",
-        "reasons": [
-          "Maschinenmodell im Titel ist ein Broschürenthema; die Produktangabe endet auf „8 SEITEN“."
-        ],
-        "risks": [
-          "Originalität und Seitenzustand ohne Belege."
-        ],
-        "next_checks": [
-          "Fotos und Seitenumfang am Originalangebot verifizieren."
-        ]
-      }
-    },
-    {
-      "ids": [
-        "v1|377606656838|0"
-      ],
-      "assessment": {
-        "scalp_score": 4,
-        "useability_score": 91,
-        "useability_reason": "Als Lesedokument unmittelbar nutzbar, technische oder rechtliche Aktualität begrenzt und nicht belegt.",
-        "dependencies": [
-          "Keine Spezialhardware zum Lesen; Garantiebezug auf konkrete Maschinen nicht mitgeliefert"
+          "Netzstecker und zulässige Last"
         ],
         "value_band": "around_5",
         "assessment_confidence": "medium",
-        "product_kind": "media",
-        "value_reason": "Vierseitiges altes Liebherr-Komponenten-Garantieblatt über Planierraupen, kein Ersatzteil, keine Planierraupe.",
+        "product_kind": "apparatus",
+        "value_reason": "Ein einzelner Uni-Elektra FR 101 Überspannungsschutz 250 V und 16 A hat begrenztes Wertpotenzial.",
         "reasons": [
-          "„KOMPONENTEN-GARANTIE 4 SEITEN“ verweist auf eine Unterlage über Maschinen, nicht auf Maschinenkomponenten im Lieferumfang."
+          "Elektrische Kenndaten sprechen für ein komplettes Schutzgerät."
         ],
         "risks": [
-          "Garantierelevanz, Ausgabe und Papierzustand ungeklärt."
+          "Schutzwirkung und Steckerversion sind ungeprüft."
         ],
         "next_checks": [
-          "Ob Originaldruck, vier Blätter oder Faltblatt angeboten werden, klären."
+          "Stecker und Funktionsnachweis prüfen."
         ]
       }
     }
