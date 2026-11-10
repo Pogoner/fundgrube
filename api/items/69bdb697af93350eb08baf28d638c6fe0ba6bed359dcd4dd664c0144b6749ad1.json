@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-10T14:06:52Z",
+    "evaluated_at": "2026-11-10T14:35:22Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-10T14:06:52Z",
+  "generated_at": "2026-11-10T14:35:22Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-10T13:39:13Z",
+    "content_updated_at": "2026-11-10T14:09:55Z",
     "country": "",
     "dependencies": [
       "Bauprojekt"
@@ -33,13 +33,11 @@
     "detail_path": "api/items/69bdb697af93350eb08baf28d638c6fe0ba6bed359dcd4dd664c0144b6749ad1.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Weder Versandkosten noch passende Abholung bestätigt",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-13T14:30:39Z",
@@ -47,7 +45,7 @@
     "image": "https://i.ebayimg.com/images/g/KVAAAeSwTWpq0iXI/s-l400.jpg",
     "interest_score": 6,
     "is_auction": true,
-    "last_seen_at": "2026-11-10T13:39:13Z",
+    "last_seen_at": "2026-11-10T14:09:55Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -68,7 +66,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Weder Versandkosten noch passende Abholung bestätigt",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
@@ -85,11 +82,11 @@
     "semantic_interest": 12,
     "semantic_review_mode": "interactive",
     "shipping_eur": null,
-    "source_observed_at": "2026-11-10T13:39:13Z",
+    "source_observed_at": "2026-11-10T14:09:55Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Glasbausteine (24x24cm)",
     "total_eur": null,
     "total_known_eur": null,
@@ -155,10 +152,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb",
+  "snapshot_id": "sha256:18456989756b3ed1301258a6a80dfb5456cef2055d3585a913a2b0f410ef6448",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"

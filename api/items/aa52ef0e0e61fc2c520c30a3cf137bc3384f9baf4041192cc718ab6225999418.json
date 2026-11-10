@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-10T14:06:52Z",
+    "evaluated_at": "2026-11-10T14:35:22Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-10T14:06:52Z",
+  "generated_at": "2026-11-10T14:35:22Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-10T08:27:59Z",
+    "content_updated_at": "2026-11-10T14:19:16Z",
     "country": "",
     "dependencies": [
       "Kompatibles Indramat-Antriebssystem",
@@ -39,7 +39,6 @@
     "eligibility_reasons": [
       "Versand über dem Limit; keine passende Abholung bestätigt",
       "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -50,7 +49,7 @@
     "image": "https://i.ebayimg.com/images/g/WZkAAeSwptdqhuwk/s-l400.jpg",
     "interest_score": 7,
     "is_auction": true,
-    "last_seen_at": "2026-11-10T08:27:59Z",
+    "last_seen_at": "2026-11-10T14:19:16Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -73,14 +72,11 @@
     "risks": [
       "Versand über dem Limit; keine passende Abholung bestätigt",
       "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
       "Funktion, Ausführung und Kompatibilität zur Zielmaschine ungeprüft.",
-      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 52,
@@ -91,10 +87,10 @@
     "semantic_interest": 52,
     "semantic_review_mode": "interactive",
     "shipping_eur": 23.99,
-    "source_observed_at": "2026-11-10T08:27:59Z",
+    "source_observed_at": "2026-11-10T14:19:16Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": true,
+    "stale": false,
     "time_window_eligible": false,
     "title": "Indramat KDV 2.1-100-220/300-W0 Power Supply / Netzteil MAHO MH800 CNC",
     "total_eur": null,
@@ -161,10 +157,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb",
+  "snapshot_id": "sha256:18456989756b3ed1301258a6a80dfb5456cef2055d3585a913a2b0f410ef6448",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
