@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-10T14:04:35Z",
+    "evaluated_at": "2026-11-10T14:06:52Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,19 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-10T14:04:35Z",
+  "generated_at": "2026-11-10T14:06:52Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Als Ersatzteil / defekt",
     "content_updated_at": "2026-11-10T13:38:41Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Identifikation der einzelnen Werkzeuge und Zubehörteile"
     ],
     "description": "",
     "description_status": "missing",
@@ -42,13 +42,14 @@
     "ends_at": "2026-11-13T08:22:31Z",
     "id": "v1|257838178904|0",
     "image": "https://i.ebayimg.com/images/g/DoMAAeSwWhZqDAz1/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 8,
     "is_auction": true,
     "last_seen_at": "2026-11-10T13:38:41Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Fotos und Einzelteile inventarisieren",
+      "Konkrete Defekte und Vollständigkeit prüfen"
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -63,21 +64,24 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Als Werkzeugposten angeboten, keine einzelne Maschine belegt"
     ],
     "reserve_status": "unknown",
     "risks": [
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-      "Defekt, ungeprüft oder unvollständig angegeben; keine Funktion unterstellen",
+      "Zustandsangabe als Ersatzteil/defekt",
+      "Keine konkrete Beschreibung und keine Stückliste",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 13,
+    "score": 8,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-10T13:59:39.018000Z",
+    "semantic_interest": 13,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 7.69,
     "source_observed_at": "2026-11-10T13:38:41Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -88,11 +92,11 @@
     "total_eur": null,
     "total_known_eur": 8.69,
     "url": "https://www.ebay.de/itm/257838178904?hash=item3c085a6258%3Ag%3ADoMAAeSwWhZqDAz1&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Werkzeuge können je nach tatsächlichem Umfang unabhängig oder mit üblichen Ergänzungen einsetzbar sein; ohne Stückliste lässt sich der Grad der Eigenständigkeit nicht sicher bestimmen.",
+    "useability_score": 65,
     "valid_until": "2026-11-13T08:22:31Z",
     "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_reason": "Das unspezifische Angebot eines Werkzeug-Restpostens belegt weder Stückzahl noch Gerätekategorien oder Materialqualität; höheres wirtschaftliches Potenzial wäre spekulativ.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -149,7 +153,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:fbced5fb8368989a8c892c1194f11b2f64088b81a75f88574cda1f45700ed13a",
+  "snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
