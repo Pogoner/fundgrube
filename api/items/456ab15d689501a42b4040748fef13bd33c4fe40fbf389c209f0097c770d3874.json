@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-10T15:07:30Z",
+    "evaluated_at": "2026-11-10T19:34:10Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-10T15:07:30Z",
+  "generated_at": "2026-11-10T19:34:10Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "low",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-10T14:41:49Z",
+    "content_updated_at": "2026-11-10T19:07:45Z",
     "country": "",
     "dependencies": [
       "DVD-Abspielgerät"
@@ -33,12 +33,10 @@
     "detail_path": "api/items/456ab15d689501a42b4040748fef13bd33c4fe40fbf389c209f0097c770d3874.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-13T15:57:17Z",
@@ -46,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/GvAAAeSwnvxq8Jp-/s-l400.jpg",
     "interest_score": 12,
     "is_auction": true,
-    "last_seen_at": "2026-11-10T14:41:49Z",
+    "last_seen_at": "2026-11-10T19:07:45Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -68,7 +66,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -84,11 +81,11 @@
     "semantic_interest": 15,
     "semantic_review_mode": "interactive",
     "shipping_eur": 9.68,
-    "source_observed_at": "2026-11-10T14:41:49Z",
+    "source_observed_at": "2026-11-10T19:07:45Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "DVD Konvolut Sammlung | rar | uncut | Action Horror Thriller",
     "total_eur": null,
     "total_known_eur": 10.68,
@@ -154,7 +151,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:abce4f6e5f30e19fe8b2f57b38a0b401ede306e1bb514139ba9fd1116b057ace",
+  "snapshot_id": "sha256:baa0cce08dabf66ff8072ce07c86588ae63cc574ca0a0059f425a58adb29a135",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",

@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-10T15:07:30Z",
+    "evaluated_at": "2026-11-10T19:34:10Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-10T15:07:30Z",
+  "generated_at": "2026-11-10T19:34:10Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "low",
@@ -34,13 +34,11 @@
     "detail_path": "api/items/23008a7528e88801d2c1ae593f786060aea7ef374a7ab466f64ef7a81024eee9.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-13T17:17:07Z",
@@ -71,7 +69,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
@@ -93,7 +90,7 @@
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": true,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "2 Stück KNITTER SPA106F Taster gebraucht",
     "total_eur": null,
     "total_known_eur": 2.85,
@@ -159,7 +156,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:abce4f6e5f30e19fe8b2f57b38a0b401ede306e1bb514139ba9fd1116b057ace",
+  "snapshot_id": "sha256:baa0cce08dabf66ff8072ce07c86588ae63cc574ca0a0059f425a58adb29a135",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",

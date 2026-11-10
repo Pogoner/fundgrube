@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-10T15:07:30Z",
+    "evaluated_at": "2026-11-10T19:34:10Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,13 +13,13 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-10T15:07:30Z",
+  "generated_at": "2026-11-10T19:34:10Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Gebraucht",
     "content_updated_at": "2026-11-10T14:47:35Z",
@@ -34,6 +34,7 @@
     "eligibility": "excluded",
     "eligibility_reasons": [
       "Ablauf außerhalb des Suchfensters",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -68,10 +69,13 @@
     "reserve_status": "unknown",
     "risks": [
       "Ablauf außerhalb des Suchfensters",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert.",
+      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 3,
@@ -85,7 +89,7 @@
     "source_observed_at": "2026-11-10T14:47:35Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": false,
+    "stale": true,
     "time_window_eligible": false,
     "title": "Apothekerflaschen 1 x 150 ml Braunglas Laborflaschen mit Verschluss",
     "total_eur": null,
@@ -152,7 +156,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:abce4f6e5f30e19fe8b2f57b38a0b401ede306e1bb514139ba9fd1116b057ace",
+  "snapshot_id": "sha256:baa0cce08dabf66ff8072ce07c86588ae63cc574ca0a0059f425a58adb29a135",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
