@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-10T13:30:20Z",
+    "evaluated_at": "2026-11-10T14:04:35Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-10T13:30:20Z",
+  "generated_at": "2026-11-10T14:04:35Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,7 @@
     "content_updated_at": "2026-11-10T01:04:47Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Ösen oder passende Befestigungsmittel"
     ],
     "description": "",
     "description_status": "missing",
@@ -43,13 +43,14 @@
     "ends_at": "2026-11-12T21:00:01Z",
     "id": "v1|377633160450|0",
     "image": "https://i.ebayimg.com/images/g/sEUAAeSwH4tq8euk/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 34,
     "is_auction": true,
     "last_seen_at": "2026-11-10T01:04:47Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Tatsächliche Abmessungen und Beschädigungen prüfen",
+      "Ösen und Materialzustand bestätigen"
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -59,12 +60,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "accessory",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Maße 1,50 mal 7,45 Meter und hohes Flächengewicht genannt"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -73,14 +74,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "B-Ware; Löcher und genaue Materialbeschichtung ungeklärt",
+      "Quellenbeobachtung älter als der aktuelle Vollscan",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 36,
+    "score": 34,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-10T07:56:40.154000Z",
+    "semantic_interest": 36,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 8.99,
     "source_observed_at": "2026-11-10T01:04:47Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -91,11 +96,11 @@
     "total_eur": null,
     "total_known_eur": 9.99,
     "url": "https://www.ebay.de/itm/377633160450?hash=item57ecb0bd02%3Ag%3AsEUAAeSwH4tq8euk&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Als Abdeckung oder Schutzplane relativ eigenständig nutzbar und nur übliche Befestigung notwendig.",
+    "useability_score": 94,
     "valid_until": "2026-11-12T21:00:01Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "Eine etwa 11 Quadratmeter große schwere PVC-Gewebeplane hat breit einsetzbaren Materialnutzen; B-Ware senkt die Sicherheit hinsichtlich Qualität.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -152,10 +157,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69",
+  "snapshot_id": "sha256:fbced5fb8368989a8c892c1194f11b2f64088b81a75f88574cda1f45700ed13a",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
