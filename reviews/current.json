@@ -2632,6 +2632,35 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende M4-Gewindebolzen oder Schrauben"
+        ],
+        "next_checks": [
+          "Tatsächliche Stückzahl und M4-Kompatibilität prüfen"
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "25 Stück und M4 als Größe genannt"
+        ],
+        "risks": [
+          "Gewindegüte und Verzinkungszustand nicht geprüft"
+        ],
+        "scalp_score": 9,
+        "useability_reason": "M4-Flügelmuttern sind für passende Gewinde ohne Spezialanlage nutzbar, benötigen jedoch zugehörige Schrauben oder Gewindebolzen und eine konkrete Verbindung.",
+        "useability_score": 78,
+        "value_band": "around_5",
+        "value_reason": "Ein kleiner Posten von 25 üblichen verzinkten Flügelmuttern hat vor allem geringes Normteilpotenzial; keine seltenen Spezialteile erkennbar."
+      },
+      "content_fingerprint": "sha256:0cd8b4d17ab4856311834e3b685fa145fe28dbeda2aaada2edab6ede12e942a5",
+      "ends_at": "2026-11-11T11:34:17Z",
+      "id": "v1|117513989819|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [],
         "next_checks": [
@@ -10071,123 +10100,6 @@
     },
     {
       "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Passende Elektronikschaltung",
-          "Lötwerkzeug"
-        ],
-        "next_checks": [
-          "Typ, Stückzahl und elektrische Funktion prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [
-          "Einordnung anhand des vollständig vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Lieferumfang und Zustand im Detail unbelegt."
-        ],
-        "scalp_score": 9,
-        "useability_reason": "Benötigt passende Platine, Versorgung und Schaltung.",
-        "useability_score": 31,
-        "value_band": "around_5",
-        "value_reason": "Kleiner Satz oder einzelner spezialisierter Schaltkreis für Elektronikprojekte."
-      },
-      "content_fingerprint": "sha256:1a929eb65c9188dbb69e79a2b2c46c8aba5de99bdd25107c28b308c442be851d",
-      "ends_at": "2026-11-10T14:04:06Z",
-      "id": "v1|147659459723|0",
-      "reviewed_at": "2026-11-08T20:13:29.681366Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Passende Schaltung"
-        ],
-        "next_checks": [
-          "Lieferumfang und Zustand anhand des Originalangebots prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [
-          "Neun neue Standard-Leistungswiderstände."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 3,
-        "useability_reason": "Widerstände benötigen passende Schaltung und Montage.",
-        "useability_score": 44,
-        "value_band": "around_5",
-        "value_reason": "Neun neue Standard-Leistungswiderstände."
-      },
-      "content_fingerprint": "sha256:17c8fa4d74f527b225b2a832b5da7ce0789a275307c44d0ae152eb547b17069c",
-      "ends_at": "2026-11-10T14:04:06Z",
-      "id": "v1|147659459725|0",
-      "reviewed_at": "2026-11-08T20:13:53Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Sensorauswertung",
-          "Verdrahtung"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft."
-        ],
-        "scalp_score": 4,
-        "useability_reason": "Benötigt passende Auswerteelektronik und Einbau.",
-        "useability_score": 43,
-        "value_band": "around_5",
-        "value_reason": "Ein einfacher Temperatursensor bietet minimales Teilepotenzial."
-      },
-      "content_fingerprint": "sha256:f7a91e167f91e25fda400a1456a5b2da5ae4a148a0ed13c88eca41359ed07cef",
-      "ends_at": "2026-11-10T14:04:06Z",
-      "id": "v1|147659459729|0",
-      "reviewed_at": "2026-11-08T20:13:07.561264Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Passende Elektronikschaltung",
-          "Lötwerkzeug"
-        ],
-        "next_checks": [
-          "Typ, Stückzahl und elektrische Funktion prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [
-          "Einordnung anhand des vollständig vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Lieferumfang und Zustand im Detail unbelegt."
-        ],
-        "scalp_score": 9,
-        "useability_reason": "Benötigt passende Platine, Versorgung und Schaltung.",
-        "useability_score": 31,
-        "value_band": "around_5",
-        "value_reason": "Kleiner Satz oder einzelner spezialisierter Schaltkreis für Elektronikprojekte."
-      },
-      "content_fingerprint": "sha256:ed6fd83dda26f7e024d08838055a8d4ffd707c97b6115af0e5664d0d2078b615",
-      "ends_at": "2026-11-10T14:04:06Z",
-      "id": "v1|147659459730|0",
-      "reviewed_at": "2026-11-08T20:13:29.681366Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
@@ -13509,6 +13421,37 @@
       "reviewed_at": "2026-11-09T13:29:04.022000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:18cff51577f584e36862ed4275ce55f2c7fbbad1390b56dc424a9b3372bc8d45"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Säge bzw. Bearbeitungswerkzeuge",
+          "Geeignetes Projekt und passende Zuschnittmaße"
+        ],
+        "next_checks": [
+          "Stückgrößen und Materialstärke prüfen",
+          "Schäden, Verzug und Einsatzfähigkeit kontrollieren"
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Material als Siebdruckplattenreste und Gewicht 5 kg genannt"
+        ],
+        "risks": [
+          "Abmessungen, Feuchtigkeit und Beschichtungszustand nicht belegt"
+        ],
+        "scalp_score": 15,
+        "useability_reason": "Holzplattenreste sind Rohmaterial für Zuschnitt oder ein konkretes Bauprojekt; sinnvoller Einsatz benötigt Bearbeitungswerkzeuge und passende Abmessungen.",
+        "useability_score": 54,
+        "value_band": "around_5",
+        "value_reason": "Ein Posten von fünf Kilogramm Siebdruckplatten-Resten kann als Werkstoff dienen, bleibt wegen kleiner und unbekannter Stückgrößen wirtschaftlich begrenzt."
+      },
+      "content_fingerprint": "sha256:3aca6f850a3c5961a0a9d92b547ba5680bce0d8b911ea9d6eebe0ab71f98a979",
+      "ends_at": "2026-11-13T08:27:26Z",
+      "id": "v1|147674283099|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
     },
     {
       "assessment": {
@@ -38725,6 +38668,37 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Identifikation der einzelnen Werkzeuge und Zubehörteile"
+        ],
+        "next_checks": [
+          "Fotos und Einzelteile inventarisieren",
+          "Konkrete Defekte und Vollständigkeit prüfen"
+        ],
+        "product_kind": "unknown",
+        "reasons": [
+          "Als Werkzeugposten angeboten, keine einzelne Maschine belegt"
+        ],
+        "risks": [
+          "Zustandsangabe als Ersatzteil/defekt",
+          "Keine konkrete Beschreibung und keine Stückliste"
+        ],
+        "scalp_score": 13,
+        "useability_reason": "Werkzeuge können je nach tatsächlichem Umfang unabhängig oder mit üblichen Ergänzungen einsetzbar sein; ohne Stückliste lässt sich der Grad der Eigenständigkeit nicht sicher bestimmen.",
+        "useability_score": 65,
+        "value_band": "unknown",
+        "value_reason": "Das unspezifische Angebot eines Werkzeug-Restpostens belegt weder Stückzahl noch Gerätekategorien oder Materialqualität; höheres wirtschaftliches Potenzial wäre spekulativ."
+      },
+      "content_fingerprint": "sha256:89351e162bc3bd71f6a6cc521d24356de5559c211bfd5d36a12b19851f946c8a",
+      "ends_at": "2026-11-13T08:22:31Z",
+      "id": "v1|257838178904|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Bei Fachnutzung passende Instrumente"
@@ -45069,6 +45043,39 @@
       "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
+          "Passende Gasflasche und Druckregler",
+          "Belüfteter zulässiger Betriebsort"
+        ],
+        "next_checks": [
+          "Mitgelieferten Regler und Gerätetyp prüfen",
+          "Sicherheits- und Dichtigkeitsprüfung vor Betrieb"
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Heizleistung 4200 W genannt",
+          "Als Gasheizgerät, nicht als separates Zubehör, bezeichnet"
+        ],
+        "risks": [
+          "Retoure und gebrauchter Zustand",
+          "Gasdichtheit, Abschaltung und Zulässigkeit nicht nachgewiesen"
+        ],
+        "scalp_score": 43,
+        "useability_reason": "Ein vollständiger mobiler Gasheizofen kann mit handelsüblicher Gasversorgung betrieben werden; Gasflasche, Druckregler und sichere Belüftung sind zusätzliche Voraussetzungen.",
+        "useability_score": 74,
+        "value_band": "around_50",
+        "value_reason": "Ein einzelner genannter 4,2-kW-Gasheizer kann als eigenständiges Heizgerät wirtschaftlich brauchbar sein; konkrete Ausführung und kompletter Lieferumfang sind unbekannt."
+      },
+      "content_fingerprint": "sha256:3a4dd2e6e7fc3ebde9ec69fa1d345ef3fe24743af1d55d7266d6ed244c1876a0",
+      "ends_at": "2026-11-11T11:10:48Z",
+      "id": "v1|267839525823|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
           "Geeignete Last und Nutzungssituation"
         ],
         "next_checks": [
@@ -45343,33 +45350,6 @@
       "ends_at": "2026-11-16T08:30:01Z",
       "id": "v1|287701790432|0",
       "reviewed_at": "2026-11-08T20:36:16.629337Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [],
-        "next_checks": [
-          "Lieferumfang und Zustand anhand des Originalangebots prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [
-          "Acht kleine Rollen Standardklebeband."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 5,
-        "useability_reason": "Klebeband kann direkt oder mit üblichem Abroller genutzt werden.",
-        "useability_score": 99,
-        "value_band": "around_5",
-        "value_reason": "Acht kleine Rollen Standardklebeband."
-      },
-      "content_fingerprint": "sha256:96fa6edb044cfafe1eb462f3b656b3b3be920665986bc96749703d91c49875cc",
-      "ends_at": "2026-11-10T14:06:41Z",
-      "id": "v1|287701921127|0",
-      "reviewed_at": "2026-11-08T20:13:53Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -48056,6 +48036,37 @@
       "reviewed_at": "2026-11-08T21:39:14.384777Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:574bdb5b26117338bc39bfe1dbcf2fc658dd908660a4facf05ccdac7e6cb9545"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Geeignete saubere Schraubgewinde"
+        ],
+        "next_checks": [
+          "Haltbarkeitsdatum und Versiegelung prüfen",
+          "Technisches Datenblatt und Einsatzbereich kontrollieren"
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Sieben Einheiten, Marke und Typ TM 44 genannt"
+        ],
+        "risks": [
+          "Alter, Haltbarkeit und Lagerung der Klebstoffe unbekannt",
+          "Originalität und ungeöffnete Gebinde nicht belegt"
+        ],
+        "scalp_score": 14,
+        "useability_reason": "Gewindesicherung wird direkt an geeigneten Schraubverbindungen angewandt und benötigt neben üblichem Werkzeug keine Spezialanlage.",
+        "useability_score": 92,
+        "value_band": "around_5",
+        "value_reason": "Sieben kleine Ein-Milliliter-Einheiten mittelfester Gewindesicherung bieten begrenzten, aber konkreten Werkstatt-Verbrauchsnutzen."
+      },
+      "content_fingerprint": "sha256:34bcb6a022c32df335664aa4821580496a68a6197ba8f84567494ac8aadb132c",
+      "ends_at": "2026-11-13T08:18:16Z",
+      "id": "v1|287718186557|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
     },
     {
       "assessment": {
@@ -62618,59 +62629,6 @@
     },
     {
       "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [],
-        "next_checks": [
-          "Fehler, Größe und Schutzklasse klären."
-        ],
-        "product_kind": "consumable",
-        "reasons": [
-          "Einwegoverall mit ausdrücklich genannten Fehlern und kleinem Materialpotenzial."
-        ],
-        "risks": [
-          "Fehler können die Schutzbarriere beeinträchtigen."
-        ],
-        "scalp_score": 4,
-        "useability_reason": "Schutzoverall ist eigenständig tragbar; Schutzwirkung ist gesondert zu prüfen.",
-        "useability_score": 99,
-        "value_band": "around_5",
-        "value_reason": "Einwegoverall mit ausdrücklich genannten Fehlern und kleinem Materialpotenzial."
-      },
-      "content_fingerprint": "sha256:87a02b80e2904bf761ce0fdd21a9764572a6d7e0a75e1f500352c09ff4b1fcc5",
-      "ends_at": "2026-11-10T13:56:07Z",
-      "id": "v1|377617959891|0",
-      "reviewed_at": "2026-11-08T20:13:53Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
-          "Schutzklasse und Haltbarkeit ungeprüft."
-        ],
-        "scalp_score": 5,
-        "useability_reason": "Bei passender Größe unmittelbar tragbar.",
-        "useability_score": 99,
-        "value_band": "around_5",
-        "value_reason": "Ein Einwegschutzanzug ist kleine Verbrauchsware."
-      },
-      "content_fingerprint": "sha256:98547c4766c49d99390b49b11166fc7e80d64c39f01b35dffb145b1f8b6b5bab",
-      "ends_at": "2026-11-10T13:56:37Z",
-      "id": "v1|377617960721|0",
-      "reviewed_at": "2026-11-08T20:13:07.561264Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Kompatibler Canon-IR3200"
@@ -65463,6 +65421,39 @@
       "reviewed_at": "2026-11-10T07:56:40.154000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:1426c80595d570357a6daf9924e55cfa607a2f38aa4e31e98c7d1318210aeeca"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Spannmittel oder Befestigung",
+          "Vollständigkeit und Ösen nicht gesichert"
+        ],
+        "next_checks": [
+          "Genaue Maße, Ösen und Dichtigkeit prüfen",
+          "Risse, Reparaturen und Beschichtungszustand beurteilen"
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Breite, ungefähre Länge und Flächengewicht genannt",
+          "Als PVC-Gewebeplane angeboten"
+        ],
+        "risks": [
+          "B-Ware mit möglichen Löchern, Zuschnitten oder Beschädigungen",
+          "Keine Verkäuferbeschreibung verfügbar"
+        ],
+        "scalp_score": 30,
+        "useability_reason": "Eine schwere PVC-Gewebeplane ist als Abdeckung weitgehend eigenständig verwendbar und benötigt nur normale Befestigungsmittel.",
+        "useability_score": 94,
+        "value_band": "around_50",
+        "value_reason": "Jeweils eine etwa 1,5 m breite, fünf bis fünfeinhalb Meter lange schwere LKW-PVC-Plane bietet realen Material- und Abdecknutzen, aber B-Ware begrenzt das Potenzial."
+      },
+      "content_fingerprint": "sha256:0241162e93f2c5a54bde12863532ef69689603fa8611b67d8a2a42b9fd0635cb",
+      "ends_at": "2026-11-13T11:00:01Z",
+      "id": "v1|377633166745|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
     },
     {
       "assessment": {
@@ -68611,6 +68602,68 @@
       "reviewed_at": "2026-11-10T07:56:40.154000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:1426c80595d570357a6daf9924e55cfa607a2f38aa4e31e98c7d1318210aeeca"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Enthaltene Solarzellen und Akkus; Lieferumfang unbekannt"
+        ],
+        "next_checks": [
+          "Stückzahl, Solarmodule und Akkus prüfen",
+          "Lichtfunktion und Außenbereichseignung kontrollieren"
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Menge von 15 und Solar-LED-Bauart genannt"
+        ],
+        "risks": [
+          "Weihnachts-/Dekoartikel; keine industrielle Belastbarkeit belegt",
+          "Akkuqualität und Modellvarianten unbekannt"
+        ],
+        "scalp_score": 31,
+        "useability_reason": "Solar-LED-Dekoleuchten sind bei vorhandenen Solarmodulen und intakten Akkus ohne gesonderte Elektroinstallation nutzbar.",
+        "useability_score": 91,
+        "value_band": "around_50",
+        "value_reason": "Fünfzehn als neu bezeichnete dekorative Solarleuchten können ein brauchbarer Kleinwarenposten sein, sind aber keine professionellen Industriebeleuchtungen."
+      },
+      "content_fingerprint": "sha256:5d397f9a44621d8a4aaa60ca63c1881130ccadf48f2152ab3498ffa35ef33b68",
+      "ends_at": "2026-11-13T05:17:32Z",
+      "id": "v1|407352296909|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Je nach tatsächlichem Inhalt Stoffe, Nadeln oder Nähmaschine"
+        ],
+        "next_checks": [
+          "Stückliste und tatsächliche Scherenzahl prüfen",
+          "Marke, Material und Funktionszustand feststellen"
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Stückzahl 212 und Scheren/Nähzeug im Titel genannt"
+        ],
+        "risks": [
+          "Kein verifizierter Einzelinhalt; UVP reine Angebotsbehauptung",
+          "Qualität, Vollständigkeit und Markenmix unbekannt"
+        ],
+        "scalp_score": 32,
+        "useability_reason": "Ein Sortiment aus Nähzubehör und Scheren ist teils direkt verwendbar, teils nur mit üblichen Textil-, Handarbeits- oder Nähgeräten.",
+        "useability_score": 86,
+        "value_band": "around_50",
+        "value_reason": "Ein als 212-teilig bezeichnetes Nähzeug-/Scheren-Sortiment kann als Kleinwarenposten nützlich sein; die genannte UVP ist keine unabhängige wirtschaftliche Bewertung."
+      },
+      "content_fingerprint": "sha256:715e6875702c6c6799db9881652292a033669ee23a0a4b91be3320bbf072ac13",
+      "ends_at": "2026-11-13T11:32:36Z",
+      "id": "v1|407352867445|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
     },
     {
       "assessment": {
@@ -73623,6 +73676,39 @@
       "reviewed_at": "2026-11-10T01:44:02Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:46f944c350f84798a209b4c95fbb9aaa3bcd23f8082d7c68023dbc6ccc414509"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Spannmittel oder Befestigung",
+          "Vollständigkeit und Ösen nicht gesichert"
+        ],
+        "next_checks": [
+          "Genaue Maße, Ösen und Dichtigkeit prüfen",
+          "Risse, Reparaturen und Beschichtungszustand beurteilen"
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Breite, ungefähre Länge und Flächengewicht genannt",
+          "Als PVC-Gewebeplane angeboten"
+        ],
+        "risks": [
+          "B-Ware mit möglichen Löchern, Zuschnitten oder Beschädigungen",
+          "Keine Verkäuferbeschreibung verfügbar"
+        ],
+        "scalp_score": 30,
+        "useability_reason": "Eine schwere PVC-Gewebeplane ist als Abdeckung weitgehend eigenständig verwendbar und benötigt nur normale Befestigungsmittel.",
+        "useability_score": 94,
+        "value_band": "around_50",
+        "value_reason": "Jeweils eine etwa 1,5 m breite, fünf bis fünfeinhalb Meter lange schwere LKW-PVC-Plane bietet realen Material- und Abdecknutzen, aber B-Ware begrenzt das Potenzial."
+      },
+      "content_fingerprint": "sha256:4067f9d3885c317f74526fbfe67388f9a38c71a7cfb669502ff51423e5b20484",
+      "ends_at": "2026-11-11T11:00:01Z",
+      "id": "v1|820335407312|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
     },
     {
       "assessment": {
@@ -82604,6 +82690,38 @@
       "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
+          "Sortierung und gegebenenfalls Metallbearbeitung",
+          "Prüfung des Materials für den beabsichtigten Einsatz"
+        ],
+        "next_checks": [
+          "Gewicht und Fotos des Gesamtpostens prüfen",
+          "Materialidentität und Abwicklung im Original verifizieren"
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "11 kg und Kupferqualität Millberry im Titel genannt"
+        ],
+        "risks": [
+          "99,9-%-Reinheit und Menge unbestätigte Verkäuferangaben",
+          "Ungewöhnlich niedrige Auktionsangabe belegt keinen Lieferumfang"
+        ],
+        "scalp_score": 53,
+        "useability_reason": "Kupfermaterial benötigt für produktive technische Verwendung eine passende Verarbeitung, Fertigung oder Recyclingkette; es ist keine eigenständige Maschine.",
+        "useability_score": 59,
+        "value_band": "around_50",
+        "value_reason": "Eine behauptete Menge von 11 kg hochreinem Kupfer kann substanzielle Rohstoffrelevanz haben; Masse, Reinheit und tatsächlich gelieferte Form sind aus dem Titel allein nicht gesichert."
+      },
+      "content_fingerprint": "sha256:5525ddbecb2ff293f03a1f5c1d789fd056946901cf8a41b688fed7d7ae987048",
+      "ends_at": "2026-11-13T11:49:38Z",
+      "id": "v1|880102001800|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
           "Passender Kraftstoff",
           "Betriebsstoffe"
         ],
@@ -84888,6 +85006,37 @@
       "reviewed_at": "2026-11-10T01:44:02Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:46f944c350f84798a209b4c95fbb9aaa3bcd23f8082d7c68023dbc6ccc414509"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Knopfzelle; Mitlieferung unbekannt"
+        ],
+        "next_checks": [
+          "Messbereich, Batterie und Messbacken prüfen",
+          "Anzeige und Wiederholgenauigkeit testen"
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Konkrete Messgerätebezeichnung und LCD genannt"
+        ],
+        "risks": [
+          "B-Ware; Messgenauigkeit, Nullstellung und Displayfunktion nicht bestätigt",
+          "Beschreibung fehlt"
+        ],
+        "scalp_score": 24,
+        "useability_reason": "Ein digitaler Messschieber ist als Handmessgerät mit üblicher Batterie unmittelbar einsetzbar; kein spezielles Maschinensystem nötig.",
+        "useability_score": 94,
+        "value_band": "around_50",
+        "value_reason": "Ein einzelner PARKSIDE-Digitalmessschieber hat praktischen Werkstattnutzen, aber keine belegte professionelle Präzisions- oder Markenwertklasse."
+      },
+      "content_fingerprint": "sha256:33880c2dc81324f9a80e85bfa7aed77dc87488c692875915ece3df5c4f8e0d48",
+      "ends_at": "2026-11-13T12:33:03Z",
+      "id": "v1|900080130985|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
     },
     {
       "assessment": {
@@ -87967,6 +88116,39 @@
       "reviewed_at": "2026-11-10T01:44:02Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:46f944c350f84798a209b4c95fbb9aaa3bcd23f8082d7c68023dbc6ccc414509"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatible Bohrmaschine",
+          "Passender Aufnahmedorn bzw. Zentrierbohrer"
+        ],
+        "next_checks": [
+          "Lieferumfang und Aufnahmedorn prüfen",
+          "Schneiden, Drehzahl und Materialfreigabe verifizieren"
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Durchmesser 83 und 92 mm genannt",
+          "Hersteller und Nummern bezeichnet"
+        ],
+        "risks": [
+          "Aufnahmedorn möglicherweise nicht enthalten",
+          "Materialeignung und Zahnzustand unklar"
+        ],
+        "scalp_score": 32,
+        "useability_reason": "Lochsägen sind mit passender Bohrmaschine und geeignetem Aufnahmedorn verwendbar; selbst keine vollständige Maschine.",
+        "useability_score": 74,
+        "value_band": "around_50",
+        "value_reason": "Zwei markenbenannte wolfcraft-Lochsägen mit großen Durchmessern sind brauchbares Bohrzubehör; Material, Schneiden und Umfang bleiben ungeprüft."
+      },
+      "content_fingerprint": "sha256:08b339acaa09538aae5e9386fa83afc36224039bcca5b5e57398589ef56da0bc",
+      "ends_at": "2026-11-12T18:21:03Z",
+      "id": "v1|920122556631|0",
+      "reviewed_at": "2026-11-10T13:59:39.018000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
     },
     {
       "assessment": {
