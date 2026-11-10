@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-09T20:40:57Z",
+    "evaluated_at": "2026-11-10T01:30:18Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-09T20:40:57Z",
+  "generated_at": "2026-11-10T01:30:18Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-09T09:32:00Z",
+    "content_updated_at": "2026-11-10T01:06:15Z",
     "country": "",
     "dependencies": [
       "Möbelprojekt",
@@ -37,7 +37,6 @@
     "eligibility": "excluded",
     "eligibility_reasons": [
       "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -48,7 +47,7 @@
     "image": "https://i.ebayimg.com/images/g/1X0AAeSwnjxp0sL0/s-l400.jpg",
     "interest_score": 5,
     "is_auction": true,
-    "last_seen_at": "2026-11-09T09:32:00Z",
+    "last_seen_at": "2026-11-10T01:06:15Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -71,14 +70,11 @@
     "reserve_status": "unknown",
     "risks": [
       "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
       "Menge und Traglast unbekannt.",
-      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 10,
@@ -89,10 +85,10 @@
     "semantic_interest": 10,
     "semantic_review_mode": "interactive",
     "shipping_eur": 3.0,
-    "source_observed_at": "2026-11-09T09:32:00Z",
+    "source_observed_at": "2026-11-10T01:06:15Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": true,
+    "stale": false,
     "time_window_eligible": false,
     "title": "lenkrollen -schwarz-zapfen -länge ca 3,5cm+dicke 5mm",
     "total_eur": null,
@@ -159,10 +155,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:4185421d74da3d8c15b425fd5fcd234df2709ef853e93342c5596fa238c50b73",
+  "snapshot_id": "sha256:46f944c350f84798a209b4c95fbb9aaa3bcd23f8082d7c68023dbc6ccc414509",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
