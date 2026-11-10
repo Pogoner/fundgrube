@@ -1,4 +1,755 @@
 {
   "schema_version": 1,
-  "request": null
+  "request": {
+    "id": "fundgrube-20261110T014402Z-llm27",
+    "source_commit": "eefaf9654f18fca5b63eaf61556232f56edfb142",
+    "ratings": {
+      "schema_version": 2,
+      "source_snapshot_id": "sha256:46f944c350f84798a209b4c95fbb9aaa3bcd23f8082d7c68023dbc6ccc414509",
+      "reviewed_at": "2026-11-10T01:44:02Z",
+      "reviewer": "ChatGPT",
+      "groups": [
+        {
+          "ids": [
+            "v1|257844188055|0"
+          ],
+          "assessment": {
+            "scalp_score": 24,
+            "useability_score": 44,
+            "useability_reason": "Ein Einbaumessgerät benötigt typischerweise Versorgung, passende Messsignale und ein Gehäuse oder Panel.",
+            "dependencies": [
+              "Versorgung und Messbereich unbekannt",
+              "Geeigneter Schalttafel-Einbau"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Als unspezifiziertes Panel-Messgerät grundsätzlich brauchbare Messtechnik; ohne Typ, Messbereich und Hersteller nur begrenztes wirtschaftliches Potenzial.",
+            "reasons": [
+              "Der Titel beschreibt ein Messgerät, keinen vollständigen Messplatz."
+            ],
+            "risks": [
+              "Modell und Funktionen nicht belegt"
+            ],
+            "next_checks": [
+              "Typenschild und Anschlüsse prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|336888261817|0"
+          ],
+          "assessment": {
+            "scalp_score": 68,
+            "useability_score": 74,
+            "useability_reason": "Als Abluft-/Absaugeinheit grundsätzlich nutzbar, allerdings sind Einbindung, Luftführung und Sicherheitseinrichtungen erforderlich.",
+            "dependencies": [
+              "Geeignete Spannungsversorgung",
+              "Abluftkanal, Filter und Anschluss an die Spritzkabine"
+            ],
+            "value_band": "around_500",
+            "assessment_confidence": "low",
+            "product_kind": "apparatus",
+            "value_reason": "Eine als gesamte Absauganlage bezeichnete Einrichtung für eine Spritzkabine kann substanzielles gewerbliches Potenzial haben; Umfang und Leistung sind unbekannt.",
+            "reasons": [
+              "Angeboten wird laut Titel eine Absauganlage, nicht nur eine Broschüre."
+            ],
+            "risks": [
+              "Vollständigkeit und Explosionsschutz ungeklärt",
+              "Versand und tatsächlicher Abholort unbekannt"
+            ],
+            "next_checks": [
+              "Bilder, Motor, Luftmenge und Zulassung prüfen",
+              "Abholung und Transport klären"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|900078409400|0"
+          ],
+          "assessment": {
+            "scalp_score": 7,
+            "useability_score": 94,
+            "useability_reason": "Als Schutzbrille unmittelbar nutzbar, wenn die Schutzwirkung und Norm tatsächlich geeignet sind.",
+            "dependencies": [
+              "Geeignete und unbeschädigte Solarfilterung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Einzelne neue Sonnenfinsternisbrille hat nur geringes wirtschaftliches Potenzial.",
+            "reasons": [
+              "Der Titel nennt eine Brille, kein optisches Gerät."
+            ],
+            "risks": [
+              "Schutzstandard und Lagerzustand unbestätigt"
+            ],
+            "next_checks": [
+              "Kennzeichnung und EN-ISO-12312-2-Eignung im Original prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|267838894344|0"
+          ],
+          "assessment": {
+            "scalp_score": 19,
+            "useability_score": 76,
+            "useability_reason": "Nach Montage an einer kompatiblen Schubkarre nutzbar; kein vollständiges Transportgerät.",
+            "dependencies": [
+              "Passender Achsdurchmesser und Einbaumaße",
+              "Kompatible Schubkarre"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Ein einzelnes PU-Schubkarren-Ersatzrad ist ein kleiner Ersatzteilposten.",
+            "reasons": [
+              "Der tatsächliche Lieferumfang ist ein Ersatzrad."
+            ],
+            "risks": [
+              "Retoure, Maße und Belastbarkeit ungeklärt"
+            ],
+            "next_checks": [
+              "Achsdurchmesser und Raddurchmesser prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|267838913842|0"
+          ],
+          "assessment": {
+            "scalp_score": 46,
+            "useability_score": 79,
+            "useability_reason": "Als Heizer grundsätzlich eigenständig mit handelsüblichem Gas, Regler und geeigneter Lüftung einsetzbar.",
+            "dependencies": [
+              "Passende Gasflasche und Druckregler",
+              "Sichere Belüftung und Aufstellbedingungen"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "apparatus",
+            "value_reason": "Ein Gasheizofen mit genannter Leistung von 4200 W ist ein vollwertiges Heizgerät mit möglichem Gebrauchswert; Retourenzustand mindert Sicherheit der Einordnung.",
+            "reasons": [
+              "Die Auktion betrifft einen Gasheizofen, nicht ein bloßes Heizelement."
+            ],
+            "risks": [
+              "Retoure; Dichtheit, Funktion und Zertifizierung ungeprüft"
+            ],
+            "next_checks": [
+              "Lieferumfang, Regler und Sicherheitsabschaltung prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|206666232608|0"
+          ],
+          "assessment": {
+            "scalp_score": 8,
+            "useability_score": 19,
+            "useability_reason": "Elektronische Teile benötigen eine passende Baugruppe; der Titel nennt keine eigenständige Funktion.",
+            "dependencies": [
+              "Passendes Computersystem oder Schaltung",
+              "Teileidentifikation"
+            ],
+            "value_band": "unknown",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Zwei nicht genauer benannte PC-Bauelemente erlauben keine belastbare Annahme über Typ oder wirtschaftlichen Nutzen.",
+            "reasons": [
+              "Tatsächlich werden nur zwei Bauelemente genannt."
+            ],
+            "risks": [
+              "Art und Wert völlig unklar"
+            ],
+            "next_checks": [
+              "Fotos, Typenbezeichnung und Stückzahl prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|900064202618|0"
+          ],
+          "assessment": {
+            "scalp_score": 13,
+            "useability_score": 23,
+            "useability_reason": "Für eine spezifische Konstruktion oder Montage bestimmt, ohne eigenen Betriebszweck.",
+            "dependencies": [
+              "Passende Maßzeichnung und Montageprojekt"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Unbestimmte Aluminium-Distanzscheiben und Zuschnitte sind gewöhnlich geringwertige Einzelteile; der Titel deutet auf Auftragsfertigung hin.",
+            "reasons": [
+              "Angeboten werden Scheiben beziehungsweise Teile, keine Maschine."
+            ],
+            "risks": [
+              "Menge, Material und konkrete Lieferung unklar"
+            ],
+            "next_checks": [
+              "Prüfen, ob überhaupt ein bestimmter Lieferumfang verkauft wird"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|287697078022|0"
+          ],
+          "assessment": {
+            "scalp_score": 14,
+            "useability_score": 62,
+            "useability_reason": "Eine Transporthilfe ist möglicherweise direkt einsetzbar, sofern Traglast und Form zur Anwendung passen.",
+            "dependencies": [
+              "Geeignete Last und Nutzungssituation"
+            ],
+            "value_band": "unknown",
+            "assessment_confidence": "low",
+            "product_kind": "accessory",
+            "value_reason": "Die bloße Bezeichnung Beförderungshilfe lässt Größe, Art und Material offen; plausibles Potenzial bleibt klein bis unbestimmt.",
+            "reasons": [
+              "Titel legt eine Hilfe und kein komplettes Fahrzeug nahe."
+            ],
+            "risks": [
+              "Fehlende Produktidentifikation und Belastbarkeitsangaben"
+            ],
+            "next_checks": [
+              "Art, Maße, Traglast und Lieferumfang prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|198771950684|0"
+          ],
+          "assessment": {
+            "scalp_score": 12,
+            "useability_score": 91,
+            "useability_reason": "Verbrauchsartikel können ohne besondere Anlagen verwendet werden, sofern Art und Hygienezustand stimmen.",
+            "dependencies": [
+              "Anwendungsspezifische Hygieneanforderungen"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "consumable",
+            "value_reason": "Nicht näher bezeichnete Hygiene- und Pflegeartikel haben eher begrenztes wirtschaftliches Einzelpotenzial.",
+            "reasons": [
+              "Wahrscheinlich Verbrauchsmaterial, kein Industrieapparat."
+            ],
+            "risks": [
+              "Mengen und Haltbarkeit nicht angegeben"
+            ],
+            "next_checks": [
+              "Originalverpackung, konkrete Menge und Ablaufdaten prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|257842559259|0"
+          ],
+          "assessment": {
+            "scalp_score": 11,
+            "useability_score": 26,
+            "useability_reason": "Benötigt Einbau in einen Stromkreis; keine eigenständige Geräteleistung.",
+            "dependencies": [
+              "Passende Schaltung und Anschlussverdrahtung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Ein einzelner 12-V-Wippschalter ist ein übliches kleines Elektrobauteil.",
+            "reasons": [
+              "3-Pin-ON-OFF-ON-Schalter laut Titel."
+            ],
+            "risks": [
+              "Kontaktbelegung und reale Belastbarkeit unbestätigt"
+            ],
+            "next_checks": [
+              "Datenblatt, Einbaumaße und Kontakte prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|128183769831|0"
+          ],
+          "assessment": {
+            "scalp_score": 16,
+            "useability_score": 20,
+            "useability_reason": "Nur montiert an kompatiblem Roller und passender Felge sinnvoll nutzbar.",
+            "dependencies": [
+              "Kompatible Felge und Fahrzeug",
+              "Passende Reifengröße"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Ein einzelner pannensicherer E-Scooter-Reifen bietet nur Ersatzteilpotenzial.",
+            "reasons": [
+              "Es handelt sich um einen Reifen, nicht um einen E-Scooter."
+            ],
+            "risks": [
+              "8,5-Zoll- und 6-Zoll-Angaben können unterschiedliche Maße bezeichnen"
+            ],
+            "next_checks": [
+              "Kompatibilität und Montageart klären"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|920120651193|0"
+          ],
+          "assessment": {
+            "scalp_score": 9,
+            "useability_score": 89,
+            "useability_reason": "Mit üblichen Brennstoffen oder der vorgesehenen Zündquelle grundsätzlich unmittelbar verwendbar.",
+            "dependencies": [
+              "Passende Gasquelle oder Brennstoff je nach Ausführung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "tool",
+            "value_reason": "Ein einfacher Gasanzünder ist ein geringwertiges Handgerät.",
+            "reasons": [
+              "Titel nennt einen Anzünder, kein vollständiges Gasgerät."
+            ],
+            "risks": [
+              "Bauart und Sicherheit nicht konkretisiert"
+            ],
+            "next_checks": [
+              "Bauart, Funktion und erforderliche Gasversorgung prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377623184589|0"
+          ],
+          "assessment": {
+            "scalp_score": 22,
+            "useability_score": 43,
+            "useability_reason": "Die Einzelgegenstände sind unbekannt und als defekt angeboten; sinnvolle Nutzung kann Reparatur und Zusatzkomponenten erfordern.",
+            "dependencies": [
+              "Identifikation der enthaltenen Gegenstände",
+              "Prüf- und Reparaturmittel"
+            ],
+            "value_band": "unknown",
+            "assessment_confidence": "low",
+            "product_kind": "unknown",
+            "value_reason": "Ein unbestimmtes Paket defekter Retouren hat theoretisches Teilepotenzial, aber ohne Inventarliste keine tragfähige wirtschaftliche Aussage.",
+            "reasons": [
+              "Der Titel bezeichnet ein gemischtes Paket, kein definiertes Komplettgerät."
+            ],
+            "risks": [
+              "Inhalt, Anzahl und Defektarten völlig unklar"
+            ],
+            "next_checks": [
+              "Inhaltsliste und echte Produktfotos verlangen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|940077855437|0"
+          ],
+          "assessment": {
+            "scalp_score": 37,
+            "useability_score": 94,
+            "useability_reason": "Ohne Maschine verwendbares Material; benötigt nur passende Befestigung an geeigneten Geländern.",
+            "dependencies": [
+              "Geländer und Befestigungsmaterial"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "accessory",
+            "value_reason": "Zwölf angegebene Balkon-Sichtschutzbahnen ergeben potenziell einen nennenswerten Materialposten, falls alle Stücke enthalten sind.",
+            "reasons": [
+              "Titel nennt zwölf Bespannungen, keine komplette Bauinstallation."
+            ],
+            "risks": [
+              "Anzahl und Maße je Stück nicht unabhängig belegt"
+            ],
+            "next_checks": [
+              "Stückzahl, Länge und Materialzustand prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237165045269|0"
+          ],
+          "assessment": {
+            "scalp_score": 13,
+            "useability_score": 8,
+            "useability_reason": "Ein spezialisiertes Messer kann erst in einer passenden Maschine sinnvoll eingesetzt werden.",
+            "dependencies": [
+              "Zwingend passende Maschinenaufnahme und Abmessungen"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Ein unbestimmtes Ersatzmesser hat ohne Modellbezug nur kleines und sehr unsicheres Ersatzteilpotenzial.",
+            "reasons": [
+              "Verkauft wird laut Titel ein Ersatzmesser, nicht das zugehörige Gerät."
+            ],
+            "risks": [
+              "Modell und Schneidenzustand unbekannt"
+            ],
+            "next_checks": [
+              "Maße, Material und Maschinentyp identifizieren"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|800896138791|0"
+          ],
+          "assessment": {
+            "scalp_score": 29,
+            "useability_score": 58,
+            "useability_reason": "Laufwerke brauchen einen geeigneten IDE-Host, Versorgung und gegebenenfalls Reparatur; Defekt ist getrennte Zustandsunsicherheit.",
+            "dependencies": [
+              "IDE-Schnittstelle und Stromversorgung",
+              "Test- beziehungsweise Reparaturausrüstung"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Ein Konvolut aus 28 defekten IDE-Festplatten kann allenfalls Teile-, Datenrettungs- oder Materialpotenzial bieten; Kapazitäten fehlen.",
+            "reasons": [
+              "28 Laufwerke werden angeboten, keine funktionsfähige Speicheranlage."
+            ],
+            "risks": [
+              "Alle als defekt bezeichnet; Datensicherheit und mechanischer Zustand ungeklärt"
+            ],
+            "next_checks": [
+              "Anzahl, Kapazitäten und Defektarten prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|800896142062|0"
+          ],
+          "assessment": {
+            "scalp_score": 32,
+            "useability_score": 66,
+            "useability_reason": "SATA-Laufwerke erfordern üblichen Rechner/Adapter und Strom; Defektstatus allein mindert nicht die Schnittstellen-Eigenständigkeit.",
+            "dependencies": [
+              "SATA-Host beziehungsweise Adapter und Stromversorgung",
+              "Für Nutzung eventuell Reparatur oder Teiletausch"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "28 als defekt bezeichnete SATA-HDDs besitzen begrenztes, aber mengenbedingtes Komponenten- und Materialpotenzial.",
+            "reasons": [
+              "Konvolut einzelner Festplatten, kein komplettes Datensystem."
+            ],
+            "risks": [
+              "Kapazitäten und konkreter Defektstatus fehlen"
+            ],
+            "next_checks": [
+              "Stückzahl, Kapazitäten und Teststatus prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|407350831131|0"
+          ],
+          "assessment": {
+            "scalp_score": 23,
+            "useability_score": 96,
+            "useability_reason": "Handwerkzeuge sind unmittelbar und ohne Hilfsanlage einsetzbar.",
+            "dependencies": [],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "tool",
+            "value_reason": "Zwanzig einfache Universalschlüssel im Restposten haben Mengenpotenzial, aber keine belegte professionelle Qualität.",
+            "reasons": [
+              "Laut Titel zehn Zweiersets, also möglicher größerer Werkzeugposten."
+            ],
+            "risks": [
+              "Werkzeugprofil, Qualität und reale Menge ungeprüft"
+            ],
+            "next_checks": [
+              "Fotos, Größe und Setbestandteile prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|407350842341|0"
+          ],
+          "assessment": {
+            "scalp_score": 37,
+            "useability_score": 47,
+            "useability_reason": "Der Kegel ist kein eigenständiger Holzspalter; er benötigt einen geeigneten Antrieb, Halterung und sichere Spannvorrichtung.",
+            "dependencies": [
+              "Kompatibler Dreh- und Kraftantrieb",
+              "Sichere Befestigung und Werkstückführung"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "accessory",
+            "value_reason": "Ein Härtegrad beworbener Holzspalt-Bohrkegel kann als Werkzeugaufsatz brauchbar sein; Marken- und Prüfaussagen sind unbelegt.",
+            "reasons": [
+              "Titel nennt ausdrücklich einen Bohrkegel, nicht eine komplette Maschine."
+            ],
+            "risks": [
+              "Erhebliche Verletzungsgefahr; TÜV-Behauptung ungeprüft"
+            ],
+            "next_checks": [
+              "Antriebsanforderungen und Sicherheitsunterlagen prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|407350843070|0"
+          ],
+          "assessment": {
+            "scalp_score": 38,
+            "useability_score": 94,
+            "useability_reason": "Ohne Motor oder Spezialanlage eigenständig mit üblicher körperlicher Betätigung einsetzbar.",
+            "dependencies": [
+              "Geeigneter fester Untergrund zur Verankerung"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "tool",
+            "value_reason": "Ein komplettes manuelles Holzspalter-Set mit Bodenanker besitzt plausiblen Werkzeugnutzen, aber kein belegtes professionelles Potenzial.",
+            "reasons": [
+              "Als Set mit Anker und Zubehör statt nur als Einzelkegel bezeichnet."
+            ],
+            "risks": [
+              "Materialfestigkeit und genaue Setbestandteile ungeprüft"
+            ],
+            "next_checks": [
+              "Konstruktion, Sicherheitsabstände und Lieferumfang prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|820335669341|0"
+          ],
+          "assessment": {
+            "scalp_score": 22,
+            "useability_score": 94,
+            "useability_reason": "Bei vorhandenem üblichen USB-Netzteil oder Anschluss weitgehend eigenständig als Lichtfläche nutzbar.",
+            "dependencies": [
+              "USB-Stromversorgung je nach Modell"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "apparatus",
+            "value_reason": "Ein DIN-A3-LED-Leuchttablet hat überschaubaren Hobby- und Zeichenbedarf-Nutzen.",
+            "reasons": [
+              "Angeboten wird das Leuchttablet als Gesamtgerät."
+            ],
+            "risks": [
+              "B-Ware; Leuchtfläche und Anschluss ungeprüft"
+            ],
+            "next_checks": [
+              "Panel, Kabel und gleichmäßige Ausleuchtung prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|820335396576|0"
+          ],
+          "assessment": {
+            "scalp_score": 31,
+            "useability_score": 96,
+            "useability_reason": "Als Abdeckmaterial weitgehend direkt nutzbar, nur geeignete Befestigung erforderlich.",
+            "dependencies": [
+              "Befestigungsmittel je nach Einsatz"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Eine großformatige 1,50 x 6,00 m LKW-PVC-Plane ist nützliches gewerbliches Abdeckmaterial; B-Ware begrenzt den potenziellen Wert.",
+            "reasons": [
+              "Es handelt sich um eine einzelne Gewebeplane, keinen LKW."
+            ],
+            "risks": [
+              "B-Ware, Ösen und Beschädigungen ungeprüft"
+            ],
+            "next_checks": [
+              "Tatsächliche Maße, Materialstärke und Fehler prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|407351430045|0"
+          ],
+          "assessment": {
+            "scalp_score": 34,
+            "useability_score": 95,
+            "useability_reason": "Kochgeschirr mit üblicher Herdplatte unmittelbar verwendbar.",
+            "dependencies": [
+              "Passender Herd"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Fünf angegebene Edelstahl-Keramik-Pfannen bilden einen kleinen Handelswarenposten; Qualität und Marke nicht belegt.",
+            "reasons": [
+              "Titel nennt fünf Pfannen, nicht ein komplettes Küchengerät."
+            ],
+            "risks": [
+              "Beschichtung und Stückzahl nur Verkäuferangaben"
+            ],
+            "next_checks": [
+              "Stückzahl, Durchmesser und Beschichtungszustand prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|327448335850|0"
+          ],
+          "assessment": {
+            "scalp_score": 44,
+            "useability_score": 66,
+            "useability_reason": "Ein Eval-Board ist ohne Hostrechner, Software und zu entwickelnde Anwendung kein eigenständiges Mess- oder Produktionsgerät.",
+            "dependencies": [
+              "PC mit Entwicklungsumgebung",
+              "Passende Firmware und Schnittstellen"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Ein Silicon-Labs-Explorer-/Entwicklungskit besitzt spezielles elektronisches Entwicklungsinteresse, aber keinen garantierten Profimarktwert.",
+            "reasons": [
+              "Entwicklungskit, kein vollständiges Industrie-Steuergerät."
+            ],
+            "risks": [
+              "Exakte BB52-Kitvariante und Lieferumfang unklar"
+            ],
+            "next_checks": [
+              "Platinenbezeichnung, USB-Anschluss und Zubehör prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|407351328064|0"
+          ],
+          "assessment": {
+            "scalp_score": 32,
+            "useability_score": 96,
+            "useability_reason": "Einzelne Stressbälle sind ohne weitere technische Infrastruktur nutzbar.",
+            "dependencies": [],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "accessory",
+            "value_reason": "194 genannte kleine Knautschfiguren ergeben höchstens einen einfachen Restposten, trotz hoher Stückzahl ohne nachgewiesenen Markt.",
+            "reasons": [
+              "Es handelt sich um Spielzeug-Handelsware statt Industrieausrüstung."
+            ],
+            "risks": [
+              "Reale Menge, Materialqualität und Schadstoffkonformität nicht geprüft"
+            ],
+            "next_checks": [
+              "Stückzahl und Sicherheitskennzeichnung prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|168850793857|0"
+          ],
+          "assessment": {
+            "scalp_score": 64,
+            "useability_score": 98,
+            "useability_reason": "Kupferschrott lässt sich ohne eigene Spezialmaschine als Rohstoff verwenden oder weitergeben; Verarbeitung zu neuen Bauteilen wäre separat.",
+            "dependencies": [
+              "Geeignete sachgerechte Lagerung und Abgabe"
+            ],
+            "value_band": "around_500",
+            "assessment_confidence": "low",
+            "product_kind": "consumable",
+            "value_reason": "Falls die behaupteten 25 kg sortenreines Millberry-Kupfer tatsächlich geliefert werden, ist ein substanzieller Rohstoffposten plausibel. Ein 1-Euro-Angebot allein beweist weder Menge noch Material.",
+            "reasons": [
+              "Tatsächlich angeboten wäre Kupferschrott, kein Kupferbearbeitungsgerät."
+            ],
+            "risks": [
+              "25-kg-Lieferumfang und Kupferreinheit völlig unbestätigt",
+              "Versandangabe wirkt bei diesem behaupteten Gewicht prüfbedürftig"
+            ],
+            "next_checks": [
+              "Originalangebot auf Menge, realistische Versand-/Abholbedingungen und Bilder prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|940078335032|0"
+          ],
+          "assessment": {
+            "scalp_score": 56,
+            "useability_score": 93,
+            "useability_reason": "Eine Motorsäge ist als Gerät grundsätzlich mit üblichem Kraftstoff und Kettenpflege eigenständig nutzbar. Defektstatus ist Zustandsrisiko, keine bewiesene fehlende Baugruppe.",
+            "dependencies": [
+              "Passender Kraftstoff und Kettenöl",
+              "Geeignete Sicherheitsausrüstung"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "tool",
+            "value_reason": "Eine als defekt angebotene Stihl MS 190 T ist als komplette Marken-Motorsäge im Titel benannt; Reparatur- und Teilepotenzial, aber Funktionswert nicht belegt.",
+            "reasons": [
+              "Der Titel nennt eine ganze Motorsäge, nicht bloß ein Ersatzteil."
+            ],
+            "risks": [
+              "Defektart, Vollständigkeit und Sicherheitszustand unbekannt"
+            ],
+            "next_checks": [
+              "Bilder, Motor, Kettenbremse, Schnittgarnitur und Fehlerbild prüfen"
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|336889042211|0"
+          ],
+          "assessment": {
+            "scalp_score": 18,
+            "useability_score": 30,
+            "useability_reason": "Sie benötigt einen geeigneten Sicherungshalter und ein passendes elektrisches System; kein eigenständiges Gerät.",
+            "dependencies": [
+              "Kompatibler Sicherungshalter",
+              "Passende elektrische Anlage"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Eine einzelne 80-A-/500-V-Hochleistungssicherung ist ein spezialisiertes Ersatzteil mit begrenztem allgemeinem Nutzen.",
+            "reasons": [
+              "Tatsächlich verkauft wird eine Sicherung, kein vollständiger Schutzschrank."
+            ],
+            "risks": [
+              "Elektrische Kennwerte und Zustand nicht verifiziert"
+            ],
+            "next_checks": [
+              "Exakte Bauform und Kennlinie prüfen"
+            ]
+          }
+        }
+      ]
+    }
+  }
 }
