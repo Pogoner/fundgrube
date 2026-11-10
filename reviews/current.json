@@ -174,6 +174,37 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Gültiger einlösender Dienst",
+          "Aktive und übertragbare Codeberechtigung"
+        ],
+        "next_checks": [
+          "Art des Codes und Nutzungsbedingungen im Original klären"
+        ],
+        "product_kind": "unknown",
+        "reasons": [
+          "Titel bietet einen Code, keine Maschine"
+        ],
+        "risks": [
+          "Gültigkeit und Berechtigung völlig unbelegt",
+          "Versandkosten bei angeblich digitalem Code auffällig"
+        ],
+        "scalp_score": 2,
+        "useability_reason": "Der beworbene Entwurfscode ist nur bei einem passenden Dienst und erfolgreicher Einlösung nutzbar; eigenständiges Gerät wird nicht verkauft.",
+        "useability_score": 12,
+        "value_band": "unknown",
+        "value_reason": "Ein beworbener Rabatt- oder Entwurfscode ohne nachprüfbare Gültigkeit besitzt kaum belastbares wirtschaftliches Sachwertpotenzial."
+      },
+      "content_fingerprint": "sha256:fa3536be237efcc8ccc5216647a68e118e3d372b451660f336b1636c43340a27",
+      "ends_at": "2026-11-12T09:14:46Z",
+      "id": "v1|117499634659|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
@@ -2819,6 +2850,36 @@
       "reviewed_at": "2026-11-08T07:08:35Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:3f45858a4d149bab9de8b1d95f705d81753a0ab744bd617b29ef889da1de7184"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Tatsächlich angebotenes Teil bestimmen",
+          "Bei Maschine übliche Infrastruktur und Zubehör"
+        ],
+        "next_checks": [
+          "Originalbilder und exakten Lieferumfang prüfen"
+        ],
+        "product_kind": "unknown",
+        "reasons": [
+          "Unbestimmte Mehrfachnennung von Baumaschinentypen"
+        ],
+        "risks": [
+          "Liefergegenstand und Eigentumsumfang unbekannt"
+        ],
+        "scalp_score": 10,
+        "useability_reason": "Der Titel reiht mehrere sehr verschiedene Baumaschinen und Schaufeln auf; ein konkretes verkauften Objekt ist nicht identifizierbar.",
+        "useability_score": 25,
+        "value_band": "unknown",
+        "value_reason": "Eine allgemeine Aufzählung schwerer Maschinen rechtfertigt keine Bewertung als kompletter Bagger oder Dumper."
+      },
+      "content_fingerprint": "sha256:d49a46ef8aa87aa8402c9973a37f7d18cab929f7b7ea9c24f772c6d88a5a17cf",
+      "ends_at": "2026-11-11T08:06:18Z",
+      "id": "v1|128167671166|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -13657,6 +13718,33 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [],
+        "next_checks": [
+          "Originalfotos und tatsächlichen Liefergegenstand prüfen"
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Titel weist auf einen Rallye-Bocksbeutel hin"
+        ],
+        "risks": [
+          "Flasche, Inhalt und Sammlerrelevanz nicht belegt"
+        ],
+        "scalp_score": 11,
+        "useability_reason": "Der als ADAC-Bocksbeutel zur Rallye 2013 bezeichnete Gegenstand kann als Andenken unabhängig von Industrieanlagen dienen; konkreter Inhalt offen.",
+        "useability_score": 88,
+        "value_band": "around_5",
+        "value_reason": "Ein einzelnes, nicht näher belegtes Rallye-Andenken hat nur begrenzt plausibles Wiederverwendungspotenzial."
+      },
+      "content_fingerprint": "sha256:ffc575fe1e685907f3d8deb0a90d5de58419c6b2e09cb5366058d70d117b2172",
+      "ends_at": "2026-11-11T11:30:12Z",
+      "id": "v1|168830451883|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Gegebenenfalls Aufhängung"
@@ -14295,6 +14383,36 @@
       "reviewed_at": "2026-11-08T20:17:23.574995Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatibles Metrix-System",
+          "Passende elektrische Schnittstellen und Konfiguration"
+        ],
+        "next_checks": [
+          "Datenblatt, Anschlüsse und Modulversion prüfen"
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Konkrete Modulkennung DAA 144F-3A"
+        ],
+        "risks": [
+          "Kompatibilität, Zustand und Funktion nicht geprüft"
+        ],
+        "scalp_score": 44,
+        "useability_reason": "Das ausdrücklich benannte Metrix-Modul ist eine Integrationskomponente; ohne passendes Grundsystem und Anschlüsse kaum eigenständig nutzbar.",
+        "useability_score": 20,
+        "value_band": "around_50",
+        "value_reason": "Ein herstellerspezifisches Industriemodul kann als Ersatzteil wirtschaftlich relevant sein, ist aber nicht das vollständige Gesamtsystem."
+      },
+      "content_fingerprint": "sha256:320855c74f513b26bc619b88db7677b47aba01409eafdb1ff27b9cc493895e7d",
+      "ends_at": "2026-11-11T16:21:42Z",
+      "id": "v1|168838467963|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -18907,6 +19025,36 @@
       "reviewed_at": "2026-11-08T20:38:59.029562Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Tatsächlich enthaltene nutzbare Gegenstände"
+        ],
+        "next_checks": [
+          "Inhaltsliste und Fotos prüfen"
+        ],
+        "product_kind": "unknown",
+        "reasons": [
+          "Verkauft wird ein gemischtes Paket und kein konkret benanntes Gerät"
+        ],
+        "risks": [
+          "Inhalt und Vollständigkeit gänzlich ungeklärt",
+          "Zustand als defekt oder Ersatzteil bezeichnet"
+        ],
+        "scalp_score": 14,
+        "useability_reason": "Eine ungeöffnete beziehungsweise unklare Retourenkiste hat ohne bekannte Gegenstände keine sicher bestimmbare eigenständige Nutzung.",
+        "useability_score": 20,
+        "value_band": "unknown",
+        "value_reason": "Das wirtschaftliche Potenzial einer Mystery-Retourenkiste kann mangels Inhaltsliste nicht seriös als hochwertig eingestuft werden."
+      },
+      "content_fingerprint": "sha256:62ee40fc26f306f911a0776c836450206651d90081c21aa69f2e632734b0b1c3",
+      "ends_at": "2026-11-13T14:07:57Z",
+      "id": "v1|198777258706|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -24858,64 +25006,6 @@
     },
     {
       "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Geschützter Netzanschluss",
-          "Montage und Berührungsschutz"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
-          "Lagergeräusch und Luftleistung ungeprüft."
-        ],
-        "scalp_score": 22,
-        "useability_reason": "Benötigt sicheren elektrischen Anschluss und geeignete Einbausituation.",
-        "useability_score": 51,
-        "value_band": "around_50",
-        "value_reason": "Ein industrieller 230-V-Axiallüfter bietet kleines Einbaupotenzial."
-      },
-      "content_fingerprint": "sha256:6a94c1f8339107f9ff7999359a4da3892ab3ca790d78189b6c941b268ddb43df",
-      "ends_at": "2026-11-10T14:16:36Z",
-      "id": "v1|227595761998|0",
-      "reviewed_at": "2026-11-08T20:13:07.561264Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Passender Motor"
-        ],
-        "next_checks": [
-          "Kapazität, Isolation und Anschlussausführung prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [
-          "Ein gebrauchter 20-µF-Motorkondensator."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 6,
-        "useability_reason": "Motorkondensator benötigt einen Motor mit passenden elektrischen Anforderungen.",
-        "useability_score": 28,
-        "value_band": "around_5",
-        "value_reason": "Ein gebrauchter 20-µF-Motorkondensator."
-      },
-      "content_fingerprint": "sha256:bd298ddbae555c4f7e63b0fbb59f915759bc5a55a721970d4c3094b5072f3cc5",
-      "ends_at": "2026-11-10T14:17:58Z",
-      "id": "v1|227595763010|0",
-      "reviewed_at": "2026-11-08T20:13:53Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Kompatibler Zahlungsdienst",
@@ -26050,6 +26140,36 @@
       "reviewed_at": "2026-11-08T20:22:31.869802Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passendes Labor- oder Messsystem möglicherweise erforderlich",
+          "Lieferumfang des Kits ungeklärt"
+        ],
+        "next_checks": [
+          "Hersteller, Inhalt und benötigte Geräte prüfen"
+        ],
+        "product_kind": "unknown",
+        "reasons": [
+          "Bezeichneter Liefergegenstand ist ein Kit"
+        ],
+        "risks": [
+          "Keine Beschreibung, Bestückung oder Spezifikation verfügbar"
+        ],
+        "scalp_score": 30,
+        "useability_reason": "Ein als Plasmazähler-Kit bezeichnetes Labor-Kit ist nicht nachweislich ein komplettes Zählgerät; Messsystem und Komponenten müssen erst geklärt werden.",
+        "useability_score": 34,
+        "value_band": "unknown",
+        "value_reason": "Ein wissenschaftliches Kit kann spezialisierte Nachfrage haben, aber Titel allein belegt weder Vollständigkeit noch ein vollständiges Messgerät."
+      },
+      "content_fingerprint": "sha256:9341c83b62515debcfa5835119b83dbb5163acc9a91917819bc84e9a8141c214",
+      "ends_at": "2026-11-13T09:06:02Z",
+      "id": "v1|227600750855|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -34027,6 +34147,35 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passende Aufnahme und Befestigungsmaße"
+        ],
+        "next_checks": [
+          "Gewinde, Klemmbereich und Gegenstück prüfen"
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Titel benennt nur einen Befestiger"
+        ],
+        "risks": [
+          "Maße, Werkstoff und Stückzahl nicht belegt"
+        ],
+        "scalp_score": 13,
+        "useability_reason": "Eine Klemmbefestigung lässt sich an passender Halterung einsetzen, benötigt aber kompatible Maße und ein Gegenstück.",
+        "useability_score": 68,
+        "value_band": "around_5",
+        "value_reason": "Ein einzelner unbestimmter Klemmbefestiger ist wirtschaftlich eher kleinteilig."
+      },
+      "content_fingerprint": "sha256:104eca6f18c9fad5006c2fb3d655709033ffee985b4db4540a6e08c031ad2807",
+      "ends_at": "2026-11-13T11:25:46Z",
+      "id": "v1|237167237202|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
@@ -36735,33 +36884,6 @@
     },
     {
       "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [],
-        "next_checks": [
-          "Maße, Material und erforderliche Kennzeichnung prüfen."
-        ],
-        "product_kind": "accessory",
-        "reasons": [
-          "Zwei neue Notausgangsschilder, kleines Beschilderungspotenzial."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 7,
-        "useability_reason": "Hinweisschilder lassen sich unmittelbar an geeigneter Stelle anbringen.",
-        "useability_score": 97,
-        "value_band": "around_5",
-        "value_reason": "Zwei neue Notausgangsschilder, kleines Beschilderungspotenzial."
-      },
-      "content_fingerprint": "sha256:54c081965f8ca735a4bed8b177b4de703a3fa3aae04903e55e9b263a826471d9",
-      "ends_at": "2026-11-10T14:15:41Z",
-      "id": "v1|257826893182|0",
-      "reviewed_at": "2026-11-08T20:13:53Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [],
         "next_checks": [
@@ -36816,6 +36938,33 @@
       "reviewed_at": "2026-11-08T07:08:35Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:3f45858a4d149bab9de8b1d95f705d81753a0ab744bd617b29ef889da1de7184"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [],
+        "next_checks": [
+          "Originalbilder und Zahl der Blätter prüfen"
+        ],
+        "product_kind": "media",
+        "reasons": [
+          "Lieferumfang laut Titel drei Zeichnungen"
+        ],
+        "risks": [
+          "Kein Beschreibungstext; Authentizität, Material und Ausführung unbekannt"
+        ],
+        "scalp_score": 14,
+        "useability_reason": "Drei als Zeichnungen bezeichnete Blätter sind als Bildträger ohne technische Anlage verwendbar; Art und Ausführung bleiben unklar.",
+        "useability_score": 92,
+        "value_band": "unknown",
+        "value_reason": "Drei unbestimmte Zeichnungen bieten ohne Künstler-, Originalitäts- oder Motivangabe nur gering belegbares wirtschaftliches Potenzial."
+      },
+      "content_fingerprint": "sha256:40cec424f5c3dbbaeac82ee5fc25b0228e208672378a69d05f5cc6eb4dcda590",
+      "ends_at": "2026-11-11T08:50:08Z",
+      "id": "v1|257828031147|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -44952,6 +45101,66 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Rohr mit passendem Durchmesser",
+          "Geeignete Befestigung und Sicherheitsanforderungen"
+        ],
+        "next_checks": [
+          "Maße und Stückzahl prüfen"
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Rohrisolierung 15/20 ist benannt"
+        ],
+        "risks": [
+          "Länge und Menge unbekannt"
+        ],
+        "scalp_score": 18,
+        "useability_reason": "Eine Rohrisolierung lässt sich mit passenden Rohrabmessungen direkt verbauen; kein Spezialgerät als Kernvoraussetzung.",
+        "useability_score": 87,
+        "value_band": "around_5",
+        "value_reason": "Einzelne alukaschierte Dämm-Isolierschalen besitzen eher kleines Sachwertpotenzial; die Menge ist nicht belegt."
+      },
+      "content_fingerprint": "sha256:747cbc6646e4c3e8e1edbfa1a1c3d3f218303ad2759b1ee2d7cb741e388cc8b6",
+      "ends_at": "2026-11-14T05:01:01Z",
+      "id": "v1|267838260496|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Rohrabmessungen",
+          "Geeignete Montage"
+        ],
+        "next_checks": [
+          "Länge und Menge prüfen"
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Konkrete Isolierschale 15/30 mm benannt"
+        ],
+        "risks": [
+          "Stückzahl und Länge nicht belegt"
+        ],
+        "scalp_score": 17,
+        "useability_reason": "Die alukaschierte Conel-Isolierschale ist bei passendem Rohrmaß direkt im Installationsprojekt nutzbar.",
+        "useability_score": 87,
+        "value_band": "around_5",
+        "value_reason": "Einzelnes Dämmmaterial hat typischerweise nur begrenztes wirtschaftliches Potenzial; die Liefermenge ist unbekannt."
+      },
+      "content_fingerprint": "sha256:87b17a0c1a63f567715df421cb0d5d76c4cb0f3434bdfe41717b64fc2b3e6fa6",
+      "ends_at": "2026-11-14T05:01:02Z",
+      "id": "v1|267838260509|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Passender Montageuntergrund und Befestigung",
           "Weitere Zeichen für eine Wortbeschriftung"
         ],
@@ -52899,65 +53108,6 @@
     },
     {
       "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Sortierung",
-          "Geeigneter Recyclingweg"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
-          "Metallanteil und Trennaufwand unbekannt."
-        ],
-        "scalp_score": 34,
-        "useability_reason": "Für Sortierung und Recycling nutzbar; kein funktionierendes Steckersortiment zugesichert.",
-        "useability_score": 46,
-        "value_band": "around_50",
-        "value_reason": "Etwa neun Kilogramm Stecker-Schrott bieten vor allem Materialrückgewinnungspotenzial."
-      },
-      "content_fingerprint": "sha256:7e16d07d11a29fdcb6e154959b2ea3e96ac0548ad59900197fd1c5623b27bf62",
-      "ends_at": "2026-11-10T14:09:45Z",
-      "id": "v1|307271432509|0",
-      "reviewed_at": "2026-11-08T20:13:07.561264Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Sortierung",
-          "Materialverwertung"
-        ],
-        "next_checks": [
-          "Gewicht, Materialanteile und Verunreinigungen prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [
-          "Einordnung anhand des vollständig vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Lieferumfang und Zustand im Detail unbelegt."
-        ],
-        "scalp_score": 32,
-        "useability_reason": "Verwertung erfordert Sortierung oder Recyclingmöglichkeit.",
-        "useability_score": 56,
-        "value_band": "around_50",
-        "value_reason": "Neun Kilogramm Steckerschrott bieten Material- und Sortierpotenzial, keine belegte Gerätefunktion."
-      },
-      "content_fingerprint": "sha256:7e16d07d11a29fdcb6e154959b2ea3e96ac0548ad59900197fd1c5623b27bf62",
-      "ends_at": "2026-11-10T14:17:42Z",
-      "id": "v1|307271441521|0",
-      "reviewed_at": "2026-11-08T20:13:29.681366Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Passender Rahmen",
@@ -57021,6 +57171,35 @@
       "reviewed_at": "2026-11-10T01:44:02Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:46f944c350f84798a209b4c95fbb9aaa3bcd23f8082d7c68023dbc6ccc414509"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "high",
+        "dependencies": [
+          "Passende Handgröße"
+        ],
+        "next_checks": [
+          "Tatsächliche Menge und Größe prüfen"
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Konkret benannte Baumwollhandschuhe"
+        ],
+        "risks": [
+          "Hygiene, Liefermenge und Materialangabe nicht unabhängig geprüft"
+        ],
+        "scalp_score": 4,
+        "useability_reason": "Baumwoll-Stoffhandschuhe sind direkt tragbar, sofern Größe M passt; keine Maschine oder Integration erforderlich.",
+        "useability_score": 98,
+        "value_band": "around_5",
+        "value_reason": "Ein einzelnes Paar einfache Butler-Stoffhandschuhe besitzt nur geringes wirtschaftliches Potenzial."
+      },
+      "content_fingerprint": "sha256:cbee6dbbdbd347e58a0da93532fadc2e743c3bb142b7f5bfd5e3fef2f6ac430d",
+      "ends_at": "2026-11-11T11:20:00Z",
+      "id": "v1|327449359953|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -66290,36 +66469,6 @@
     },
     {
       "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "HSK-A100-Maschine",
-          "passender Fräserschaft"
-        ],
-        "next_checks": [
-          "Spannmaß, Rundlauf und Konuszustand prüfen."
-        ],
-        "product_kind": "tool",
-        "reasons": [
-          "Einordnung anhand des vollständig vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Lieferumfang und Zustand im Detail unbelegt."
-        ],
-        "scalp_score": 55,
-        "useability_reason": "Benötigt passende HSK-A100-Maschinenspindel und Werkzeug.",
-        "useability_score": 16,
-        "value_band": "around_500",
-        "value_reason": "Garant-HSK-A100-Flächenspannfutter bietet substanzielles Maschinenwerkzeugpotenzial."
-      },
-      "content_fingerprint": "sha256:9b2ab76db6960adf6b9a041c79cdce815969ca0a7dbc29d73bec6c2bcb4aeea9",
-      "ends_at": "2026-11-10T14:15:01Z",
-      "id": "v1|407335951884|0",
-      "reviewed_at": "2026-11-08T20:13:29.681366Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
@@ -68373,6 +68522,37 @@
     {
       "assessment": {
         "assessment_confidence": "medium",
+        "dependencies": [
+          "Geeigneter Anschlagpunkt",
+          "Passender Auffanggurt",
+          "Vorgeschriebene Prüfung und Freigabe vor Einsatz"
+        ],
+        "next_checks": [
+          "Seriennummer, Norm, Prüfdatum und zulässige Verwendung prüfen"
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Konkreter Modellname HELIXON-S und Länge 10 m"
+        ],
+        "risks": [
+          "Sicherheitskritisches Gerät; Inspektionshistorie und Zulassung nicht belegt"
+        ],
+        "scalp_score": 59,
+        "useability_reason": "Ein zehn Meter langes einziehbares Höhensicherungsgerät benötigt einen zugelassenen Anschlagpunkt und kompatible persönliche Schutzausrüstung; es ist kein alleinstehendes Sicherungssystem.",
+        "useability_score": 73,
+        "value_band": "around_500",
+        "value_reason": "Ein professionelles automatisches Höhensicherungsgerät kann höheres wirtschaftliches Potenzial bieten; Hersteller- und Zustandsangabe reichen nicht für einen Sicherheitsnachweis."
+      },
+      "content_fingerprint": "sha256:57a045f867b6c2fdfd463aae37272662ad9754b6884140748c4f4273fe7bb63e",
+      "ends_at": "2026-11-14T11:09:45Z",
+      "id": "v1|407350706358|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
           "Fotos, Größe und Setbestandteile prüfen"
@@ -68633,6 +68813,33 @@
       "reviewed_at": "2026-11-10T13:59:39.018000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [],
+        "next_checks": [
+          "Fotos und tatsächliche Stückzahl prüfen"
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Ein Konvolut von Dekofiguren statt Industriemaschinen"
+        ],
+        "risks": [
+          "Anzahl, Material, Schäden und Motiv nicht belegt"
+        ],
+        "scalp_score": 24,
+        "useability_reason": "Eine Figurensammlung ist ohne Spezialgeräte als Dekoration oder Sammlung nutzbar.",
+        "useability_score": 93,
+        "value_band": "around_50",
+        "value_reason": "Ein gemischtes Konvolut dekorativer Figuren kann moderates Potenzial besitzen; Anzahl, Material und Qualität fehlen."
+      },
+      "content_fingerprint": "sha256:c1f7d4818cf45b9893f59e87fcaadc8cfda91df0c0ca96fbddd7ee5a664ad307",
+      "ends_at": "2026-11-13T09:59:05Z",
+      "id": "v1|407352723600|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -70914,6 +71121,36 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Gewinde und Leitungsmaße",
+          "Fachgerechte Installation"
+        ],
+        "next_checks": [
+          "Anschlussmaße und Vollständigkeit prüfen"
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Zwei Ventile im Titel genannt"
+        ],
+        "risks": [
+          "Gewindegrößen und Dichtungen nicht dokumentiert"
+        ],
+        "scalp_score": 18,
+        "useability_reason": "Zwei Absperrventile lassen sich mit kompatiblen Wasserleitungsanschlüssen einsetzen; sie benötigen keine spezielle Steuerungsanlage.",
+        "useability_score": 80,
+        "value_band": "around_5",
+        "value_reason": "Zwei einfache Armaturen bieten begrenztes, aber plausibles Gebrauchswertpotenzial."
+      },
+      "content_fingerprint": "sha256:1e304231b39c9bcee7eab86e5f2120da92eff502b39483930795e1d8c1f6ef68",
+      "ends_at": "2026-11-14T09:15:37Z",
+      "id": "v1|800895919955|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "IDE-Schnittstelle und Stromversorgung",
@@ -71375,6 +71612,35 @@
       "reviewed_at": "2026-11-08T20:27:16Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Funktion und erforderliche Anschlüsse erst klären"
+        ],
+        "next_checks": [
+          "Typenschild und Anwendung klären"
+        ],
+        "product_kind": "unknown",
+        "reasons": [
+          "Die Angabe 220 V deutet auf elektrische Ausrüstung hin"
+        ],
+        "risks": [
+          "Gerätetyp und Lieferumfang nicht eindeutig"
+        ],
+        "scalp_score": 27,
+        "useability_reason": "Das Diehl-Secura-A-Objekt mit Netzspannungsangabe benötigt möglicherweise eine passende Installation; genaue Gerätefunktion ist nicht beschrieben.",
+        "useability_score": 40,
+        "value_band": "unknown",
+        "value_reason": "Marken- und Spannungsangabe ohne belegten Gerätetyp erlauben nur ein begrenztes wirtschaftliches Potenzial."
+      },
+      "content_fingerprint": "sha256:bc06264b58e32466b83a5427aed44b2a81958bfa5507ed3ab3141ea53f271cdc",
+      "ends_at": "2026-11-13T20:46:43Z",
+      "id": "v1|820312048207|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -74224,6 +74490,37 @@
       "reviewed_at": "2026-11-10T07:56:40.154000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:1426c80595d570357a6daf9924e55cfa607a2f38aa4e31e98c7d1318210aeeca"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Unbekannte erforderliche Peripherie",
+          "Netzanschluss und Systemkompatibilität prüfen"
+        ],
+        "next_checks": [
+          "Geräteart, Inhalt und konkrete Fehlfunktion prüfen"
+        ],
+        "product_kind": "unknown",
+        "reasons": [
+          "Modellbezeichnung R800 ist vorhanden"
+        ],
+        "risks": [
+          "Als nicht funktionsfähig oder Ersatzteil deklariert",
+          "Keine belegte Vollständigkeit oder Fehlerdiagnose"
+        ],
+        "scalp_score": 28,
+        "useability_reason": "Der Name Elsi Retail R800 deutet auf ein einzelnes Handelsgerät hin; ohne Beschreibung bleiben Eigenständigkeit, Peripherie und Lieferumfang ungeklärt. Der Defekthinweis allein beweist keine fehlenden Baugruppen.",
+        "useability_score": 62,
+        "value_band": "unknown",
+        "value_reason": "Das bezeichnete Handelsgerät könnte einen begrenzten Ersatzteil- oder Gerätenutzen haben; genaue Geräteart und Zustand fehlen."
+      },
+      "content_fingerprint": "sha256:39fdbfe791e166b0366a9e496609fe1cf1d541dc4a05b921c6b8de7148bcf385",
+      "ends_at": "2026-11-13T03:53:57Z",
+      "id": "v1|840087090138|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -81410,6 +81707,35 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Konfektionsgröße"
+        ],
+        "next_checks": [
+          "Foto und tatsächliche Größenkennzeichnung prüfen"
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Titel benennt eindeutig Bekleidung"
+        ],
+        "risks": [
+          "Passform und tatsächlicher Zustand nicht verifiziert"
+        ],
+        "scalp_score": 6,
+        "useability_reason": "Ein Damen-Kasack ist als Kleidungsstück bei passender Größe unmittelbar tragbar.",
+        "useability_score": 97,
+        "value_band": "around_5",
+        "value_reason": "Ein einzelner Kasack der Größe 36 bietet nur geringes plausibles wirtschaftliches Potenzial."
+      },
+      "content_fingerprint": "sha256:628ba286f5b6446f3439e8dd78d684163b378d24f76c74e061d67fbd5512a6eb",
+      "ends_at": "2026-11-11T12:04:31Z",
+      "id": "v1|880082049985|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Passende Sensor-/Aktorschnittstellen"
@@ -83381,6 +83707,35 @@
       "reviewed_at": "2026-11-10T01:44:02Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:46f944c350f84798a209b4c95fbb9aaa3bcd23f8082d7c68023dbc6ccc414509"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Ausführender Anbieter und konkret definierter Leistungsumfang"
+        ],
+        "next_checks": [
+          "Prüfen, ob überhaupt ein physischer Artikel geliefert wird"
+        ],
+        "product_kind": "unknown",
+        "reasons": [
+          "Dienstleistungswerbung statt belegten Geräts"
+        ],
+        "risks": [
+          "Leistungsumfang, Vertragsbedingungen und Lieferung unbekannt"
+        ],
+        "scalp_score": 3,
+        "useability_reason": "Der Titel bewirbt Aluminium-Bearbeitungsdienstleistungen und bezeichnet keine unmittelbar nutzbare gelieferte Maschine.",
+        "useability_score": 10,
+        "value_band": "unknown",
+        "value_reason": "Ohne spezifizierten physischen Lieferumfang oder Vertrag ist kein plausibler Warenwert ableitbar."
+      },
+      "content_fingerprint": "sha256:739aab4efcc777ccfaacf6b04d9245662d9499a929f7fa5cc3522c1560e8fb5f",
+      "ends_at": "2026-11-11T07:29:27Z",
+      "id": "v1|900064205731|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
@@ -88116,6 +88471,37 @@
       "reviewed_at": "2026-11-10T01:44:02Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:46f944c350f84798a209b4c95fbb9aaa3bcd23f8082d7c68023dbc6ccc414509"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Netzversorgung",
+          "Reinigungsspirale oder passendes Einsatzwerkzeug auf Lieferumfang prüfen"
+        ],
+        "next_checks": [
+          "Probelauf, mitgelieferte Spirale und Vollständigkeit prüfen"
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Es ist eine Rohrreinigungsmaschine und kein isoliertes Ersatzteil benannt"
+        ],
+        "risks": [
+          "Als B-Ware beziehungsweise defekt angeboten; genaue Fehlfunktion unbekannt",
+          "Spirale und Zubehör nicht belegt"
+        ],
+        "scalp_score": 54,
+        "useability_reason": "Eine Rohrreinigungsmaschine mit 500-W-Antrieb ist als eigenständiges Werkzeug mit üblicher Stromversorgung nutzbar, sofern wesentliche Reinigungswerkzeuge vorhanden sind. Der Defekthinweis allein beweist keine fehlende Baugruppe.",
+        "useability_score": 92,
+        "value_band": "around_50",
+        "value_reason": "Eine motorische Rohrreinigungsmaschine besitzt substanzielles praktisches Werkzeugpotenzial; Defekt- und Zubehörunsicherheit begrenzen die Einordnung."
+      },
+      "content_fingerprint": "sha256:68cd71bd7d750dc97f65b916b591d9ecab465a1ce433a8cbe27f1b71bbe79e27",
+      "ends_at": "2026-11-14T09:31:05Z",
+      "id": "v1|920120869907|0",
+      "reviewed_at": "2026-11-10T14:16:22Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:24761cbfcca032756a8b551138e638117f74a970733181485394f2e574fafadb"
     },
     {
       "assessment": {
