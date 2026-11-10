@@ -3121,24 +3121,6 @@
         "summary": "Kandidatenseite 91 lesen"
       }
     },
-    "/api/candidates/page-092.json": {
-      "get": {
-        "operationId": "readFundgrubeCandidates92",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/candidatePage"
-                }
-              }
-            },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
-          }
-        },
-        "summary": "Kandidatenseite 92 lesen"
-      }
-    },
     "/api/items/{item_file}": {
       "get": {
         "description": "Nur bereits im Snapshot referenzierte Dateien existieren. Kein dynamischer Suchendpunkt.",
