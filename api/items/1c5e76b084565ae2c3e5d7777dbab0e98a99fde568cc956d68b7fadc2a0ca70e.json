@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-10T14:35:22Z",
+    "evaluated_at": "2026-11-10T15:07:30Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-10T14:35:22Z",
+  "generated_at": "2026-11-10T15:07:30Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,7 @@
     "content_updated_at": "2026-11-10T03:25:54Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Bohrmaschine und passendes Bohrfutter"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +45,13 @@
     "ends_at": "2026-11-19T20:31:33Z",
     "id": "v1|407351593849|0",
     "image": "https://i.ebayimg.com/images/g/q5wAAeSwk-Jq8ij7/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 34,
     "is_auction": true,
     "last_seen_at": "2026-11-10T03:25:54Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Bohrerdurchmesser, Vollständigkeit und Kennzeichnung prüfen"
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,12 +61,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "tool",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Größerer Satz von 92 Bohrern laut Titel"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -76,14 +76,17 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Materialkennzeichnung und tatsächliche Stückzahl ungeprüft",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 45,
+    "score": 34,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-10T14:48:17Z",
+    "semantic_interest": 45,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 0.0,
     "source_observed_at": "2026-11-10T03:25:54Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -94,11 +97,11 @@
     "total_eur": null,
     "total_known_eur": 1.0,
     "url": "https://www.ebay.de/itm/407351593849?hash=item5ed80c0b79%3Ag%3Aq5wAAeSwk-Jq8ij7&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Die Bohrer benötigen eine übliche geeignete Bohrmaschine und passende Spannaufnahme; keine proprietäre Gesamtanlage.",
+    "useability_score": 76,
     "valid_until": "2026-11-19T20:31:33Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "Ein 92-teiliges HSS-Co-Spiralbohrerset besitzt Werkstattnutzen und plausibles Potenzial, sofern Legierung, Größen und Vollständigkeit stimmen.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -155,7 +158,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:18456989756b3ed1301258a6a80dfb5456cef2055d3585a913a2b0f410ef6448",
+  "snapshot_id": "sha256:abce4f6e5f30e19fe8b2f57b38a0b401ede306e1bb514139ba9fd1116b057ace",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
