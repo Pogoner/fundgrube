@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-10T08:43:42Z",
+    "evaluated_at": "2026-11-10T11:54:45Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-10T08:43:42Z",
+  "generated_at": "2026-11-10T11:54:45Z",
   "item": {
     "assessment_basis": "heuristic",
     "assessment_confidence": "low",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Neu",
-    "content_updated_at": "2026-11-10T08:18:34Z",
+    "content_updated_at": "2026-11-10T11:30:49Z",
     "country": "",
     "dependencies": [
       "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -33,12 +33,10 @@
     "detail_path": "api/items/b0e127f62bc722d5c3e1f04302656795f7e62a6b59c84bd1b1e87c44fcb1f949.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-13T11:25:46Z",
@@ -46,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/HIoAAeSw-~1q7biv/s-l400.jpg",
     "interest_score": 18,
     "is_auction": true,
-    "last_seen_at": "2026-11-10T08:18:34Z",
+    "last_seen_at": "2026-11-10T11:30:49Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -69,7 +67,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -81,11 +78,11 @@
     "semantic_assessed": true,
     "semantic_interest": 35,
     "shipping_eur": 2.9,
-    "source_observed_at": "2026-11-10T08:18:34Z",
+    "source_observed_at": "2026-11-10T11:30:49Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Klemmbefestigung",
     "total_eur": null,
     "total_known_eur": 3.9,
@@ -151,10 +148,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:180fb2e476142629a02c1548509e6f3a4eb3f26959dd92608df6739cad9dc6de",
+  "snapshot_id": "sha256:32721d6a49d7b603ea3352354508e2636cfad7a325f68656678abec3cd097945",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
