@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T19:59:22Z",
+    "evaluated_at": "2026-11-11T20:11:27Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,19 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T19:59:22Z",
+  "generated_at": "2026-11-11T20:11:27Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Neu",
     "content_updated_at": "2026-11-11T19:33:22Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Montagefläche und Befestigungsmittel"
     ],
     "description": "",
     "description_status": "missing",
@@ -48,7 +48,7 @@
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Länge, Deckel und Unversehrtheit prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -58,25 +58,28 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "accessory",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Vollständiger Kanal mit Deckel laut Titel."
     ],
     "reserve_status": "unknown",
     "risks": [
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Geradheit, Länge und Transportschäden ungeprüft.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
+    "scalp_score": 24,
     "score": 18,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-11T20:08:09Z",
+    "semantic_interest": 24,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 10.0,
     "source_observed_at": "2026-11-11T19:33:22Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -87,11 +90,11 @@
     "total_eur": null,
     "total_known_eur": 11.0,
     "url": "https://www.ebay.de/itm/257843815902?hash=item3c08b065de%3Ag%3AcM8AAeSw96Nqykzr&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Direkt in Elektro-/Werkstattprojekten mit Befestigungsmitteln nutzbar.",
+    "useability_score": 76,
     "valid_until": "2026-11-14T15:49:53Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_5",
+    "value_reason": "Zwei Meter Verdrahtungskanal 25x25 mit Deckel sind ein einfaches Montagematerial.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -148,10 +151,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042",
+  "snapshot_id": "sha256:3e2251e01ea96ee5996810a173045f824a8d41ceae273a5c681f0a9c181891c1",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
