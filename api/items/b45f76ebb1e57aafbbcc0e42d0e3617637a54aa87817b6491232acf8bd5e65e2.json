@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T02:08:52Z",
+    "evaluated_at": "2026-11-11T02:25:59Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,18 +13,21 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T02:08:52Z",
+  "generated_at": "2026-11-11T02:25:59Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Used",
     "content_updated_at": "2026-11-11T01:52:02Z",
     "country": "",
-    "dependencies": [],
+    "dependencies": [
+      "Passendes Diatest-Sondenmesssystem",
+      "Kenntnis von Nenndurchmesser und Kalibrieraufgabe"
+    ],
     "description": "",
     "description_status": "missing",
     "description_truncated": false,
@@ -43,13 +46,13 @@
     "ends_at": "2026-11-17T21:35:27Z",
     "id": "v1|377635818326|0",
     "image": "https://i.ebayimg.com/images/g/rMkAAeSwhZNnuHea/s-l400.jpg",
-    "interest_score": 45,
+    "interest_score": 6,
     "is_auction": true,
     "last_seen_at": "2026-11-11T01:52:02Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Istmaß, Markierungen und Zertifikat prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -59,11 +62,11 @@
     "postcode": "",
     "price_eur": 0.01,
     "price_kind": "auction_price",
-    "product_kind": "tool",
+    "product_kind": "component",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
-      "Nennenswertes Werkzeug denkbar; Modell, Qualität und Umfang können die Größenordnung stark ändern."
+      "Der Lieferumfang ist ein Einstellring, nicht die im Titel erwähnte Messeinrichtung."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -72,13 +75,16 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Angabe 1.100 mm mehrdeutig; Kalibrierzertifikat und Verschleiß unbekannt.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 50,
-    "score": 45,
+    "scalp_score": 36,
+    "score": 6,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 50,
+    "semantic_assessed_at": "2026-11-11T02:24:06.478000Z",
+    "semantic_interest": 36,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 22.9,
     "source_observed_at": "2026-11-11T01:52:02Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -89,11 +95,11 @@
     "total_eur": null,
     "total_known_eur": 22.91,
     "url": "https://www.ebay.de/itm/377635818326?hash=item57ecd94b56%3Ag%3ArMkAAeSwhZNnuHea&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Werkzeugtyp mit eigenem unmittelbarem Anwendungszweck; konkrete Versorgung und Lieferumfang sind noch zu klären.",
-    "useability_score": 90,
+    "useability_reason": "Nur zusammen mit einer passenden Messsonde/Messeinrichtung und einem passenden Kalibrierprozess sinnvoll.",
+    "useability_score": 18,
     "valid_until": "2026-11-17T21:35:27Z",
     "value_band": "around_50",
-    "value_reason": "Nennenswertes Werkzeug denkbar; Modell, Qualität und Umfang können die Größenordnung stark ändern.",
+    "value_reason": "Ein Diatest-Einstellring ist ein enges Präzisionsmess-Normal mit möglichem Fachnutzen, kein vollständiges Sondenmessgerät.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -150,10 +156,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660",
+  "snapshot_id": "sha256:be6c85b9cf5133f0685439bd004ef33da3320103e1cb38f1bccb5124f5b34fa0",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"

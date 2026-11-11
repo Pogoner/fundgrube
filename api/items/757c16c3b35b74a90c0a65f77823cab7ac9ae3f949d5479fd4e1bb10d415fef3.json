@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T02:08:52Z",
+    "evaluated_at": "2026-11-11T02:25:59Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,20 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T02:08:52Z",
+  "generated_at": "2026-11-11T02:25:59Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Gebraucht",
     "content_updated_at": "2026-11-11T01:52:57Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Kompatible Videoquellen und Verkabelung",
+      "Gegebenenfalls externes Bedienpanel/Steuerung"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +46,13 @@
     "ends_at": "2026-11-19T14:36:34Z",
     "id": "v1|147673283042|0",
     "image": "https://i.ebayimg.com/images/g/rxQAAeSwxYpqyhb1/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 23,
     "is_auction": true,
     "last_seen_at": "2026-11-11T01:52:57Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Lieferumfang, Einschaltfunktion und benötigte Steuerkomponenten prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,11 +62,11 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "apparatus",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "19-Zoll-Bildmischer statt Prospekt oder Ersatzteil."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -74,13 +75,16 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Ob FSN-150/RCP-120 im Lieferumfang liegt, ist nicht belegt; alte Schnittstellen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 66,
+    "score": 23,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-11T02:24:06.478000Z",
+    "semantic_interest": 66,
+    "semantic_review_mode": "interactive",
     "shipping_eur": null,
     "source_observed_at": "2026-11-11T01:52:57Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -91,11 +95,11 @@
     "total_eur": null,
     "total_known_eur": null,
     "url": "https://www.ebay.de/itm/147673283042?hash=item22620379e2%3Ag%3ArxQAAeSwxYpqyhb1&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Für eine funktionierende Videoregie sind passende Signalquellen, Displays und gegebenenfalls Steuerpult oder weitere FSN-Module nötig.",
+    "useability_score": 35,
     "valid_until": "2026-11-19T14:36:34Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_500",
+    "value_reason": "Ein professioneller Barco-FSN-1400-Bildmischer kann technisch hochwertig sein, doch Wert und Einsatzfähigkeit hängen stark von Version und Zubehör ab.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -152,10 +156,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660",
+  "snapshot_id": "sha256:be6c85b9cf5133f0685439bd004ef33da3320103e1cb38f1bccb5124f5b34fa0",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
