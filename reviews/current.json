@@ -2499,6 +2499,36 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Brennstoff und Stromversorgung",
+          "Ausreichende Belüftung und sichere Aufstellung"
+        ],
+        "next_checks": [
+          "Defektbeschreibung, Sicherheitsabschaltung und Lieferumfang prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Ein vollständiger Bauheizer wird benannt, keine separate Brennerkomponente."
+        ],
+        "risks": [
+          "Fehlerursache, Brennkammer, Sicherheit und Transport unbekannt."
+        ],
+        "scalp_score": 44,
+        "useability_reason": "Als Bauheizer grundsätzlich eigenständig mit Brennstoff, Stromversorgung und sicherer Belüftung nutzbar; Defekt ist kein Nachweis fehlender Baugruppen.",
+        "useability_score": 87,
+        "value_band": "around_50",
+        "value_reason": "Eine 37-kW-Diesel-Heizkanone ist eine komplette Heizmaschine, deren ausdrücklich defekter Zustand das wirtschaftliche Potenzial deutlich unsicher macht."
+      },
+      "content_fingerprint": "sha256:92619eb8878f18cb8b5f26cb5be0b6f62aa560e514246a69acfaa58089d2ec56",
+      "ends_at": "2026-11-20T11:13:45Z",
+      "id": "v1|117513936617|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Passende M4-Gewindebolzen oder Schrauben"
@@ -9706,6 +9736,36 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Druckluftversorgung",
+          "Passende Leitungen und Verschraubungen"
+        ],
+        "next_checks": [
+          "Typenschilder, Gewinde, Manometer und Dichtheit prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Filter-Regler/Öler mit Manometer statt Gesamtkompressor."
+        ],
+        "risks": [
+          "Dichtungen, Anschlüsse und zulässige Betriebsdaten nicht geprüft."
+        ],
+        "scalp_score": 53,
+        "useability_reason": "Erfordert Druckluftquelle, Montage, Leitungen und eine passende Pneumatikanwendung; keine eigenständige Produktionsmaschine.",
+        "useability_score": 44,
+        "value_band": "around_50",
+        "value_reason": "Eine Festo-Mini-Druckluft-Wartungseinheit aus Filter-Regler und Öler samt Manometer kann in pneumatischen Anlagen nützlich sein."
+      },
+      "content_fingerprint": "sha256:8811a78457b80f435a8c86f264e3808334fabbc1e865b104622e66468d47c028",
+      "ends_at": "2026-11-16T09:39:05Z",
+      "id": "v1|137915565867|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Elektronikschaltung"
         ],
         "next_checks": [
@@ -12743,6 +12803,36 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Kompatible Videoquellen und Verkabelung",
+          "Gegebenenfalls externes Bedienpanel/Steuerung"
+        ],
+        "next_checks": [
+          "Lieferumfang, Einschaltfunktion und benötigte Steuerkomponenten prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "19-Zoll-Bildmischer statt Prospekt oder Ersatzteil."
+        ],
+        "risks": [
+          "Ob FSN-150/RCP-120 im Lieferumfang liegt, ist nicht belegt; alte Schnittstellen."
+        ],
+        "scalp_score": 66,
+        "useability_reason": "Für eine funktionierende Videoregie sind passende Signalquellen, Displays und gegebenenfalls Steuerpult oder weitere FSN-Module nötig.",
+        "useability_score": 35,
+        "value_band": "around_500",
+        "value_reason": "Ein professioneller Barco-FSN-1400-Bildmischer kann technisch hochwertig sein, doch Wert und Einsatzfähigkeit hängen stark von Version und Zubehör ab."
+      },
+      "content_fingerprint": "sha256:2a93dc4cf8bc8be508d7f560d983643d3a8cf0745d254d52a72d026dcbc89221",
+      "ends_at": "2026-11-19T14:36:34Z",
+      "id": "v1|147673283042|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Säge bzw. Bearbeitungswerkzeuge",
@@ -12771,6 +12861,36 @@
       "reviewed_at": "2026-11-10T13:59:39.018000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Lightning-fähiges kompatibles iPhone",
+          "Passende Seek-Software"
+        ],
+        "next_checks": [
+          "Lightning-Stecker, App-Unterstützung und Livebild testen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Wärmebildkamera als Smartphone-Modul, nicht nur Handbuch."
+        ],
+        "risks": [
+          "Kompatibilität aktueller iOS-Versionen und Sensorzustand nicht geprüft."
+        ],
+        "scalp_score": 61,
+        "useability_reason": "Erfordert ein kompatibles iPhone mit Lightning-Anschluss und unterstützte Software; kein allein bedienbares Wärmebildgerät.",
+        "useability_score": 41,
+        "value_band": "around_50",
+        "value_reason": "Ein Seek Thermal CompactXR ist eine spezialisierte mobile Wärmebildkamera mit technischem Nutzen, aber an eine bestimmte Schnittstelle gebunden."
+      },
+      "content_fingerprint": "sha256:acefbcf658e21fc3f39ef9c171a6cf63ab0f9b297220ea52d38df9906efd8e2b",
+      "ends_at": "2026-11-20T11:51:25Z",
+      "id": "v1|147674458747|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
     },
     {
       "assessment": {
@@ -22866,6 +22986,36 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatibler 12-V-Verbraucher",
+          "Passende Steckverbindung und Polarität"
+        ],
+        "next_checks": [
+          "AC- oder DC-Ausgang, Stecker, Belastbarkeit und Sicherheit prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Konkrete Ausgangsleistung, kein komplettes Maschinenangebot."
+        ],
+        "risks": [
+          "AC/DC-Bezeichnung im Titel widersprüchlich; Prüfzeichen und Spannungsstabilität unbekannt."
+        ],
+        "scalp_score": 33,
+        "useability_reason": "Für einen passenden Verbraucher eigenständig als Stromquelle verwendbar, jedoch nicht als vollständiges Endgerät.",
+        "useability_score": 61,
+        "value_band": "around_50",
+        "value_reason": "Ein 120-W-Netzteil mit angegebenen 12 V und 10 A ist verbreitetes elektrisches Zubehör mit überschaubarem Potenzial."
+      },
+      "content_fingerprint": "sha256:7bfe6ad0900b7f581ec20823a5d8e4e95f290d6155fbf1cb1d6872249efcd43c",
+      "ends_at": "2026-11-19T15:11:15Z",
+      "id": "v1|206687237707|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Ungeklärte Stromversorgung und gegebenenfalls passende Messsonden"
@@ -22926,6 +23076,65 @@
       "reviewed_at": "2026-11-10T07:56:40.154000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:1426c80595d570357a6daf9924e55cfa607a2f38aa4e31e98c7d1318210aeeca"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Netzversorgung und passende Bohrwerkzeuge"
+        ],
+        "next_checks": [
+          "Typenschild, Probelauf und Zubehör prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Bohrhammer als Gesamtgerät im Koffer benannt."
+        ],
+        "risks": [
+          "Funktion, Schlagwerk, Aufnahme und Kofferinhalt nicht geprüft."
+        ],
+        "scalp_score": 61,
+        "useability_reason": "Als Elektrowerkzeug weitgehend selbstständig nutzbar, sofern Netzanschluss und passende Bohrer vorhanden sind.",
+        "useability_score": 94,
+        "value_band": "around_50",
+        "value_reason": "Ein Bosch Professional GBH 2-24 DSR im Koffer ist ein vollwertiges Bohr-/Meißelwerkzeug mit substanzieller allgemeiner Werkstattnutzung."
+      },
+      "content_fingerprint": "sha256:549d3f4afd501fcb4f4102d29c33b417019abbdf6f8def049ad8ef542c3b5768",
+      "ends_at": "2026-11-15T16:54:25Z",
+      "id": "v1|206689985011|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Stromversorgung/Batterie",
+          "Gegebenenfalls gerätespezifische Kalibrierung"
+        ],
+        "next_checks": [
+          "Modellvariante, Sensor, Kalibrierung und Lieferumfang prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Eigenständiges Öl-Qualitätsmessgerät und nicht nur Zubehör."
+        ],
+        "risks": [
+          "Die Modellvarianten sind im Titel vermischt; Funktions- und Kalibrierstatus nicht belegt."
+        ],
+        "scalp_score": 72,
+        "useability_reason": "Die Messfunktion ist grundsätzlich als Handgerät mit üblicher Versorgung möglich, ohne eine größere Anlage integrieren zu müssen.",
+        "useability_score": 91,
+        "value_band": "around_500",
+        "value_reason": "Ein als neu bezeichneter VITO FT 440 Frittieröltester ist ein spezialisiertes professionelles Messgerät; genaue Variante FT Connect bleibt unklar."
+      },
+      "content_fingerprint": "sha256:46c01560cbde88182039e94536be4a011e7f01d05391c0c091d5bd98b3a489d4",
+      "ends_at": "2026-11-17T18:03:47Z",
+      "id": "v1|206690085353|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
     },
     {
       "assessment": {
@@ -32361,6 +32570,36 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatibler Akku/Verbraucher",
+          "Passende Anschlüsse und Ladekennlinie"
+        ],
+        "next_checks": [
+          "Ausgangsdaten, Anschlüsse und Funktion kontrollieren."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Ladegerät mit genannten Ausgangsdaten."
+        ],
+        "risks": [
+          "AC/DC- und Ladecharakteristik, Ausgangsstecker und Funktion unbekannt."
+        ],
+        "scalp_score": 28,
+        "useability_reason": "Für einen passenden Akku oder Verbraucher nutzbar, ohne selbst ein vollständiges Werkzeug darzustellen.",
+        "useability_score": 58,
+        "value_band": "around_50",
+        "value_reason": "Ein einzelnes 12-V-/2-A-Ladegerät hat moderates Zubehörpotenzial; die konkrete Sonnenschein-Anwendung ist nicht ausgewiesen."
+      },
+      "content_fingerprint": "sha256:dca271088378b3f58b61a194571c89cda75d7dfd1b41c5be60406df0361402be",
+      "ends_at": "2026-11-16T10:08:05Z",
+      "id": "v1|237172865270|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [],
         "next_checks": [
@@ -36241,6 +36480,35 @@
       "reviewed_at": "2026-11-09T13:29:04.022000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:18cff51577f584e36862ed4275ce55f2c7fbbad1390b56dc424a9b3372bc8d45"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Bearbeitungswerkzeuge und konkretes Werkstückprojekt"
+        ],
+        "next_checks": [
+          "Abmessungen, Legierung und Vollmaterial bestätigen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Ein massives Materialreststück, kein Messgerät oder Werkzeug."
+        ],
+        "risks": [
+          "Messinglegierung, Maßhaltigkeit und Oberflächenzustand unbekannt."
+        ],
+        "scalp_score": 38,
+        "useability_reason": "Als Halbzeug für Dreh- oder Fräsarbeiten verwendbar, benötigt Bearbeitung beziehungsweise passenden Anwendungsfall.",
+        "useability_score": 47,
+        "value_band": "around_50",
+        "value_reason": "Ein einzelnes Messing-Rundmaterial mit angegebenen 60 mm Durchmesser und 210 mm Länge besitzt plausiblen Materialwert, keine fertige Gerätefunktion."
+      },
+      "content_fingerprint": "sha256:f4bf7d28fcc35c7649d62e014d6d37fa633eb4780c90cfa88239da6e87fdcfa3",
+      "ends_at": "2026-11-13T22:09:23Z",
+      "id": "v1|257846212865|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
     },
     {
       "assessment": {
@@ -49322,6 +49590,36 @@
       "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
+          "Kompatibles Steuerungs-/Reglersystem",
+          "Anschlüsse, Konfiguration und Prozesssignale"
+        ],
+        "next_checks": [
+          "Teilenummer, Stecksystem und Funktion im Zielsystem prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Explizit ein Steuerungs-/Reglermodul, keine vollständige Anlage."
+        ],
+        "risks": [
+          "Exakte Modellvariante, Schnittstellen und Funktion unbekannt."
+        ],
+        "scalp_score": 56,
+        "useability_reason": "Benötigt ein kompatibles ABB-System, Verdrahtung, Programmierung und Prozessanbindung; als Einzelmodul kaum autark nutzbar.",
+        "useability_score": 19,
+        "value_band": "around_50",
+        "value_reason": "Ein ABB-RDE2-Regel-/Automationsmodul kann als Ersatz- oder Integrationsbaugruppe industriellen Wert besitzen; Systemzuordnung unklar."
+      },
+      "content_fingerprint": "sha256:a952702364433a069cb97765b0f6ac59b88abb55686875e05147b06d4dae2d11",
+      "ends_at": "2026-11-17T08:55:27Z",
+      "id": "v1|307275580280|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
           "Passende Versorgung, Signale und Steuerungsanwendung"
         ],
         "next_checks": [
@@ -56781,6 +57079,36 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Kompatibles 18-V-Festool-Gerät",
+          "Passendes Ladegerät"
+        ],
+        "next_checks": [
+          "Akkutest, Modellkompatibilität und Ladefähigkeit prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Es wird ein Akkupack und kein vollständiges Werkzeug angeboten."
+        ],
+        "risks": [
+          "Tatsächliche Kapazität, Zellzustand und Kontakte ungeprüft."
+        ],
+        "scalp_score": 51,
+        "useability_reason": "Der Akkupack ist keine allein verwendbare Maschine; benötigt passende Festool-Werkzeuge und Ladegerät.",
+        "useability_score": 30,
+        "value_band": "around_50",
+        "value_reason": "Markenspezifischer 18-V-Akkupack mit 4 Ah kann als Arbeitsgeräte-Zubehör wirtschaftlich interessant sein, jedoch nur bei erhaltener Kapazität."
+      },
+      "content_fingerprint": "sha256:5ceaa1c47ea6badd64a552350ab9256a71ffc64de2f8c1ab81d9fcd3eeac3e39",
+      "ends_at": "2026-11-13T21:59:00Z",
+      "id": "v1|366799474629|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Kompatibler Festool-CTH-48-Sauger"
         ],
         "next_checks": [
@@ -56805,6 +57133,35 @@
       "reviewed_at": "2026-11-11T01:51:51.043000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:e4453b10ea1a0d267c8b6b588bd4dccdc8a176a83e084106795e244dc5038020"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatibler Festool CT 36 oder baugleicher Absauger"
+        ],
+        "next_checks": [
+          "Unbenutztheit, Passform und Verpackung im Original prüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlich angeboten sind fünf Filterbeutel, nicht der Absauger."
+        ],
+        "risks": [
+          "Als gebraucht ausgewiesen; Hygiene und Restnutzbarkeit unklar."
+        ],
+        "scalp_score": 19,
+        "useability_reason": "Nur als Verbrauchsmaterial in einem passenden CT-36-Absauger sinnvoll; keine eigenständig nutzbare Maschine.",
+        "useability_score": 26,
+        "value_band": "around_5",
+        "value_reason": "Fünf Vlies-Filterbeutel für ein bestimmtes Festool-Absaugermodell; begrenzter Warenwert, Zustand als gebraucht angegeben."
+      },
+      "content_fingerprint": "sha256:672786b618803897e038d562a796223975021cf1f506538b860c145eea724b5f",
+      "ends_at": "2026-11-13T21:39:00Z",
+      "id": "v1|366799474632|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
     },
     {
       "assessment": {
@@ -59898,6 +60255,36 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Modellgerechte Verbrauchsmittel und Schutzvorrichtungen",
+          "Sachkundige sichere Anwendung"
+        ],
+        "next_checks": [
+          "Seriennummer, Sicherheitsvorrichtungen und den Zubehörumfang prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Gerät inklusive Koffer und als Zubehör bezeichneter Bestandteile."
+        ],
+        "risks": [
+          "Verschleiß, Vollständigkeit und Sicherheitszustand unbekannt."
+        ],
+        "scalp_score": 62,
+        "useability_reason": "Mit passenden zugelassenen Kartuschen/Befestigungselementen und fachgerechter sicherer Bedienung als Handwerkzeug nutzbar.",
+        "useability_score": 77,
+        "value_band": "around_50",
+        "value_reason": "Ein Hilti-DX-A41-Bolzensetzgerät im Originalkoffer mit Zubehör ist ein spezialisiertes Profiwerkzeug mit eigenem Einsatzbereich."
+      },
+      "content_fingerprint": "sha256:eee44640e8a37b20a659111e826cd9f12f00c879b689b6e972ec03e2c30eb217",
+      "ends_at": "2026-11-19T14:00:01Z",
+      "id": "v1|377632212008|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Ösen oder passende Befestigungsmittel"
         ],
         "next_checks": [
@@ -60049,6 +60436,36 @@
       "reviewed_at": "2026-11-10T19:47:55Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:98e476cec96c71cad8cb13b3794038026f44dc62cfa4d1e02ee8c248de4ff9ff"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passendes Diatest-Sondenmesssystem",
+          "Kenntnis von Nenndurchmesser und Kalibrieraufgabe"
+        ],
+        "next_checks": [
+          "Istmaß, Markierungen und Zertifikat prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Der Lieferumfang ist ein Einstellring, nicht die im Titel erwähnte Messeinrichtung."
+        ],
+        "risks": [
+          "Angabe 1.100 mm mehrdeutig; Kalibrierzertifikat und Verschleiß unbekannt."
+        ],
+        "scalp_score": 36,
+        "useability_reason": "Nur zusammen mit einer passenden Messsonde/Messeinrichtung und einem passenden Kalibrierprozess sinnvoll.",
+        "useability_score": 18,
+        "value_band": "around_50",
+        "value_reason": "Ein Diatest-Einstellring ist ein enges Präzisionsmess-Normal mit möglichem Fachnutzen, kein vollständiges Sondenmessgerät."
+      },
+      "content_fingerprint": "sha256:8d33dcf0badff4219238b0a6bb4cf8cdaa0233e087cd10bf713d6df88700d2c5",
+      "ends_at": "2026-11-17T21:35:27Z",
+      "id": "v1|377635818326|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
     },
     {
       "assessment": {
@@ -62074,6 +62491,37 @@
       "reviewed_at": "2026-11-09T13:29:04.022000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:18cff51577f584e36862ed4275ce55f2c7fbbad1390b56dc424a9b3372bc8d45"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passende Ladeinfrastruktur",
+          "Sichere Betriebsumgebung und vorgeschriebene Prüfungen"
+        ],
+        "next_checks": [
+          "Genauen Defekt, Lieferumfang, Batterie, Besichtigung und Logistik klären."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Angeboten ist ein Elektrostapler, nicht lediglich eine defekte Einzelkomponente."
+        ],
+        "risks": [
+          "Fehlerart, Batteriezustand, Tragfähigkeit und sicherer Transport ungeklärt.",
+          "Kein bestätigter Abholort; Versand unbekannt."
+        ],
+        "scalp_score": 64,
+        "useability_reason": "Ein Stapler ist als Maschine grundsätzlich eigenständig nutzbar; Batterie, Laden, sichere Betriebsumgebung und betriebliche Prüfung werden vorausgesetzt. 'Defekt' allein belegt keine fehlende Baugruppe.",
+        "useability_score": 79,
+        "value_band": "around_500",
+        "value_reason": "Ein kompletter 1,6-t-Elektrostapler mit benannten Teleskopgabeln und Batterie hat erhebliches industrielles Potenzial, durch ausdrücklich defekten Zustand stark unsicher."
+      },
+      "content_fingerprint": "sha256:712cd8940ab7af540f6c3e837eac3fb9edcfeeeaa5f3f6c980f42ac75a45c74c",
+      "ends_at": "2026-11-16T09:49:54Z",
+      "id": "v1|407350554868|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
     },
     {
       "assessment": {
@@ -73148,6 +73596,35 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Zu verwendende Kabel oder Schläuche"
+        ],
+        "next_checks": [
+          "Trommeltyp, Größe, Risse und gegebenenfalls elektrische Sicherheit prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Fünf mechanische Trommeln, nicht fünf elektrisch angetriebene Maschinen."
+        ],
+        "risks": [
+          "Konstruktion, Größe, elektrische Ausstattung und Zustand nicht beschrieben."
+        ],
+        "scalp_score": 47,
+        "useability_reason": "Trommeln sind zum Aufrollen von Leitungen relativ eigenständig brauchbar, benötigen nur passende Schläuche beziehungsweise Kabel.",
+        "useability_score": 81,
+        "value_band": "around_50",
+        "value_reason": "Ein Konvolut von fünf Schlauch- oder Kabeltrommeln hat praktischen Lager- und Werkstattnutzen; Art und Ausstattung bleiben im Titel offen."
+      },
+      "content_fingerprint": "sha256:a0d391631cfaffb3a482b221dfa813b390780cb989809457784ca839a3c96a55",
+      "ends_at": "2026-11-19T15:16:29Z",
+      "id": "v1|860128160186|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Kompatible Maschine und Filteraufnahme"
@@ -77195,6 +77672,36 @@
     {
       "assessment": {
         "assessment_confidence": "medium",
+        "dependencies": [
+          "Netzversorgung",
+          "Lötspitze und Lötmaterial"
+        ],
+        "next_checks": [
+          "Heiztest, Spitze und mitgelieferten Halter prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Vollständige Lötstation und kein Ersatzheizelement."
+        ],
+        "risks": [
+          "Funktionsfähigkeit, Temperaturregelung und Spitzenzustand ungeprüft."
+        ],
+        "scalp_score": 49,
+        "useability_reason": "Übliche Netzversorgung sowie Lötspitze und Verbrauchsmaterial genügen grundsätzlich.",
+        "useability_score": 94,
+        "value_band": "around_50",
+        "value_reason": "Eine ATTEN ST-2090D-Lötstation ist ein relativ eigenständiges Elektronikwerkzeug; sehr geringe Nutzungszeit ist nur Verkäuferbehauptung."
+      },
+      "content_fingerprint": "sha256:6380651ac7e08acaddb57fe48d85753ac3377760c7a5c8346551135ceb154bff",
+      "ends_at": "2026-11-19T16:26:38Z",
+      "id": "v1|920054258739|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
           "Passform, Sohlen und Mangelart prüfen."
@@ -80162,6 +80669,36 @@
       "reviewed_at": "2026-11-11T01:51:51.043000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:e4453b10ea1a0d267c8b6b588bd4dccdc8a176a83e084106795e244dc5038020"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Geeigneter Sauger",
+          "Passende Anschlüsse beziehungsweise Adapter"
+        ],
+        "next_checks": [
+          "Kupplungen, Durchmesser und Schlauchzustand prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "D 27/32 und Länge 3,5 m konkret benannt."
+        ],
+        "risks": [
+          "Beschädigung, Antistatik und vorhandene Endstücke ungeklärt."
+        ],
+        "scalp_score": 43,
+        "useability_reason": "Zum Absaugen ist ein kompatibler Sauger mit passender Kupplung erforderlich; universelle Nutzung gegebenenfalls über Adapter.",
+        "useability_score": 44,
+        "value_band": "around_50",
+        "value_reason": "Ein textilummantelter, 3,5 m langer antistatischer Festool-Saugschlauch ist nützliches Qualitätszubehör, aber kein eigenständiges Gerät."
+      },
+      "content_fingerprint": "sha256:8e1e442269c554d5c2a1ee210bfb2ff5115eb86eac4ba84e306a9cc3775ead6d",
+      "ends_at": "2026-11-13T21:54:00Z",
+      "id": "v1|920126681182|0",
+      "reviewed_at": "2026-11-11T02:24:06.478000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
     },
     {
       "assessment": {
