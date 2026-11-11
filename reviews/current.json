@@ -5864,6 +5864,35 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatible Schließanlage und Schlüssel"
+        ],
+        "next_checks": [
+          "Schlüsselumfang, Profil und Maße bestätigen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Vier 16-mm-Wechselkerne, keine fertige Türschlossanlage."
+        ],
+        "risks": [
+          "Ob Schlüssel beiliegen und Gleichschließung stimmt, ist offen."
+        ],
+        "scalp_score": 42,
+        "useability_reason": "Nur in kompatiblen Zylindern beziehungsweise Schließsystemen nutzbar.",
+        "useability_score": 51,
+        "value_band": "around_50",
+        "value_reason": "Vier gleichschließende MLM-Wechselkerne bieten gewisse Substanz bei passender Schließanlage."
+      },
+      "content_fingerprint": "sha256:25ec834976fee3d9227705b9f1bf8b0676cfe7ff544721085fbb725a2951374f",
+      "ends_at": "2026-11-14T13:09:05Z",
+      "id": "v1|128184917674|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Kompatibles Danfoss-VLT-Grundgerät",
@@ -9322,35 +9351,6 @@
       "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
-          "E14-Leuchten"
-        ],
-        "next_checks": [
-          "Glühfäden, Sockel und Wattzahlen prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [
-          "Semantische Einordnung des vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert."
-        ],
-        "scalp_score": 10,
-        "useability_reason": "Benötigt E14-Leuchten.",
-        "useability_score": 78,
-        "value_band": "around_5",
-        "value_reason": "Zehn gebrauchte Kerzen-Glühlampen bilden kleinen Vorrat."
-      },
-      "content_fingerprint": "sha256:3e390d2025d80f0f9e8fb69adca2e2dbbbca5c5319bd264aef33643a2e731de0",
-      "ends_at": "2026-11-11T19:50:05Z",
-      "id": "v1|147666648645|0",
-      "reviewed_at": "2026-11-08T20:19:14.740423Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
           "Säge mit passender Aufnahme"
         ],
         "next_checks": [
@@ -11760,6 +11760,35 @@
       "reviewed_at": "2026-11-11T02:24:06.478000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Kompatible Filter und Dichtsitz"
+        ],
+        "next_checks": [
+          "Typ, Filter, Haltbarkeit und Normkennzeichnung prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Halbmaske ist nicht automatisch komplett filterbestückt."
+        ],
+        "risks": [
+          "Norm, Haltbarkeit, Dichtung und hygienischer Zustand ungeprüft; nicht ohne Prüfung für Gefährdung verwenden."
+        ],
+        "scalp_score": 21,
+        "useability_reason": "Nur mit passenden freigegebenen Filtern und korrekt sitzender Dichtung schutzwirksam.",
+        "useability_score": 76,
+        "value_band": "around_5",
+        "value_reason": "OX-ON-Halbmaske ist prinzipiell brauchbare Schutzausrüstung, aber Zertifizierung und Filterumfang unklar."
+      },
+      "content_fingerprint": "sha256:465fda8ed0d180345d4dcfd8798dc23ac02c14d707bcc260efaf129a43f00464",
+      "ends_at": "2026-11-14T16:42:53Z",
+      "id": "v1|147673399897|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
     },
     {
       "assessment": {
@@ -20514,6 +20543,35 @@
       "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
+          "Passende Stromversorgung und Halterung"
+        ],
+        "next_checks": [
+          "Spannung, Lichtbild, Anschluss und E-Zeichen im Original prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Titel deutet kompletten Leuchtenkopf an, nicht bloß Birne."
+        ],
+        "risks": [
+          "Spannung, Lichtleistung, Zertifizierung und Lieferumfang fehlen."
+        ],
+        "scalp_score": 49,
+        "useability_reason": "Mit geeigneter Spannungsquelle und Montage grundsätzlich als Leuchte einsetzbar.",
+        "useability_score": 89,
+        "value_band": "around_50",
+        "value_reason": "Neuer Arbeits-/Rückfahrscheinwerfer kann als eigenständiger Lichtkopf nützliche Ausrüstung sein."
+      },
+      "content_fingerprint": "sha256:bd90c91b8dbe528491a50ed2b45e6b7dbfad6f71dd8d826d11de2f6ee3c5488f",
+      "ends_at": "2026-11-14T14:48:45Z",
+      "id": "v1|206692255333|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
           "Passender Montageaufbau und Gegenstücke"
         ],
         "next_checks": [
@@ -24453,6 +24511,35 @@
       "reviewed_at": "2026-11-10T19:47:55Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:98e476cec96c71cad8cb13b3794038026f44dc62cfa4d1e02ee8c248de4ff9ff"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Normgerechte Elektroinstallation und Fachprüfung"
+        ],
+        "next_checks": [
+          "Typenkennzeichnung, Polzahl, Auslösestrom und Messprotokoll prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "FI-Schutzschalter, keine fertige Verteilung."
+        ],
+        "risks": [
+          "Schutzfunktion unbekannt; gebrauchtes Schutzorgan ohne Messung nicht sicher."
+        ],
+        "scalp_score": 38,
+        "useability_reason": "Nur fachgerecht in geeigneter Elektroverteilung und nach Prüfung nutzbar.",
+        "useability_score": 40,
+        "value_band": "around_50",
+        "value_reason": "Gebrauchter Doepke-Fehlerstromschutzschalter 63-A-Klasse ist technisches Markenbauteil."
+      },
+      "content_fingerprint": "sha256:f79ab4fb63813bdc97a3706f93bb1d49afadfe57755ea5c742c69b84da979fd7",
+      "ends_at": "2026-11-14T17:00:01Z",
+      "id": "v1|227609315146|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
     },
     {
       "assessment": {
@@ -32282,6 +32369,35 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Montagefläche und Befestigungsmittel"
+        ],
+        "next_checks": [
+          "Länge, Deckel und Unversehrtheit prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Vollständiger Kanal mit Deckel laut Titel."
+        ],
+        "risks": [
+          "Geradheit, Länge und Transportschäden ungeprüft."
+        ],
+        "scalp_score": 24,
+        "useability_reason": "Direkt in Elektro-/Werkstattprojekten mit Befestigungsmitteln nutzbar.",
+        "useability_score": 76,
+        "value_band": "around_5",
+        "value_reason": "Zwei Meter Verdrahtungskanal 25x25 mit Deckel sind ein einfaches Montagematerial."
+      },
+      "content_fingerprint": "sha256:3d4d29c70b8ada3d136e9cdd24cf88930eefd1a8fc7a103a30b8805e75d8eb78",
+      "ends_at": "2026-11-14T15:49:53Z",
+      "id": "v1|257843815902|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Bearbeitungswerkzeuge und konkretes Werkstückprojekt"
         ],
         "next_checks": [
@@ -32306,6 +32422,35 @@
       "reviewed_at": "2026-11-11T02:24:06.478000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Sortierung, Prüfung und kompatible Endgeräte"
+        ],
+        "next_checks": [
+          "Kisteninhalt, Mengen, Akkus und E-Schrott-Risiken prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Konvolut statt kompletter PC oder Smartphone."
+        ],
+        "risks": [
+          "Explizit als defekt/Ersatzteil; funktionierende Teile nicht belegt."
+        ],
+        "scalp_score": 31,
+        "useability_reason": "Teile nur nach Sortierung, Prüfung und passenden Reparaturprojekten verwendbar.",
+        "useability_score": 44,
+        "value_band": "around_50",
+        "value_reason": "Große Kiste gemischter PC-/Mobiltelefon-/Elektroteile ist Materialposten mit unsicherem Nutzwert."
+      },
+      "content_fingerprint": "sha256:1fd89e69ed946da25773920bb1e9e2900c6fa3c217a54c5739e0484117fd0ec2",
+      "ends_at": "2026-11-14T16:44:38Z",
+      "id": "v1|257847573987|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
     },
     {
       "assessment": {
@@ -33384,6 +33529,35 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Identifikation, Haltbarkeit und geeignete Anwendung"
+        ],
+        "next_checks": [
+          "Exakte Produktnummern, Versiegelung, Verfalldaten und Inhalt prüfen."
+        ],
+        "product_kind": "unknown",
+        "reasons": [
+          "Nur Kartons mit Inhalt genannt, keine bestimmbare Ausrüstung."
+        ],
+        "risks": [
+          "Art, Sterilität und Ablaufdatum unbekannt; keine Nutzung ohne Prüfung."
+        ],
+        "scalp_score": 26,
+        "useability_reason": "Mögliche medizinische Verbrauchsartikel erfordern eindeutige Identifikation, Haltbarkeit und Zweck.",
+        "useability_score": 42,
+        "value_band": "unknown",
+        "value_reason": "Fünf Kartons mit unbenanntem Coloplast-Inhalt erlauben keine belastbare Einschätzung der konkreten Produkte."
+      },
+      "content_fingerprint": "sha256:069756ef9b8ad5ac621aaf847ea81766548afcd665abe3852fee24ec74095261",
+      "ends_at": "2026-11-14T18:15:13Z",
+      "id": "v1|267833415484|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
@@ -33512,33 +33686,6 @@
       "ends_at": "2026-11-14T18:15:13Z",
       "id": "v1|267833415489|0",
       "reviewed_at": "2026-11-08T20:27:47.855443Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Mechanikprojekt"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft."
-        ],
-        "scalp_score": 10,
-        "useability_reason": "Benötigen passende Einbaumaße und Federkraft.",
-        "useability_score": 42,
-        "value_band": "around_5",
-        "value_reason": "Fünf größere Druckfedern bieten kleines Mechanikpotenzial."
-      },
-      "content_fingerprint": "sha256:712a197a01371c30768ddcd478210819faa724bc421f593e9aa84975850f1f0f",
-      "ends_at": "2026-11-11T19:45:10Z",
-      "id": "v1|267833474339|0",
-      "reviewed_at": "2026-11-08T20:18:43.932038Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -36411,68 +36558,6 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
-          "Passende Gasflasche und Druckregler",
-          "Geeignete sichere Belüftung und Aufstellung"
-        ],
-        "next_checks": [
-          "Typenschild, Druckregler, Dichtheit und erlaubten Einsatzort prüfen."
-        ],
-        "product_kind": "apparatus",
-        "reasons": [
-          "Tatsächlich angeboten: Gerät; nur Titel und Zustandsfeld als Sachbasis."
-        ],
-        "risks": [
-          "Retourengrund, Dichtheit und Funktionszustand unbekannt",
-          "Gasgeräte erfordern Sicherheitsprüfung"
-        ],
-        "scalp_score": 37,
-        "useability_reason": "Als eigenständiges Heizgerät mit üblichem Gaszubehör nutzbar, sofern zugelassene Anschlüsse und sichere Einsatzumgebung vorhanden sind.",
-        "useability_score": 79,
-        "value_band": "around_50",
-        "value_reason": "Ein einzelner Gasheizofen mit angegebener 4,2-kW-Leistung hat begrenztes, aber brauchbares wirtschaftliches Potenzial; Retoure ist ein Risiko."
-      },
-      "content_fingerprint": "sha256:3a4dd2e6e7fc3ebde9ec69fa1d345ef3fe24743af1d55d7266d6ed244c1876a0",
-      "ends_at": "2026-11-11T19:45:44Z",
-      "id": "v1|267839998211|0",
-      "reviewed_at": "2026-11-11T01:51:51.043000Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:e4453b10ea1a0d267c8b6b588bd4dccdc8a176a83e084106795e244dc5038020"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Kompatible Achse und Schubkarre",
-          "Passende Nabenbreite und Achsdurchmesser"
-        ],
-        "next_checks": [
-          "Achsdurchmesser, Breite, Radmaß und enthaltene Achse prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [
-          "Tatsächlich angeboten: Komponente/Zubehör; nur Titel und Zustandsfeld als Sachbasis."
-        ],
-        "risks": [
-          "Retourengrund und genauer Lieferumfang unbekannt",
-          "Maße und Tragkraft nicht belegt"
-        ],
-        "scalp_score": 24,
-        "useability_reason": "Passend zu gängigen Schubkarren nur bei richtiger Nabe, Achse und Belastbarkeit einsetzbar.",
-        "useability_score": 66,
-        "value_band": "around_50",
-        "value_reason": "Jeweils ein angebotenes PU-Schubkarren-Ersatzrad, nicht eine komplette Schubkarre; einzelnes Rad besitzt beschränktes Wiederverwendungspotenzial."
-      },
-      "content_fingerprint": "sha256:36272961de742411a9ee674bd909a03f1bfbf08d7935946e668293938df87d5b",
-      "ends_at": "2026-11-11T19:55:32Z",
-      "id": "v1|267840007441|0",
-      "reviewed_at": "2026-11-11T01:51:51.043000Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:e4453b10ea1a0d267c8b6b588bd4dccdc8a176a83e084106795e244dc5038020"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
           "Kompatible Achse und Schubkarre",
           "Passende Nabenbreite und Achsdurchmesser"
         ],
@@ -36558,6 +36643,35 @@
       "reviewed_at": "2026-11-11T19:41:49.590000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:fc7a8fb57b8a92c4556436033f05feb5991ba0e23b354e0c3a5be59dc17776ef"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Gasversorgung und geeigneter Regler"
+        ],
+        "next_checks": [
+          "Retourenursache, Zündsicherung, Gasdichtigkeit und Zulässigkeit des Betriebs unbekannt."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Nur titelbasierte Lieferung; kein Zubehör oder Probelauf bestätigt."
+        ],
+        "risks": [
+          "Gasheizgerät als benanntes Komplettgerät, nicht nur Einzelbauteil."
+        ],
+        "scalp_score": 51,
+        "useability_reason": "Mit passender Gasflasche, Druckregler und Lüftung eigenständige Wärmequelle.",
+        "useability_score": 85,
+        "value_band": "around_50",
+        "value_reason": "4200-W-Gasheizofen als grundsätzlich selbstständiges Heizgerät; Retoure begrenzt wirtschaftliche Sicherheit."
+      },
+      "content_fingerprint": "sha256:3a4dd2e6e7fc3ebde9ec69fa1d345ef3fe24743af1d55d7266d6ed244c1876a0",
+      "ends_at": "2026-11-12T19:36:05Z",
+      "id": "v1|267840973041|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
     },
     {
       "assessment": {
@@ -44681,6 +44795,35 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passendes Möbel und Befestigungsmaterial"
+        ],
+        "next_checks": [
+          "Maße, Befestigung und Tragfähigkeit kontrollieren."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Fünf Rollen statt vollständigem Möbelstück."
+        ],
+        "risks": [
+          "Traglast, Rollendurchmesser und Befestigung unbekannt."
+        ],
+        "scalp_score": 34,
+        "useability_reason": "Mit üblichen Montagearbeiten an geeignetem Möbelstück gut nutzbar.",
+        "useability_score": 79,
+        "value_band": "around_50",
+        "value_reason": "Fünf offenbar neue Möbelrollen ergeben einen kleinen vollständigen Montagesatz."
+      },
+      "content_fingerprint": "sha256:afd21d921b131873db90cc00e5ee39b2c4d2f2bb3cbb9874e422b0cace67608d",
+      "ends_at": "2026-11-14T11:16:31Z",
+      "id": "v1|307274161106|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Kompatibles Steuerungs-/Reglersystem",
@@ -45108,35 +45251,6 @@
       "ends_at": "2026-11-14T12:28:02Z",
       "id": "v1|327439117422|0",
       "reviewed_at": "2026-11-08T20:27:38.500932Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Optikprojekt",
-          "Passende Anschlussmaße"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
-          "Ursprungsgerät und enthaltene Optik unbekannt."
-        ],
-        "scalp_score": 9,
-        "useability_reason": "Benötigt passende optische Baugruppen oder ein konkretes Umbauprojekt.",
-        "useability_score": 31,
-        "value_band": "unknown",
-        "value_reason": "Ein optischer Tubus ist erkennbares Bauteil, Funktion und Optik fehlen jedoch."
-      },
-      "content_fingerprint": "sha256:06a4cfe7ca75dcf069487a169e8e1045138446c25e4096d082d04c2fd327228b",
-      "ends_at": "2026-11-11T20:00:41Z",
-      "id": "v1|327439785111|0",
-      "reviewed_at": "2026-11-08T20:18:43.932038Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -49524,6 +49638,35 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "high",
+        "dependencies": [
+          "Passende 20-/22-mm-Verschraubung"
+        ],
+        "next_checks": [
+          "Maulweiten und Zustand der Flanken prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Kompletter Schlüssel statt Zubehör."
+        ],
+        "risks": [
+          "Maulverschleiß, Verzug und Korrosion nicht geprüft."
+        ],
+        "scalp_score": 26,
+        "useability_reason": "Mit passender Mutter/Schraube sofort verwendbar und ohne Spezialgerät.",
+        "useability_score": 96,
+        "value_band": "around_50",
+        "value_reason": "Gebrauchter GEDORE-Doppelmaulschlüssel 20/22 mm ist solide, aber einzelnes Handwerkzeug."
+      },
+      "content_fingerprint": "sha256:2f36239cf77be9143d891e1178249fe22c88d159e8e1da0129a449ef4a45496e",
+      "ends_at": "2026-11-14T16:19:36Z",
+      "id": "v1|336888665779|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Kompatibler Sicherungshalter",
@@ -49583,6 +49726,93 @@
       "reviewed_at": "2026-11-10T07:56:40.154000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:1426c80595d570357a6daf9924e55cfa607a2f38aa4e31e98c7d1318210aeeca"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Schaltung und Einbaumaße"
+        ],
+        "next_checks": [
+          "Rastermaß, Pinbelegung und Widerstandskurve prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Schieberegler ist kein eigenständiges Steuergerät."
+        ],
+        "risks": [
+          "Widerstandskennlinie, Kontaktzustand und Anschlussbild ungeprüft."
+        ],
+        "scalp_score": 13,
+        "useability_reason": "Benötigt passendes Gerät oder neues Projekt mit korrektem Einbaumaß.",
+        "useability_score": 30,
+        "value_band": "around_5",
+        "value_reason": "Ein Radiohm-100-kOhm-Schieberegler ist ein spezielles elektromechanisches Einzelteil."
+      },
+      "content_fingerprint": "sha256:3a7cc3aa41e2b762c245213fbe326f898f13dd02c9f2049ef48ac46e079aea50",
+      "ends_at": "2026-11-14T11:12:07Z",
+      "id": "v1|336891892106|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Geeignete Leitung und Netzinstallation"
+        ],
+        "next_checks": [
+          "Polzahl, Schutzart und Anschlusszustand prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Angeboten wird ein Stecker, keine fertige Stromversorgung."
+        ],
+        "risks": [
+          "Polarität, Kodierung und tatsächlicher Neuzustand nicht verifiziert."
+        ],
+        "scalp_score": 32,
+        "useability_reason": "Funktioniert als Anschlusskomponente an fachgerecht ausgeführter Leitung, nicht allein als Gerät.",
+        "useability_score": 66,
+        "value_band": "around_50",
+        "value_reason": "Neuer Bals-16-A-CEE-Industriestecker ist ein brauchbares Marken-Elektroteil."
+      },
+      "content_fingerprint": "sha256:e2c434e1a4a324db47a99085a4506d27c029f50150f50e1859b3b35558e9bbc4",
+      "ends_at": "2026-11-14T13:20:12Z",
+      "id": "v1|336892046771|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Einbaukomponenten und Montagewerkzeug"
+        ],
+        "next_checks": [
+          "Innenmaße, Deckel und Schutzart prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Ein Gehäuse, kein bestückter Schaltschrank."
+        ],
+        "risks": [
+          "Dichtigkeit, Zubehör und Materialqualität unbekannt."
+        ],
+        "scalp_score": 26,
+        "useability_reason": "Als Gehäuse mit üblichen Bearbeitungswerkzeugen und Komponenten verwendbar.",
+        "useability_score": 71,
+        "value_band": "around_50",
+        "value_reason": "ELFIN-Kunststoff-Anschlussgehäuse in konkreten Abmessungen ist universeller Montagebedarf."
+      },
+      "content_fingerprint": "sha256:fd2d377d816fdb4f0b9c1fb98b24128c6a923dd0dd9e1d50cdf2e8e91f79797e",
+      "ends_at": "2026-11-14T13:24:15Z",
+      "id": "v1|336892052193|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
     },
     {
       "assessment": {
@@ -50261,122 +50491,6 @@
       "ends_at": "2026-11-14T09:29:49Z",
       "id": "v1|366784032531|0",
       "reviewed_at": "2026-11-08T20:28:52Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [],
-        "next_checks": [
-          "Konkrete Artikel, Größen und Schäden vor Bewertung des Loses klären."
-        ],
-        "product_kind": "accessory",
-        "reasons": [
-          "Semantische Einordnung des vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert."
-        ],
-        "scalp_score": 18,
-        "useability_reason": "Unmittelbar ohne weitere technische Anlage verwendbar.",
-        "useability_score": 95,
-        "value_band": "unknown",
-        "value_reason": "Dreißig gemischte Mode-/Dekoretouren mit ausdrücklich defektem Zustand."
-      },
-      "content_fingerprint": "sha256:2d04ce66e5ba3e94600a2be41e3d5ce8398b2f39e968f12575bf6463aecb8725",
-      "ends_at": "2026-11-11T20:02:09Z",
-      "id": "v1|366785618494|0",
-      "reviewed_at": "2026-11-08T20:19:14.740423Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Crimpwerkzeug",
-          "Passende Leitungen"
-        ],
-        "next_checks": [
-          "Lieferumfang und Zustand anhand des Originalangebots prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [
-          "20 kleine isolierte Leitungsanschlüsse."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 3,
-        "useability_reason": "Kabelschuhe benötigen passende Leiter und Crimpwerkzeug.",
-        "useability_score": 52,
-        "value_band": "around_5",
-        "value_reason": "20 kleine isolierte Leitungsanschlüsse."
-      },
-      "content_fingerprint": "sha256:4ac4005af9234ed2441aca5e83aed341ff04aaba7813f4da5065ea5f9d4acd16",
-      "ends_at": "2026-11-11T20:03:19Z",
-      "id": "v1|366785620573|0",
-      "reviewed_at": "2026-11-08T20:20:19Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Geeignete Leiter",
-          "Elektroinstallation"
-        ],
-        "next_checks": [
-          "Leitertypen, Kontakte und Anzahl prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [
-          "Semantische Einordnung des vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert."
-        ],
-        "scalp_score": 12,
-        "useability_reason": "Benötigt Geeignete Leiter, Elektroinstallation.",
-        "useability_score": 57,
-        "value_band": "around_5",
-        "value_reason": "Zwanzig Wago-Achtfachklemmen bieten kleinen Installationsvorrat."
-      },
-      "content_fingerprint": "sha256:59c60f29e9e290023f1fafbbe251bb3f95477b30a7d77eec14a07b038e24f020",
-      "ends_at": "2026-11-11T20:08:55Z",
-      "id": "v1|366785629657|0",
-      "reviewed_at": "2026-11-08T20:19:14.740423Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Passender mechanischer Einbau"
-        ],
-        "next_checks": [
-          "Lieferumfang und Zustand anhand des Originalangebots prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [
-          "Sechs einfache neue Sicherungssplinte."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 3,
-        "useability_reason": "Splinte brauchen passende Bohrungen und mechanische Anwendung.",
-        "useability_score": 55,
-        "value_band": "around_5",
-        "value_reason": "Sechs einfache neue Sicherungssplinte."
-      },
-      "content_fingerprint": "sha256:bb479c0a2bffed400b210df170851e28b44ab4c87851a206b6be6fca2efeb25d",
-      "ends_at": "2026-11-11T20:10:35Z",
-      "id": "v1|366785632970|0",
-      "reviewed_at": "2026-11-08T20:20:19Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -54946,6 +55060,64 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Oszillatorschaltung"
+        ],
+        "next_checks": [
+          "Aufdruck, Frequenz und Stückzahl prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Die Einheit umfasst Quarzbauteile, kein fertiges Gerät."
+        ],
+        "risks": [
+          "Frequenztoleranz, Alterung und Funktion der gebrauchten Teile unbekannt."
+        ],
+        "scalp_score": 19,
+        "useability_reason": "Benötigen passende Oszillatorschaltung und Frequenzanforderung; kein eigenständiges Mess- oder Funkgerät.",
+        "useability_score": 25,
+        "value_band": "around_5",
+        "value_reason": "25 gebrauchte 39,500-kHz-Schwingquarze sind Spezialelektronik mit kleinem Mengenpotenzial."
+      },
+      "content_fingerprint": "sha256:c8a672afe7bd206f3fa564e1e38954af8e2ca6a106ea5c0dcbcded3a54dbbe35",
+      "ends_at": "2026-11-14T10:50:05Z",
+      "id": "v1|377632638513|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatible Oszillatorschaltung"
+        ],
+        "next_checks": [
+          "Frequenz und Bauform im Original prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Bezeichnung meint zwei Quarzbauteile, keinen vollständigen Oszillator."
+        ],
+        "risks": [
+          "Elektrische Toleranzen und tatsächliche Lagerung nicht bestätigt."
+        ],
+        "scalp_score": 10,
+        "useability_reason": "Nur in passender Taktoszillatorschaltung sinnvoll.",
+        "useability_score": 22,
+        "value_band": "around_5",
+        "value_reason": "Zwei ungebrauchte 2,4576-MHz-HC51U-Schwingquarze sind kleines Ersatzteil-Los."
+      },
+      "content_fingerprint": "sha256:a5d7b9cfb3ce340e8fdcbeb05d901fb4dc593d3aa5c614b6a83e3f35be085718",
+      "ends_at": "2026-11-14T10:50:29Z",
+      "id": "v1|377632638819|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Leistungselektronische Schaltung",
@@ -54973,6 +55145,151 @@
       "reviewed_at": "2026-11-11T07:26:19.352000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:ad20901014159a9b1f63253e5cc1db40044fc300569bb1d5108a55d93bb93e10"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Elektronische Zielschaltung"
+        ],
+        "next_checks": [
+          "Kennlinie, Typenaufdruck und Prüfbeleg nachsehen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Sechs Bauelemente, keine fertige Schutzbox; geprüft ist Verkäuferbehauptung."
+        ],
+        "risks": [
+          "Messverfahren, Leistungswert unter Einsatzbedingungen und Zustand unbekannt."
+        ],
+        "scalp_score": 21,
+        "useability_reason": "Schutzdiode muss in geeignete Schaltung mit richtiger Polarität und Kennlinie eingebaut werden.",
+        "useability_score": 30,
+        "value_band": "around_5",
+        "value_reason": "Sechs 1N6373-Schutzdioden mit genanntem 1500-W-Impulswert haben projektgebundenes Bauteilpotenzial."
+      },
+      "content_fingerprint": "sha256:ca49b40f3bdf83906b946c6822b7407f7ae8c7e70970e08d16a7c0d5b13119d0",
+      "ends_at": "2026-11-14T10:56:36Z",
+      "id": "v1|377632644016|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passende elektronische Schaltung"
+        ],
+        "next_checks": [
+          "Typ, Spannung und Messzustand prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Los enthält Kondensatoren, kein benanntes Endgerät."
+        ],
+        "risks": [
+          "Spannungsfestigkeit und Bauart fehlen, Restlebensdauer unklar."
+        ],
+        "scalp_score": 12,
+        "useability_reason": "Zum Einbau in Elektronikprojekte brauchbar, ohne selbstständige Funktion.",
+        "useability_score": 40,
+        "value_band": "around_5",
+        "value_reason": "36 gebrauchte 100-nF-Kondensatoren sind gewöhnliches Kleinmaterial."
+      },
+      "content_fingerprint": "sha256:634506feee5d1f1c48a85680c7dd7779da98b5cc9a9ec3c9a9854d7c98b65809",
+      "ends_at": "2026-11-14T11:09:29Z",
+      "id": "v1|377632671409|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passende elektronische Schaltung"
+        ],
+        "next_checks": [
+          "Aufdruck, Messwerte und Spannungsklasse prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Keramik-Kondensatoren sind Bauteile, kein Gerät."
+        ],
+        "risks": [
+          "Kapazitätstoleranz und Spannungsfestigkeit unbekannt."
+        ],
+        "scalp_score": 13,
+        "useability_reason": "Nur als Bauelemente in passender Schaltung verwendbar.",
+        "useability_score": 38,
+        "value_band": "around_5",
+        "value_reason": "51 gebrauchte 22-nF-Keramikkondensatoren sind eine kleine Materialmenge."
+      },
+      "content_fingerprint": "sha256:3d45f0bca7186bf691b5f90eb55544efc054e0a87e1afc58ee1b212610cd0388",
+      "ends_at": "2026-11-14T11:10:01Z",
+      "id": "v1|377632672367|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Elektronikprojekt und Montagewerkzeug"
+        ],
+        "next_checks": [
+          "Stückzahl, Typen und elektrische Daten prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Mengenlos einzelner Kondensatoren."
+        ],
+        "risks": [
+          "Alter, gemischte Typen und Spannungsfestigkeit unbekannt."
+        ],
+        "scalp_score": 15,
+        "useability_reason": "Nur mit Elektronikprojekt und Löt-/Montagearbeiten nutzbar.",
+        "useability_score": 38,
+        "value_band": "around_5",
+        "value_reason": "63 gebrauchte 10-nF-Keramikkondensatoren bieten etwas Stückzahl, aber gewöhnliche Bauteile."
+      },
+      "content_fingerprint": "sha256:8c4d08a0460ec3ac03d688450e363052f5959063061c59ec27bb2dac652b1f30",
+      "ends_at": "2026-11-14T11:12:09Z",
+      "id": "v1|377632676591|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passende Hochspannungsschaltung"
+        ],
+        "next_checks": [
+          "Typ, Isolation und Normen vor Verwendung prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Kondensatorlos, kein fertiges Netzteil."
+        ],
+        "risks": [
+          "Tatsächliche Spannungsfestigkeit, Isolation und Alterung nicht geprüft."
+        ],
+        "scalp_score": 18,
+        "useability_reason": "Nur in passender Hochspannungsschaltung fachgerecht einsetzbar.",
+        "useability_score": 36,
+        "value_band": "around_5",
+        "value_reason": "21 gebrauchte Kondensatoren mit genannten 4,7 nF und 2 kV können Spezialreparaturen dienen."
+      },
+      "content_fingerprint": "sha256:956b1be8f91f59d75139039cb0526bea70a159c0afb43a835b34e081e9d03704",
+      "ends_at": "2026-11-14T11:15:41Z",
+      "id": "v1|377632683105|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
     },
     {
       "assessment": {
@@ -55237,62 +55554,6 @@
       "ends_at": "2026-11-13T17:55:42Z",
       "id": "v1|407337068678|0",
       "reviewed_at": "2026-11-08T20:27:16Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [],
-        "next_checks": [
-          "Lieferumfang und Zustand anhand des Originalangebots prüfen."
-        ],
-        "product_kind": "media",
-        "reasons": [
-          "Ein einfaches Informationsblatt beziehungsweise Beobachtungsset."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 2,
-        "useability_reason": "Vogelbeobachtungsleitfaden und Zählliste sind unmittelbar lesbar.",
-        "useability_score": 100,
-        "value_band": "around_5",
-        "value_reason": "Ein einfaches Informationsblatt beziehungsweise Beobachtungsset."
-      },
-      "content_fingerprint": "sha256:abf4fcbde4acb00fe49e5b52456bf63d73343e5e435a6712675833dc925f28b7",
-      "ends_at": "2026-11-11T20:01:21Z",
-      "id": "v1|407340412082|0",
-      "reviewed_at": "2026-11-08T20:20:19Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Dreiphasiger Stromkreis",
-          "Gehäusemontage",
-          "Verdrahtung"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft."
-        ],
-        "scalp_score": 46,
-        "useability_reason": "Benötigen passende Leistungsinstallation und fachgerechte Montage.",
-        "useability_score": 35,
-        "value_band": "around_50",
-        "value_reason": "Zwei dreiphasige 50-A-Entstörfilter bieten substanzielles Industrieteilepotenzial."
-      },
-      "content_fingerprint": "sha256:a907794da1da0aaecfcf23187988875fbd1a1f3e2d0324386e05cc95306f5a4c",
-      "ends_at": "2026-11-11T20:08:00Z",
-      "id": "v1|407340424073|0",
-      "reviewed_at": "2026-11-08T20:18:43.932038Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -57399,6 +57660,35 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Keine besondere technische Infrastruktur"
+        ],
+        "next_checks": [
+          "Konkreten Inhalt, CE-Hinweise und Stückzahl prüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Behaupteter 73-teiliger Bestand statt einzelnes Produkt."
+        ],
+        "risks": [
+          "Tatsächliche Stückzahl, Zustand und Spielzeugsicherheit nicht belegt."
+        ],
+        "scalp_score": 58,
+        "useability_reason": "Einzelne einfache Spielzeuge typischerweise ohne zusätzliche Geräte verwendbar.",
+        "useability_score": 91,
+        "value_band": "around_50",
+        "value_reason": "Titel behauptet 73 neue Spielwaren aus Marken-Restposten; als Mengenlos wirtschaftlich interessant, aber Sortimentsqualität offen."
+      },
+      "content_fingerprint": "sha256:6307b4b3e47380d619959a708940186448223485740962d4a8bbf30df385ba90",
+      "ends_at": "2026-11-14T18:10:43Z",
+      "id": "v1|407356095668|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
@@ -57766,34 +58056,6 @@
       "ends_at": "2026-11-14T17:07:18Z",
       "id": "v1|800877141937|0",
       "reviewed_at": "2026-11-08T20:30:38Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Passende Größen"
-        ],
-        "next_checks": [
-          "Einzelinhalte und Mängel prüfen."
-        ],
-        "product_kind": "accessory",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
-          "Als defekt angeboten; Zusammensetzung, Schäden und Hygiene unbekannt."
-        ],
-        "scalp_score": 46,
-        "useability_reason": "Bekleidung, Schuhe und Dekoration grundsätzlich eigenständig verwendbar.",
-        "useability_score": 92,
-        "value_band": "around_50",
-        "value_reason": "60 gemischte Retouren bieten substanzielles Warenlos-Potenzial bei hohem Zustandsrisiko."
-      },
-      "content_fingerprint": "sha256:06afd6c6a2d19c52c4ffc28e083686d9752a1ae51131f64178f8d7ced02708b0",
-      "ends_at": "2026-11-11T20:02:07Z",
-      "id": "v1|800877644884|0",
-      "reviewed_at": "2026-11-08T20:18:43.932038Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -61644,36 +61906,6 @@
       "reviewed_at": "2026-11-08T20:41:00.231474Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Passender 12-V-Verbraucher",
-          "Passender Stecker und richtige Ausgangsart",
-          "Netzversorgung"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "accessory",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Lieferumfang und Funktion nicht unabhängig geprüft.",
-          "AC/DC-Ausgang, Polarität und eine etwaige Ladefunktion sind nicht belegt."
-        ],
-        "scalp_score": 7,
-        "useability_reason": "Benötigt einen spannungs-, strom- und steckerkompatiblen Verbraucher.",
-        "useability_score": 65,
-        "value_band": "around_5",
-        "value_reason": "Ein neues kleines 12-V-Netzteil mit 400 mA ist einfaches Geräteversorgungszubehör."
-      },
-      "content_fingerprint": "sha256:5819a73db6de91ab32ee36bfac969d9cd78d73e0e9e424210d747fe8998daaa1",
-      "ends_at": "2026-11-11T19:55:34Z",
-      "id": "v1|820332184744|0",
-      "reviewed_at": "2026-11-08T21:16:51.104409Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:713fe12ed99a481364f62d673eb136fcb9d398755188723a5d7b0bd0e6d60938"
     },
     {
       "assessment": {
@@ -66048,33 +66280,6 @@
     },
     {
       "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [],
-        "next_checks": [
-          "Lieferumfang und Zustand anhand des Originalangebots prüfen."
-        ],
-        "product_kind": "tool",
-        "reasons": [
-          "Zwölf einfache neue Farbstifte."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 3,
-        "useability_reason": "Buntstifte sind unmittelbar zum Zeichnen nutzbar.",
-        "useability_score": 100,
-        "value_band": "around_5",
-        "value_reason": "Zwölf einfache neue Farbstifte."
-      },
-      "content_fingerprint": "sha256:a46d74fc5afe5971f4e84d5fd538f5a7c546860cc3b7126b53c91447e653e74e",
-      "ends_at": "2026-11-11T19:55:52Z",
-      "id": "v1|860113601877|0",
-      "reviewed_at": "2026-11-08T20:20:19Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Passender 5x20-mm-Halter",
@@ -68865,33 +69070,6 @@
         "assessment_confidence": "low",
         "dependencies": [],
         "next_checks": [
-          "Stückzahl und Materialzustand prüfen."
-        ],
-        "product_kind": "accessory",
-        "reasons": [
-          "Semantische Einordnung des vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert."
-        ],
-        "scalp_score": 4,
-        "useability_reason": "Unmittelbar ohne weitere technische Anlage verwendbar.",
-        "useability_score": 99,
-        "value_band": "around_5",
-        "value_reason": "Neunzig einfache Cocktail-Schirmchen haben geringen Mengenwert."
-      },
-      "content_fingerprint": "sha256:41b20b775840d249d6c0c96f6392c04b467d73860dbaeef3a775194e22eeb29a",
-      "ends_at": "2026-11-11T20:00:49Z",
-      "id": "v1|900057245558|0",
-      "reviewed_at": "2026-11-08T20:19:14.740423Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [],
-        "next_checks": [
           "Umfang, Ausgabe und Vollständigkeit prüfen."
         ],
         "product_kind": "media",
@@ -71229,36 +71407,6 @@
       "ends_at": "2026-11-17T21:00:01Z",
       "id": "v1|920105342579|0",
       "reviewed_at": "2026-11-08T20:44:20.235573Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Harzsystem",
-          "Laminierausrüstung"
-        ],
-        "next_checks": [
-          "Fasertyp, Maße und Lagerzustand prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [
-          "Fünf Quadratmeter 400-g-Carbongelege bieten substanzielles Verbundmaterialpotenzial."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 55,
-        "useability_reason": "Kohlegelege benötigt Harz, geeigneten Formenbau und Verarbeitung.",
-        "useability_score": 60,
-        "value_band": "around_500",
-        "value_reason": "Fünf Quadratmeter 400-g-Carbongelege bieten substanzielles Verbundmaterialpotenzial."
-      },
-      "content_fingerprint": "sha256:bf216b47ad8c4874521de956da5f0eb318d7219453a6a096869458f28a73d434",
-      "ends_at": "2026-11-11T19:45:00Z",
-      "id": "v1|920105728510|0",
-      "reviewed_at": "2026-11-08T20:20:19Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -74759,6 +74907,35 @@
       "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
+          "Passende Werkzeuge je enthaltenem Teil"
+        ],
+        "next_checks": [
+          "Komplette Inventarliste, Fotos und Kompatibilität prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Zufallsmischung, keine bestimmte Maschine zugesichert."
+        ],
+        "risks": [
+          "Tatsächlicher Inhalt und Verschleißzustand unklar."
+        ],
+        "scalp_score": 39,
+        "useability_reason": "Übliche Werkzeuge/Zubehör meist mit verbreitetem Hand- oder Elektrowerkzeug brauchbar.",
+        "useability_score": 84,
+        "value_band": "around_50",
+        "value_reason": "Benannte 2 kg Bosch/KWB/Skil/Metabo-Werkzeugmischung kann nützliches Werkstattzubehör enthalten."
+      },
+      "content_fingerprint": "sha256:aab74f233a25abc1aa04737e266d4f5a7f68b41abfd53f0367c4317847ee46fe",
+      "ends_at": "2026-11-14T19:05:01Z",
+      "id": "v1|940073077608|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
           "Passende Riemenscheiben",
           "Antrieb"
         ],
@@ -77769,6 +77946,64 @@
       "reviewed_at": "2026-11-10T14:48:17Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:18456989756b3ed1301258a6a80dfb5456cef2055d3585a913a2b0f410ef6448"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatible Pipettenspitzen"
+        ],
+        "next_checks": [
+          "Format und Zustand des Deckels prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Leerer Kasten mit Deckel, keine enthaltenen Spitzen."
+        ],
+        "risks": [
+          "Sauberkeit, Kompatibilität und Verschlusszustand unbekannt."
+        ],
+        "scalp_score": 11,
+        "useability_reason": "Mit passenden Spitzen als Ordnungshilfe unmittelbar nutzbar.",
+        "useability_score": 82,
+        "value_band": "around_5",
+        "value_reason": "Leere Eppendorf-Aufbewahrungsdose ist kleines Laborzubehör, kein Pipettenspitzenvorrat."
+      },
+      "content_fingerprint": "sha256:af4b3cefd0e39bc98e109daa17cfd0dd3a376138659785f5b0c86ed29c934cb6",
+      "ends_at": "2026-11-14T14:55:40Z",
+      "id": "v1|960183159693|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatibler Maschinenaufbau"
+        ],
+        "next_checks": [
+          "Kennzeichnung, Maße und Verpackung prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Drei Lager und keine eigenständige Maschine."
+        ],
+        "risks": [
+          "Originalität, Lagerung und Dicht-/Laufflächenzustand nicht belegt."
+        ],
+        "scalp_score": 51,
+        "useability_reason": "Benötigen passende Wellen-/Gehäuseabmessungen und Lageranwendung.",
+        "useability_score": 53,
+        "value_band": "around_50",
+        "value_reason": "Drei neue FAG-Axial-Rillenkugellager 51109 besitzen begrenztes, aber fachliches Ersatzteilpotenzial."
+      },
+      "content_fingerprint": "sha256:738f53acd03c2124a9d843a03a60b17119f56f5acbd7345e6726665eb925f199",
+      "ends_at": "2026-11-14T17:43:17Z",
+      "id": "v1|960183645251|0",
+      "reviewed_at": "2026-11-11T20:08:09Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
     }
   ],
   "schema_version": 3
