@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T20:11:27Z",
+    "evaluated_at": "2026-11-11T22:08:06Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T20:11:27Z",
+  "generated_at": "2026-11-11T22:08:06Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -31,13 +31,11 @@
     "detail_path": "api/items/b08b0edd5485e8474a34bce45faea989befe71c90913cb764d3c2ee36811bba6.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-14T22:03:29Z",
@@ -67,7 +65,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
@@ -89,7 +86,7 @@
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": true,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "10 Gürtel Schwarz/Weiß Karo Restposten Hüftgrütel Accessoires Hosengürtel SKA",
     "total_eur": null,
     "total_known_eur": 6.9,
@@ -155,10 +152,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:3e2251e01ea96ee5996810a173045f824a8d41ceae273a5c681f0a9c181891c1",
+  "snapshot_id": "sha256:dee014267fed096d729748dc80b77926e99fe8c060f913451dc6d1eecb0d7a3f",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
