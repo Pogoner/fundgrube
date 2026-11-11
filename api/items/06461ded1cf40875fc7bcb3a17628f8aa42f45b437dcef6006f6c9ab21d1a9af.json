@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T14:36:18Z",
+    "evaluated_at": "2026-11-11T15:19:56Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,13 +13,13 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T14:36:18Z",
+  "generated_at": "2026-11-11T15:19:56Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Neu",
     "content_updated_at": "2026-11-11T14:11:20Z",
@@ -34,12 +34,10 @@
     "detail_path": "api/items/06461ded1cf40875fc7bcb3a17628f8aa42f45b437dcef6006f6c9ab21d1a9af.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-14T14:54:35Z",
@@ -70,7 +68,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -89,7 +86,7 @@
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Zahnflachriemen Optibelt Omega HTD-1190-14M-55",
     "total_eur": null,
     "total_known_eur": 7.19,
@@ -155,7 +152,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:eb1898cc904a862b072a7e7e6ffc240aefb5d2725bba2d6379a57ebef04ccfe4",
+  "snapshot_id": "sha256:f0473322e7736dd0e56dfa6f3eb5d85912236fed19e88a2c33f3dcccc3a5fa41",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
