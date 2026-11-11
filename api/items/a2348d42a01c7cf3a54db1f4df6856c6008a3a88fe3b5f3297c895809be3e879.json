@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T01:34:45Z",
+    "evaluated_at": "2026-11-11T02:08:52Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T01:34:45Z",
+  "generated_at": "2026-11-11T02:08:52Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Als Ersatzteil / defekt",
-    "content_updated_at": "2026-11-11T01:09:00Z",
+    "content_updated_at": "2026-11-11T01:43:14Z",
     "country": "",
     "dependencies": [],
     "description": "",
@@ -31,12 +31,10 @@
     "detail_path": "api/items/a2348d42a01c7cf3a54db1f4df6856c6008a3a88fe3b5f3297c895809be3e879.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-14T01:40:28Z",
@@ -44,7 +42,7 @@
     "image": "https://i.ebayimg.com/images/g/pfgAAeSwsndq7oGM/s-l400.jpg",
     "interest_score": 9,
     "is_auction": true,
-    "last_seen_at": "2026-11-11T01:09:00Z",
+    "last_seen_at": "2026-11-11T01:43:14Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -67,7 +65,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -82,11 +79,11 @@
     "semantic_interest": 9,
     "semantic_review_mode": "interactive",
     "shipping_eur": 7.99,
-    "source_observed_at": "2026-11-11T01:09:00Z",
+    "source_observed_at": "2026-11-11T01:43:14Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Mobiclinic®, Reisebett, Transporttasche, 2 in 1,kompakte Faltung, abnehmbare Mat",
     "total_eur": null,
     "total_known_eur": 8.99,
@@ -152,7 +149,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:e4453b10ea1a0d267c8b6b588bd4dccdc8a176a83e084106795e244dc5038020",
+  "snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
