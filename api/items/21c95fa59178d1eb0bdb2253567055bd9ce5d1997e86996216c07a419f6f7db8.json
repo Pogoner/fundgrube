@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T15:19:56Z",
+    "evaluated_at": "2026-11-11T19:30:05Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,13 +13,13 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T15:19:56Z",
+  "generated_at": "2026-11-11T19:30:05Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Neu",
     "content_updated_at": "2026-11-11T14:55:27Z",
@@ -36,6 +36,7 @@
     "eligibility": "excluded",
     "eligibility_reasons": [
       "Ablauf außerhalb des Suchfensters",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -70,10 +71,13 @@
     "reserve_status": "unknown",
     "risks": [
       "Ablauf außerhalb des Suchfensters",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt.",
+      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 3,
@@ -87,7 +91,7 @@
     "source_observed_at": "2026-11-11T14:55:27Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": false,
+    "stale": true,
     "time_window_eligible": false,
     "title": "8 x 8,27 kΩ Kohleschicht Widerstand 5% 0,4W NOS",
     "total_eur": null,
@@ -154,7 +158,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:f0473322e7736dd0e56dfa6f3eb5d85912236fed19e88a2c33f3dcccc3a5fa41",
+  "snapshot_id": "sha256:fc7a8fb57b8a92c4556436033f05feb5991ba0e23b354e0c3a5be59dc17776ef",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",

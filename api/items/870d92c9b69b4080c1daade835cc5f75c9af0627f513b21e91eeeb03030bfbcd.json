@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T15:19:56Z",
+    "evaluated_at": "2026-11-11T19:30:05Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T15:19:56Z",
+  "generated_at": "2026-11-11T19:30:05Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-11T14:55:05Z",
+    "content_updated_at": "2026-11-11T19:04:41Z",
     "country": "",
     "dependencies": [
       "Steuerungsprojekt"
@@ -33,12 +33,10 @@
     "detail_path": "api/items/870d92c9b69b4080c1daade835cc5f75c9af0627f513b21e91eeeb03030bfbcd.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-14T18:03:47Z",
@@ -46,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/3dAAAeSw4CBoj0SK/s-l400.jpg",
     "interest_score": 4,
     "is_auction": true,
-    "last_seen_at": "2026-11-11T14:55:05Z",
+    "last_seen_at": "2026-11-11T19:04:41Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -68,7 +66,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -84,11 +81,11 @@
     "semantic_interest": 10,
     "semantic_review_mode": "interactive",
     "shipping_eur": 5.5,
-    "source_observed_at": "2026-11-11T14:55:05Z",
+    "source_observed_at": "2026-11-11T19:04:41Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Leuchtmelder Telemecanique",
     "total_eur": null,
     "total_known_eur": 6.5,
@@ -154,7 +151,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:f0473322e7736dd0e56dfa6f3eb5d85912236fed19e88a2c33f3dcccc3a5fa41",
+  "snapshot_id": "sha256:fc7a8fb57b8a92c4556436033f05feb5991ba0e23b354e0c3a5be59dc17776ef",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
