@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T14:05:58Z",
+    "evaluated_at": "2026-11-11T14:36:18Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T14:05:58Z",
+  "generated_at": "2026-11-11T14:36:18Z",
   "items": [
     {
       "assessment_basis": "heuristic",
@@ -22,8 +22,88 @@
       "buying_options": [],
       "carried": false,
       "city": "",
+      "condition": "Neu",
+      "content_updated_at": "2026-11-11T14:10:26Z",
+      "country": "",
+      "dependencies": [
+        "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      ],
+      "description": "",
+      "description_status": "missing",
+      "description_truncated": false,
+      "detail_path": "api/items/d99f466cd96b741a5748e0f60487811d868edcea8f3e854e76f64712a20b5732.json",
+      "details_fetched": false,
+      "distance_km": null,
+      "eligibility": "review",
+      "eligibility_reasons": [
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
+      ],
+      "eligibility_without_time_window": "review",
+      "ends_at": "2026-11-14T11:12:07Z",
+      "id": "v1|336891892106|0",
+      "image": "https://i.ebayimg.com/images/g/v1gAAeSwyElp0AsD/s-l400.jpg",
+      "interest_score": 18,
+      "is_auction": true,
+      "last_seen_at": "2026-11-11T14:10:26Z",
+      "local_pickup_confirmed": false,
+      "minimum_bid_eur": null,
+      "next_checks": [
+        "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      ],
+      "personal_interest_excluded": false,
+      "personal_interest_reason": null,
+      "pickup_available": null,
+      "pickup_radius_km": 50,
+      "pickup_search_confirmed": false,
+      "postcode": "",
+      "price_eur": 1.0,
+      "price_kind": "auction_price",
+      "product_kind": "unknown",
+      "reasons": [
+        "Beobachteter Auktionspreis höchstens 1 €",
+        "Zum Abrufzeitpunkt keine Gebote",
+        "Ausgewiesene Versandkosten im Suchlimit",
+        "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      ],
+      "reserve_status": "unknown",
+      "risks": [
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
+      ],
+      "scalp_score": 35,
+      "score": 18,
+      "score_version": 2,
+      "semantic_assessed": true,
+      "semantic_interest": 35,
+      "shipping_eur": 2.0,
+      "source_observed_at": "2026-11-11T14:10:26Z",
+      "source_provider": "auktionen-ohne-gebot",
+      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+      "stale": false,
+      "time_window_eligible": true,
+      "title": "Schieberegler 100 kOhm , RADIOHM 4 76, 100 KA, 8 cm lang",
+      "total_eur": null,
+      "total_known_eur": 3.0,
+      "url": "https://www.ebay.de/itm/336891892106?hash=item4e7052518a%3Ag%3Av1gAAeSwyElp0AsD&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
+      "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
+      "useability_score": 50,
+      "valid_until": "2026-11-14T11:12:07Z",
+      "value_band": "unknown",
+      "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+      "verification_level": "aggregator"
+    },
+    {
+      "assessment_basis": "heuristic",
+      "assessment_confidence": "low",
+      "bid_count": 0,
+      "buying_options": [],
+      "carried": false,
+      "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -45,7 +125,7 @@
       "image": "https://i.ebayimg.com/images/g/UEYAAeSwNnlpVD7E/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -79,7 +159,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -103,7 +183,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -125,7 +205,7 @@
       "image": "https://i.ebayimg.com/images/g/uHcAAeSw3NlpVDx5/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -159,7 +239,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -183,7 +263,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -205,7 +285,7 @@
       "image": "https://i.ebayimg.com/images/g/q~QAAeSwHOFpVD3Y/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -239,7 +319,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -263,7 +343,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -285,7 +365,7 @@
       "image": "https://i.ebayimg.com/images/g/4xcAAeSwuIRpVD4I/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -319,7 +399,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -343,7 +423,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -365,7 +445,7 @@
       "image": "https://i.ebayimg.com/images/g/wM0AAeSwLrBpVDuW/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -399,7 +479,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -423,7 +503,7 @@
       "carried": false,
       "city": "",
       "condition": "Vom Verkäufer generalüberholt",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -445,7 +525,7 @@
       "image": "https://i.ebayimg.com/images/g/WfIAAOSwUxRmnQEQ/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -479,7 +559,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -503,7 +583,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -525,7 +605,7 @@
       "image": "https://i.ebayimg.com/images/g/nhgAAOSwP7hmkul6/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -559,7 +639,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -583,7 +663,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -605,7 +685,7 @@
       "image": "https://i.ebayimg.com/images/g/ejoAAeSwEABo2XBw/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -639,7 +719,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -663,7 +743,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -685,7 +765,7 @@
       "image": "https://i.ebayimg.com/images/g/j3oAAOSwvf5mkugB/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -719,7 +799,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -743,7 +823,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -765,7 +845,7 @@
       "image": "https://i.ebayimg.com/images/g/FzQAAeSwGqFqFUm4/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -799,7 +879,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 7.79,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -823,7 +903,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -845,7 +925,7 @@
       "image": "https://i.ebayimg.com/images/g/nccAAeSwM4hqFUkp/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -879,7 +959,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 6.29,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -903,7 +983,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -925,7 +1005,7 @@
       "image": "https://i.ebayimg.com/images/g/YHIAAeSwqBlo2XSM/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -959,7 +1039,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -983,7 +1063,7 @@
       "carried": false,
       "city": "",
       "condition": "Vom Verkäufer generalüberholt",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1005,7 +1085,7 @@
       "image": "https://i.ebayimg.com/images/g/8cYAAOSwABdoTcdz/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1039,7 +1119,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1063,7 +1143,7 @@
       "carried": false,
       "city": "",
       "condition": "Vom Verkäufer generalüberholt",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1085,7 +1165,7 @@
       "image": "https://i.ebayimg.com/images/g/saoAAOSwk19oTXxK/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1119,7 +1199,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1143,7 +1223,7 @@
       "carried": false,
       "city": "",
       "condition": "Vom Verkäufer generalüberholt",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1165,7 +1245,7 @@
       "image": "https://i.ebayimg.com/images/g/8tQAAOSwPyhoTX2Y/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1199,7 +1279,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1223,7 +1303,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:10Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1245,7 +1325,7 @@
       "image": "https://i.ebayimg.com/images/g/C9sAAOSwq2NoTXjU/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:10Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1279,7 +1359,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:10Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1303,7 +1383,7 @@
       "carried": false,
       "city": "",
       "condition": "Vom Verkäufer generalüberholt",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1325,7 +1405,7 @@
       "image": "https://i.ebayimg.com/images/g/njsAAOSwqhFoTXrt/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1359,7 +1439,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1383,7 +1463,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1405,7 +1485,7 @@
       "image": "https://i.ebayimg.com/images/g/lrkAAOSw9NZmnst5/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1439,7 +1519,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1463,7 +1543,7 @@
       "carried": false,
       "city": "",
       "condition": "Vom Verkäufer generalüberholt",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1485,7 +1565,7 @@
       "image": "https://i.ebayimg.com/images/g/F~oAAOSwocJmhDIi/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1519,7 +1599,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1543,7 +1623,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1565,7 +1645,7 @@
       "image": "https://i.ebayimg.com/images/g/YtUAAeSwCZpokOYY/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1599,7 +1679,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1623,7 +1703,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1645,7 +1725,7 @@
       "image": "https://i.ebayimg.com/images/g/a4wAAeSw9XdqP6PC/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1679,7 +1759,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1703,7 +1783,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1725,7 +1805,7 @@
       "image": "https://i.ebayimg.com/images/g/K7MAAeSwQONqP6Nv/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1759,7 +1839,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1783,7 +1863,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1805,7 +1885,7 @@
       "image": "https://i.ebayimg.com/images/g/-d8AAeSwkvJqP6KD/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1839,7 +1919,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1863,7 +1943,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1885,7 +1965,7 @@
       "image": "https://i.ebayimg.com/images/g/~3wAAeSwF~BqP6GM/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1919,7 +1999,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1943,7 +2023,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -1965,7 +2045,7 @@
       "image": "https://i.ebayimg.com/images/g/FLAAAeSwvBFqP6DX/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1999,7 +2079,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2023,7 +2103,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2045,7 +2125,7 @@
       "image": "https://i.ebayimg.com/images/g/SfYAAeSwp91qP6AN/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2079,7 +2159,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2103,7 +2183,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2125,7 +2205,7 @@
       "image": "https://i.ebayimg.com/images/g/FvsAAeSwnudqP5-Z/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2159,7 +2239,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2183,7 +2263,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2205,7 +2285,7 @@
       "image": "https://i.ebayimg.com/images/g/7MAAAeSwh8lqP53N/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2239,7 +2319,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2263,7 +2343,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2285,7 +2365,7 @@
       "image": "https://i.ebayimg.com/images/g/kOkAAeSw599qP51z/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2319,7 +2399,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2343,7 +2423,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:26Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2365,7 +2445,7 @@
       "image": "https://i.ebayimg.com/images/g/TckAAeSwbFFqP5xd/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:26Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2399,7 +2479,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:26Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2423,7 +2503,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2445,7 +2525,7 @@
       "image": "https://i.ebayimg.com/images/g/SKgAAeSwyIFqP5wg/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2479,7 +2559,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2503,7 +2583,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2525,7 +2605,7 @@
       "image": "https://i.ebayimg.com/images/g/j24AAeSwwlRqP5so/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2559,7 +2639,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2583,7 +2663,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2605,7 +2685,7 @@
       "image": "https://i.ebayimg.com/images/g/H4wAAeSwubhqP5rj/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2639,7 +2719,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2663,7 +2743,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2685,7 +2765,7 @@
       "image": "https://i.ebayimg.com/images/g/wv8AAeSwn75qP5mG/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2719,7 +2799,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2743,7 +2823,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2765,7 +2845,7 @@
       "image": "https://i.ebayimg.com/images/g/aagAAOSwya5m-mWZ/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2799,7 +2879,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2823,7 +2903,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2845,7 +2925,7 @@
       "image": "https://i.ebayimg.com/images/g/gBkAAeSwE2hqPusy/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2879,7 +2959,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2903,7 +2983,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -2925,7 +3005,7 @@
       "image": "https://i.ebayimg.com/images/g/P6UAAeSwOgVqPuqY/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2959,7 +3039,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2983,7 +3063,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3005,7 +3085,7 @@
       "image": "https://i.ebayimg.com/images/g/kKoAAeSwn75qPuov/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3039,7 +3119,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3063,7 +3143,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3085,7 +3165,7 @@
       "image": "https://i.ebayimg.com/images/g/YWkAAeSwp2JqGeZo/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3119,7 +3199,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3143,7 +3223,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3165,7 +3245,7 @@
       "image": "https://i.ebayimg.com/images/g/dCMAAeSwArRqPulR/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3199,7 +3279,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3223,7 +3303,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3245,7 +3325,7 @@
       "image": "https://i.ebayimg.com/images/g/4KcAAeSwqWhqPubK/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3279,7 +3359,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3303,7 +3383,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3325,7 +3405,7 @@
       "image": "https://i.ebayimg.com/images/g/XWAAAeSwf1FqPuXc/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3359,7 +3439,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3383,7 +3463,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3405,7 +3485,7 @@
       "image": "https://i.ebayimg.com/images/g/XtIAAeSwHk1qPuSj/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3439,7 +3519,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3463,7 +3543,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3485,7 +3565,7 @@
       "image": "https://i.ebayimg.com/images/g/VQsAAeSwGiFqPuMy/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3519,7 +3599,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3543,7 +3623,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3565,7 +3645,7 @@
       "image": "https://i.ebayimg.com/images/g/FM0AAOSwXB1m~7eu/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3599,7 +3679,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3623,7 +3703,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3645,7 +3725,7 @@
       "image": "https://i.ebayimg.com/images/g/GpQAAeSw6tJqPuIw/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3679,7 +3759,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3703,7 +3783,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T13:40:21Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3725,7 +3805,7 @@
       "image": "https://i.ebayimg.com/images/g/ldwAAOSwce1nAULx/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T13:40:21Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3759,7 +3839,7 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T13:40:21Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3780,10 +3860,10 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": true,
+      "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T06:51:10Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3796,7 +3876,6 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3806,7 +3885,7 @@
       "image": "https://i.ebayimg.com/images/g/KZQAAeSwJslqPt4A/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T06:51:10Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3829,12 +3908,9 @@
       ],
       "reserve_status": "unknown",
       "risks": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3843,10 +3919,10 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T06:51:10Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": true,
+      "stale": false,
       "time_window_eligible": true,
       "title": "125 Stück 180 kOhm +/- 5% 0,25W Widerstand ungebraucht",
       "total_eur": null,
@@ -3864,10 +3940,10 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": true,
+      "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T06:51:10Z",
+      "content_updated_at": "2026-11-11T14:10:37Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -3880,7 +3956,6 @@
       "distance_km": null,
       "eligibility": "review",
       "eligibility_reasons": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
       ],
@@ -3890,7 +3965,7 @@
       "image": "https://i.ebayimg.com/images/g/0qAAAeSw7vNqPt9b/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-11T06:51:10Z",
+      "last_seen_at": "2026-11-11T14:10:37Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3913,12 +3988,9 @@
       ],
       "reserve_status": "unknown",
       "risks": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3927,10 +3999,10 @@
       "semantic_assessed": true,
       "semantic_interest": 35,
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T06:51:10Z",
+      "source_observed_at": "2026-11-11T14:10:37Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": true,
+      "stale": false,
       "time_window_eligible": true,
       "title": "125 Stück 180 kOhm +/- 5% 0,25W Widerstand ungebraucht",
       "total_eur": null,
@@ -3939,90 +4011,6 @@
       "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
       "useability_score": 50,
       "valid_until": "2026-11-14T11:40:49Z",
-      "value_band": "unknown",
-      "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
-      "verification_level": "aggregator"
-    },
-    {
-      "assessment_basis": "heuristic",
-      "assessment_confidence": "low",
-      "bid_count": 0,
-      "buying_options": [],
-      "carried": true,
-      "city": "",
-      "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-11T06:51:10Z",
-      "country": "",
-      "dependencies": [
-        "Benötigtes Umfeld und Lieferumfang noch unbekannt"
-      ],
-      "description": "",
-      "description_status": "missing",
-      "description_truncated": false,
-      "detail_path": "api/items/9e00d8c9a8f74a0bec95571e2219e179dfd704fbc31d2b835d2060c7b9f7f8d8.json",
-      "details_fetched": false,
-      "distance_km": null,
-      "eligibility": "review",
-      "eligibility_reasons": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
-      ],
-      "eligibility_without_time_window": "review",
-      "ends_at": "2026-11-14T11:41:18Z",
-      "id": "v1|377632721433|0",
-      "image": "https://i.ebayimg.com/images/g/N3cAAeSw~yRokFI3/s-l400.jpg",
-      "interest_score": 18,
-      "is_auction": true,
-      "last_seen_at": "2026-11-11T06:51:10Z",
-      "local_pickup_confirmed": false,
-      "minimum_bid_eur": null,
-      "next_checks": [
-        "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
-      ],
-      "personal_interest_excluded": false,
-      "personal_interest_reason": null,
-      "pickup_available": null,
-      "pickup_radius_km": 50,
-      "pickup_search_confirmed": false,
-      "postcode": "",
-      "price_eur": 1.0,
-      "price_kind": "auction_price",
-      "product_kind": "unknown",
-      "reasons": [
-        "Beobachteter Auktionspreis höchstens 1 €",
-        "Zum Abrufzeitpunkt keine Gebote",
-        "Ausgewiesene Versandkosten im Suchlimit",
-        "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
-      ],
-      "reserve_status": "unknown",
-      "risks": [
-        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
-        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
-        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
-      ],
-      "scalp_score": 35,
-      "score": 18,
-      "score_version": 2,
-      "semantic_assessed": true,
-      "semantic_interest": 35,
-      "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-11T06:51:10Z",
-      "source_provider": "auktionen-ohne-gebot",
-      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": true,
-      "time_window_eligible": true,
-      "title": "115 Stück 180 kOhm +/- 1% 0,25W Widerstand ungebraucht",
-      "total_eur": null,
-      "total_known_eur": 2.85,
-      "url": "https://www.ebay.de/itm/377632721433?hash=item57ecaa0a19%3Ag%3AN3cAAeSw%7EyRokFI3&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-      "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-      "useability_score": 50,
-      "valid_until": "2026-11-14T11:41:18Z",
       "value_band": "unknown",
       "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
       "verification_level": "aggregator"
@@ -4085,12 +4073,12 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:7fb98f84e1913b2410ec14333ca0ef3cbba9ca0cd58945f7a5b5c24e3f9ace10",
+  "snapshot_id": "sha256:eb1898cc904a862b072a7e7e6ffc240aefb5d2725bba2d6379a57ebef04ccfe4",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-  "total": 4724,
+  "total": 4742,
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
 }
