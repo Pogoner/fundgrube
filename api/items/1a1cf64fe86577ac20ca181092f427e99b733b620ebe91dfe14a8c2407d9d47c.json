@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T07:15:59Z",
+    "evaluated_at": "2026-11-11T07:27:04Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T07:15:59Z",
+  "generated_at": "2026-11-11T07:27:04Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,8 @@
     "content_updated_at": "2026-11-11T01:49:06Z",
     "country": "",
     "dependencies": [
-      "Betriebsmittel und Anschlüsse nach Modellvorgaben"
+      "230-V-Netzanschluss und geeignetes Wasser",
+      "Nachweis sicherer Sterilisationsprozesse und gegebenenfalls Validierung"
     ],
     "description": "",
     "description_status": "missing",
@@ -46,13 +47,13 @@
     "ends_at": "2026-11-15T20:15:32Z",
     "id": "v1|137919581662|0",
     "image": "https://i.ebayimg.com/images/g/DbUAAeSwPXVq83kL/s-l400.jpg",
-    "interest_score": 62,
+    "interest_score": 58,
     "is_auction": true,
     "last_seen_at": "2026-11-11T01:49:06Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Typenschild, Kammer, Zubehör und Prüf-/Wartungsnachweise prüfen"
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -66,7 +67,7 @@
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
-      "Der Titel deutet auf ein eigenständiges Spezialgerät hin; grobe Geräteklasse, kein belegter Gebrauchtwert."
+      "Konkretes Autoklavmodell mit elektrischen Angaben"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -77,15 +78,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-      "Zustands-, Wartungs- und Prüfunterlagen klären; Verkäuferangabe ist keine Funktions- oder Sicherheitsprüfung",
+      "Gebrauchtzustand; Dichtheit, Temperaturregelung und Sicherheit ungetestet",
+      "Servicezustand und vollständiges Zubehör unbekannt",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 78,
-    "score": 62,
+    "scalp_score": 74,
+    "score": 58,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 78,
+    "semantic_assessed_at": "2026-11-11T07:26:19.352000Z",
+    "semantic_interest": 74,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 29.9,
     "source_observed_at": "2026-11-11T01:49:06Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -96,11 +100,11 @@
     "total_eur": null,
     "total_known_eur": 30.9,
     "url": "https://www.ebay.de/itm/137919581662?hash=item201ca5cdde%3Ag%3ADbUAAeSwPXVq83kL&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständiger Gerätetyp, jedoch mit üblichen Betriebsmitteln und modellabhängigen Anschlüssen; keine passende übergeordnete Maschine nötig.",
-    "useability_score": 80,
+    "useability_reason": "Grundgerät für eigenständige Sterilisationsprozesse mit Strom, geeignetem Wasser und Verbrauchsmaterial; im medizinischen Einsatz zusätzlich Prüfung, Wartung und validierte Prozesse nötig.",
+    "useability_score": 78,
     "valid_until": "2026-11-15T20:15:32Z",
     "value_band": "around_500",
-    "value_reason": "Der Titel deutet auf ein eigenständiges Spezialgerät hin; grobe Geräteklasse, kein belegter Gebrauchtwert.",
+    "value_reason": "Ein MELAG-MELAtronic-Autoklav Typ 15-EN wird als vollständiger Sterilisator angeboten, nicht bloß als Ersatzteil. Professionelles Gerätepotenzial bei ausreichender Vollständigkeit.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -157,10 +161,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:ad20901014159a9b1f63253e5cc1db40044fc300569bb1d5108a55d93bb93e10",
+  "snapshot_id": "sha256:868576db049e21934b4ed29418843fcaa4fb13cb2a246f73c84a28e643b044a2",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"

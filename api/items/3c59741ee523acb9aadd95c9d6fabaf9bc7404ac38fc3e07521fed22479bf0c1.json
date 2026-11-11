@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T07:15:59Z",
+    "evaluated_at": "2026-11-11T07:27:04Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,21 +13,20 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T07:15:59Z",
+  "generated_at": "2026-11-11T07:27:04Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Gebraucht",
     "content_updated_at": "2026-11-11T06:57:35Z",
     "country": "",
     "dependencies": [
-      "Passende externe Komponenten",
-      "Versorgung und Verdrahtung",
-      "Konkrete Integrationsaufgabe"
+      "Kompatibles Danfoss-VLT-Grundgerät",
+      "Technisch passender Einbau und Anschluss"
     ],
     "description": "",
     "description_status": "missing",
@@ -46,13 +45,13 @@
     "ends_at": "2026-11-16T19:57:38Z",
     "id": "v1|128185517247|0",
     "image": "https://i.ebayimg.com/images/g/9CEAAOSwIHFk-fv9/s-l400.jpg",
-    "interest_score": 13,
+    "interest_score": 5,
     "is_auction": true,
     "last_seen_at": "2026-11-11T06:57:35Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Teilenummer am Objekt und kompatible VLT-Baureihen prüfen"
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -67,7 +66,7 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Technische Systembaugruppe mit möglicher substanzieller Bedeutung; Modell, Umfang und Nachfrage sind ungeklärt."
+      "Konkrete Ersatzteilnummer vorhanden"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -75,14 +74,17 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-      "Defekt, ungeprüft oder unvollständig angegeben; keine Funktion unterstellen",
+      "Bauteilart und Funktion aus dem Titel nicht klar",
+      "Gebrauchter Zustand ungeprüft",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 58,
-    "score": 13,
+    "scalp_score": 30,
+    "score": 5,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 58,
+    "semantic_assessed_at": "2026-11-11T07:26:19.352000Z",
+    "semantic_interest": 30,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.69,
     "source_observed_at": "2026-11-11T06:57:35Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -93,11 +95,11 @@
     "total_eur": null,
     "total_known_eur": 6.69,
     "url": "https://www.ebay.de/itm/128185517247?hash=item1dd873c4bf%3Ag%3A9CEAAOSwIHFk-fv9&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Die Baugruppe benötigt externe Komponenten, Verdrahtung und eine passende Anwendung; sie erledigt allein noch keine vollständige Aufgabe.",
-    "useability_score": 22,
+    "useability_reason": "Funktion hängt von einem kompatiblen VLT-System und dem korrekten Einbau ab; das Teil bildet keinen vollständigen Antrieb.",
+    "useability_score": 17,
     "valid_until": "2026-11-16T19:57:38Z",
     "value_band": "unknown",
-    "value_reason": "Technische Systembaugruppe mit möglicher substanzieller Bedeutung; Modell, Umfang und Nachfrage sind ungeklärt.",
+    "value_reason": "Der Titel bezeichnet ausdrücklich das Ersatzteil 175H2864 für Danfoss-VLT-Frequenzumrichter, nicht einen vollständigen Frequenzumrichter. Ohne Identifikation des Bauteils nur begrenzte Bewertung.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -154,10 +156,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:ad20901014159a9b1f63253e5cc1db40044fc300569bb1d5108a55d93bb93e10",
+  "snapshot_id": "sha256:868576db049e21934b4ed29418843fcaa4fb13cb2a246f73c84a28e643b044a2",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"

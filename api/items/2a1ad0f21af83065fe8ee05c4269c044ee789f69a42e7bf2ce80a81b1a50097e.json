@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T07:15:59Z",
+    "evaluated_at": "2026-11-11T07:27:04Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,20 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T07:15:59Z",
+  "generated_at": "2026-11-11T07:27:04Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
     "content_updated_at": "2026-11-11T06:57:13Z",
     "country": "",
     "dependencies": [
-      "Passende Schaltung, Beschaltung und Integrationsprojekt"
+      "Elektronikprojekt, Prüfmittel und Lötwerkzeug",
+      "Passende elektrische Spezifikationen"
     ],
     "description": "",
     "description_status": "missing",
@@ -44,13 +45,13 @@
     "ends_at": "2026-11-16T17:31:12Z",
     "id": "v1|137916463620|0",
     "image": "https://i.ebayimg.com/images/g/XKwAAeSwhFRqht0y/s-l400.jpg",
-    "interest_score": 3,
+    "interest_score": 11,
     "is_auction": true,
     "last_seen_at": "2026-11-11T06:57:13Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Stückliste und Aufdrucke im Original prüfen"
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -65,7 +66,7 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Gewöhnliche kleine Elektronikbauteile sind einzeln wenig interessant; Stückzahl und genaue Ausführung können das ändern."
+      "Mehrere Bauteilgattungen im Konvolut"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -73,13 +74,16 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Typen, Spannungswerte und Anzahlen unklar",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 7,
-    "score": 3,
+    "scalp_score": 25,
+    "score": 11,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 7,
+    "semantic_assessed_at": "2026-11-11T07:26:19.352000Z",
+    "semantic_interest": 25,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 2.99,
     "source_observed_at": "2026-11-11T06:57:13Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -90,11 +94,11 @@
     "total_eur": null,
     "total_known_eur": 3.99,
     "url": "https://www.ebay.de/itm/137916463620?hash=item201c763a04%3Ag%3AXKwAAeSwhFRqht0y&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Das Bauteil erfüllt seinen Zweck erst in einer passenden Schaltung; kein eigenständiges Gerät.",
-    "useability_score": 40,
+    "useability_reason": "Einzelteile erfordern geeignete Schaltungen oder Reparaturprojekte; als Sortiment für Elektronikwerkstätten flexibel, aber nicht selbstständig funktionsfähig.",
+    "useability_score": 43,
     "valid_until": "2026-11-16T17:31:12Z",
-    "value_band": "around_5",
-    "value_reason": "Gewöhnliche kleine Elektronikbauteile sind einzeln wenig interessant; Stückzahl und genaue Ausführung können das ändern.",
+    "value_band": "around_50",
+    "value_reason": "Kleines Mischkonvolut aus 92 Kondensatoren, Widerständen, Schaltern und Relais; wirtschaftliches Potenzial hängt von Typen und Nutzbarkeit ab.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -151,10 +155,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:ad20901014159a9b1f63253e5cc1db40044fc300569bb1d5108a55d93bb93e10",
+  "snapshot_id": "sha256:868576db049e21934b4ed29418843fcaa4fb13cb2a246f73c84a28e643b044a2",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
