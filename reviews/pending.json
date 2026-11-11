@@ -1,1 +1,648 @@
-{"request":null,"schema_version":1}
+{
+  "schema_version": 1,
+  "request": {
+    "id": "fundgrube-20261111T194149590Z-semantic24",
+    "source_commit": "c632b7d06ae19aee03bd648eb530b1edf047cb14",
+    "ratings": {
+      "schema_version": 2,
+      "source_snapshot_id": "sha256:fc7a8fb57b8a92c4556436033f05feb5991ba0e23b354e0c3a5be59dc17776ef",
+      "reviewed_at": "2026-11-11T19:41:49.590Z",
+      "reviewer": "ChatGPT",
+      "groups": [
+        {
+          "ids": [
+            "v1|960166103198|0"
+          ],
+          "assessment": {
+            "scalp_score": 20,
+            "useability_score": 96,
+            "useability_reason": "Eine Fleecejacke ist ohne Spezialausrüstung als Bekleidung nutzbar; Größe und Passform bleiben individuell.",
+            "dependencies": [],
+            "value_band": "unknown",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Eine einzelne unetikettierte Fleecejacke hat nur begrenztes wirtschaftliches Potenzial; Qualität und tatsächliche Marke sind unbestätigt.",
+            "reasons": [
+              "Einzelne Fleecejacke in Größe 54/56 laut Titel."
+            ],
+            "risks": [
+              "Passform, Marke, Materialzustand und Echtheit nicht unabhängig geprüft."
+            ],
+            "next_checks": [
+              "Etikett, Maße, Fotos und Zustand im Original kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|117515790092|0"
+          ],
+          "assessment": {
+            "scalp_score": 9,
+            "useability_score": 88,
+            "useability_reason": "M4-Flügelmuttern sind standardisierte Verbindungselemente, benötigen jedoch passende M4-Schrauben.",
+            "dependencies": [
+              "Passende M4-Schrauben"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "25 verzinkte M4-Flügelmuttern sind ein kleiner, gewöhnlicher Befestigungsposten.",
+            "reasons": [
+              "25 M4-Flügelmuttern sind klar als Materialmenge benannt."
+            ],
+            "risks": [
+              "Norm, Gewindezustand und Vollständigkeit nicht geprüft."
+            ],
+            "next_checks": [
+              "Menge und M4-Abmessungen kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|257847616448|0"
+          ],
+          "assessment": {
+            "scalp_score": 27,
+            "useability_score": 48,
+            "useability_reason": "Ein Panelmeter ist für den Schalttafeleinbau beziehungsweise eine Messschaltung gedacht, nicht als fertig universelles Handmessgerät.",
+            "dependencies": [
+              "Einbaugehäuse oder Schalttafel",
+              "Passendes Messsignal und gegebenenfalls Hilfsspannung"
+            ],
+            "value_band": "unknown",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Ein einzelnes gebrauchte Panelmeter kann für Ersatz oder ein Elektronikprojekt interessant sein; Typ, Messbereich und Speisung fehlen.",
+            "reasons": [
+              "Der Titel benennt ein Panel-Messgerät, keine komplette Prüfausrüstung."
+            ],
+            "risks": [
+              "Messart, Anschlussbild, Abmessungen und Funktion unbekannt."
+            ],
+            "next_checks": [
+              "Front- und Rückseite, Skala, Versorgung und Anschlüsse prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|327451426776|0"
+          ],
+          "assessment": {
+            "scalp_score": 9,
+            "useability_score": 75,
+            "useability_reason": "Die H1-Lampe funktioniert nur in einer kompatiblen 12-V-H1-Leuchte beziehungsweise einem Fahrzeug.",
+            "dependencies": [
+              "H1-Leuchtenfassung und 12-V-Versorgung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Eine einzelne gängige H1-55-W-Glühlampe besitzt begrenztes Scalp-Potenzial.",
+            "reasons": [
+              "Philips-H1-Lampe ist im Titel mit 12 V und 55 W spezifiziert."
+            ],
+            "risks": [
+              "Originalität, Versiegelung und tatsächliche Stückzahl unbestätigt."
+            ],
+            "next_checks": [
+              "Sockel H1 und vorhandene Verpackung im Original prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377637860944|0"
+          ],
+          "assessment": {
+            "scalp_score": 48,
+            "useability_score": 91,
+            "useability_reason": "100 Meter Gewebe-PVC-Schlauch lassen sich mit üblichen passenden Anschlüssen für Wasser- und Werkstattanwendungen einsetzen.",
+            "dependencies": [
+              "Passende Schlauchanschlüsse"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Die ausdrücklich genannte Rolle von 100 Metern Faser-PVC-Schlauch ist wegen der Materialmenge substanzieller als Einzelzubehör.",
+            "reasons": [
+              "Der Titel benennt ausdrücklich 100 m Länge und 5/16-Zoll-Maß."
+            ],
+            "risks": [
+              "Innendurchmesser, Druckklasse, Lebensmittel- und Temperaturtauglichkeit nicht bestätigt."
+            ],
+            "next_checks": [
+              "Tatsächliche Rollenlänge, Schlauchmaß und Druckfreigabe prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|267840938280|0"
+          ],
+          "assessment": {
+            "scalp_score": 45,
+            "useability_score": 91,
+            "useability_reason": "Ein 2500-W-Infrarotstrahler ist bei vollständigem Gerät und normalem Stromanschluss weitgehend eigenständig nutzbar.",
+            "dependencies": [
+              "Sicherer Montage- und Stromanschluss"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "apparatus",
+            "value_reason": "Ein kompletter Terrassen-Heizstrahler kann substanziell nutzbar sein; der Retoure-Status begrenzt die Sicherheit dieser Einschätzung.",
+            "reasons": [
+              "Als Infrarot-Heizstrahler mit 2500 W und nicht als einzelnes Ersatzteil angeboten."
+            ],
+            "risks": [
+              "Retoure und gebrauchter Zustand: Defekt oder fehlendes Zubehör möglich, aber nicht nachgewiesen.",
+              "Elektrische Sicherheit und Befestigung nicht geprüft."
+            ],
+            "next_checks": [
+              "Funktion, Netzanschluss, Befestigung und Komplettheit prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|267840950122|0"
+          ],
+          "assessment": {
+            "scalp_score": 45,
+            "useability_score": 91,
+            "useability_reason": "Ein vollständig geliefertes 2500-W-Heizgerät benötigt normalerweise nur eine geeignete Montage und Stromversorgung.",
+            "dependencies": [
+              "Sichere Montage und geeigneter Stromanschluss"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "apparatus",
+            "value_reason": "Die Heizleistung und der mögliche Komplettgeräteumfang ergeben mittleres wirtschaftliches Potenzial; Retourenrisiko separat berücksichtigen.",
+            "reasons": [
+              "Titel spricht von einem Infrarot-Terrassenstrahler, nicht von einem Heizelement."
+            ],
+            "risks": [
+              "Retoure ohne Funktionstest; technische Sicherheit, Montage und Lieferumfang unbekannt."
+            ],
+            "next_checks": [
+              "Gerätedaten, Test, Schäden und beiliegende Halterung prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|366797882922|0"
+          ],
+          "assessment": {
+            "scalp_score": 7,
+            "useability_score": 96,
+            "useability_reason": "Selbstklebende Kleinbeutel sind unmittelbar als Verpackungsmaterial verwendbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Unbekannte Menge kleiner Kunststoffbeutel rechtfertigt nur geringes wirtschaftliches Potenzial.",
+            "reasons": [
+              "Der Titel nennt selbstklebende 4x6-Beutel."
+            ],
+            "risks": [
+              "Einheit der Abmessung, Stückzahl und Materialstärke fehlen."
+            ],
+            "next_checks": [
+              "Stückzahl, Maßeinheit und Klebeflächen prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|407352506371|0"
+          ],
+          "assessment": {
+            "scalp_score": 39,
+            "useability_score": 97,
+            "useability_reason": "Ein kompletter Besucherstuhl ist ohne Spezialanlage verwendbar; übliche Montage könnte erforderlich sein.",
+            "dependencies": [
+              "Gegebenenfalls einfache Montage"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "apparatus",
+            "value_reason": "Ein neuer Freischwinger mit Armlehnen kann ein brauchbarer Möbelposten sein, doch Fabrikat und Verarbeitung sind unbekannt.",
+            "reasons": [
+              "Titel beschreibt einen vollständigen Konferenzstuhl in Originalverpackung."
+            ],
+            "risks": [
+              "Tatsächliche Vollständigkeit, Verformungen und Belastbarkeit unbestätigt."
+            ],
+            "next_checks": [
+              "Maße, Sitzpolster, Gestell und mögliche Montage prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632552668|0"
+          ],
+          "assessment": {
+            "scalp_score": 12,
+            "useability_score": 24,
+            "useability_reason": "SMD-Widerstandsnetzwerke sind Bauteile für eine bestückte Leiterplatte und ohne Elektronikprojekt nicht eigenständig nutzbar.",
+            "dependencies": [
+              "Passende Leiterplatte",
+              "Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "100 kleine 4-fach-33-Ohm-Netzwerke sind übliche Bauteile mit begrenztem Einzelposten-Potenzial.",
+            "reasons": [
+              "Benannte Menge und 33-Ohm-Widerstandswert sind aus dem Titel ersichtlich."
+            ],
+            "risks": [
+              "Pinbelegung, tatsächliches Gehäuse und Menge unbestätigt."
+            ],
+            "next_checks": [
+              "Bauteilcode, Pinout und Anzahl prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632553595|0"
+          ],
+          "assessment": {
+            "scalp_score": 12,
+            "useability_score": 24,
+            "useability_reason": "4-fach-47-Ohm-Widerstandsnetzwerke dienen der Integration in eine Schaltung, nicht der Nutzung allein.",
+            "dependencies": [
+              "Passende Leiterplatte",
+              "SMD-Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Ein 100-Stück-Posten kleiner SMD-Netzwerke ist wirtschaftlich eher gewöhnliches Reparaturmaterial.",
+            "reasons": [
+              "47 Ohm und 4-fach-Netzwerk sind konkret bezeichnet."
+            ],
+            "risks": [
+              "Verschaltung, Bauform und Stückzahl nicht verifiziert."
+            ],
+            "next_checks": [
+              "Pinbelegung und Stückzahl prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|820339095700|0"
+          ],
+          "assessment": {
+            "scalp_score": 47,
+            "useability_score": 92,
+            "useability_reason": "Eine großflächige Ösen-PVC-Plane ist mit üblichen Befestigungsmitteln als Abdeckung unmittelbar einsetzbar.",
+            "dependencies": [
+              "Befestigungsseile oder Haken"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Die genannte ca. 12 m² große, schwere Gewebeplane bietet spürbaren Materialumfang, allerdings ausdrücklich als B-Ware.",
+            "reasons": [
+              "Titel benennt Länge, Breite, Flächengewicht und Ösen."
+            ],
+            "risks": [
+              "B-Ware: genaue Beschädigungen, Ösenabstände und Wasserdichtigkeit unbekannt."
+            ],
+            "next_checks": [
+              "Tatsächliche Maße, Beschädigungen, Ösen und Dichtigkeit prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|267838450356|0"
+          ],
+          "assessment": {
+            "scalp_score": 8,
+            "useability_score": 99,
+            "useability_reason": "Haushalts-Einweghandschuhe können unmittelbar eingesetzt werden, sofern Größe und Eignung stimmen.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "100 Vinylhandschuhe sind ein kleiner Standardverbrauchsposten, kein außergewöhnlicher Fund.",
+            "reasons": [
+              "100 Stück und Größe M werden angegeben."
+            ],
+            "risks": [
+              "Ungeöffnete Verpackung, Alter, Hautverträglichkeit und Schutzklasse ungeprüft."
+            ],
+            "next_checks": [
+              "Packungszustand und Verwendungszweck prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632628133|0"
+          ],
+          "assessment": {
+            "scalp_score": 10,
+            "useability_score": 22,
+            "useability_reason": "SMD-0805-Widerstände sind ohne passende Schaltung und SMD-Bestückung nicht nutzbar.",
+            "dependencies": [
+              "Leiterplatte",
+              "SMD-Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "150 Standardwiderstände 4,7 kOhm im Format 0805 sind ein kleiner Elektronikposten.",
+            "reasons": [
+              "Wert, Toleranz, Baugröße und Menge genannt."
+            ],
+            "risks": [
+              "Werte, Lagerzustand und Menge nicht geprüft."
+            ],
+            "next_checks": [
+              "Beschriftung und Bauteilwerte verifizieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632629931|0"
+          ],
+          "assessment": {
+            "scalp_score": 10,
+            "useability_score": 22,
+            "useability_reason": "220-Ohm-SMD-Widerstände sind passive Einzelbauteile, die erst in einer Schaltung funktionieren.",
+            "dependencies": [
+              "Leiterplatte",
+              "SMD-Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "150 gebräuchliche 220-Ohm-0805-Widerstände sind ein geringwertiger Reparatur- oder Entwicklungsbestand.",
+            "reasons": [
+              "Titel nennt konkrete Stückzahl, Gehäuseformat und Toleranz."
+            ],
+            "risks": [
+              "Zählung, Werte und Qualität nicht bestätigt."
+            ],
+            "next_checks": [
+              "Wert und Menge im Original prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632630374|0"
+          ],
+          "assessment": {
+            "scalp_score": 9,
+            "useability_score": 20,
+            "useability_reason": "150-pF-0603-Kondensatoren sind nur als Bauteile einer geeigneten Elektronikschaltung verwendbar.",
+            "dependencies": [
+              "Leiterplatte",
+              "SMD-Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "150 kleine SMD-Kondensatoren haben ohne spezifizierte Dielektrika und Spannungsfestigkeit begrenztes wirtschaftliches Potenzial.",
+            "reasons": [
+              "Titel benennt 150 Stück 150 pF in 0603."
+            ],
+            "risks": [
+              "Zustandsangabe generalüberholt wirkt für passive Einzelbauteile ungewöhnlich; technische Daten fehlen."
+            ],
+            "next_checks": [
+              "Spannungsfestigkeit, Dielektrikum und Zustand prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632630737|0"
+          ],
+          "assessment": {
+            "scalp_score": 8,
+            "useability_score": 17,
+            "useability_reason": "BAR42-Schottky-Dioden im SOT23-Gehäuse sind eng zweckgebundene Platinenbauteile.",
+            "dependencies": [
+              "Kompatible Schaltung",
+              "SMD-Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "25 kleine Signaldioden stellen nur einen kleinen Elektronikbestand dar.",
+            "reasons": [
+              "Typ BAR42, Gehäuse und Nennwerte sind benannt."
+            ],
+            "risks": [
+              "Authentizität und tatsächliche Bauteilspezifikation nicht bestätigt."
+            ],
+            "next_checks": [
+              "Kennzeichnung und Anzahl im Original kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632631102|0"
+          ],
+          "assessment": {
+            "scalp_score": 7,
+            "useability_score": 15,
+            "useability_reason": "SM6T6V8A-Transil-Dioden schützen bestimmte Schaltungen und sind ohne diese nicht eigenständig einsetzbar.",
+            "dependencies": [
+              "Passende Schutzschaltung",
+              "Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Zehn SMB-Überspannungsschutzdioden besitzen begrenztes Scalp-Potenzial.",
+            "reasons": [
+              "Exakte Typangabe erlaubt technische Identifikation."
+            ],
+            "risks": [
+              "Bauteilzustand, Polarität und Echtheit nicht geprüft."
+            ],
+            "next_checks": [
+              "Typ und Einbaubedingungen kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632632134|0"
+          ],
+          "assessment": {
+            "scalp_score": 8,
+            "useability_score": 18,
+            "useability_reason": "18-V-Zenerdioden sind Schaltungsbauteile und setzen eine passende Anwendung voraus.",
+            "dependencies": [
+              "Passende Leiterplatte",
+              "Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Achtzehn SMD-Zenerdioden sind ein kleiner Standard-Elektronikposten.",
+            "reasons": [
+              "Titel nennt Zenerspannung, Nennleistung und Gehäuse."
+            ],
+            "risks": [
+              "Echte Spezifikation und Anzahl unbestätigt."
+            ],
+            "next_checks": [
+              "Typcode, Belastbarkeit und Anzahl prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632633272|0"
+          ],
+          "assessment": {
+            "scalp_score": 9,
+            "useability_score": 19,
+            "useability_reason": "48-V-SMD-Varistoren sind spezielle Schutzbauteile für eine definierte Schaltung.",
+            "dependencies": [
+              "Geeignete Schaltung",
+              "SMD-Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Fünfzig kleine Varistoren ergeben nur moderaten Materialumfang.",
+            "reasons": [
+              "Menge und SMD-Bauform benannt."
+            ],
+            "risks": [
+              "48-V-Nennangabe allein reicht für korrekte Auslegung nicht aus."
+            ],
+            "next_checks": [
+              "Datenblatt, Varistorspannung und Gehäuse überprüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632634163|0"
+          ],
+          "assessment": {
+            "scalp_score": 10,
+            "useability_score": 23,
+            "useability_reason": "12-MHz-SMD-Quarze benötigen eine passende Oszillatorschaltung und gegebenenfalls Lastkondensatoren.",
+            "dependencies": [
+              "Geeignete Takt-/Oszillatorschaltung",
+              "SMD-Bestückung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Fünf standardnahe Taktquarze sind ein kleiner Materialposten.",
+            "reasons": [
+              "Titel nennt fünf Quarze mit 12 MHz."
+            ],
+            "risks": [
+              "Quarz und vollständiger aktiver Oszillator sind nicht dasselbe; Lastkapazität unbekannt."
+            ],
+            "next_checks": [
+              "Bauteilbeschriftung, Baugröße und elektrische Daten prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632634900|0"
+          ],
+          "assessment": {
+            "scalp_score": 9,
+            "useability_score": 22,
+            "useability_reason": "11,9808-MHz-Quarze sind ausschließlich mit einer passenden Takterzeugungsschaltung verwendbar.",
+            "dependencies": [
+              "Passende Oszillatorschaltung",
+              "Lötausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Vier spezielle Frequenzquarze haben nur kleinen, projektgebundenen Materialwert.",
+            "reasons": [
+              "Vier Stück und Frequenz klar benannt."
+            ],
+            "risks": [
+              "Bezeichnung Oszillator könnte nur passive Quarze meinen; Lastdaten fehlen."
+            ],
+            "next_checks": [
+              "Foto und Aufdruck auf passiven oder aktiven Aufbau prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377632636161|0"
+          ],
+          "assessment": {
+            "scalp_score": 10,
+            "useability_score": 23,
+            "useability_reason": "7,3728-MHz-SMD-Quarze bilden erst zusammen mit Elektronik eine Taktquelle.",
+            "dependencies": [
+              "Passende Takterzeugungsschaltung",
+              "SMD-Bestückung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Fünf Taktbauteile sind ein begrenzter Entwicklungsposten.",
+            "reasons": [
+              "Fünf Stück mit Frequenz konkret bezeichnet."
+            ],
+            "risks": [
+              "Ob aktiver Oszillator oder passiver Quarz vorliegt, ist nicht belegt."
+            ],
+            "next_checks": [
+              "Bauform, Anschlusszahl und Lastkapazität prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237172925144|0"
+          ],
+          "assessment": {
+            "scalp_score": 35,
+            "useability_score": 68,
+            "useability_reason": "Ein Gleisoval ist als Modellbahngleis montierbar, benötigt für den Fahrbetrieb aber passende Märklin-H0-Fahrzeuge und Versorgung.",
+            "dependencies": [
+              "Kompatible Märklin-H0-Lokomotive",
+              "Passender Trafo oder Digitalzentrale"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Ein Satz aus zwölf gebogenen, vier geraden Gleisen mit Anschluss ist ein brauchbares Gleis-Konvolut, kein vollständiger Zug.",
+            "reasons": [
+              "Titel nennt Gleisoval mit Anschlussteil und 16 Gleisstücken."
+            ],
+            "risks": [
+              "Gleissystem, Korrosion, Verbindungsqualität und elektrische Funktion unbestätigt."
+            ],
+            "next_checks": [
+              "Gleissystem, Anschlussgleis und vollständige Gleisstücke prüfen."
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
