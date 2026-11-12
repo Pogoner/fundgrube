@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-11T22:08:06Z",
+    "evaluated_at": "2026-11-12T01:39:28Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-11T22:08:06Z",
+  "generated_at": "2026-11-12T01:39:28Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-    "content_updated_at": "2026-11-11T21:42:51Z",
+    "content_updated_at": "2026-11-12T01:14:36Z",
     "country": "",
     "dependencies": [],
     "description": "",
@@ -31,12 +31,10 @@
     "detail_path": "api/items/8b3db84952c9bd4f1d22f149945d59f10dfe93b6ae7eceee039a0663299ea689.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-14T22:54:17Z",
@@ -44,7 +42,7 @@
     "image": "https://i.ebayimg.com/images/g/k0UAAOSw6z9ngim~/s-l400.jpg",
     "interest_score": 16,
     "is_auction": true,
-    "last_seen_at": "2026-11-11T21:42:51Z",
+    "last_seen_at": "2026-11-12T01:14:36Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -66,7 +64,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -81,11 +78,11 @@
     "semantic_interest": 16,
     "semantic_review_mode": "interactive",
     "shipping_eur": 6.99,
-    "source_observed_at": "2026-11-11T21:42:51Z",
+    "source_observed_at": "2026-11-12T01:14:36Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "2 Anzughosen Größe L schwarz im Set",
     "total_eur": null,
     "total_known_eur": 7.99,
@@ -151,7 +148,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:dee014267fed096d729748dc80b77926e99fe8c060f913451dc6d1eecb0d7a3f",
+  "snapshot_id": "sha256:77a2817fe5442f700afcd5d00551280953eb7de6b7408bdaea6867db76f08969",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
