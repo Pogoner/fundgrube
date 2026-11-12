@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T13:35:02Z",
+    "evaluated_at": "2026-11-12T13:40:05Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T13:35:02Z",
+  "generated_at": "2026-11-12T13:40:05Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,8 @@
     "content_updated_at": "2026-11-12T02:57:07Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "E27-Leuchtmittel",
+      "Geeigneter Elektroanschluss"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +46,13 @@
     "ends_at": "2026-11-16T09:01:48Z",
     "id": "v1|940077757158|0",
     "image": "https://i.ebayimg.com/images/g/m00AAeSwD6Jq8Yup/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 25,
     "is_auction": true,
     "last_seen_at": "2026-11-12T02:57:07Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Fassung, Dichtungen und Betrieb prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,12 +62,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "apparatus",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Benannte LENA-Industrieleuchte mit E27/IP44 ist ein eigenständig einsetzbares Beleuchtungsgerät."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -76,14 +77,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Nur Aggregator-Kurzmetadaten ohne Verkäufer-Volltext; Angaben nicht unabhängig geprüft.",
+      "Elektrik, Dichtigkeit und Leuchtmittelumfang ungeprüft.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 29,
+    "score": 25,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-12T13:34:10Z",
+    "semantic_interest": 29,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 7.69,
     "source_observed_at": "2026-11-12T02:57:07Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -94,11 +99,11 @@
     "total_eur": null,
     "total_known_eur": 8.69,
     "url": "https://www.ebay.de/itm/940077757158?hash=itemdae10032e6%3Ag%3Am00AAeSwD6Jq8Yup&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Mit passendem Leuchtmittel und üblichem Anschluss nutzbar.",
+    "useability_score": 87,
     "valid_until": "2026-11-16T09:01:48Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "Benannte LENA-Industrieleuchte mit E27/IP44 ist ein eigenständig einsetzbares Beleuchtungsgerät.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -155,7 +160,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:f9f2adc7166733f378431621876d384a2a452ba36960b5d5c8b8d96428011b8d",
+  "snapshot_id": "sha256:821cc375ab3e63045afeb166dc5e401aefd16f7123ba278bee72b197c2d0fce3",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
