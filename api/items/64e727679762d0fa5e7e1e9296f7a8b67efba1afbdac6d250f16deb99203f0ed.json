@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T19:34:08Z",
+    "evaluated_at": "2026-11-12T19:53:10Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T19:34:08Z",
+  "generated_at": "2026-11-12T19:53:10Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -31,13 +31,11 @@
     "detail_path": "api/items/64e727679762d0fa5e7e1e9296f7a8b67efba1afbdac6d250f16deb99203f0ed.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-15T19:48:56Z",
@@ -67,7 +65,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
@@ -89,7 +86,7 @@
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": true,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "30 tlg. Slip Hipster Paket Restposten Sonderposten von FABIO FARINI Gr. 36-42",
     "total_eur": null,
     "total_known_eur": 1.0,
@@ -155,10 +152,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:9a37ca757cf4e8d54cad0f8b31d07382adfec18ced37944922c8bc1df48b30ba",
+  "snapshot_id": "sha256:727d750f63fd4298eecb4e77af6bd291c059d16e824f603927eb5e3caf7b3ba9",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"

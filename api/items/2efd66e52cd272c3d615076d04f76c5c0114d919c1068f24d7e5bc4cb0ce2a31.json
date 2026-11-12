@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T19:34:08Z",
+    "evaluated_at": "2026-11-12T19:53:10Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T19:34:08Z",
+  "generated_at": "2026-11-12T19:53:10Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,8 @@
     "content_updated_at": "2026-11-12T02:57:41Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "ATX-PC oder geeignete Last",
+      "Netzanschluss"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +46,13 @@
     "ends_at": "2026-11-16T15:58:20Z",
     "id": "v1|237173343983|0",
     "image": "https://i.ebayimg.com/images/g/o0IAAeSw-hpq6LJI/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 24,
     "is_auction": true,
     "last_seen_at": "2026-11-12T02:57:41Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Modell, Stecker, Netzteiltester und Schutzfunktionen prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,12 +62,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "component",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Ein 650-W-PC-Netzteil ist ein eigenständig funktionierendes Stromversorgungsmodul mit begrenztem Einzelwert."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -76,14 +77,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Unbenutzt ist keine Sicherheits- oder Leistungsprüfung; Marke unbekannt.",
+      "Nur Aggregator-Kurzmetadaten; Verkäufer-Vollbeschreibung und Funktion nicht unabhängig geprüft.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 28,
+    "score": 24,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-12T19:48:08Z",
+    "semantic_interest": 28,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 7.69,
     "source_observed_at": "2026-11-12T02:57:41Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -94,11 +99,11 @@
     "total_eur": null,
     "total_known_eur": 8.69,
     "url": "https://www.ebay.de/itm/237173343983?hash=item3738a206ef%3Ag%3Ao0IAAeSw-hpq6LJI&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "In kompatiblen ATX-PCs beziehungsweise mit passender Belastung verwendbar.",
+    "useability_score": 86,
     "valid_until": "2026-11-16T15:58:20Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "Ein 650-W-PC-Netzteil ist ein eigenständig funktionierendes Stromversorgungsmodul mit begrenztem Einzelwert.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -155,10 +160,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:9a37ca757cf4e8d54cad0f8b31d07382adfec18ced37944922c8bc1df48b30ba",
+  "snapshot_id": "sha256:727d750f63fd4298eecb4e77af6bd291c059d16e824f603927eb5e3caf7b3ba9",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
