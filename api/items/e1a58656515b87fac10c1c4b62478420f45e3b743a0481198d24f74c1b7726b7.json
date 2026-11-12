@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T14:05:05Z",
+    "evaluated_at": "2026-11-12T14:08:48Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,9 +13,9 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T14:05:05Z",
+  "generated_at": "2026-11-12T14:08:48Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
@@ -24,7 +24,9 @@
     "condition": "Neu",
     "content_updated_at": "2026-11-11T19:11:38Z",
     "country": "",
-    "dependencies": [],
+    "dependencies": [
+      "Passende Größen"
+    ],
     "description": "",
     "description_status": "missing",
     "description_truncated": false,
@@ -43,13 +45,13 @@
     "ends_at": "2026-11-18T08:19:05Z",
     "id": "v1|407354920251|0",
     "image": "https://i.ebayimg.com/images/g/7NgAAeSwW0ZqyLIg/s-l400.jpg",
-    "interest_score": 6,
+    "interest_score": 19,
     "is_auction": true,
     "last_seen_at": "2026-11-11T19:11:38Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Menge, Größen und Material prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -64,7 +66,7 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Kleinteile oder gewöhnliches Verbrauchsmaterial passen kaum zum Interesseprofil; Menge kann die Größenordnung ändern."
+      "Tatsächlicher benannter Angebotsgegenstand: 15 fingerlose Handschuhe mit Flammenmotiv"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -74,14 +76,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Titel sagt nicht klar, ob Stück oder Paare.",
+      "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 6,
-    "score": 6,
+    "scalp_score": 20,
+    "score": 19,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 6,
+    "semantic_assessed_at": "2026-11-12T14:04:05.160000Z",
+    "semantic_interest": 20,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.9,
     "source_observed_at": "2026-11-11T19:11:38Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -92,11 +98,11 @@
     "total_eur": null,
     "total_known_eur": 6.9,
     "url": "https://www.ebay.de/itm/407354920251?hash=item5ed83ecd3b%3Ag%3A7NgAAeSwW0ZqyLIg&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Gewöhnliches Verbrauchsmaterial braucht typischerweise keine spezielle Maschine; Eignung für den Zweck bleibt zu prüfen.",
-    "useability_score": 95,
+    "useability_reason": "Als Bekleidung ohne technische Abhängigkeit verwendbar.",
+    "useability_score": 96,
     "valid_until": "2026-11-18T08:19:05Z",
     "value_band": "around_5",
-    "value_reason": "Kleinteile oder gewöhnliches Verbrauchsmaterial passen kaum zum Interesseprofil; Menge kann die Größenordnung ändern.",
+    "value_reason": "Fünfzehn Paar/Exemplare als Modeposten haben geringes bis kleines Materialpotenzial.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -153,7 +159,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:c6015a2674b47f1b13b785a21d3503ffeebb6a18de8180f11dce6f81c938fee1",
+  "snapshot_id": "sha256:c4684d97b7e0b9e839c54bbe5fcfa18cc393df3a2db4340f25e739d245f5222e",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",

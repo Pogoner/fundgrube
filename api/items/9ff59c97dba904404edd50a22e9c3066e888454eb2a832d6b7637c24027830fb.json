@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T14:05:05Z",
+    "evaluated_at": "2026-11-12T14:08:48Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T14:05:05Z",
+  "generated_at": "2026-11-12T14:08:48Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,7 @@
     "content_updated_at": "2026-11-10T19:17:20Z",
     "country": "",
     "dependencies": [
-      "Passende Stichsäge und kompatible Blattaufnahme"
+      "Kompatible Stichsäge"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +45,13 @@
     "ends_at": "2026-11-17T17:56:38Z",
     "id": "v1|377635514674|0",
     "image": "https://i.ebayimg.com/images/g/aawAAeSwrQNq4aC8/s-l400.jpg",
-    "interest_score": 6,
+    "interest_score": 10,
     "is_auction": true,
     "last_seen_at": "2026-11-10T19:17:20Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Schafttyp, Blattanzahl und Zahnzustand prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -66,7 +66,7 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Angeboten werden Stichsägeblätter, keine vollständige Stichsäge; Menge, Werkstoff und Ausführung sind gesondert zu prüfen."
+      "Tatsächlicher benannter Angebotsgegenstand: 18 Stichsägeblätter für Metall und Holz"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -76,14 +76,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Aufnahmeform, Längen und Zähne unbekannt.",
+      "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 14,
-    "score": 6,
+    "score": 10,
     "score_version": 2,
     "semantic_assessed": true,
+    "semantic_assessed_at": "2026-11-12T14:04:05.160000Z",
     "semantic_interest": 14,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 3.5,
     "source_observed_at": "2026-11-10T19:17:20Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -94,11 +98,11 @@
     "total_eur": null,
     "total_known_eur": 4.5,
     "url": "https://www.ebay.de/itm/377635514674?hash=item57ecd4a932%3Ag%3AaawAAeSwrQNq4aC8&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Sägeblätter sind wechselbare Schneidmittel und benötigen eine passende Stichsäge und Blattaufnahme.",
-    "useability_score": 40,
+    "useability_reason": "Mit passender Stichsäge einfach nutzbar.",
+    "useability_score": 72,
     "valid_until": "2026-11-17T17:56:38Z",
-    "value_band": "unknown",
-    "value_reason": "Angeboten werden Stichsägeblätter, keine vollständige Stichsäge; Menge, Werkstoff und Ausführung sind gesondert zu prüfen.",
+    "value_band": "around_5",
+    "value_reason": "Materialset für Werkzeuge mit geringem Einzelwert.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -155,7 +159,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:c6015a2674b47f1b13b785a21d3503ffeebb6a18de8180f11dce6f81c938fee1",
+  "snapshot_id": "sha256:c4684d97b7e0b9e839c54bbe5fcfa18cc393df3a2db4340f25e739d245f5222e",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",

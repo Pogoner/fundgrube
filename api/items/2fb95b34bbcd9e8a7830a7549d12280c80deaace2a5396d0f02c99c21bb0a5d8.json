@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T14:05:05Z",
+    "evaluated_at": "2026-11-12T14:08:48Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T14:05:05Z",
+  "generated_at": "2026-11-12T14:08:48Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -24,7 +24,11 @@
     "condition": "Gebraucht",
     "content_updated_at": "2026-11-12T13:37:19Z",
     "country": "",
-    "dependencies": [],
+    "dependencies": [
+      "Industrie-Drehstrom",
+      "Fundament oder sichere Aufstellung",
+      "Hebetechnik"
+    ],
     "description": "",
     "description_status": "missing",
     "description_truncated": false,
@@ -43,13 +47,13 @@
     "ends_at": "2026-11-22T13:12:03Z",
     "id": "v1|267841581121|0",
     "image": "https://i.ebayimg.com/images/g/DbIAAeSwd2Zq9bqx/s-l400.jpg",
-    "interest_score": 45,
+    "interest_score": 54,
     "is_auction": true,
     "last_seen_at": "2026-11-12T13:37:19Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Transport, Spindel, Ausleger, Sicherheitsfunktionen und Probelauf prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -59,11 +63,11 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "tool",
+    "product_kind": "apparatus",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
-      "Nennenswertes Werkzeug denkbar; Modell, Qualität und Umfang können die Größenordnung stark ändern."
+      "Tatsächlicher benannter Angebotsgegenstand: WMW BR 50 × 1600 Radialbohrmaschine"
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -72,13 +76,17 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Maschinenzustand ungeprüft; ausgewiesene Transportkosten allein bereits hoch.",
+      "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 50,
-    "score": 45,
+    "scalp_score": 82,
+    "score": 54,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 50,
+    "semantic_assessed_at": "2026-11-12T14:04:05.160000Z",
+    "semantic_interest": 82,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 800.0,
     "source_observed_at": "2026-11-12T13:37:19Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -89,11 +97,11 @@
     "total_eur": null,
     "total_known_eur": 801.0,
     "url": "https://www.ebay.de/itm/267841581121?hash=item3e5c9a3041%3Ag%3ADbIAAeSwd2Zq9bqx&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Werkzeugtyp mit eigenem unmittelbarem Anwendungszweck; konkrete Versorgung und Lieferumfang sind noch zu klären.",
-    "useability_score": 90,
+    "useability_reason": "Im Betrieb eigenständig, verlangt Drehstrom, standsichere Aufstellung und schwere Logistik.",
+    "useability_score": 66,
     "valid_until": "2026-11-22T13:12:03Z",
-    "value_band": "around_50",
-    "value_reason": "Nennenswertes Werkzeug denkbar; Modell, Qualität und Umfang können die Größenordnung stark ändern.",
+    "value_band": "around_500",
+    "value_reason": "Große industrielle Radialbohrmaschine ist ein technisch substanzieller Maschinenposten.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -150,7 +158,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:c6015a2674b47f1b13b785a21d3503ffeebb6a18de8180f11dce6f81c938fee1",
+  "snapshot_id": "sha256:c4684d97b7e0b9e839c54bbe5fcfa18cc393df3a2db4340f25e739d245f5222e",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "partial",
