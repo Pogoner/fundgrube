@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T19:17:25Z",
+    "evaluated_at": "2026-11-12T19:34:08Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,9 +13,9 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T19:17:25Z",
+  "generated_at": "2026-11-12T19:34:08Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
@@ -24,7 +24,9 @@
     "condition": "Neu ohne Etikett",
     "content_updated_at": "2026-11-12T02:57:29Z",
     "country": "",
-    "dependencies": [],
+    "dependencies": [
+      "Passende Handgröße"
+    ],
     "description": "",
     "description_status": "missing",
     "description_truncated": false,
@@ -43,13 +45,13 @@
     "ends_at": "2026-11-16T14:14:48Z",
     "id": "v1|960174677200|0",
     "image": "https://i.ebayimg.com/images/g/xpoAAeSwsnZqePHq/s-l400.jpg",
-    "interest_score": 6,
+    "interest_score": 5,
     "is_auction": true,
     "last_seen_at": "2026-11-12T02:57:29Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Material, Größe und Kennzeichnung kontrollieren."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -64,7 +66,7 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Kleinteile oder gewöhnliches Verbrauchsmaterial passen kaum zum Interesseprofil; Menge kann die Größenordnung ändern."
+      "Zwei neue Paare Arbeitshandschuhe sind kleiner gängiger Materialposten."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -74,14 +76,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Schutzklasse und Materialqualität fehlen.",
+      "Nur Kurzmetadaten ohne Verkäuferbeschreibung; Funktions- und Lieferumfangsangaben sind nicht verifiziert.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 6,
-    "score": 6,
+    "scalp_score": 5,
+    "score": 5,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 6,
+    "semantic_assessed_at": "2026-11-12T19:29:33.140000Z",
+    "semantic_interest": 5,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.79,
     "source_observed_at": "2026-11-12T02:57:29Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -92,11 +98,11 @@
     "total_eur": null,
     "total_known_eur": 6.79,
     "url": "https://www.ebay.de/itm/960174677200?hash=itemdf8ededcd0%3Ag%3AxpoAAeSwsnZqePHq&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Gewöhnliches Verbrauchsmaterial braucht typischerweise keine spezielle Maschine; Eignung für den Zweck bleibt zu prüfen.",
-    "useability_score": 95,
+    "useability_reason": "Bei passender Größe ohne weiteres Gerät nutzbar.",
+    "useability_score": 98,
     "valid_until": "2026-11-16T14:14:48Z",
     "value_band": "around_5",
-    "value_reason": "Kleinteile oder gewöhnliches Verbrauchsmaterial passen kaum zum Interesseprofil; Menge kann die Größenordnung ändern.",
+    "value_reason": "Zwei neue Paare Arbeitshandschuhe sind kleiner gängiger Materialposten.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -153,10 +159,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:086760c18dc0f10998eb33c5a645b33e6fd5c51848583e6ffb5dd7df224c3df5",
+  "snapshot_id": "sha256:9a37ca757cf4e8d54cad0f8b31d07382adfec18ced37944922c8bc1df48b30ba",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
