@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T01:39:28Z",
+    "evaluated_at": "2026-11-12T02:18:01Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T01:39:28Z",
+  "generated_at": "2026-11-12T02:18:01Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,7 @@
     "content_updated_at": "2026-11-10T13:08:07Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Befestigungsmittel bei Bedarf"
     ],
     "description": "",
     "description_status": "missing",
@@ -43,13 +43,13 @@
     "ends_at": "2026-11-14T21:00:01Z",
     "id": "v1|820335404497|0",
     "image": "https://i.ebayimg.com/images/g/sEUAAeSwH4tq8euk/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 40,
     "is_auction": true,
     "last_seen_at": "2026-11-10T13:08:07Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Ösen, Löcher und Maße prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -59,12 +59,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "consumable",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Rund 6,3 m² schwere PVC-Abdeckplane, ausdrücklich B-Ware."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -73,14 +73,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "B-Ware, Defekte unbekannt.",
+      "Beschreibung im Quellenfeed nicht vorhanden; Funktions- und Zustandsangaben nicht unabhängig geprüft.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 44,
+    "score": 40,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-12T01:49:20Z",
+    "semantic_interest": 44,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 8.99,
     "source_observed_at": "2026-11-10T13:08:07Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -91,11 +95,11 @@
     "total_eur": null,
     "total_known_eur": 9.99,
     "url": "https://www.ebay.de/itm/820335404497?hash=itembeffcce5d1%3Ag%3AsEUAAeSwH4tq8euk&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Als Abdeckung ohne Gerät nutzbar.",
+    "useability_score": 91,
     "valid_until": "2026-11-14T21:00:01Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "Rund 6,3 m² schwere PVC-Abdeckplane, ausdrücklich B-Ware.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -152,7 +156,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:77a2817fe5442f700afcd5d00551280953eb7de6b7408bdaea6867db76f08969",
+  "snapshot_id": "sha256:c8608ccce9232cc35e8240bbc75bec366f54dc730b1cdffb35c0fb1e5a56b731",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
