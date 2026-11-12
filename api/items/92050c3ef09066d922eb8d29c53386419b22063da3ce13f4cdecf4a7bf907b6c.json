@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T14:08:48Z",
+    "evaluated_at": "2026-11-12T14:30:31Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T14:08:48Z",
+  "generated_at": "2026-11-12T14:30:31Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -24,9 +24,7 @@
     "condition": "Neu",
     "content_updated_at": "2026-11-12T02:57:18Z",
     "country": "",
-    "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
-    ],
+    "dependencies": [],
     "description": "",
     "description_status": "missing",
     "description_truncated": false,
@@ -45,13 +43,13 @@
     "ends_at": "2026-11-16T11:07:21Z",
     "id": "v1|840110395385|0",
     "image": "https://i.ebayimg.com/images/g/H-oAAeSwiiJqr41-/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 7,
     "is_auction": true,
     "last_seen_at": "2026-11-12T02:57:18Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Menge, Volumen und Sauberkeit prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,12 +59,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "consumable",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Der anhand von Titel und Zustand tatsächlich benannte Lieferumfang wurde als Gegenstand oder Teil eingeordnet; kein Verkäufer-Volltext verfügbar."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -76,14 +74,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Kalibriergenauigkeit und Material unbekannt.",
+      "Beschreibung fehlt; Quellenangaben und Funktion sind nicht unabhängig verifiziert.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 7,
+    "score": 7,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-12T14:27:13.888000Z",
+    "semantic_interest": 7,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 2.0,
     "source_observed_at": "2026-11-12T02:57:18Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -94,11 +96,11 @@
     "total_eur": null,
     "total_known_eur": 3.0,
     "url": "https://www.ebay.de/itm/840110395385?hash=itemc39a7b4ff9%3Ag%3AH-oAAeSwiiJqr41-&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Einmal-Transferpipetten funktionieren als einfache Dosierhilfen eigenständig.",
+    "useability_score": 98,
     "valid_until": "2026-11-16T11:07:21Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_5",
+    "value_reason": "Zehn einfache Kunststoff-Pipetten, keine Laborapparatur.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -155,10 +157,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:c4684d97b7e0b9e839c54bbe5fcfa18cc393df3a2db4340f25e739d245f5222e",
+  "snapshot_id": "sha256:30345e1bb9c6cfa1cf1f6a48a92796863ce02d54031c57d1c33ac8f69666cbe9",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
