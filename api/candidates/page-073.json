@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T03:18:32Z",
+    "evaluated_at": "2026-11-12T07:23:51Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,97 +13,14 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T03:18:32Z",
+  "generated_at": "2026-11-12T07:23:51Z",
   "items": [
     {
       "assessment_basis": "heuristic",
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
-      "city": "",
-      "condition": "Gebraucht",
-      "content_updated_at": "2026-11-12T03:02:59Z",
-      "country": "",
-      "dependencies": [
-        "Benötigtes Umfeld und Lieferumfang noch unbekannt"
-      ],
-      "description": "",
-      "description_status": "missing",
-      "description_truncated": false,
-      "detail_path": "api/items/020538aebb2a5b5e5e7c35881b3c27aeae59369c877f4f3c308d96e2a75c490c.json",
-      "details_fetched": false,
-      "distance_km": null,
-      "eligibility": "excluded",
-      "eligibility_reasons": [
-        "Ablauf außerhalb des Suchfensters",
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
-      ],
-      "eligibility_without_time_window": "review",
-      "ends_at": "2026-11-21T13:41:41Z",
-      "id": "v1|940083715830|0",
-      "image": "https://i.ebayimg.com/images/g/T~4AAeSwYelqaxWG/s-l400.jpg",
-      "interest_score": 18,
-      "is_auction": true,
-      "last_seen_at": "2026-11-12T03:02:59Z",
-      "local_pickup_confirmed": false,
-      "minimum_bid_eur": null,
-      "next_checks": [
-        "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
-      ],
-      "personal_interest_excluded": false,
-      "personal_interest_reason": null,
-      "pickup_available": null,
-      "pickup_radius_km": 50,
-      "pickup_search_confirmed": false,
-      "postcode": "",
-      "price_eur": 1.0,
-      "price_kind": "auction_price",
-      "product_kind": "unknown",
-      "reasons": [
-        "Beobachteter Auktionspreis höchstens 1 €",
-        "Zum Abrufzeitpunkt keine Gebote",
-        "Ausgewiesene Versandkosten im Suchlimit",
-        "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
-      ],
-      "reserve_status": "unknown",
-      "risks": [
-        "Ablauf außerhalb des Suchfensters",
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
-      ],
-      "scalp_score": 35,
-      "score": 18,
-      "score_version": 2,
-      "semantic_assessed": true,
-      "semantic_interest": 35,
-      "shipping_eur": 3.55,
-      "source_observed_at": "2026-11-12T03:02:59Z",
-      "source_provider": "auktionen-ohne-gebot",
-      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
-      "time_window_eligible": false,
-      "title": "6 Ankerschrauben verzinkt, 4 x 250/15 mm, 2 x 300/13 mm",
-      "total_eur": null,
-      "total_known_eur": 4.55,
-      "url": "https://www.ebay.de/itm/940083715830?hash=itemdae15b1ef6%3Ag%3AT%7E4AAeSwYelqaxWG&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-      "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-      "useability_score": 50,
-      "valid_until": "2026-11-21T13:41:41Z",
-      "value_band": "unknown",
-      "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
-      "verification_level": "aggregator"
-    },
-    {
-      "assessment_basis": "heuristic",
-      "assessment_confidence": "low",
-      "bid_count": 0,
-      "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -120,6 +37,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -154,9 +72,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -168,7 +89,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "9 Stück Metall-Schichtwiderstände 1,5k Ohm 1% 2W",
       "total_eur": null,
@@ -186,7 +107,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -203,6 +124,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -237,9 +159,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -251,7 +176,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "10 Stück Schaltkreise AMS1117.2.5",
       "total_eur": null,
@@ -269,7 +194,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -286,6 +211,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -320,9 +246,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -334,7 +263,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Temperatursensor 10k 1% Typ 3435K",
       "total_eur": null,
@@ -352,7 +281,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -369,6 +298,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -403,9 +333,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -417,7 +350,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Schaltkreis UB 855 D",
       "total_eur": null,
@@ -435,7 +368,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -452,6 +385,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -486,9 +420,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -500,7 +437,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 9 SüdBest",
       "total_eur": null,
@@ -518,7 +455,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -535,6 +472,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -569,9 +507,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -583,7 +524,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Klebebandabroller Paketbandabroller Handgerät 50mm",
       "total_eur": null,
@@ -601,7 +542,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -618,6 +559,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -652,9 +594,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -666,7 +611,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 10 Lago Maggiore",
       "total_eur": null,
@@ -684,7 +629,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -701,6 +646,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -735,9 +681,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -749,7 +698,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 11 Bader Reisen",
       "total_eur": null,
@@ -767,7 +716,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -784,6 +733,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -818,9 +768,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -832,7 +785,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 12 eppgroup",
       "total_eur": null,
@@ -850,7 +803,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -867,6 +820,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -901,9 +855,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -915,7 +872,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 13 sonnenklar.TV",
       "total_eur": null,
@@ -933,7 +890,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -950,6 +907,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -984,9 +942,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -998,7 +959,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 14 ADAC",
       "total_eur": null,
@@ -1016,7 +977,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1033,6 +994,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1067,9 +1029,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1081,7 +1046,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Konvolut Durchgangs-Reihenklemme TYP AKA von Weidmüller, unbenutzt",
       "total_eur": null,
@@ -1099,7 +1064,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1116,6 +1081,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1150,9 +1116,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1164,7 +1133,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 15 ADAC",
       "total_eur": null,
@@ -1182,7 +1151,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1199,6 +1168,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1233,9 +1203,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1247,7 +1220,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 16 KIT",
       "total_eur": null,
@@ -1265,7 +1238,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1282,6 +1255,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1316,9 +1290,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1330,7 +1307,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 17 Löwensenf",
       "total_eur": null,
@@ -1348,7 +1325,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1365,6 +1342,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1399,9 +1377,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1413,7 +1394,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 18 Passauer Land",
       "total_eur": null,
@@ -1431,7 +1412,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1448,6 +1429,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1482,9 +1464,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1496,7 +1481,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 19 Elster",
       "total_eur": null,
@@ -1514,7 +1499,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1531,6 +1516,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1565,9 +1551,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1579,7 +1568,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 20 KENDA",
       "total_eur": null,
@@ -1597,7 +1586,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1614,6 +1603,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1648,9 +1638,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1662,7 +1655,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 21 Kulturstaatsminister",
       "total_eur": null,
@@ -1680,7 +1673,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1697,6 +1690,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1731,9 +1725,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1745,7 +1742,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 22 Jamaica",
       "total_eur": null,
@@ -1763,7 +1760,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1780,6 +1777,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1814,9 +1812,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1828,7 +1829,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 23 Bundeswehr",
       "total_eur": null,
@@ -1846,7 +1847,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1863,6 +1864,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1897,9 +1899,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1911,7 +1916,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 24 bundesfamilienministe",
       "total_eur": null,
@@ -1929,7 +1934,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:02:59Z",
@@ -1946,6 +1951,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1980,9 +1986,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1994,7 +2003,7 @@
       "source_observed_at": "2026-11-12T03:02:59Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einkaufstaschen🛍Tragetaschen👜 Beutel🛍 Werbung Nr 25 LaL sprachreisen",
       "total_eur": null,
@@ -2012,7 +2021,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:03:10Z",
@@ -2029,6 +2038,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2063,9 +2073,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2077,7 +2090,7 @@
       "source_observed_at": "2026-11-12T03:03:10Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "HF-Dämpfungsregler Preh 1 GHz / 50 Ohm",
       "total_eur": null,
@@ -2095,7 +2108,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:03:10Z",
@@ -2112,6 +2125,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2146,9 +2160,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2160,7 +2177,7 @@
       "source_observed_at": "2026-11-12T03:03:10Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Drainagerohr DN50 für Entwässerungssysteme, in Gärten, Bauprojekten",
       "total_eur": null,
@@ -2178,7 +2195,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:03:10Z",
@@ -2195,6 +2212,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2229,9 +2247,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2243,7 +2264,7 @@
       "source_observed_at": "2026-11-12T03:03:10Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "470uF 450V 105' 35x50 Low ESR Snap In EPCOS 1 Stück",
       "total_eur": null,
@@ -2261,7 +2282,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:03:10Z",
@@ -2278,6 +2299,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2312,9 +2334,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2326,7 +2351,7 @@
       "source_observed_at": "2026-11-12T03:03:10Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Drehschalter Hauptschalter 4-polig 25 Ampere auch Gleichstrom",
       "total_eur": null,
@@ -2344,7 +2369,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:03:10Z",
@@ -2361,6 +2386,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2395,9 +2421,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2409,7 +2438,7 @@
       "source_observed_at": "2026-11-12T03:03:10Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Abstandsbolzen M2,5 x 24 aus 1.4305 blank, Abmessung gem. Zeichnung",
       "total_eur": null,
@@ -2427,7 +2456,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu ohne Etikett",
       "content_updated_at": "2026-11-12T03:03:10Z",
@@ -2444,6 +2473,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2478,9 +2508,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2492,7 +2525,7 @@
       "source_observed_at": "2026-11-12T03:03:10Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Warnweste mit Aufdruck - Ich bin ein Beroliner - XL - Sicherheitsweste neu",
       "total_eur": null,
@@ -2510,7 +2543,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:03:10Z",
@@ -2527,6 +2560,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2561,9 +2595,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2575,7 +2612,7 @@
       "source_observed_at": "2026-11-12T03:03:10Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Achse aus 1.4101 blank, Abmessung gem. Zeichnung",
       "total_eur": null,
@@ -2593,7 +2630,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:03:10Z",
@@ -2610,6 +2647,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2644,9 +2682,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2658,7 +2699,7 @@
       "source_observed_at": "2026-11-12T03:03:10Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Abstandshülse 8/3,3x7 aus 3SMnPb28Zn",
       "total_eur": null,
@@ -2676,7 +2717,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:03:10Z",
@@ -2693,6 +2734,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2727,9 +2769,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2741,7 +2786,7 @@
       "source_observed_at": "2026-11-12T03:03:10Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "SILA MIL-CH01 Charger to Suit MIL 7,2 Volts to 24 Volts for Ni-CD and Ni-MH",
       "total_eur": null,
@@ -2759,7 +2804,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu ohne Etikett",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -2776,6 +2821,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2810,9 +2856,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2824,7 +2873,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Weiße Red Bull Kellner/in Schürze Stickerei Rot/Gelbe Stickerei XL",
       "total_eur": null,
@@ -2842,7 +2891,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu ohne Etikett",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -2859,6 +2908,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2893,9 +2943,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2907,7 +2960,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Schwarze Red Bull Kellner/in Schürze Stickerei Rot/Gelbe Stickerei S/ M",
       "total_eur": null,
@@ -2925,7 +2978,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -2942,6 +2995,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2976,9 +3030,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2990,7 +3047,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Blindnieten Stahl (4x4, 4x11, 5x10 jeweils Flachrundkopf und 6,4x20 Senkkopf)",
       "total_eur": null,
@@ -3008,7 +3065,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3025,6 +3082,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3059,9 +3117,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3073,7 +3134,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Koaxialkabel 3m, mit Ferritinmantelstromfilter",
       "total_eur": null,
@@ -3091,7 +3152,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3108,6 +3169,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3142,9 +3204,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3156,7 +3221,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Speisekarte Budweiser Pilz",
       "total_eur": null,
@@ -3174,7 +3239,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3191,6 +3256,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3225,9 +3291,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3239,7 +3308,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "hewlett packard, hpe microserver gen10 plus ilo 5 nic kit",
       "total_eur": null,
@@ -3257,7 +3326,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3274,6 +3343,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3308,9 +3378,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3322,7 +3395,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Pro-Face by Schneider Electric, pfxgp4114t2d, TOUCH PANEL",
       "total_eur": null,
@@ -3340,7 +3413,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Als Ersatzteil / defekt",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3357,6 +3430,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3391,10 +3465,13 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
         "Defekt, ungeprüft oder unvollständig angegeben; keine Funktion unterstellen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3406,7 +3483,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Ortur Laser Module 2 LU1-3 Lasergravierer - Defekt!",
       "total_eur": null,
@@ -3424,7 +3501,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3441,6 +3518,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3475,9 +3553,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3489,7 +3570,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Vollhartmetall Mini Fräser OVP - Durchmesser 4+6 mm von Wodex",
       "total_eur": null,
@@ -3507,7 +3588,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3524,6 +3605,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3558,9 +3640,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3572,7 +3657,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Flaig Lasthebemagnet FX-150",
       "total_eur": null,
@@ -3590,7 +3675,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3607,6 +3692,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3641,9 +3727,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3655,7 +3744,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Gebrauchsanweisung für Stokland Sämaschine (1962?)",
       "total_eur": null,
@@ -3673,7 +3762,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3690,6 +3779,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3724,9 +3814,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3738,7 +3831,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Insektenschutz für Türen in weiß, 1,20 x 2,20",
       "total_eur": null,
@@ -3756,7 +3849,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3773,6 +3866,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3807,9 +3901,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3821,7 +3918,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Friatherm 90-Grad-Rohrinkelstücken 5er pack",
       "total_eur": null,
@@ -3839,7 +3936,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3856,6 +3953,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3890,9 +3988,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3904,7 +4005,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Flaig Permanentmagnet HX 30kg",
       "total_eur": null,
@@ -3922,7 +4023,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -3939,6 +4040,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3973,9 +4075,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3987,7 +4092,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "DR OTEK MT-XR Metalldetektor Metallsuchgerät LCD voll funktionsfähig",
       "total_eur": null,
@@ -4005,7 +4110,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -4022,6 +4127,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -4056,9 +4162,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -4070,7 +4179,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Motorola 78L05 (5V 100mA TO-92) (16 Stück)",
       "total_eur": null,
@@ -4088,7 +4197,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:03:21Z",
@@ -4105,6 +4214,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -4139,9 +4249,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -4153,7 +4266,7 @@
       "source_observed_at": "2026-11-12T03:03:21Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Kugellager",
       "total_eur": null,
@@ -4162,6 +4275,93 @@
       "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
       "useability_score": 50,
       "valid_until": "2026-11-21T17:27:48Z",
+      "value_band": "unknown",
+      "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+      "verification_level": "aggregator"
+    },
+    {
+      "assessment_basis": "heuristic",
+      "assessment_confidence": "low",
+      "bid_count": 0,
+      "buying_options": [],
+      "carried": true,
+      "city": "",
+      "condition": "Neu",
+      "content_updated_at": "2026-11-12T03:03:21Z",
+      "country": "",
+      "dependencies": [
+        "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      ],
+      "description": "",
+      "description_status": "missing",
+      "description_truncated": false,
+      "detail_path": "api/items/6d2bd71159df5f82170bed5bb81915919bee345e69e69240ded6cca6c5d34776.json",
+      "details_fetched": false,
+      "distance_km": null,
+      "eligibility": "excluded",
+      "eligibility_reasons": [
+        "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      ],
+      "eligibility_without_time_window": "review",
+      "ends_at": "2026-11-21T17:33:39Z",
+      "id": "v1|198788027269|0",
+      "image": "https://i.ebayimg.com/images/g/DRgAAOSwGEJmyy8B/s-l400.jpg",
+      "interest_score": 18,
+      "is_auction": true,
+      "last_seen_at": "2026-11-12T03:03:21Z",
+      "local_pickup_confirmed": false,
+      "minimum_bid_eur": null,
+      "next_checks": [
+        "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      ],
+      "personal_interest_excluded": false,
+      "personal_interest_reason": null,
+      "pickup_available": null,
+      "pickup_radius_km": 50,
+      "pickup_search_confirmed": false,
+      "postcode": "",
+      "price_eur": 1.0,
+      "price_kind": "auction_price",
+      "product_kind": "unknown",
+      "reasons": [
+        "Beobachteter Auktionspreis höchstens 1 €",
+        "Zum Abrufzeitpunkt keine Gebote",
+        "Ausgewiesene Versandkosten im Suchlimit",
+        "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      ],
+      "reserve_status": "unknown",
+      "risks": [
+        "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
+        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
+        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
+      ],
+      "scalp_score": 35,
+      "score": 18,
+      "score_version": 2,
+      "semantic_assessed": true,
+      "semantic_interest": 35,
+      "shipping_eur": 1.8,
+      "source_observed_at": "2026-11-12T03:03:21Z",
+      "source_provider": "auktionen-ohne-gebot",
+      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+      "stale": true,
+      "time_window_eligible": false,
+      "title": "Acrylglas klar Vierkant 6,1 mm x 6,1 mm x mindestens 300 mm lang 6 x 6 Plexiglas",
+      "total_eur": null,
+      "total_known_eur": 2.8,
+      "url": "https://www.ebay.de/itm/198788027269?hash=item2e48b09385%3Ag%3ADRgAAOSwGEJmyy8B&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
+      "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
+      "useability_score": 50,
+      "valid_until": "2026-11-21T17:33:39Z",
       "value_band": "unknown",
       "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
       "verification_level": "aggregator"
@@ -4224,12 +4424,12 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:126319eab146589f4e32b05dc9b8881e8ff136286c13ade138d30d613a97dd73",
+  "snapshot_id": "sha256:01d5143dca16432bcfffd32f966bedad16c88e1c7915a46d2e490aec5bf2615c",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-  "total": 4980,
+  "total": 4966,
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
 }

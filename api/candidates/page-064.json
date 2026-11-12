@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T03:18:32Z",
+    "evaluated_at": "2026-11-12T07:23:51Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,98 +13,14 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T03:18:32Z",
+  "generated_at": "2026-11-12T07:23:51Z",
   "items": [
     {
       "assessment_basis": "heuristic",
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
-      "city": "",
-      "condition": "Gebraucht",
-      "content_updated_at": "2026-11-12T03:01:09Z",
-      "country": "",
-      "dependencies": [
-        "Benötigtes Umfeld und Lieferumfang noch unbekannt"
-      ],
-      "description": "",
-      "description_status": "missing",
-      "description_truncated": false,
-      "detail_path": "api/items/754804c3da6db9931a3aa93d2f7339f8cf9a926380ff220fc334d3d2c2c4b3a0.json",
-      "details_fetched": false,
-      "distance_km": null,
-      "eligibility": "excluded",
-      "eligibility_reasons": [
-        "Ablauf außerhalb des Suchfensters",
-        "Weder Versandkosten noch passende Abholung bestätigt",
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
-      ],
-      "eligibility_without_time_window": "review",
-      "ends_at": "2026-11-18T19:00:00Z",
-      "id": "v1|206689816249|0",
-      "image": "https://i.ebayimg.com/images/g/GMMAAeSwudhq8zm-/s-l400.jpg",
-      "interest_score": 18,
-      "is_auction": true,
-      "last_seen_at": "2026-11-12T03:01:09Z",
-      "local_pickup_confirmed": false,
-      "minimum_bid_eur": null,
-      "next_checks": [
-        "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
-      ],
-      "personal_interest_excluded": false,
-      "personal_interest_reason": null,
-      "pickup_available": null,
-      "pickup_radius_km": 50,
-      "pickup_search_confirmed": false,
-      "postcode": "",
-      "price_eur": 1.0,
-      "price_kind": "auction_price",
-      "product_kind": "unknown",
-      "reasons": [
-        "Beobachteter Auktionspreis höchstens 1 €",
-        "Zum Abrufzeitpunkt keine Gebote",
-        "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
-      ],
-      "reserve_status": "unknown",
-      "risks": [
-        "Ablauf außerhalb des Suchfensters",
-        "Weder Versandkosten noch passende Abholung bestätigt",
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
-      ],
-      "scalp_score": 35,
-      "score": 18,
-      "score_version": 2,
-      "semantic_assessed": true,
-      "semantic_interest": 35,
-      "shipping_eur": null,
-      "source_observed_at": "2026-11-12T03:01:09Z",
-      "source_provider": "auktionen-ohne-gebot",
-      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
-      "time_window_eligible": false,
-      "title": "Schraubstock, Kniehebelpresse,",
-      "total_eur": null,
-      "total_known_eur": null,
-      "url": "https://www.ebay.de/itm/206689816249?hash=item301fac4eb9%3Ag%3AGMMAAeSwudhq8zm-&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-      "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-      "useability_score": 50,
-      "valid_until": "2026-11-18T19:00:00Z",
-      "value_band": "unknown",
-      "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
-      "verification_level": "aggregator"
-    },
-    {
-      "assessment_basis": "heuristic",
-      "assessment_confidence": "low",
-      "bid_count": 0,
-      "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -121,6 +37,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -155,9 +72,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -169,7 +89,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "20m² C-Glasvlies 30 g/m² für Epoxid- Polyester und Vinylesterharze Silane",
       "total_eur": null,
@@ -187,7 +107,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -204,6 +124,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -238,9 +159,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -252,7 +176,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Schaufensterpuppe Damen Beine Unterkörper aufblasbar Silber 110 cm Deko #T120",
       "total_eur": null,
@@ -270,7 +194,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -287,6 +211,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -321,9 +246,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -335,7 +263,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "10 x Bosch Fächerscheiben Schleifscheiben Lamellenscheiben 115 mm K 80 Metall 3",
       "total_eur": null,
@@ -353,7 +281,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -371,6 +299,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -405,9 +334,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -419,7 +351,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Doppelschleifbock Flott, 230 V",
       "total_eur": null,
@@ -524,7 +456,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -541,6 +473,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -575,9 +508,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -589,7 +525,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Bosch 1 Kg Holzbohrer Flachfräsbohrer Zufallsmischung Markenware Top-Neu 3",
       "total_eur": null,
@@ -607,7 +543,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -625,6 +561,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -659,9 +596,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -673,7 +613,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank, ca. 120 cm mit Schrankunterbau",
       "total_eur": null,
@@ -691,7 +631,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -708,6 +648,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -742,9 +683,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -756,7 +700,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Restposten 1 kg Schleifpapier Schleifzubehör Schleifscheiben Polierzubehör 3",
       "total_eur": null,
@@ -774,7 +718,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -791,6 +735,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -825,9 +770,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -839,7 +787,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Gasschlauch-Kupplung Messer",
       "total_eur": null,
@@ -944,7 +892,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -962,6 +910,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -996,9 +945,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1010,7 +962,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einständerpresse Neff Typ 10T, 380 V",
       "total_eur": null,
@@ -1028,7 +980,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1045,6 +997,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1079,9 +1032,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1093,7 +1049,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "SIX BUNNIES 18 x Kinder Tanktop Shirts Pink Leo Bunny Print 2-10 Jahre Neu OVP",
       "total_eur": null,
@@ -1111,7 +1067,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1129,6 +1085,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1163,9 +1120,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1177,7 +1137,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank ca. 150 cm mit Schrankunterbau, Schraubstock, ohne Inhalt",
       "total_eur": null,
@@ -1195,7 +1155,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1212,6 +1172,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1246,9 +1207,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1260,7 +1224,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "WÖHNER Sicherungssockel 1-polig 63A / 400V",
       "total_eur": null,
@@ -1278,7 +1242,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1296,6 +1260,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1330,9 +1295,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1344,7 +1312,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank ca. 150 cm mit Schrankunterbau, Schraubstock, ohne Inhalt",
       "total_eur": null,
@@ -1362,7 +1330,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1379,6 +1347,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1413,9 +1382,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1427,7 +1399,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Sonderposten Restposten Retouren Ware Flohmarkt Wiederverkäufer Mix Box",
       "total_eur": null,
@@ -1445,7 +1417,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1463,6 +1435,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1497,9 +1470,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1511,7 +1487,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank ca. 150 cm mit Schrankunterbau, Schraubstock, ohne Inhalt",
       "total_eur": null,
@@ -1529,7 +1505,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1546,6 +1522,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1580,9 +1557,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1594,7 +1574,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Sonderposten Restposten Retouren Ware Flohmarkt Wiederverkäufer Mix Box",
       "total_eur": null,
@@ -1612,7 +1592,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1630,6 +1610,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1664,9 +1645,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1678,7 +1662,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank ca. 150 cm mit Schrankunterbau, Schraubstock, ohne Inhalt",
       "total_eur": null,
@@ -1696,7 +1680,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1713,6 +1697,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1747,9 +1732,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1761,7 +1749,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Platinen für Sauertsoffkonzentrator Heimox 590, Oxicur L5, Companion 590i",
       "total_eur": null,
@@ -1779,7 +1767,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1797,6 +1785,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1831,9 +1820,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1845,7 +1837,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank ca. 150 cm mit Schrankunterbau, Schraubstock, ohne Inhalt",
       "total_eur": null,
@@ -1863,7 +1855,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1881,6 +1873,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1915,9 +1908,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -1929,7 +1925,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank ca. 150 cm mit Schrankunterbau, Schraubstock, ohne Inhalt",
       "total_eur": null,
@@ -1947,7 +1943,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -1964,6 +1960,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -1998,9 +1995,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2012,7 +2012,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Zanotti / Daikin Ablaufrohr",
       "total_eur": null,
@@ -2030,7 +2030,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -2048,6 +2048,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2082,9 +2083,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2096,7 +2100,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank ca. 150 cm mit Schrankunterbau, Schraubstock, ohne Inhalt",
       "total_eur": null,
@@ -2114,7 +2118,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -2131,6 +2135,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2165,9 +2170,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2179,7 +2187,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Base Protection Sicherheitsschuhe S1P, Gr.43, grau +türkis",
       "total_eur": null,
@@ -2197,7 +2205,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:09Z",
@@ -2215,6 +2223,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2249,9 +2258,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2263,7 +2275,7 @@
       "source_observed_at": "2026-11-12T03:01:09Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank, ca. 260 cm mit 3 Unterbauschränken, Wandregal mit PVC-Sortierboxen",
       "total_eur": null,
@@ -2368,7 +2380,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -2385,6 +2397,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2419,9 +2432,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2433,7 +2449,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Dehne Drillmaschine Sähmaschine Saattabelle Oldtimer Schlepper Traktor",
       "total_eur": null,
@@ -2451,7 +2467,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -2469,6 +2485,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2503,9 +2520,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2517,7 +2537,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank, ca. 180 cm",
       "total_eur": null,
@@ -2535,7 +2555,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -2552,6 +2572,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2586,9 +2607,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2600,7 +2624,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Viessmann Platine 7866808",
       "total_eur": null,
@@ -2618,7 +2642,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -2636,6 +2660,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2670,9 +2695,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2684,7 +2712,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank ca. 250 cm, 4 Schubkästen",
       "total_eur": null,
@@ -2702,7 +2730,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -2720,6 +2748,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2754,9 +2783,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2768,7 +2800,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Werkbank, ca. 180 cm mit Handhebelschere, 2 Kniehebelpressen",
       "total_eur": null,
@@ -2786,7 +2818,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -2803,6 +2835,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2837,9 +2870,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2851,7 +2887,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "4 Tpansportrollen Durchmesser 20cm Gebraucht",
       "total_eur": null,
@@ -2869,7 +2905,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -2887,6 +2923,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -2921,9 +2958,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -2935,7 +2975,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Doppelschleifbock Dewalt, 230 V",
       "total_eur": null,
@@ -3040,7 +3080,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3058,6 +3098,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3092,9 +3133,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3106,7 +3150,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Tischpresse, Eigenbau, 230 V",
       "total_eur": null,
@@ -3124,7 +3168,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3141,6 +3185,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3175,9 +3220,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3189,7 +3237,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Brauner Anschlussblock 10-polig/10-Pin Flachstecker Steckanschluss Kunststoff",
       "total_eur": null,
@@ -3207,7 +3255,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3225,6 +3273,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3259,9 +3308,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3273,7 +3325,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Einständerpresse WMW Typ PYETE3,15, Gewicht 370 kg, 380 V",
       "total_eur": null,
@@ -3378,7 +3430,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3396,6 +3448,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3430,9 +3483,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3444,7 +3500,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "ca. 15 lfm. Metallregal",
       "total_eur": null,
@@ -3462,7 +3518,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3480,6 +3536,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3514,9 +3571,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3528,7 +3588,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "6 Metall-Schließfachschränke, 8-türig",
       "total_eur": null,
@@ -3546,7 +3606,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3564,6 +3624,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3598,9 +3659,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3612,7 +3676,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Gartenhaus mit Carport, ca. 850 cm x 400 cm, Sitzgruppe",
       "total_eur": null,
@@ -3630,7 +3694,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3647,6 +3711,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3681,9 +3746,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3695,7 +3763,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "5m² Kohlefasergelege +/- 45 ° Bidiagonal HT-Faser 400g/m² Modellbau 50K",
       "total_eur": null,
@@ -3713,7 +3781,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3731,6 +3799,7 @@
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3765,9 +3834,12 @@
       "risks": [
         "Ablauf außerhalb des Suchfensters",
         "Weder Versandkosten noch passende Abholung bestätigt",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3779,7 +3851,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Blockheizkraftwerk BHKW Sokratherm GG 140, Erdgas, 216 kW / 142 kW",
       "total_eur": null,
@@ -3797,7 +3869,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3814,6 +3886,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3848,9 +3921,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3862,7 +3938,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Reduktion Nuss 1/4 Zoll auf 3/8 Zoll Werkzeug Adapter Müllner Steckschlüssel",
       "total_eur": null,
@@ -3880,7 +3956,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3897,6 +3973,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -3931,9 +4008,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -3945,7 +4025,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "2 St PULS PISA11.404 Sicherungsmodul 24 V/DC 3.7 A Anzahl Ausgänge:4",
       "total_eur": null,
@@ -3963,7 +4043,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -3980,6 +4060,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -4014,9 +4095,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -4028,7 +4112,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Federn _ Spiralfeder _ Druckfeder - 1,5 x 21,5 x 131mm __ 5 Stück",
       "total_eur": null,
@@ -4049,7 +4133,7 @@
       "carried": false,
       "city": "",
       "condition": "New",
-      "content_updated_at": "2026-11-12T03:01:20Z",
+      "content_updated_at": "2026-11-12T07:08:40Z",
       "country": "",
       "dependencies": [
         "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -4073,7 +4157,7 @@
       "image": "https://i.ebayimg.com/images/g/ccwAAOSw0PRlAeDM/s-l400.jpg",
       "interest_score": 18,
       "is_auction": true,
-      "last_seen_at": "2026-11-12T03:01:20Z",
+      "last_seen_at": "2026-11-12T07:08:40Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -4107,15 +4191,15 @@
       "score_version": 2,
       "semantic_assessed": true,
       "semantic_interest": 35,
-      "shipping_eur": 14.43,
-      "source_observed_at": "2026-11-12T03:01:20Z",
+      "shipping_eur": 14.45,
+      "source_observed_at": "2026-11-12T07:08:40Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
       "time_window_eligible": false,
       "title": "12er Pack Farb-/Buntstifte - Colourworld - Brandneu",
       "total_eur": null,
-      "total_known_eur": 15.03,
+      "total_known_eur": 15.05,
       "url": "https://www.ebay.de/itm/860135056073?hash=itemc8440b62c9%3Ag%3AccwAAOSw0PRlAeDM&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
       "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
       "useability_score": 50,
@@ -4129,7 +4213,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-12T03:01:20Z",
@@ -4146,6 +4230,7 @@
       "eligibility": "excluded",
       "eligibility_reasons": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
         "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -4180,9 +4265,12 @@
       "reserve_status": "unknown",
       "risks": [
         "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
         "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
         "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
         "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
         "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
       ],
       "scalp_score": 35,
@@ -4194,7 +4282,7 @@
       "source_observed_at": "2026-11-12T03:01:20Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
+      "stale": true,
       "time_window_eligible": false,
       "title": "Mechanischer Holzspalter Brennholz Spalter liegend Fuß betrieben 1,2T Gebraucht",
       "total_eur": null,
@@ -4203,6 +4291,93 @@
       "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
       "useability_score": 50,
       "valid_until": "2026-11-18T20:00:04Z",
+      "value_band": "unknown",
+      "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+      "verification_level": "aggregator"
+    },
+    {
+      "assessment_basis": "heuristic",
+      "assessment_confidence": "low",
+      "bid_count": 0,
+      "buying_options": [],
+      "carried": true,
+      "city": "",
+      "condition": "Gebraucht",
+      "content_updated_at": "2026-11-12T03:01:20Z",
+      "country": "",
+      "dependencies": [
+        "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      ],
+      "description": "",
+      "description_status": "missing",
+      "description_truncated": false,
+      "detail_path": "api/items/9ba09a26ecd4fc2854d3b06c7d5c99bf25debd0fb88d40a0160c233fa8a89734.json",
+      "details_fetched": false,
+      "distance_km": null,
+      "eligibility": "excluded",
+      "eligibility_reasons": [
+        "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      ],
+      "eligibility_without_time_window": "review",
+      "ends_at": "2026-11-18T20:00:54Z",
+      "id": "v1|327451580513|0",
+      "image": "https://i.ebayimg.com/images/g/WV8AAeSwSCBqGzoA/s-l400.jpg",
+      "interest_score": 18,
+      "is_auction": true,
+      "last_seen_at": "2026-11-12T03:01:20Z",
+      "local_pickup_confirmed": false,
+      "minimum_bid_eur": null,
+      "next_checks": [
+        "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      ],
+      "personal_interest_excluded": false,
+      "personal_interest_reason": null,
+      "pickup_available": null,
+      "pickup_radius_km": 50,
+      "pickup_search_confirmed": false,
+      "postcode": "",
+      "price_eur": 1.0,
+      "price_kind": "auction_price",
+      "product_kind": "unknown",
+      "reasons": [
+        "Beobachteter Auktionspreis höchstens 1 €",
+        "Zum Abrufzeitpunkt keine Gebote",
+        "Ausgewiesene Versandkosten im Suchlimit",
+        "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      ],
+      "reserve_status": "unknown",
+      "risks": [
+        "Ablauf außerhalb des Suchfensters",
+        "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
+        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
+        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
+      ],
+      "scalp_score": 35,
+      "score": 18,
+      "score_version": 2,
+      "semantic_assessed": true,
+      "semantic_interest": 35,
+      "shipping_eur": 5.19,
+      "source_observed_at": "2026-11-12T03:01:20Z",
+      "source_provider": "auktionen-ohne-gebot",
+      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+      "stale": true,
+      "time_window_eligible": false,
+      "title": "Tubus von einer optischen Einrichtung - genaue Funktion unbekannt",
+      "total_eur": null,
+      "total_known_eur": 6.19,
+      "url": "https://www.ebay.de/itm/327451580513?hash=item4c3da29861%3Ag%3AWV8AAeSwSCBqGzoA&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
+      "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
+      "useability_score": 50,
+      "valid_until": "2026-11-18T20:00:54Z",
       "value_band": "unknown",
       "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
       "verification_level": "aggregator"
@@ -4265,12 +4440,12 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:126319eab146589f4e32b05dc9b8881e8ff136286c13ade138d30d613a97dd73",
+  "snapshot_id": "sha256:01d5143dca16432bcfffd32f966bedad16c88e1c7915a46d2e490aec5bf2615c",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-  "total": 4980,
+  "total": 4966,
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
 }

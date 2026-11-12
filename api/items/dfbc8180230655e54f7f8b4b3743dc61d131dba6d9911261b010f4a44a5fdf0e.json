@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T03:18:32Z",
+    "evaluated_at": "2026-11-12T07:23:51Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T03:18:32Z",
+  "generated_at": "2026-11-12T07:23:51Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "New",
-    "content_updated_at": "2026-11-12T02:52:32Z",
+    "content_updated_at": "2026-11-12T07:08:19Z",
     "country": "",
     "dependencies": [
       "Installationsprojekt",
@@ -36,7 +36,6 @@
     "distance_km": null,
     "eligibility": "review",
     "eligibility_reasons": [
-      "Weder Versandkosten noch passende Abholung bestätigt",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
@@ -46,7 +45,7 @@
     "image": "https://i.ebayimg.com/images/g/LAgAAeSw1lxq3LkX/s-l400.jpg",
     "interest_score": 6,
     "is_auction": true,
-    "last_seen_at": "2026-11-12T02:52:32Z",
+    "last_seen_at": "2026-11-12T07:08:19Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -63,11 +62,11 @@
     "product_kind": "component",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
-      "Zum Abrufzeitpunkt keine Gebote"
+      "Zum Abrufzeitpunkt keine Gebote",
+      "Ausgewiesene Versandkosten im Suchlimit"
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Weder Versandkosten noch passende Abholung bestätigt",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -81,15 +80,15 @@
     "semantic_assessed_at": "2026-11-08T20:26:04.264666Z",
     "semantic_interest": 11,
     "semantic_review_mode": "interactive",
-    "shipping_eur": null,
-    "source_observed_at": "2026-11-12T02:52:32Z",
+    "shipping_eur": 14.91,
+    "source_observed_at": "2026-11-12T07:08:19Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
     "time_window_eligible": true,
     "title": "METERXITY 10er Pack Kabelschellen 1-5/8 Zoll/42 mm 304",
     "total_eur": null,
-    "total_known_eur": null,
+    "total_known_eur": 15.51,
     "url": "https://www.ebay.de/itm/860121962572?hash=itemc84343984c%3Ag%3ALAgAAeSw1lxq3LkX&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
     "useability_reason": "Benötigen passende Kabel/Rohre und Montagefläche.",
     "useability_score": 55,
@@ -152,7 +151,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:126319eab146589f4e32b05dc9b8881e8ff136286c13ade138d30d613a97dd73",
+  "snapshot_id": "sha256:01d5143dca16432bcfffd32f966bedad16c88e1c7915a46d2e490aec5bf2615c",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
