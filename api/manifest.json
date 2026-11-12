@@ -31,23 +31,23 @@
   "blockers": [
     {
       "action": "Quellenstand und Abdeckung beachten; vor einem Gebot das Originalangebot prüfen. Der nächste geplante Lauf berücksichtigt Wartezeiten.",
-      "code": "aggregator_claims_only",
-      "message": "Drittanbieter-Daten, keine direkte eBay-Liveprüfung und kein atomarer Snapshot; die Trefferliste kann sich während des Durchlaufs verändern."
+      "code": "source_cooldown",
+      "message": "Die schonende Abrufpause ist noch nicht abgelaufen."
     }
   ],
   "counts": {
     "page_size": 50,
     "pages": 100,
-    "total": 4966
+    "total": 4957
   },
   "coverage": {
     "all_collected_records_retained": true,
-    "api_requests_this_run": 4,
+    "api_requests_this_run": 0,
     "browse_calls_this_run": 0,
     "browse_calls_today": 0,
-    "categories_completed": 1,
+    "categories_completed": 0,
     "categories_planned": 1,
-    "categories_scanned": 1,
+    "categories_scanned": 0,
     "categories_total": 1,
     "complete": false,
     "cursor": {
@@ -61,96 +61,96 @@
     "daily_request_budget": 8000,
     "debounce_seconds": 1740,
     "duplicate_records": 0,
-    "elapsed_seconds": 43,
+    "elapsed_seconds": 0,
     "last_successful_full_scan_at": "2026-11-12T07:23:51Z",
     "local_active_window_hours": 72,
     "manual_leaf_override": false,
     "max_api_requests_per_run": 160,
     "max_run_seconds": 1500,
     "max_source_items_per_search": 9600,
-    "next_offset": 144,
+    "next_offset": 0,
     "page_size": 48,
-    "pages_fetched": 4,
+    "pages_fetched": 0,
     "pagination_caveat": "Ein abgeschlossener Durchlauf besucht die zu diesem Zeitpunkt gemeldeten Seiten beider aktivierten Suchen. Offset-Seiten und Trefferzahlen verändern sich: keine atomare Momentaufnahme und keine garantierte vollständige eBay-Abdeckung.",
     "pagination_is_stable": false,
-    "pickup_search_count": 1,
-    "pickup_total_reported": 0,
+    "pickup_search_count": 0,
+    "pickup_total_reported": null,
     "planned_interval_minutes": 30,
     "price_filter_applied": true,
-    "records_read": 110,
+    "records_read": 0,
     "reported_nonempty_but_no_records": false,
-    "requests_this_run": 5,
+    "requests_this_run": 0,
     "requests_today": 370,
     "retention_capacity": 5000,
     "retention_omitted_records": 0,
-    "scan_completed_at": "2026-11-12T07:23:51Z",
-    "scan_finished_at": "2026-11-12T07:23:51Z",
-    "scan_started_at": "2026-11-12T07:23:08Z",
+    "scan_completed_at": null,
+    "scan_finished_at": null,
+    "scan_started_at": null,
     "schedule_interval_minutes": 30,
     "searches": {
       "general": {
         "absence_is_evidence": false,
-        "completed_at": "2026-11-12T07:23:51Z",
+        "completed_at": null,
         "duplicate_records": 0,
         "empty_pages": 0,
         "enabled": true,
         "last_successful_traversal_at": "2026-11-12T07:23:51Z",
-        "next_offset": 144,
-        "pages_fetched": 3,
-        "records_read": 110,
-        "remaining_reported": 0,
+        "next_offset": 0,
+        "pages_fetched": 0,
+        "records_read": 0,
+        "remaining_reported": null,
         "repeated_pages": 0,
         "reported_nonempty_but_no_records": false,
-        "short_pages": 1,
+        "short_pages": 0,
         "sparse_pages": 0,
         "sparse_slots_estimate": 0,
-        "started_at": "2026-11-12T07:23:08Z",
-        "status": "completed",
-        "stop_reason": "reported_end",
-        "total_changed": true,
-        "total_reported_initial": 131,
-        "total_reported_latest": 110,
-        "total_reported_max": 131,
-        "total_reported_min": 110,
-        "traversal_completed": true,
-        "unique_records": 110,
-        "unobserved_estimate": 0
+        "started_at": null,
+        "status": "not_started",
+        "stop_reason": "not_started",
+        "total_changed": false,
+        "total_reported_initial": null,
+        "total_reported_latest": null,
+        "total_reported_max": null,
+        "total_reported_min": null,
+        "traversal_completed": false,
+        "unique_records": 0,
+        "unobserved_estimate": null
       },
       "pickup": {
         "absence_is_evidence": false,
-        "completed_at": "2026-11-12T07:23:29Z",
+        "completed_at": null,
         "duplicate_records": 0,
-        "empty_pages": 1,
+        "empty_pages": 0,
         "enabled": true,
         "last_successful_traversal_at": "2026-11-12T07:23:29Z",
-        "next_offset": 48,
-        "pages_fetched": 1,
+        "next_offset": 0,
+        "pages_fetched": 0,
         "records_read": 0,
-        "remaining_reported": 0,
+        "remaining_reported": null,
         "repeated_pages": 0,
         "reported_nonempty_but_no_records": false,
-        "short_pages": 1,
+        "short_pages": 0,
         "sparse_pages": 0,
         "sparse_slots_estimate": 0,
-        "started_at": "2026-11-12T07:23:19Z",
-        "status": "completed",
-        "stop_reason": "reported_end",
+        "started_at": null,
+        "status": "not_started",
+        "stop_reason": "not_started",
         "total_changed": false,
-        "total_reported_initial": 0,
-        "total_reported_latest": 0,
-        "total_reported_max": 0,
-        "total_reported_min": 0,
-        "traversal_completed": true,
+        "total_reported_initial": null,
+        "total_reported_latest": null,
+        "total_reported_max": null,
+        "total_reported_min": null,
+        "traversal_completed": false,
         "unique_records": 0,
-        "unobserved_estimate": 0
+        "unobserved_estimate": null
       }
     },
     "source_cache_max_age_minutes": 15,
     "source_claims_only": true,
-    "source_total_reported": 110,
+    "source_total_reported": null,
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "traversal_completed": true,
-    "unique_records": 110,
+    "traversal_completed": false,
+    "unique_records": 0,
     "upstream_end_filter": "alle"
   },
   "criteria": {
@@ -165,7 +165,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T07:23:51Z",
+    "evaluated_at": "2026-11-12T07:37:26Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -175,26 +175,26 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T07:23:51Z",
+  "generated_at": "2026-11-12T07:37:26Z",
   "interactive_review": {
-    "applied": 2979,
-    "available": 3043,
+    "applied": 3026,
+    "available": 3076,
     "errors": [],
     "expires_at": null,
-    "latest_reviewed_at": "2026-11-12T03:01:23.512000Z",
+    "latest_reviewed_at": "2026-11-12T07:33:35Z",
     "oldest_reviewed_at": "2026-11-08T07:08:35Z",
     "retention_basis": "content_and_auction",
-    "reviewed_at": "2026-11-12T03:01:23.512000Z",
+    "reviewed_at": "2026-11-12T07:33:35Z",
     "reviewer": "ChatGPT",
     "skipped_changed": 1,
     "skipped_future": 0,
-    "skipped_missing": 63,
+    "skipped_missing": 49,
     "skipped_newer": 0,
     "skipped_stale": 0,
     "source_snapshot_id": null,
     "status": "applied",
-    "total": 3043,
-    "unreviewed": 1987,
+    "total": 3076,
+    "unreviewed": 1931,
     "validation_status": "partial"
   },
   "interface": {
@@ -219,601 +219,601 @@
       "count": 50,
       "index": 1,
       "path": "api/candidates/page-001.json",
-      "sha256": "2a56955f9af3fe1791bccd227b620c0f372a9209b02b48fc087f1a543ec68c71"
+      "sha256": "34e17950d0eb55a92ff535fc5d5f3015d787bc90be39cd8350410f3a156ca06d"
     },
     {
       "count": 50,
       "index": 2,
       "path": "api/candidates/page-002.json",
-      "sha256": "3164a251bfb63ee75dce42ed6210c79d6cb87a0cfe8b3801b3da30c4859068aa"
+      "sha256": "832d3cb7bf2a1decb4c58ee3b6c6483e7883e30e7d14465efe6c3da4e78a494b"
     },
     {
       "count": 50,
       "index": 3,
       "path": "api/candidates/page-003.json",
-      "sha256": "05a3802e9d4f97aa8dc7dc1e1302853fc2e49f6a868d4ff977205e425f079300"
+      "sha256": "12aa26b5121b4e1aa1b08d7368a0cb6ded20f064142cb7b6ea0a642418cca935"
     },
     {
       "count": 50,
       "index": 4,
       "path": "api/candidates/page-004.json",
-      "sha256": "91ad148cd53515b05536a3cf1853ad01cb60a6dd2046204216c67fe6cf6d3850"
+      "sha256": "fb895c9e248d7af36868e8a03f6c88156f8b5da8c543c1cdce0f0e15fa5746ad"
     },
     {
       "count": 50,
       "index": 5,
       "path": "api/candidates/page-005.json",
-      "sha256": "5543f010aaa68d68356ef34db5569e1453488339a8c294e9e7a3392c1a801dfc"
+      "sha256": "829f5cdc1611fac896d0d0e0a83270de9aa56808c87b78f44a7f2354a7eb593b"
     },
     {
       "count": 50,
       "index": 6,
       "path": "api/candidates/page-006.json",
-      "sha256": "2b0c8a11e8fe2e7668ab292b2828dfaabf8bad89e869ebcf74cdc553df02991a"
+      "sha256": "397b268ad9d414d4c7cf995ed47c6040870e755f344503d46cfe6be4283c6a2c"
     },
     {
       "count": 50,
       "index": 7,
       "path": "api/candidates/page-007.json",
-      "sha256": "41e36df77d1976068c0340799dca0f25f3511e1a9e6972b9fc58cb70fce96985"
+      "sha256": "9b66c9d7dd6541a81e38d801b792fd8d34b11b11e8f05a6cffa40271c3278c6e"
     },
     {
       "count": 50,
       "index": 8,
       "path": "api/candidates/page-008.json",
-      "sha256": "833d81f58a939bf250f748c504512eac923010938608dc7933a16566dea9f5ed"
+      "sha256": "40781439a9263e12fb31391659afd9438561e1381af47fb6622a7f2693d8922d"
     },
     {
       "count": 50,
       "index": 9,
       "path": "api/candidates/page-009.json",
-      "sha256": "eec01ef36e88b66dc8e561a6e5f951a375b06df586e30f762a4edfbd8eef2694"
+      "sha256": "9bec24d4523a39eb5a19d0e6c595331d82ba536408ae605785a7ae472e8dc338"
     },
     {
       "count": 50,
       "index": 10,
       "path": "api/candidates/page-010.json",
-      "sha256": "06e646f6c0c7e875c02220e336e7c0e31b02537df371bf23abca2dfb93c8175b"
+      "sha256": "b7cd537f6e330e205476ddaa651b12c68f6fc1f88b740afcb669defcbbc0ef5c"
     },
     {
       "count": 50,
       "index": 11,
       "path": "api/candidates/page-011.json",
-      "sha256": "a621ff5c03ac30b70dc68fbcd43238c66cf77e572407e242142dcc7eb227234d"
+      "sha256": "5e16df4991d99956a4d7e1df3991d1fc2cf7ba6d4135f5142378983fd321cd35"
     },
     {
       "count": 50,
       "index": 12,
       "path": "api/candidates/page-012.json",
-      "sha256": "fcda5ab5d6324a146d7af7f9a4355768d6cc6a361c98cf97490813aabfd8b5d1"
+      "sha256": "60fb3a24ad05091540e58f67b4502e550f0b947e7a9b03e5ecc14d5d089ecf3e"
     },
     {
       "count": 50,
       "index": 13,
       "path": "api/candidates/page-013.json",
-      "sha256": "a87628715a0bf60ee719a18214cfb424f1c4c2e171e31b78341ffe0458952775"
+      "sha256": "163c43fb88d6053716f5b066c6aa77320c1fe3b6d547dea87c92912e0457e4f0"
     },
     {
       "count": 50,
       "index": 14,
       "path": "api/candidates/page-014.json",
-      "sha256": "dacd81eb293d570a0ea9bff50d3f3aad658f55309e42925f7b8f1af33243834c"
+      "sha256": "ff99003760099566b033b72f9a32469d39a95b63f75e4757525517ea9e2207bb"
     },
     {
       "count": 50,
       "index": 15,
       "path": "api/candidates/page-015.json",
-      "sha256": "4474f08caf06e2b236b05c0f2b675b234e405ac1eb48f0fd578af2691cd56512"
+      "sha256": "b5d299d842830d301ebcceb7bfa8c424a4c317f68d84dd4c51bc595550782b3e"
     },
     {
       "count": 50,
       "index": 16,
       "path": "api/candidates/page-016.json",
-      "sha256": "be28ad40c71714c2e50d9c5dcb4162c851c3bd64beffa2638b7f361e27ff858c"
+      "sha256": "07d76ec5f36c905b4c4d36abec7b6de9506920dee20a4eb29ebbbebafe9cfab2"
     },
     {
       "count": 50,
       "index": 17,
       "path": "api/candidates/page-017.json",
-      "sha256": "fa6cf0276f3fff0827aaf3f11fb2b77626514ce3519fa9448b2b2dc1eba05fc7"
+      "sha256": "64e29ff7c17c86f32c7c79cf2b14ff9f32673c56cfb0b79681366cf91e1360da"
     },
     {
       "count": 50,
       "index": 18,
       "path": "api/candidates/page-018.json",
-      "sha256": "1d07301c65e86223b99570f4f8dd5892e3d8c287f70331c5bdd45fe8543fec51"
+      "sha256": "95a6a676207efe2e03cab31e16e4b654fc34c39f41a67c33cc28f613bbc5174e"
     },
     {
       "count": 50,
       "index": 19,
       "path": "api/candidates/page-019.json",
-      "sha256": "fda5e536e1f6558b1b934ce46fa6f1f62701c56faa217619d6d23a45deeaa7c3"
+      "sha256": "c6502def6be8e223ac7af926b2a73355ce60f0801cffa5bad25a9e12c000868a"
     },
     {
       "count": 50,
       "index": 20,
       "path": "api/candidates/page-020.json",
-      "sha256": "acbda91503fb428676d88b30a3979d5e5a250a537e6788e2f88ebe20a6b9ee65"
+      "sha256": "0d14bd1cfe5beadbb90302ad1eccbe159488b969e15d8de1acd5a3a8b49cee7e"
     },
     {
       "count": 50,
       "index": 21,
       "path": "api/candidates/page-021.json",
-      "sha256": "f45a61cd95fd3e6b743170ff8896411cf1fc893d339b004c347d913ad098cb57"
+      "sha256": "323034201c33bd2684aba63cb2a9b899753e489089646a9e7abce76858b9b217"
     },
     {
       "count": 50,
       "index": 22,
       "path": "api/candidates/page-022.json",
-      "sha256": "f8a205766013307fe34ab1c0e05eb7c85bcc595a369c3c0c80252558a59a746b"
+      "sha256": "8783f48389b928cc0f1635138f35cfd7215c8da2206bc912d8b2ede1cbe55e57"
     },
     {
       "count": 50,
       "index": 23,
       "path": "api/candidates/page-023.json",
-      "sha256": "666956c091f28efc5ae4b506ad535b5b0f0ceae62103646adf11dfa83d2daab1"
+      "sha256": "a24ac5866b1efcba7ec7a9830b9f1daa47226137f6abf5abfc19ea3a9887275d"
     },
     {
       "count": 50,
       "index": 24,
       "path": "api/candidates/page-024.json",
-      "sha256": "819681abf10762578a69e0a9088746d14fa3346854a8143d8a2f567264edb08a"
+      "sha256": "69fe578c004b8310a0e3ca207710b07525ab74512dda03b5a19b5595945a4660"
     },
     {
       "count": 50,
       "index": 25,
       "path": "api/candidates/page-025.json",
-      "sha256": "d27081d5bd69ea47a999b67fae896d5e45d58edcdcb9fa4e11d43608884c4a65"
+      "sha256": "f857a33ea5672a1003e9a333441275848ed58262b94d04d84430e8ab194b38c4"
     },
     {
       "count": 50,
       "index": 26,
       "path": "api/candidates/page-026.json",
-      "sha256": "b744dd367e1da519405222e1a411b8726e67a2e580ae879319b835532bb6032b"
+      "sha256": "60d9e11c67bbf7940709058e32108fe2742834fa79e0f210791d6644f63530ec"
     },
     {
       "count": 50,
       "index": 27,
       "path": "api/candidates/page-027.json",
-      "sha256": "114f93384ad5a18b2fe2f677d462b6c94462b000460469a5a0834ec80e7d1005"
+      "sha256": "1afb67f02b7e84af80943e3b84f17d77660b0b1d1fe7525876ee349e3f6dc832"
     },
     {
       "count": 50,
       "index": 28,
       "path": "api/candidates/page-028.json",
-      "sha256": "c757787eaa988a5a3affde9f157b9b1e0ee4b6829d0dbc9d5919a62d02343458"
+      "sha256": "c2316211394f2fd1a89c5f24aedca27ce4c8c89c4279e06bd1a8d6a0023147da"
     },
     {
       "count": 50,
       "index": 29,
       "path": "api/candidates/page-029.json",
-      "sha256": "3642fc42c0e997ca2ac49a63b50a46a67ab8de5ada97a33c98fca4f6f715adec"
+      "sha256": "caeb127b06e89a1223d0d18a920a4d35b61a17890f96d3b1a54b6d9502c007de"
     },
     {
       "count": 50,
       "index": 30,
       "path": "api/candidates/page-030.json",
-      "sha256": "387154ca75696aad15fe08b1442ed225f504a39355602cb6e674702532908d06"
+      "sha256": "6bbc03d1897d2fe63a34a92a48f393a5ac1d8506ce246a123c231462dbc89a83"
     },
     {
       "count": 50,
       "index": 31,
       "path": "api/candidates/page-031.json",
-      "sha256": "598f5577f4d01f2115eec49d3ec7dc2330d93513c3550d2570f09c16319346e6"
+      "sha256": "77ba3109bb41eb0d6904318d26961fbbe63e469baf48696d0ca421a85cc39dd4"
     },
     {
       "count": 50,
       "index": 32,
       "path": "api/candidates/page-032.json",
-      "sha256": "07026c7f5b846c0f5cba6493ad74458a9939fd352e2f07007e9d573f7eeee71e"
+      "sha256": "43486aa51d9469e69c5e897f6f5ed9f91aea9d3a070e4bcff6a1dafd215b20df"
     },
     {
       "count": 50,
       "index": 33,
       "path": "api/candidates/page-033.json",
-      "sha256": "57500adc297f9f69e219a8d03275d675c3674a956fd499055703c095eb89bf12"
+      "sha256": "b8bc3bee0d6c0355af4ddbde7d6d93b4af0b0d3a3654124a4aee9f364acc4ba6"
     },
     {
       "count": 50,
       "index": 34,
       "path": "api/candidates/page-034.json",
-      "sha256": "6069a5ebb2992b53e092181876fb34181982121ca18fde193521d7b34d26a58a"
+      "sha256": "d0cb5ee192355ef6432fc8dcb2a88df4be2a0415d97743639bcc36f84968a4f9"
     },
     {
       "count": 50,
       "index": 35,
       "path": "api/candidates/page-035.json",
-      "sha256": "2145838c578f42da57549260d7e64207799db0b6e498df7c22c16ca52187b4bf"
+      "sha256": "1cb34b1778a3135725b7fba5f1ac5f9632ddf82f46bef28d2db9f9ea147baeb3"
     },
     {
       "count": 50,
       "index": 36,
       "path": "api/candidates/page-036.json",
-      "sha256": "66af82b21184ad3e319469a680bed691e3714e9e9cc853c0081bff61ee5ff3c2"
+      "sha256": "e980ffe22a3afa9dad91424a4bbfc1bead721cc5d9f6aed5d0c102a3e2e9436b"
     },
     {
       "count": 50,
       "index": 37,
       "path": "api/candidates/page-037.json",
-      "sha256": "bf913a1dd31904fbaae7ebfcc6e5dc0837b0b10b95d6d75f4e21e1b0f84120c8"
+      "sha256": "e8b22c63de52dab41239fe56963a921dd4f75ea73a9ad77d11063feca2f73bb7"
     },
     {
       "count": 50,
       "index": 38,
       "path": "api/candidates/page-038.json",
-      "sha256": "c566ad2f8ca946b887d9c78211af03ea000076521fb73a69166cd2c80a3b2437"
+      "sha256": "536fb305c51021b2defd44b680d74020da0cda89c4a439112065c91451fee92f"
     },
     {
       "count": 50,
       "index": 39,
       "path": "api/candidates/page-039.json",
-      "sha256": "53adde3f0c80bef55565f72d26e3d0a3d9af3477092597672f7d00993ced1b10"
+      "sha256": "19c3cb3e9ec3bbe3c8a3526f3e86f413970390b9a8cd23552a73ad0d7db890df"
     },
     {
       "count": 50,
       "index": 40,
       "path": "api/candidates/page-040.json",
-      "sha256": "d8793c97932122234b4bdfecc0e61e6857140d9c92774b92f82170ef5921e6ac"
+      "sha256": "23774bd104ebcd15994edb8a50a2b33476221ddfbdc86b0f54ffa1ce6bba3bee"
     },
     {
       "count": 50,
       "index": 41,
       "path": "api/candidates/page-041.json",
-      "sha256": "308f01dfd20a37bca794d406de447dffffa66e0b08d47f48933d9f0e7a501416"
+      "sha256": "1c74e3bc0f8b34e01e11f8808d60f3a27c29d7b03ee0723fdb3192eaaa9f1209"
     },
     {
       "count": 50,
       "index": 42,
       "path": "api/candidates/page-042.json",
-      "sha256": "98ddac895de284d6ada7f3732432b27264d2ea2de683fca7f9b6c146696a7ed5"
+      "sha256": "f305c71b33de79fe37c3085b0b6bf387d0465bd78f67a18ea8f4a07656848d9e"
     },
     {
       "count": 50,
       "index": 43,
       "path": "api/candidates/page-043.json",
-      "sha256": "e3793baffc4b30f82367313afabe2e76f1b013560ceb76de58b36119bdc6cbd9"
+      "sha256": "0c35b0f7da59fc299ecb57b0e2f46c943d3147e30cf74b1a770bb53f6924d57c"
     },
     {
       "count": 50,
       "index": 44,
       "path": "api/candidates/page-044.json",
-      "sha256": "9206eea1e3ff1f3defada39a00142a7f34d8b8ac7c1da4d7df52cb39696d3398"
+      "sha256": "bfdcbb0dec980a4851f800faaffc3edc251aae455c857970b384f865ec682fba"
     },
     {
       "count": 50,
       "index": 45,
       "path": "api/candidates/page-045.json",
-      "sha256": "64c784d1a9b0b9c9b04cb9b9c06084bb0c86f4ac102fd377f2b9478a9b0811db"
+      "sha256": "2b64829820b193ef43098a4259c9df6026e8b891560d6f128fff5de544ce9720"
     },
     {
       "count": 50,
       "index": 46,
       "path": "api/candidates/page-046.json",
-      "sha256": "be76b5453dd93c2e656dadb17a9c706ea663e6bf5aa132a3e67f23119e18dfce"
+      "sha256": "041c1cae368775fbd0b6962b9fa71d0cb10b16af5100cc96fb2cf5ed4e799c76"
     },
     {
       "count": 50,
       "index": 47,
       "path": "api/candidates/page-047.json",
-      "sha256": "681e45788915c36e91a0dad35c60f678725d83d5fd106820551ae3a944499e48"
+      "sha256": "3c50cf4a369bff63a07dfb071d252c18bbaa61cf0e609e10b63b0a9d7b379f8e"
     },
     {
       "count": 50,
       "index": 48,
       "path": "api/candidates/page-048.json",
-      "sha256": "33a9eaa639cba8c072a4e6f1a873966b8b89980b29550d4c9c3d78a8cd69c1f8"
+      "sha256": "ad8502e1f7ce28a07090f4081685f2200a8fd6183d8821924953cd5a34d563a6"
     },
     {
       "count": 50,
       "index": 49,
       "path": "api/candidates/page-049.json",
-      "sha256": "c55c27e18112e860514177100d1b539f7ba2b28f5f6368afa3378e754cf5f618"
+      "sha256": "e3809ad338da2d3ba45cfec69f2950be8884a60db97073be43691f99610f94c5"
     },
     {
       "count": 50,
       "index": 50,
       "path": "api/candidates/page-050.json",
-      "sha256": "25d08fb988b7b0f24a2a94ad33ab91d0730cfdc526fbb69b90a7d53d4e6bf07e"
+      "sha256": "ba3fdf37b26c8a811ceaed0ff8df92b4c5202918bcdb685b9f08936597d6548d"
     },
     {
       "count": 50,
       "index": 51,
       "path": "api/candidates/page-051.json",
-      "sha256": "c860b87e47fdace0b5caaa559f5fcec50eff3a336cd475d5d3ba421232d0b00c"
+      "sha256": "66f5cc5dbd8cecb520930f5fdd3223d9b00b596e9f3b8a51b2d8386a3056e4f0"
     },
     {
       "count": 50,
       "index": 52,
       "path": "api/candidates/page-052.json",
-      "sha256": "697fcc869af7bef4db21d7633ac9aedff95bd0ee40d364f864c5ff7ebb4e6639"
+      "sha256": "011380923f67df7c6c519f343163c9895873b8665e85bfdae01297cc91a4d1e3"
     },
     {
       "count": 50,
       "index": 53,
       "path": "api/candidates/page-053.json",
-      "sha256": "1ca96115657902ca86b12cda1ef71f68fec5a72ba1f1514440c0c9aba762814a"
+      "sha256": "18d523a59b378f940f202d0d5a3e13474da4386203eca68329947033e3cc5b3d"
     },
     {
       "count": 50,
       "index": 54,
       "path": "api/candidates/page-054.json",
-      "sha256": "8ada68406b92bf642241946b692861ac2fa88a8723c11499af3b747d9a744436"
+      "sha256": "d04549d83cf36cf06a25e9a03ed506db174fd5704336f23d13e0f323225d7483"
     },
     {
       "count": 50,
       "index": 55,
       "path": "api/candidates/page-055.json",
-      "sha256": "4f7b549a96c77344c4d4b8a0d9eedb05941bb9ffcd68369bd26abd8c6a1aaa72"
+      "sha256": "5ec1ed5e0ce930f9ed3605ecbb2ad477644410263eedb68a2338404ff236fa79"
     },
     {
       "count": 50,
       "index": 56,
       "path": "api/candidates/page-056.json",
-      "sha256": "cb6911d9a4ed196c1af39b15d8304959fb686fb32c211fe49188a717d32b7368"
+      "sha256": "fc52110c5792d0cb2d2cd98e71421837686721fcc400d4d82dd78f396c8694da"
     },
     {
       "count": 50,
       "index": 57,
       "path": "api/candidates/page-057.json",
-      "sha256": "5650b7c49f98dc1c16884720c6d5a2ef4613ef2c4846b04bbc3314d53a6ed6ea"
+      "sha256": "a64bb876e206ac466fa348dd0adae206528ba85479da6e106a0bb6ba5624250c"
     },
     {
       "count": 50,
       "index": 58,
       "path": "api/candidates/page-058.json",
-      "sha256": "85c63a469216d8d2827eeaebf04873635dfb2fa8d3bacf170c260e697a7b58ce"
+      "sha256": "51fd55f358a821952859c08ccdbfef30a69e3685d0b416ab5d4d12b3b71b8588"
     },
     {
       "count": 50,
       "index": 59,
       "path": "api/candidates/page-059.json",
-      "sha256": "0a6597fc790abe5bceec65f0280e3a06738616b522c96aba889f24cda07b41bc"
+      "sha256": "bdfe73df99f2d6d9906df8097862829e991436d33bb8053afc8e140fbb3642d8"
     },
     {
       "count": 50,
       "index": 60,
       "path": "api/candidates/page-060.json",
-      "sha256": "f43d119e6f666f3d74c6115e00c35fb287a0da9762f55bfe7a31ddbd3c75b89f"
+      "sha256": "f6c2df652167acf33d73810271fd72d9fbc530558fe50671ac125b8ff31d447a"
     },
     {
       "count": 50,
       "index": 61,
       "path": "api/candidates/page-061.json",
-      "sha256": "69ab01fcda918ab94bb681c7d2dca2601fa61cb61a5164e55fdf8ef48decaf76"
+      "sha256": "1469c2eb316f68898998cea48f4a3599c8f8c0f8ebbab81dbcc8627df4488ef9"
     },
     {
       "count": 50,
       "index": 62,
       "path": "api/candidates/page-062.json",
-      "sha256": "b6d962272ba69b3f7f368f289f1d7ea2c7dffa67075573b3db0a2d42d1132762"
+      "sha256": "7a0bc3a5e3ab2ee2b987b66ad00e8887486174405f9d2915e44bbcd13e62f99f"
     },
     {
       "count": 50,
       "index": 63,
       "path": "api/candidates/page-063.json",
-      "sha256": "d6f5ffd9ba6130b2ab168516c8b9463c055ff2f8a558814392108958efe4ade3"
+      "sha256": "dc0aec7b43d16467deae9b908935cd56279ac7e3f9f8bba73989c8d24789b6ae"
     },
     {
       "count": 50,
       "index": 64,
       "path": "api/candidates/page-064.json",
-      "sha256": "cde03075f8a9a74244f9e6a54255c3be2b02fe05438b006e954d8f4ff7fda898"
+      "sha256": "3bb6a80a25a8aaf257c374b283ed1349d94f8e01fbd2a4edd3fcd141a9ba536e"
     },
     {
       "count": 50,
       "index": 65,
       "path": "api/candidates/page-065.json",
-      "sha256": "dc01dfd59fc8067e7961a8f2af4165c8d1d9941b7673345eb11e36c0e6ff8bd8"
+      "sha256": "ada00a992394c50d619ee64ddeb49a4b94ccba0a7d3f0b561d55143391df935a"
     },
     {
       "count": 50,
       "index": 66,
       "path": "api/candidates/page-066.json",
-      "sha256": "87ed02f204808c481e3924ea57c127e4a520625402cae6c6d2f599c0d11a7a33"
+      "sha256": "09018acb6c32f0f5760e98766b2fbb97e1109eb1ab494f854a982e514d63859b"
     },
     {
       "count": 50,
       "index": 67,
       "path": "api/candidates/page-067.json",
-      "sha256": "76bd4225212f28113ac85ba74a228b0eef5a2856c5dcecce080dd7a8b6a515c8"
+      "sha256": "d660c689fba2cec493d1fa36785d57aab566a8ba3897bb1e017e9b6e3c786128"
     },
     {
       "count": 50,
       "index": 68,
       "path": "api/candidates/page-068.json",
-      "sha256": "ae0264ce26fe0348246b3c610dd6fad28184843b215d4a724e08628374ec752f"
+      "sha256": "8d7cef038f5b8b11cd8f3b75c480faa903c6bbf71751a6db249c836d00c2ab46"
     },
     {
       "count": 50,
       "index": 69,
       "path": "api/candidates/page-069.json",
-      "sha256": "28ac54699082f07a2789bb07eb79abed8da0f23a561993b69dcc164a0fd2a774"
+      "sha256": "f2ed0ac4fbdc27a9076c192f8fb6471134354d612fb238353145fee34d3cb6d9"
     },
     {
       "count": 50,
       "index": 70,
       "path": "api/candidates/page-070.json",
-      "sha256": "d6e13de2aa3a4904c00076dec9ffc720b98165466cc50b9d0bb9acf1eae2eab8"
+      "sha256": "355852ff40a99d7ab3ef2a32ba8f55038b6247cfaf1c461276903fdcb485e810"
     },
     {
       "count": 50,
       "index": 71,
       "path": "api/candidates/page-071.json",
-      "sha256": "cd62a3352eb5011ee2a1c46e58c28178a012b132b329507ff8593b277b163bd0"
+      "sha256": "fc87ed1a5a99cbc81540ccbdd4389d2e65c47f3e0bfa2f359c429ea7142b165f"
     },
     {
       "count": 50,
       "index": 72,
       "path": "api/candidates/page-072.json",
-      "sha256": "388b733623e77bbc8d5660addc65de0f63d3ed02dc5d545e59ce1da1d3c140e7"
+      "sha256": "816c1e635c7135d54ae46cc01c94fd298fbdc549ba8fcab59563f3a09b1d059c"
     },
     {
       "count": 50,
       "index": 73,
       "path": "api/candidates/page-073.json",
-      "sha256": "0fc8f998e75ffae48f556a6c093576bcb290cd1a57074836a103414938863a47"
+      "sha256": "dadf8ca9f1816a02432b06f4ff2fddfd2eff1a72e1c3ef08cd8c5733258f2cc1"
     },
     {
       "count": 50,
       "index": 74,
       "path": "api/candidates/page-074.json",
-      "sha256": "35d31b381f29a8a2817dcc09d8d378fc2ebddc8e7c1f07303ebd280efdeb26cc"
+      "sha256": "d186206aef7b0f75970edcdd9c5dc820cb0176b9c4eff9feae6a11b9519d0ba6"
     },
     {
       "count": 50,
       "index": 75,
       "path": "api/candidates/page-075.json",
-      "sha256": "bc832cf5c4b3c57febfb526fd4d682d0c041bef849d67c4146d77873bba08a6c"
+      "sha256": "38758b4c11a85a1cc0ab358af3fabe0b1c4c929dfb4e4c90b12cb8b0e310b8d7"
     },
     {
       "count": 50,
       "index": 76,
       "path": "api/candidates/page-076.json",
-      "sha256": "f64decda725841e3d777fa2a57457cf287c2f1e34e4759fac69ea19ad8a829e1"
+      "sha256": "93b26ec6dfdbb417bf7c6fa81ab9f86e44adfa2fc3d693355010e055478b01e3"
     },
     {
       "count": 50,
       "index": 77,
       "path": "api/candidates/page-077.json",
-      "sha256": "eab53d601039e568a4fab0427df5eb5a22f34d1694333e43e27df25583b76d0c"
+      "sha256": "53ac211c8dd47f904d443ed86209766853e56baadb7658c6f02282e222a18a9a"
     },
     {
       "count": 50,
       "index": 78,
       "path": "api/candidates/page-078.json",
-      "sha256": "a9de28d2eda25d2e454abcbd6433a22f3cefb2b363a46cdcc6c87bcc69b8d8e5"
+      "sha256": "6eda4c89ac3a7158223a840e6929e5d7130989b7cbd5db1638e139daaf4936aa"
     },
     {
       "count": 50,
       "index": 79,
       "path": "api/candidates/page-079.json",
-      "sha256": "feef6c9c0f74c72066bc64ea196b6a6b98c603ec72d1cce64ac19bb4dbfdea4c"
+      "sha256": "e00356ce94dc90e988b92ab38eb2114579da8c8fa8a8332ec81d35063bdaaa6c"
     },
     {
       "count": 50,
       "index": 80,
       "path": "api/candidates/page-080.json",
-      "sha256": "da8ec7fb8bb48fe1148cfd14e3adc7f1c7406a5a3493174b3d96b9c0102edb8d"
+      "sha256": "cf138f9612d22548f50b8d6c0c03cf75b2d6a9bfa57eee540970c5ce91b1407a"
     },
     {
       "count": 50,
       "index": 81,
       "path": "api/candidates/page-081.json",
-      "sha256": "2d52f724e07c37a3bbe8c6fa731c87f7f00a87b6ff3b9f43f63c511c0b2ce6a8"
+      "sha256": "9bf448695fb7d5dbd6246e5a691304ecc988aca641493fd031c41153edab80e7"
     },
     {
       "count": 50,
       "index": 82,
       "path": "api/candidates/page-082.json",
-      "sha256": "532f71767333b08710b711f1ea645112a94077732d0d62ec9c11a44a5d3c3074"
+      "sha256": "97a29ca14f5253e5e97012e1cd34ed9b59915622cfbb7ff3a793b630a304bfe4"
     },
     {
       "count": 50,
       "index": 83,
       "path": "api/candidates/page-083.json",
-      "sha256": "2b0cc1eddf6948654270e886c43599ea843eafe73b136b5e44319d2dad707987"
+      "sha256": "a91d071bbf574caf7fd3deda693739a0db0f003dee81b5b1574a659e4c5b22e6"
     },
     {
       "count": 50,
       "index": 84,
       "path": "api/candidates/page-084.json",
-      "sha256": "8a0c20c58747a5f83363b58469bcaa40ed81ac726704657ea74b450ae0354e6e"
+      "sha256": "6ebc9ebc14a14ff5c42e81890fa07b6790059b339582845183e4c60511f73509"
     },
     {
       "count": 50,
       "index": 85,
       "path": "api/candidates/page-085.json",
-      "sha256": "02235e1a0e33765aa72125eaac564835466e61783f9f95964cca5af97a3e1795"
+      "sha256": "f69709f3f38c97e6c4c249838e191411b4d7e70e6cf85600e763161ee0eaec73"
     },
     {
       "count": 50,
       "index": 86,
       "path": "api/candidates/page-086.json",
-      "sha256": "517d0bd10ec57f057682a8e75f88c159f64413d0acec384ce524cc9da0c75e98"
+      "sha256": "c337c84baa957a11acf6c3034bb4ab5b0765b9260dab661a2b429e8b11519833"
     },
     {
       "count": 50,
       "index": 87,
       "path": "api/candidates/page-087.json",
-      "sha256": "8ab0263da8cda0e2952c45310cd155e49cde73c55fe5230b1bf79e048d400747"
+      "sha256": "51429421479c39cb186ed1361da9d670f8b46f38c8d741ccc584dc0959e6419f"
     },
     {
       "count": 50,
       "index": 88,
       "path": "api/candidates/page-088.json",
-      "sha256": "75cdce14132965b92b5b85bdc4f4db56451d2ff08c8189c48855b6ee9d2242e4"
+      "sha256": "a6a182d689e0f7bfda87ada210b479a050e19e644b061da7988ae722626eee36"
     },
     {
       "count": 50,
       "index": 89,
       "path": "api/candidates/page-089.json",
-      "sha256": "6622474fe807ee2ab74b09fce315c9f85413ebf5d8d8f19afcbc4f8f7a93ee22"
+      "sha256": "27e906ecce65499f6ddee929d1c51fe10f321720f966d193e26446af1ed166cf"
     },
     {
       "count": 50,
       "index": 90,
       "path": "api/candidates/page-090.json",
-      "sha256": "99b2434a4010d0dd588cf08486e924db6829319167b418d3a936dd1d4a34569a"
+      "sha256": "4f4d0f3071c4b44eb4d645b907f8de946663da728013798a3b87dda25a7b8954"
     },
     {
       "count": 50,
       "index": 91,
       "path": "api/candidates/page-091.json",
-      "sha256": "afaadfd489971631e66e2d528fd1fa9d4c00a8eb84113890540dbdfba28d755b"
+      "sha256": "69b3fa7d891d84c7d3085639b5ee1834926c93ece2ebff8b168bd95966075f45"
     },
     {
       "count": 50,
       "index": 92,
       "path": "api/candidates/page-092.json",
-      "sha256": "73e30b13515bb9fe1e8fd7fabbd9682c2e80ae42008746cd798a4c0a12d89666"
+      "sha256": "e419d96932c1e71c49c786dc210bd6cd3171a08da597cff3f52acc964e939c84"
     },
     {
       "count": 50,
       "index": 93,
       "path": "api/candidates/page-093.json",
-      "sha256": "6368fe8edf00adb877680a03644267c4d892eccc0784f123163a2da26f1a5df7"
+      "sha256": "d61fe055aa3c0af963bdaf5b0a601f01a185f9058c7e4524e6aacc32d9dba110"
     },
     {
       "count": 50,
       "index": 94,
       "path": "api/candidates/page-094.json",
-      "sha256": "ba51ffe1cc10c5197f94ca9a9aaf396ec84b42a6b34a72f26a9cf8f2e6afdc8e"
+      "sha256": "6d4effe9fd20a74beb490411df5f5bccc86c902eac2bbe1c11959d4a1e8e0ffd"
     },
     {
       "count": 50,
       "index": 95,
       "path": "api/candidates/page-095.json",
-      "sha256": "f8482e8d91d3a66617dd37083c8705e689fb582aae4d258e41f59afb5a7b94df"
+      "sha256": "8c8bab557b6223636fe4b76a5db5e6263846ccb1635d3a0a6a3bbc348119cd2c"
     },
     {
       "count": 50,
       "index": 96,
       "path": "api/candidates/page-096.json",
-      "sha256": "84151fe7325347dd55a36e500d6d127a7b7fe7b48afe3b14dd1a879944af2640"
+      "sha256": "7e1d910c3f0a95e9e2aa96691269b4ed6ee4b77ebd2dff9b00c580edef53d2a2"
     },
     {
       "count": 50,
       "index": 97,
       "path": "api/candidates/page-097.json",
-      "sha256": "441b1ba89e101d25291d66f5218d70bbae44a3e624ba2506c281de106352cbeb"
+      "sha256": "bce549527561394eadc0ba5081739b7015b61ded6f91cd801bb422ba225f9676"
     },
     {
       "count": 50,
       "index": 98,
       "path": "api/candidates/page-098.json",
-      "sha256": "a189530b0dd8c9acd5e908d62ce6c6a4e56d6e98bd8a1fb2e94b0cbfef63e295"
+      "sha256": "40d8dabf4f0d80e92e9afed3428700053e133050c7e5b7bbdd5c50414467ecc4"
     },
     {
       "count": 50,
       "index": 99,
       "path": "api/candidates/page-099.json",
-      "sha256": "118182349b6e9dc5fd66027c9965b098a03ff4787a2e09b8dc118f6183997dd5"
+      "sha256": "0b3d10bdc313b4fabe1b11917f81cdda2335fa9b46d05725353a242bd774d083"
     },
     {
-      "count": 16,
+      "count": 7,
       "index": 100,
       "path": "api/candidates/page-100.json",
-      "sha256": "0d56f551733a6da7f2d940cf29400fdd67f5d24576cdd003e00ad667d3ecf5a9"
+      "sha256": "beacba16c24385d25f022062be9635df1f123e4a3a96c2da57309b5301264400"
     }
   ],
   "paths": {
@@ -875,40 +875,40 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:01d5143dca16432bcfffd32f966bedad16c88e1c7915a46d2e490aec5bf2615c",
+  "snapshot_id": "sha256:7d7681e30911cc188fda552d9c0bcefe8ed18b8ed2a3b8bd5b55eaf8a3859b6a",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "stats": {
-    "active": 1711,
+    "active": 1708,
     "budget_limited": false,
-    "carried": 4856,
-    "categories_completed": 1,
+    "carried": 4957,
+    "categories_completed": 0,
     "categories_planned": 1,
-    "categories_scanned": 1,
+    "categories_scanned": 0,
     "categories_total": 1,
     "detail_failures": 0,
     "details_fetched": 0,
     "eligible": 0,
-    "excluded": 3269,
+    "excluded": 3261,
     "omitted_by_capacity": 0,
     "omitted_by_export_validity": 0,
     "omitted_by_source_status": 0,
     "omitted_records": 0,
-    "outside_active_window": 3255,
+    "outside_active_window": 3249,
     "pages_omitted": 0,
-    "personal_interest_excluded": 373,
-    "received": 110,
+    "personal_interest_excluded": 376,
+    "received": 0,
     "refreshed": 0,
-    "retained": 4966,
-    "review": 1697,
+    "retained": 4957,
+    "review": 1696,
     "searches_failed": 0,
-    "searches_succeeded": 4,
-    "shortlisted": 1574,
-    "stale": 4856
+    "searches_succeeded": 0,
+    "shortlisted": 1573,
+    "stale": 4847
   },
-  "status_message": "Gemeldete Seitenpositionen der Quellenlisten durchlaufen; veränderliche Aggregator-Daten, kein vollständiger atomarer Bestand und keine eigene eBay-Prüfung.",
+  "status_message": "Abrufpause: In diesem Lauf wurde keine neue Quellenabfrage gestartet. Der gespeicherte Bestand und seine ursprünglichen Quellenzeitpunkte bleiben erhalten.",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
 }

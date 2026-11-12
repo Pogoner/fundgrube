@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T07:23:51Z",
+    "evaluated_at": "2026-11-12T07:37:26Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T07:23:51Z",
+  "generated_at": "2026-11-12T07:37:26Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,7 @@
     "content_updated_at": "2026-11-12T02:56:34Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Passendes ZWG-/FMT-Optiksystem"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +45,13 @@
     "ends_at": "2026-11-15T19:38:30Z",
     "id": "v1|227608157499|0",
     "image": "https://i.ebayimg.com/images/g/BqAAAeSw38Nq83I7/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 5,
     "is_auction": true,
     "last_seen_at": "2026-11-12T02:56:34Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Verfahrweg, Spindelspiel und Gewindeabmessungen prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,12 +61,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "component",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "TH-1.1-Translationselement mit Gewindespindel ist eine präzise Verstellkomponente für optische Aufbauten."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -76,14 +76,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Titelbasierte Einordnung ohne Verkäufer-Vollbeschreibung; tatsächlicher Lieferumfang und Zustand ungeprüft.",
+      "Aggregator-Daten ohne unabhängige Geräte-, Funktions- oder Echtheitsprüfung.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 27,
+    "score": 5,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-12T07:33:35Z",
+    "semantic_interest": 27,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.2,
     "source_observed_at": "2026-11-12T02:56:34Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -94,11 +98,11 @@
     "total_eur": null,
     "total_known_eur": 6.2,
     "url": "https://www.ebay.de/itm/227608157499?hash=item34fe80dd3b%3Ag%3ABqAAAeSw38Nq83I7&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Nutzung verlangt kompatible Bank, Messschraube beziehungsweise Montageschnittstelle.",
+    "useability_score": 19,
     "valid_until": "2026-11-15T19:38:30Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "TH-1.1-Translationselement mit Gewindespindel ist eine präzise Verstellkomponente für optische Aufbauten.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -155,10 +159,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:01d5143dca16432bcfffd32f966bedad16c88e1c7915a46d2e490aec5bf2615c",
+  "snapshot_id": "sha256:7d7681e30911cc188fda552d9c0bcefe8ed18b8ed2a3b8bd5b55eaf8a3859b6a",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
