@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T02:49:55Z",
+    "evaluated_at": "2026-11-12T03:18:32Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T02:49:55Z",
+  "generated_at": "2026-11-12T03:18:32Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,7 @@
     "content_updated_at": "2026-11-10T07:54:22Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Passende Kleidergröße"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +45,13 @@
     "ends_at": "2026-11-15T18:10:01Z",
     "id": "v1|198781467361|0",
     "image": "https://i.ebayimg.com/images/g/5zwAAeSwMixq8I4U/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 22,
     "is_auction": true,
     "last_seen_at": "2026-11-10T07:54:22Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Maße, Reißverschlüsse, Zustand und eventuelle Schutzkennzeichnungen prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,12 +61,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "accessory",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Der Titel bezeichnet den bewerteten Liefergegenstand, nicht ein größeres Gerät."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -76,14 +76,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Verschleiß, Flecken und Schutzwirkung unbekannt.",
+      "Keine Verkäuferbeschreibung verfügbar; tatsächlicher Lieferumfang und Funktion nicht unabhängig geprüft.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 24,
+    "score": 22,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-12T03:01:23.512000Z",
+    "semantic_interest": 24,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 6.99,
     "source_observed_at": "2026-11-10T07:54:22Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -94,11 +98,11 @@
     "total_eur": null,
     "total_known_eur": 7.99,
     "url": "https://www.ebay.de/itm/198781467361?hash=item2e484c7ae1%3Ag%3A5zwAAeSwMixq8I4U&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Als Kleidungsstück mit passender Größe ohne Spezialgeräte verwendbar.",
+    "useability_score": 93,
     "valid_until": "2026-11-15T18:10:01Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_5",
+    "value_reason": "Gebrauchte Engelbert-Strauss-Arbeitsjacke Größe XL als einzelnes Kleidungsstück, keine Schutzausrüstungsgarantie.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -155,10 +159,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:8104fbd12a655351fefb27bb774fcd78105f45569d3b38d52b24d19204e60f00",
+  "snapshot_id": "sha256:126319eab146589f4e32b05dc9b8881e8ff136286c13ade138d30d613a97dd73",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
