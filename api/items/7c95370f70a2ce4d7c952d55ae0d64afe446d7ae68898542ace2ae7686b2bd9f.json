@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T02:18:01Z",
+    "evaluated_at": "2026-11-12T02:47:53Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,20 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T02:18:01Z",
+  "generated_at": "2026-11-12T02:47:53Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": false,
     "city": "",
     "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-    "content_updated_at": "2026-11-12T01:53:01Z",
+    "content_updated_at": "2026-11-12T02:22:59Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Passende Durchmesser und Länge",
+      "Normgerechter Einbau"
     ],
     "description": "",
     "description_status": "missing",
@@ -46,11 +47,11 @@
     "image": "https://i.ebayimg.com/images/g/dH8AAeSwlPlo2Pzr/s-l400.jpg",
     "interest_score": 18,
     "is_auction": true,
-    "last_seen_at": "2026-11-12T01:53:01Z",
+    "last_seen_at": "2026-11-12T02:22:59Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Menge, Durchmesser, Zulassung und Beschädigungen prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -60,12 +61,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "consumable",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Titel benennt Rockwool-Conlit-Dämmung mit Maßangaben."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -73,15 +74,19 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Kein Verkäufer-Volltext; Art, Vollständigkeit und Zustand nicht unabhängig geprüft.",
+      "Brandschutzzulassung und einwandfreier Zustand sind nicht belegt.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
+    "scalp_score": 30,
     "score": 18,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-12T02:30:45.658000Z",
+    "semantic_interest": 30,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 7.69,
-    "source_observed_at": "2026-11-12T01:53:01Z",
+    "source_observed_at": "2026-11-12T02:22:59Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
@@ -90,11 +95,11 @@
     "total_eur": null,
     "total_known_eur": 8.69,
     "url": "https://www.ebay.de/itm/267839281372?hash=item3e5c7718dc%3Ag%3AdH8AAeSwlPlo2Pzr&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Erfordert passende Rohr-/Bauteilabmessungen und fachgerechten Brandschutzeinbau.",
+    "useability_score": 59,
     "valid_until": "2026-11-15T05:02:49Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "Conlit-Brandschutzdämmmaterial besitzt bei passender Dimension einen fachlichen Nutzwert, aber unklare Menge.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -151,7 +156,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:c8608ccce9232cc35e8240bbc75bec366f54dc730b1cdffb35c0fb1e5a56b731",
+  "snapshot_id": "sha256:f0ee09abc89f446af5d53e46bf658c44a2b8ca72dacb67ad5199409c979fef99",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
