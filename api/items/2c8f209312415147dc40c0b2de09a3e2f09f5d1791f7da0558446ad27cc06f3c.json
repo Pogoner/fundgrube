@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T19:53:10Z",
+    "evaluated_at": "2026-11-12T20:22:41Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T19:53:10Z",
+  "generated_at": "2026-11-12T20:22:41Z",
   "item": {
     "assessment_basis": "heuristic",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Neu",
-    "content_updated_at": "2026-11-12T03:01:53Z",
+    "content_updated_at": "2026-11-12T20:04:12Z",
     "country": "",
     "dependencies": [
       "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -36,7 +36,6 @@
     "eligibility": "excluded",
     "eligibility_reasons": [
       "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -47,7 +46,7 @@
     "image": "https://i.ebayimg.com/images/g/6gEAAeSwFv1qz4dr/s-l400.jpg",
     "interest_score": 18,
     "is_auction": true,
-    "last_seen_at": "2026-11-12T03:01:53Z",
+    "last_seen_at": "2026-11-12T20:04:12Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -71,12 +70,9 @@
     "reserve_status": "unknown",
     "risks": [
       "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 35,
@@ -85,10 +81,10 @@
     "semantic_assessed": true,
     "semantic_interest": 35,
     "shipping_eur": 1.3,
-    "source_observed_at": "2026-11-12T03:01:53Z",
+    "source_observed_at": "2026-11-12T20:04:12Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": true,
+    "stale": false,
     "time_window_eligible": false,
     "title": "Conrad 9 LED ROT rund 3 mm, mit Widerstand 186937",
     "total_eur": null,
@@ -155,10 +151,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:727d750f63fd4298eecb4e77af6bd291c059d16e824f603927eb5e3caf7b3ba9",
+  "snapshot_id": "sha256:df0aaed34caf117b98e4e90b3c2e3b56b4951c885d05a82a8d26cfc786227fb7",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"

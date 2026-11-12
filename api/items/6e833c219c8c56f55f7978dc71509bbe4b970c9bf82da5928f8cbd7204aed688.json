@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-12T19:53:10Z",
+    "evaluated_at": "2026-11-12T20:22:41Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-12T19:53:10Z",
+  "generated_at": "2026-11-12T20:22:41Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-12T18:34:36Z",
+    "content_updated_at": "2026-11-12T19:59:05Z",
     "country": "",
     "dependencies": [
       "Passendes Betätigungswerkzeug"
@@ -33,12 +33,10 @@
     "detail_path": "api/items/6e833c219c8c56f55f7978dc71509bbe4b970c9bf82da5928f8cbd7204aed688.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-15T19:57:02Z",
@@ -46,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/v5QAAeSwH5Bqy0Wf/s-l400.jpg",
     "interest_score": 57,
     "is_auction": true,
-    "last_seen_at": "2026-11-12T18:34:36Z",
+    "last_seen_at": "2026-11-12T19:59:05Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -69,7 +67,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -84,11 +81,11 @@
     "semantic_interest": 63,
     "semantic_review_mode": "interactive",
     "shipping_eur": 10.49,
-    "source_observed_at": "2026-11-12T18:34:36Z",
+    "source_observed_at": "2026-11-12T19:59:05Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Fällkeil Leeb Prototypen Spindelkeil SK20 Gewindespindel Kugelgewindetrieb",
     "total_eur": null,
     "total_known_eur": 11.49,
@@ -154,10 +151,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:727d750f63fd4298eecb4e77af6bd291c059d16e824f603927eb5e3caf7b3ba9",
+  "snapshot_id": "sha256:df0aaed34caf117b98e4e90b3c2e3b56b4951c885d05a82a8d26cfc786227fb7",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
