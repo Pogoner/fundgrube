@@ -2515,6 +2515,37 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passende Dentalsteuerung",
+          "Spezielle Versorgung"
+        ],
+        "next_checks": [
+          "Motoranschluss, Fehlerbeschreibung und mechanischen Zustand prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Bien-Air CA 7141 Dentalmikromotor als defekt"
+        ],
+        "risks": [
+          "Defekt deklariert, aber keine einzelne fehlende Baugruppe nachgewiesen.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 24,
+        "useability_reason": "Betrieb verlangt kompatible zahnmedizinische Steuer- und Versorgungsgeräte.",
+        "useability_score": 24,
+        "value_band": "around_50",
+        "value_reason": "Dentalmotor kann als Reparaturträger oder Ersatzteil dienlich sein, konkrete Fehler nicht bekannt."
+      },
+      "content_fingerprint": "sha256:f4977d7bdc11ef148cf5ce464c7ba561bd75052448cc4b2d6a8ca35359c0aab1",
+      "ends_at": "2026-11-16T10:47:38Z",
+      "id": "v1|117512247110|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
@@ -2629,6 +2660,99 @@
       "reviewed_at": "2026-11-11T02:24:06.478000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Lagerstelle und Montagegerät"
+        ],
+        "next_checks": [
+          "Originalteilenummer, Maße und Lagerungszustand prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: FAG 23944-S-MB Pendelrollenlager originalverpackt"
+        ],
+        "risks": [
+          "Originalverpackung allein sichert Lagerzustand und richtige Ausführung nicht.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 59,
+        "useability_reason": "Nur in exakt passend dimensionierter Maschine einsetzbar.",
+        "useability_score": 30,
+        "value_band": "around_50",
+        "value_reason": "Großes spezialisiertes Industrielager kann professionellen Ersatzteilwert haben."
+      },
+      "content_fingerprint": "sha256:eb5ac810ac2291c6fd64495743238f847d048e7302f4bfe9c61a20b07aa10529",
+      "ends_at": "2026-11-17T17:45:25Z",
+      "id": "v1|117514485467|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Netzstrom",
+          "Druckluftschlauch und Verbraucher"
+        ],
+        "next_checks": [
+          "Typenschild, Förderleistung, Druckabschaltung und Lieferumfang prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: WELDINGER FK120 Turbo Flüsterkompressor 1500 W"
+        ],
+        "risks": [
+          "Behältergröße, Fördermenge und Neuheit nicht gesichert.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 58,
+        "useability_reason": "Mit Netzstrom und Schlauch/geeigneten Druckluftgeräten eigenständig druckerzeugend.",
+        "useability_score": 92,
+        "value_band": "around_50",
+        "value_reason": "Benannter eigenständiger Druckluftkompressor für Werkstatt- und Hobbyeinsatz."
+      },
+      "content_fingerprint": "sha256:754f1dd3d5b019371ef90023b14185989bc453801c51019cff4253fc1acbd59c",
+      "ends_at": "2026-11-18T18:55:03Z",
+      "id": "v1|117516378873|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Elektrische Hochvoltinstallation",
+          "Geeignete Verbraucher",
+          "Batterieprüfung"
+        ],
+        "next_checks": [
+          "Typenschilder, Vollständigkeit, Batteriealter, elektrische Prüfung und Versand/Abholung klären."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: USV-Wechselrichter 7 kW mit fünf 240-V-Batteriesätzen"
+        ],
+        "risks": [
+          "240-V-Batteriesätze sind sicherheitskritisch; 35-kW-Angabe und Speicherzustand unbestätigt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 72,
+        "useability_reason": "Ein USV-System ist prinzipiell eigenständig, benötigt aber fachgerechte Hochvolt-Einbindung und passende Last.",
+        "useability_score": 67,
+        "value_band": "around_500",
+        "value_reason": "Benannte leistungsfähige USV samt Batteriebestand bietet erhebliches industrielles Potenzial, sofern vollständig und brauchbar."
+      },
+      "content_fingerprint": "sha256:ee36b770d8342c9b150c1b0db78dec0fff63d41fadeda2581ee713fadc136c55",
+      "ends_at": "2026-11-15T08:07:26Z",
+      "id": "v1|117517229239|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -3792,33 +3916,6 @@
       "ends_at": "2026-11-15T13:28:27Z",
       "id": "v1|128176882209|0",
       "reviewed_at": "2026-11-08T20:29:53.173691Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [],
-        "next_checks": [
-          "Lieferumfang und Zustand anhand des Originalangebots prüfen."
-        ],
-        "product_kind": "tool",
-        "reasons": [
-          "Neue einfache 300-mm-Zwinge."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 9,
-        "useability_reason": "Schnellspannzwinge ist unmittelbar von Hand einsetzbar.",
-        "useability_score": 99,
-        "value_band": "around_5",
-        "value_reason": "Neue einfache 300-mm-Zwinge."
-      },
-      "content_fingerprint": "sha256:0224d69b8844481874ee9501431d56c26627dd53b85a4c8cf8b45f13f836da87",
-      "ends_at": "2026-11-12T13:41:12Z",
-      "id": "v1|128176902963|0",
-      "reviewed_at": "2026-11-08T20:21:54Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -6099,6 +6196,36 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passende Verneblereinheit und hygienische Zubehörteile"
+        ],
+        "next_checks": [
+          "Zubehör, Desinfizierbarkeit, Laufprobe und Modell prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: DeVilbiss AirForce One Vernebler/Inhalator"
+        ],
+        "risks": [
+          "Neuwertigkeit und hygienische Eignung nicht bestätigt, medizinisches Gerät.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 35,
+        "useability_reason": "Mit üblichem Strom und passenden Verbrauchsteilen grundsätzlich eigenständig.",
+        "useability_score": 91,
+        "value_band": "around_50",
+        "value_reason": "Benanntes Inhalationsgerät ist als einzelnes Gerät brauchbar, ohne außergewöhnlichen wirtschaftlichen Wert."
+      },
+      "content_fingerprint": "sha256:9e2ac630cf45c88a64225dbc0d486bdaf07629fb5baa734725014fc5f55f745d",
+      "ends_at": "2026-11-17T17:38:10Z",
+      "id": "v1|128187255818|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Kompatibler FM4428-Kartenleser und Software"
@@ -6190,6 +6317,37 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Passender MIG-Brenner",
+          "Schweißgerät"
+        ],
+        "next_checks": [
+          "Gewinde, Drahtdurchmesser und Liefermenge klären."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: MIG-Schweißspitzen und Düse für 0,8-mm-Draht"
+        ],
+        "risks": [
+          "M5-Gewinde und tatsächliche Teilezahl prüfen.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 8,
+        "useability_reason": "Passt nur zu kompatiblem Brenner und 0,8-mm-Draht.",
+        "useability_score": 48,
+        "value_band": "around_5",
+        "value_reason": "Kleiner Satz Schweißverschleißteile mit engem Anwendungsbereich."
+      },
+      "content_fingerprint": "sha256:1c17d77fc676d93f665f5589e4e3dc7ac60f392efcbf9cc75755217765cd7425",
+      "ends_at": "2026-11-18T09:45:50Z",
+      "id": "v1|128188388204|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Gegebenenfalls Batteriewechsel"
         ],
         "next_checks": [
@@ -6215,6 +6373,38 @@
       "reviewed_at": "2026-11-12T13:34:10Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:ec81c65d2737bdb59d7d46817e8b4f3f3b1a9c93327f92b8cf13bc67f282bd6b"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Netzstrom",
+          "Schutzkleidung",
+          "Verbrauchsdraht"
+        ],
+        "next_checks": [
+          "Netzleistung, Stromregelbereich, mitgelieferten Draht und Gerätetyp prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: WELDINGER ME 130 mini FLUX ECO mit Draht und Zubehör"
+        ],
+        "risks": [
+          "Neu-Angabe, Zubehörumfang und Schweißfunktion ungeprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 57,
+        "useability_reason": "Ein eigenständiges Schweißgerät für Netzversorgung, Schutzkleidung und Werkstückvorbereitung.",
+        "useability_score": 92,
+        "value_band": "around_50",
+        "value_reason": "Benanntes kompaktes Fülldraht-Schweißgerät mit Zusatzmaterial ergibt brauchbares Werkstattpaket."
+      },
+      "content_fingerprint": "sha256:86fca8c67025539e94f156902a8cb70142a0e36c6c721178c4b68f5dbdd151de",
+      "ends_at": "2026-11-18T18:35:06Z",
+      "id": "v1|128189195645|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -9193,6 +9383,98 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "high",
+        "dependencies": [
+          "Passender Sammler-/Verpackungszweck"
+        ],
+        "next_checks": [
+          "Nur Schachtelinhalt und Zustand prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Leere Apple-iPhone-6-Originalverpackung"
+        ],
+        "risks": [
+          "Titel schließt ein funktionsfähiges iPhone ausdrücklich aus.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 5,
+        "useability_reason": "Nur als passende Aufbewahrungs- oder Sammlerverpackung einsetzbar.",
+        "useability_score": 24,
+        "value_band": "around_5",
+        "value_reason": "Ausdrücklich nur Originalverpackung, kein Smartphone."
+      },
+      "content_fingerprint": "sha256:c03ee1de6e9d0181c4bb46a144ad595ff143b57415f2d0a3bdcd602a987cf54a",
+      "ends_at": "2026-11-19T17:36:52Z",
+      "id": "v1|137916474949|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Schaltung",
+          "SMD-Löttechnik"
+        ],
+        "next_checks": [
+          "Bauteilmarkierung und Stückzahl prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Fünf SOT-89-Transistoren 2SC3357"
+        ],
+        "risks": [
+          "Lager- und ESD-Zustand unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 7,
+        "useability_reason": "Benötigt passende Leiterplatte oder Elektronikprojekt.",
+        "useability_score": 31,
+        "value_band": "around_5",
+        "value_reason": "Kleiner Satz elektronischer Standardbauteile mit begrenztem Wert."
+      },
+      "content_fingerprint": "sha256:cadd9c919298ac08de73a7fec465571e71e44954d245cfe59dea1218f26f38d2",
+      "ends_at": "2026-11-17T17:02:40Z",
+      "id": "v1|137919166054|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Gehäuse und Netzschutz",
+          "Passender Stromkreis"
+        ],
+        "next_checks": [
+          "Wicklungsdaten, Leitungen und Isolationsprüfung klären."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Sedlbauer 300-VA-Ringkerntransformator 2×115 auf 2×18 V"
+        ],
+        "risks": [
+          "Netzspannung, Wicklungen und Isolierung nicht geprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 40,
+        "useability_reason": "Nur mit geschützter Verdrahtung, Gehäuse und Zielgerät sinnvoll nutzbar.",
+        "useability_score": 44,
+        "value_band": "around_50",
+        "value_reason": "Ein spezifizierter leistungsfähiger Ringkerntrafo bietet Netzteilbau-Potenzial."
+      },
+      "content_fingerprint": "sha256:2fa71c6d42aff536657338b7926efcc7772c3fa4987710f71d1d6c6e2035f83d",
+      "ends_at": "2026-11-17T17:13:28Z",
+      "id": "v1|137919195546|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Trennung und sachgerechte Entsorgung/Verwertung"
@@ -11846,6 +12128,128 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Sichere Baustellenaufstellung",
+          "Fachgerechte Lastbemessung"
+        ],
+        "next_checks": [
+          "Typen, Verriegelungen und Belastbarkeit nachprüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Vier Doka-Stützen und Dachdecker-Rollböcke"
+        ],
+        "risks": [
+          "Tragfähigkeit, Vollständigkeit und normgerechter Zustand unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 50,
+        "useability_reason": "Für Bau- und Montagearbeiten mit geeigneter sicherer Aufstellung einsetzbar.",
+        "useability_score": 81,
+        "value_band": "around_50",
+        "value_reason": "Vier gebrauchte Baustützen/Rollböcke bieten handwerklich nützliche Substanz."
+      },
+      "content_fingerprint": "sha256:c3df251f7883a7142381915d665974c3b43807ed9d3a9375a465c1ce0725c83d",
+      "ends_at": "2026-11-17T17:02:01Z",
+      "id": "v1|147674302985|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Platz und Transportfahrzeug"
+        ],
+        "next_checks": [
+          "Rahmen, Maße, Traglast und Abholbedingungen prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Zwei Paletten mit Gitteraufsatzrahmen ohne Inhalt"
+        ],
+        "risks": [
+          "Titel schließt sonstigen Paletteninhalt ausdrücklich aus.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 42,
+        "useability_reason": "Als Lagerhilfen eigenständig nutzbar, sofern Rahmen tragfähig.",
+        "useability_score": 91,
+        "value_band": "around_50",
+        "value_reason": "Zwei Transport- und Lagerbehälter aus Paletten mit Gitteraufsatz sind nützlich, kein Wareninhalt."
+      },
+      "content_fingerprint": "sha256:a67947e5dd2e347898dc6561a50952b9b81087f9b48d8eeb68e4800cc33c74ff",
+      "ends_at": "2026-11-17T17:04:01Z",
+      "id": "v1|147674304191|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Sichere Aufstellfläche"
+        ],
+        "next_checks": [
+          "Holme, Sprossen, Sicherungen und Transportmaße prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Zweiteilige Alu-Ausziehleiter ca. 450 cm"
+        ],
+        "risks": [
+          "Leiterzustand und Leiterprüfplakette unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 49,
+        "useability_reason": "Nach Sicherheitsprüfung als eigenständiges Steiggerät verwendbar.",
+        "useability_score": 92,
+        "value_band": "around_50",
+        "value_reason": "Gebrauchte längere Aluleiter mit praktischem Werkstatt- und Bauwert."
+      },
+      "content_fingerprint": "sha256:676d723225a545367b63ca3051700f7ca659e4e598ebd0c38e221a7a0b946cbc",
+      "ends_at": "2026-11-17T17:06:01Z",
+      "id": "v1|147674307203|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Geeignete Aufhängung am Bauwerk",
+          "Absperrung"
+        ],
+        "next_checks": [
+          "Elementgrößen, Verbinder, Aufhängungen und Abholung prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Zehn Elemente Schuttrutsche"
+        ],
+        "risks": [
+          "Anzahl Verbindungsmittel und Materialschäden unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 58,
+        "useability_reason": "Als Schuttrutsche nur nach geeigneter Montage an Bauwerk oder Gerüst nutzbar.",
+        "useability_score": 79,
+        "value_band": "around_50",
+        "value_reason": "Zehn Rutschenelemente sind ein größerer Baustellenposten."
+      },
+      "content_fingerprint": "sha256:15d68f9013a583e43b1d49b5d4f7d9ed1e361a1eec780838827e355818da80ef",
+      "ends_at": "2026-11-17T17:08:01Z",
+      "id": "v1|147674308023|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Lightning-fähiges kompatibles iPhone",
@@ -11873,6 +12277,37 @@
       "reviewed_at": "2026-11-11T02:24:06.478000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Netzanschluss",
+          "Bohrer und Spannmittel"
+        ],
+        "next_checks": [
+          "Fotos, Spindelspiel, Bohrfutter, Motorlauf und Transport klären."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Flott 8STW Tischbohrmaschine 230 V"
+        ],
+        "risks": [
+          "Rundlauf, Bohrfutter, Vorschub und Vollständigkeit nicht belegt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 65,
+        "useability_reason": "Mit gewöhnlichem 230-V-Anschluss und passenden Bohrern eigenständig verwendbar.",
+        "useability_score": 92,
+        "value_band": "around_500",
+        "value_reason": "Marken-Tischbohrmaschine kann als vollständige Werkstattmaschine substanzielle Nutzung bieten."
+      },
+      "content_fingerprint": "sha256:fbb76b2a8c1310e9124c0c12a647cd1bd712f7e23ee62a4e3fe2386ab176669b",
+      "ends_at": "2026-11-18T19:28:00Z",
+      "id": "v1|147674751470|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -11933,6 +12368,36 @@
       "reviewed_at": "2026-11-12T01:49:20Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:77a2817fe5442f700afcd5d00551280953eb7de6b7408bdaea6867db76f08969"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Schaltung und Löttechnik"
+        ],
+        "next_checks": [
+          "Typaufdruck, Stückzahl und Funktion prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Sieben RFT 1N4007-Dioden"
+        ],
+        "risks": [
+          "Elektrische Kennwerte nicht verifiziert.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 6,
+        "useability_reason": "Braucht passende Schaltung.",
+        "useability_score": 42,
+        "value_band": "around_5",
+        "value_reason": "Sehr kleine Menge gewöhnlicher Gleichrichterbauteile."
+      },
+      "content_fingerprint": "sha256:6bfae0052c38ea33acdb5cedb1edaca162cef16c246102a6eadf4fe0b09cd63b",
+      "ends_at": "2026-11-22T12:57:36Z",
+      "id": "v1|147677537965|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -18837,35 +19302,6 @@
     },
     {
       "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Passender Vahle-Stromabnehmer"
-        ],
-        "next_checks": [
-          "Teilenummer und Federmechanik prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [
-          "Semantische Einordnung des vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert."
-        ],
-        "scalp_score": 17,
-        "useability_reason": "Benötigt Passender Vahle-Stromabnehmer.",
-        "useability_score": 6,
-        "value_band": "around_50",
-        "value_reason": "Vahle-Federmitnahme ist enges Stromabnehmer-Ersatzteil."
-      },
-      "content_fingerprint": "sha256:992c5d4f743744b81048bdab5a1f8ec3c4133a832bc8ee41c365041d1e06107e",
-      "ends_at": "2026-11-12T13:39:58Z",
-      "id": "v1|206682345972|0",
-      "reviewed_at": "2026-11-08T20:19:14.740423Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Bing 8/30 S oder nachweislich kompatibel"
@@ -20117,6 +20553,195 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Transportfahrzeug für Abholung"
+        ],
+        "next_checks": [
+          "Stückzahl, Belastbarkeit, Holzschäden und Standort prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 15 gebrauchte Europaletten"
+        ],
+        "risks": [
+          "Palettenqualität und EPAL-Kennzeichnung nicht bestätigt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 47,
+        "useability_reason": "Paletten können selbstständig für Lagerung/Transport genutzt werden.",
+        "useability_score": 93,
+        "value_band": "around_50",
+        "value_reason": "Fünfzehn wiederverwendbare Europaletten sind ein brauchbarer Materialposten."
+      },
+      "content_fingerprint": "sha256:294c9c8279409b8a1ca09b4fe6a6e3e82c47009902e2da187d85b336ec4b8f11",
+      "ends_at": "2026-11-17T17:00:01Z",
+      "id": "v1|206689105915|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Tragfähige Aufhängung für Seilzüge"
+        ],
+        "next_checks": [
+          "Werkzeugliste, Seilzugzustand und Traglastplaketten prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Posten Handwerkzeuge mit zwei Seilzügen"
+        ],
+        "risks": [
+          "Stückliste und zulässige Traglasten fehlen.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 54,
+        "useability_reason": "Werkzeuge allgemein verwendbar, Seilzüge benötigen sichere Befestigung und Kontrolle.",
+        "useability_score": 83,
+        "value_band": "around_50",
+        "value_reason": "Verschiedene Handwerkzeuge plus zwei benannte Seilzüge ergeben ein brauchbares Konvolut."
+      },
+      "content_fingerprint": "sha256:f751b182dfc8c035bb12de7390bf3c55ac8d686bfa116768ac44875204549aa0",
+      "ends_at": "2026-11-17T17:10:01Z",
+      "id": "v1|206689151028|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Geeignete Baustelle",
+          "Stromversorgung",
+          "Hebe- und Transportsicherung"
+        ],
+        "next_checks": [
+          "Typenschild, Seile, Sicherheitseinrichtungen und Anhängerteile klären."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: ALBERT HD26 Dachdecker-/Bauaufzug"
+        ],
+        "risks": [
+          "Hubtechnik ist sicherheitskritisch, TÜV/Zustand und Vollständigkeit unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 76,
+        "useability_reason": "Funktioniert als Arbeitsgerät bei kompletter Ausrüstung und sicherer Aufstellung.",
+        "useability_score": 72,
+        "value_band": "around_500",
+        "value_reason": "Benannter größerer Bauaufzug mit Anhängerbezug kann professionelles Potenzial haben."
+      },
+      "content_fingerprint": "sha256:5194ce9e1d991019237df5b42419f4e5f1687a678678f7e8cfe84c5080820ee4",
+      "ends_at": "2026-11-17T17:12:01Z",
+      "id": "v1|206689169527|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Drehstrom",
+          "Druckluftnetz",
+          "Kühlung und Wartung",
+          "Transporttechnik"
+        ],
+        "next_checks": [
+          "Laufstunden, Leistung, Behälter, Steuerung und Abholbedingungen prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Almig-Kompressoranlage mit zwei Variable-34-Kompressoren"
+        ],
+        "risks": [
+          "Baujahr 2014 beweist weder Wartungsstand noch Vollständigkeit; hohe Transportlast.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 84,
+        "useability_reason": "Bei vollständiger Anlage arbeitsfähig, benötigt aber umfangreiche industrielle Anschluss- und Wartungsbedingungen.",
+        "useability_score": 67,
+        "value_band": "around_500",
+        "value_reason": "Zwei benannte industrielle Schraubenkompressoren als Anlage sind wirtschaftlich substanziell."
+      },
+      "content_fingerprint": "sha256:168f45aee9d62ebabb0e72468942d7eea2917a56986770d9eb03071bf8f0ae7f",
+      "ends_at": "2026-11-18T17:52:00Z",
+      "id": "v1|206689588242|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Schutzgasflasche",
+          "Gasversorgung",
+          "Netzstrom",
+          "Schweißschutz"
+        ],
+        "next_checks": [
+          "Gerätezustand, Schlauchpaket, Netzanschluss und Flaschenlieferumfang prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Technolit Profi 195-SD MIG/MAG-Gerät mit Schlauchpaket und Wagen"
+        ],
+        "risks": [
+          "Gasflasche ist laut Titel nicht als Teil des Angebots gesichert, Funktion ungeprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 71,
+        "useability_reason": "Schweißt mit gängiger Infrastruktur; Schutzgas und elektrischer Anschluss erforderlich.",
+        "useability_score": 86,
+        "value_band": "around_500",
+        "value_reason": "Größeres benanntes Schweißgerät samt Schlauchpaket und Flaschenwagen ist ein substanzielles Set."
+      },
+      "content_fingerprint": "sha256:213d306c2c627fb25428fb149c8d840829783237a15bb9f56f24cb6ab618098f",
+      "ends_at": "2026-11-18T18:48:00Z",
+      "id": "v1|206689781665|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "380-V-Drehstrom",
+          "Passende Bohrer"
+        ],
+        "next_checks": [
+          "Drehstromversorgung, Bohrfutter, Spindelspiel und Transport prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Mecanica G10 Tischbohrmaschine 380 V"
+        ],
+        "risks": [
+          "Motorlauf und Bohrfutterzustand unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 59,
+        "useability_reason": "Eigenständige Bohrmaschine, benötigt jedoch üblichen dreiphasigen Industrieanschluss.",
+        "useability_score": 80,
+        "value_band": "around_500",
+        "value_reason": "Benannte stationäre Bohrmaschine mit professionellem Werkstattpotenzial."
+      },
+      "content_fingerprint": "sha256:a41209a537e1d2beb20d8fe7311701d5cccd7408744973803936f587b2e962ec",
+      "ends_at": "2026-11-18T19:30:00Z",
+      "id": "v1|206689912243|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Netzversorgung und passende Bohrwerkzeuge"
         ],
         "next_checks": [
@@ -20257,92 +20882,6 @@
       "ends_at": "2026-11-15T19:00:01Z",
       "id": "v1|227592762482|0",
       "reviewed_at": "2026-11-08T20:33:29.786958Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Passender 9-V-Verbraucher"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "accessory",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
-          "Polarität und Regelung unbekannt."
-        ],
-        "scalp_score": 6,
-        "useability_reason": "Benötigt kompatiblen 9-V-Verbraucher mit passender Polarität und Hohlbuchse.",
-        "useability_score": 65,
-        "value_band": "around_5",
-        "value_reason": "Ein kleines 9-V-Netzteil bietet geringes Versorgungszubehörpotenzial."
-      },
-      "content_fingerprint": "sha256:4369e30f8289458b349ae101f0646814733b1af7e58e510c5ca6813fab1722d0",
-      "ends_at": "2026-11-12T13:46:08Z",
-      "id": "v1|227594059071|0",
-      "reviewed_at": "2026-11-08T20:20:38.700957Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Passender Verbraucher"
-        ],
-        "next_checks": [
-          "Ausgangswerte, Stecker, Polarität und Funktion prüfen."
-        ],
-        "product_kind": "accessory",
-        "reasons": [
-          "Einordnung anhand des vollständig vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Lieferumfang und Zustand im Detail unbelegt."
-        ],
-        "scalp_score": 8,
-        "useability_reason": "Benötigt einen Verbraucher mit passenden Ausgangs- und Anschlussdaten.",
-        "useability_score": 49,
-        "value_band": "around_5",
-        "value_reason": "Einfaches Steckernetzteil ohne belegten besonderen Gerätewert."
-      },
-      "content_fingerprint": "sha256:778ed9fc2d52812a7e7486805b67fc97fa8bb441b816fe257ba20f3c4c74df7d",
-      "ends_at": "2026-11-12T13:46:16Z",
-      "id": "v1|227594059287|0",
-      "reviewed_at": "2026-11-08T20:19:14.740423Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Passendes Endgerät"
-        ],
-        "next_checks": [
-          "Polung, Stecker und Ausgang prüfen."
-        ],
-        "product_kind": "accessory",
-        "reasons": [
-          "Älteres Friwo-Kleinnetzteil."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 4,
-        "useability_reason": "7-V-Netzteil benötigt ein exakt kompatibles Gerät mit geringem Strombedarf.",
-        "useability_score": 26,
-        "value_band": "around_5",
-        "value_reason": "Älteres Friwo-Kleinnetzteil."
-      },
-      "content_fingerprint": "sha256:087f3f6153f6637b79d1b0e9bdb8cfdfed01c7287c540451e0fae0adacde2760",
-      "ends_at": "2026-11-12T13:46:25Z",
-      "id": "v1|227594059533|0",
-      "reviewed_at": "2026-11-08T20:21:54Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -29571,6 +30110,38 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Geeignete Versorgung",
+          "Widerstände",
+          "Platine"
+        ],
+        "next_checks": [
+          "Diodenmaße, Spannung und Test prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 18 rote Conrad-Leuchtdioden 5 mm"
+        ],
+        "risks": [
+          "Einwandfreie Funktion und exakte Daten unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 7,
+        "useability_reason": "Erfordert Schaltung, Vorwiderstand und Montage.",
+        "useability_score": 46,
+        "value_band": "around_5",
+        "value_reason": "Kleiner Satz preiswerter Standard-LEDs."
+      },
+      "content_fingerprint": "sha256:4300bd5e61945781b937ab7bcf438b1e4f4ef70489c3620b0788958a2e40dd63",
+      "ends_at": "2026-11-19T23:52:16Z",
+      "id": "v1|237174080796|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Kompatibles Sirona-Frässystem",
           "Zahnmedizinischer Fertigungsprozess"
         ],
@@ -32587,6 +33158,37 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Steckbrett",
+          "Gleichspannungsversorgung"
+        ],
+        "next_checks": [
+          "Ausgänge 3,3/5 V und Versorgung prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Zwei YwRobot MB V2 Breadboard-Stromversorgungsmodule"
+        ],
+        "risks": [
+          "Elektrische Funktion und Pins unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 13,
+        "useability_reason": "Nutzen setzt Steckbrett und passende Versorgung voraus.",
+        "useability_score": 45,
+        "value_band": "around_5",
+        "value_reason": "Zwei einfache Steckbrett-Netzteile sind kleiner Elektronik-Lernbedarf."
+      },
+      "content_fingerprint": "sha256:030a3e48a365e421236137e600b726e95eef17c1db70d171d22639e94fa65c02",
+      "ends_at": "2026-11-19T16:23:08Z",
+      "id": "v1|257843930540|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Gewicht und Materialreinheit müssen stimmen"
         ],
         "next_checks": [
@@ -32641,6 +33243,98 @@
       "reviewed_at": "2026-11-11T02:24:06.478000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:c3915e595c38a8008f3e24addf7cb3f7651391f9a6fc54059dd3dbe231e98660"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passende Platine oder Schaltung",
+          "Löttechnik"
+        ],
+        "next_checks": [
+          "Diodentyp, Polarität und Anschlusslängen prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 100 abgegriffene Gleichrichterdioden 1N4002A"
+        ],
+        "risks": [
+          "Abgegriffene Anschlüsse könnten Montage erschweren; Zustand nicht nachgewiesen.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 10,
+        "useability_reason": "Einsetzbar in eigenem Stromkreis oder Elektronikprojekt, nicht eigenständig.",
+        "useability_score": 42,
+        "value_band": "around_5",
+        "value_reason": "Hundert Standarddioden bilden nur einen kleinen Elektronikposten."
+      },
+      "content_fingerprint": "sha256:07370861515424a9d8acb9ff80efdcee261486beedd61c480e55eb4843da27ef",
+      "ends_at": "2026-11-16T11:49:42Z",
+      "id": "v1|257847182906|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Elektronikprojekt",
+          "Löttechnik"
+        ],
+        "next_checks": [
+          "Gleichrichtertyp und Anschlusszustand prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 100 abgegriffene Gleichrichterdioden 1N4004"
+        ],
+        "risks": [
+          "Anschlusslänge und ungetestete Ware.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 10,
+        "useability_reason": "Brauchen elektronische Schaltung und Einbau.",
+        "useability_score": 42,
+        "value_band": "around_5",
+        "value_reason": "100 Stück gebräuchliche Gleichrichterdioden mit begrenztem Einzelwert."
+      },
+      "content_fingerprint": "sha256:8564488357e859ffd7683d39b2fd3adf472289e6922a97ffbaacd8578cbfccbb",
+      "ends_at": "2026-11-16T11:51:17Z",
+      "id": "v1|257847183706|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Schaltung und Lötarbeitsplatz"
+        ],
+        "next_checks": [
+          "Kennzeichnung und Stückzahl prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 100 abgegriffene Gleichrichterdioden 1N4005"
+        ],
+        "risks": [
+          "Abgegriffene Anschlussdrähte und ungeprüfte Dioden.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 10,
+        "useability_reason": "Für passende Elektronikprojekte nach Einlöten einsetzbar.",
+        "useability_score": 42,
+        "value_band": "around_5",
+        "value_reason": "Kleines Konvolut gebräuchlicher diskreter Halbleiter."
+      },
+      "content_fingerprint": "sha256:1e8e009c9138c96d164f3ddf84fc65c9864cf5dce7834b29c25009aedb176809",
+      "ends_at": "2026-11-16T11:53:03Z",
+      "id": "v1|257847184473|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -36871,6 +37565,69 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Geeignete Brennstoffversorgung",
+          "Sicherer Außenaufstellort",
+          "Transport"
+        ],
+        "next_checks": [
+          "Brenner, Kessel, Dichtheit, Anhängerzulassung und Standort prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Schanz 450 Feldküche/Gulaschkanone mit Edelstahlkesseln"
+        ],
+        "risks": [
+          "Kesselvolumen, Zulassung und Dichtigkeit nicht belegt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 76,
+        "useability_reason": "Als Kochanlage grundsätzlich eigenständig, mit sicherer Brennstoff- und Transportinfrastruktur.",
+        "useability_score": 80,
+        "value_band": "around_500",
+        "value_reason": "Große Feldküche mit benannten Edelstahlkesseln besitzt professionelles Nutzungspotenzial."
+      },
+      "content_fingerprint": "sha256:2428352e4af6dc39b96e99b8c866df0ee7e9ea9e2d2e2b7ca443990d620282a1",
+      "ends_at": "2026-11-19T17:02:01Z",
+      "id": "v1|267838468154|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatible Sicherheitssteuerung",
+          "24-V-Versorgung"
+        ],
+        "next_checks": [
+          "Typ, Pinbelegung und sicherheitstechnische Prüfung klären."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Pilz PZE 5 24-V-Sicherheitskontaktmodul"
+        ],
+        "risks": [
+          "Sicherheitsfunktion und Kontaktverschleiß nicht geprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 39,
+        "useability_reason": "Braucht vorhandene Sicherheitssteuerung und elektrotechnische Integration.",
+        "useability_score": 25,
+        "value_band": "around_50",
+        "value_reason": "Benanntes Industriemodul bietet Ersatzteilwert in passender Sicherheitssteuerung."
+      },
+      "content_fingerprint": "sha256:920cf190f98c61221e3a2274dafaca153dbb2a49b9f0af4b981fa08236867cc0",
+      "ends_at": "2026-11-16T12:24:59Z",
+      "id": "v1|267838558300|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Passende Durchmesser und Länge",
           "Normgerechter Einbau"
         ],
@@ -37076,6 +37833,38 @@
       "reviewed_at": "2026-11-12T01:49:20Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:77a2817fe5442f700afcd5d00551280953eb7de6b7408bdaea6867db76f08969"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Industrie-Drehstrom",
+          "Fundament oder sichere Aufstellung",
+          "Hebetechnik"
+        ],
+        "next_checks": [
+          "Transport, Spindel, Ausleger, Sicherheitsfunktionen und Probelauf prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: WMW BR 50 × 1600 Radialbohrmaschine"
+        ],
+        "risks": [
+          "Maschinenzustand ungeprüft; ausgewiesene Transportkosten allein bereits hoch.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 82,
+        "useability_reason": "Im Betrieb eigenständig, verlangt Drehstrom, standsichere Aufstellung und schwere Logistik.",
+        "useability_score": 66,
+        "value_band": "around_500",
+        "value_reason": "Große industrielle Radialbohrmaschine ist ein technisch substanzieller Maschinenposten."
+      },
+      "content_fingerprint": "sha256:1a6c8cdf3acef4f4a42c78844c0b0a7fd463e347e7831c656a6bbfecff98d13b",
+      "ends_at": "2026-11-22T13:12:03Z",
+      "id": "v1|267841581121|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -37651,92 +38440,6 @@
       "ends_at": "2026-11-15T13:23:54Z",
       "id": "v1|287706904731|0",
       "reviewed_at": "2026-11-08T20:31:39.518082Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Passende Kasse"
-        ],
-        "next_checks": [
-          "Lieferumfang und Zustand anhand des Originalangebots prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [
-          "Ein einfaches Papier-Verbrauchsteil für Altkassen."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 3,
-        "useability_reason": "Bonrolle muss Format und Papieranforderungen der alten Kasse erfüllen.",
-        "useability_score": 20,
-        "value_band": "around_5",
-        "value_reason": "Ein einfaches Papier-Verbrauchsteil für Altkassen."
-      },
-      "content_fingerprint": "sha256:94f1f305d9916a6050a56c43caa76e8e2e2121a435847dcee40fceb150a91d6a",
-      "ends_at": "2026-11-12T13:53:24Z",
-      "id": "v1|287706973210|0",
-      "reviewed_at": "2026-11-08T20:21:54Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Passende Kasse"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "consumable",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
-          "Als defekt deklariert; Papierzustand ungeklärt."
-        ],
-        "scalp_score": 3,
-        "useability_reason": "Benötigt passend dimensionierte antike Kasse.",
-        "useability_score": 19,
-        "value_band": "around_5",
-        "value_reason": "Eine Bonrolle für alte Kassen bietet minimales Verbrauchspotenzial."
-      },
-      "content_fingerprint": "sha256:5a2b0adcf81c6c673523ae0f3b336549c71ae62f9e5de57ac10cdd89715ae67c",
-      "ends_at": "2026-11-12T13:54:05Z",
-      "id": "v1|287706974172|0",
-      "reviewed_at": "2026-11-08T20:20:38.700957Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Kompatible historische Kasse"
-        ],
-        "next_checks": [
-          "Maße, Papierzustand und Defekt klären."
-        ],
-        "product_kind": "consumable",
-        "reasons": [
-          "Semantische Einordnung des vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert."
-        ],
-        "scalp_score": 2,
-        "useability_reason": "Benötigt Kompatible historische Kasse.",
-        "useability_score": 16,
-        "value_band": "around_5",
-        "value_reason": "Als defekt angebotene Bonrolle für antike Kasse."
-      },
-      "content_fingerprint": "sha256:5a2b0adcf81c6c673523ae0f3b336549c71ae62f9e5de57ac10cdd89715ae67c",
-      "ends_at": "2026-11-12T13:54:45Z",
-      "id": "v1|287706975107|0",
-      "reviewed_at": "2026-11-08T20:19:14.740423Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -39582,6 +40285,38 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "S7-Kompatibilität",
+          "Programmierwerkzeug",
+          "Spannungsversorgung"
+        ],
+        "next_checks": [
+          "Fotos der Steuerung, I/O-Module und Softwarevoraussetzungen prüfen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Siemens-S7-Übungseinheit"
+        ],
+        "risks": [
+          "Aus dem Titel geht nicht hervor, welche Baugruppen und Kabel enthalten sind.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 49,
+        "useability_reason": "Braucht Stromversorgung und ggf. Programmiergerät/Software.",
+        "useability_score": 52,
+        "value_band": "around_50",
+        "value_reason": "Als Übungseinheit kann ein zusammengehöriger Automationsaufbau nützlich sein, Umfang ist unklar."
+      },
+      "content_fingerprint": "sha256:0bb57470d8e95d0c83ca62ddbffd45e94c48d44df518d93e3b647859027ac429",
+      "ends_at": "2026-11-19T16:41:07Z",
+      "id": "v1|287716704267|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Mafell-Antriebssystem"
@@ -39879,6 +40614,66 @@
       "reviewed_at": "2026-11-12T07:33:35Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:01d5143dca16432bcfffd32f966bedad16c88e1c7915a46d2e490aec5bf2615c"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Siemens-S7-Steuerung"
+        ],
+        "next_checks": [
+          "Teilenummer und Test in passender Steuerung prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Siemens S7 Memory Card 6ES7 951-0KG00-0AA0"
+        ],
+        "risks": [
+          "Speicherfunktion und genaue Kompatibilität ungeprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 33,
+        "useability_reason": "Ohne kompatible S7-Steuerung praktisch nicht separat verwendbar.",
+        "useability_score": 17,
+        "value_band": "around_50",
+        "value_reason": "Spezifisches Speichermedium kann einem passenden SIMATIC-System dienen."
+      },
+      "content_fingerprint": "sha256:c1b1369682f8b7a852bfeba303769c2af32ffe2ed493828a1751c49a78650bc2",
+      "ends_at": "2026-11-16T13:23:01Z",
+      "id": "v1|287719650039|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatibles Schleifgerät"
+        ],
+        "next_checks": [
+          "Blattanzahl, Aufnahme und Materialeignung prüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Max-Bahr-Schleifblätter 125 mm gemischte Körnungen"
+        ],
+        "risks": [
+          "Körnungsanzahlen, Lochbild und Lagerzustand unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 9,
+        "useability_reason": "Einfach mit passendem 125-mm-Schleifgerät einsetzbar.",
+        "useability_score": 76,
+        "value_band": "around_5",
+        "value_reason": "Kleines Verbrauchsmaterialset ohne besonderen Wiederverwertungsspielraum."
+      },
+      "content_fingerprint": "sha256:9742c870ad986a38cbd2166e4e477440892ec1288ac1059f02e3195c2417929e",
+      "ends_at": "2026-11-21T20:15:48Z",
+      "id": "v1|287722218206|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -45765,6 +46560,156 @@
     {
       "assessment": {
         "assessment_confidence": "medium",
+        "dependencies": [
+          "Passendes Güde-KS400B-Modell"
+        ],
+        "next_checks": [
+          "Modellpassung und Laschen prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Motorgehäuseabdeckung Güde KS400B Kettensäge"
+        ],
+        "risks": [
+          "Brüche und Befestigungspunkte nicht geprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 12,
+        "useability_reason": "Nur auf exakt kompatibler Säge verwendbar.",
+        "useability_score": 8,
+        "value_band": "around_5",
+        "value_reason": "Einzelne Gehäuseabdeckung ist enges Ersatzteil, keine Kettensäge."
+      },
+      "content_fingerprint": "sha256:13bf85823fbf8420639dfba17df6fd5b61b8181a717c2a4b7b3312b8d0e7ef95",
+      "ends_at": "2026-11-17T22:14:51Z",
+      "id": "v1|307276505752|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Flaschen mit passendem Gewinde"
+        ],
+        "next_checks": [
+          "Gewinde, Röhrchen und Stückliste prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Fünf Einsätze/Ersatzteile für Spritzflaschen"
+        ],
+        "risks": [
+          "Maße und Lieferumfang nur aus Titel ableitbar.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 8,
+        "useability_reason": "Benötigt kompatible Spritzflaschen.",
+        "useability_score": 35,
+        "value_band": "around_5",
+        "value_reason": "Kleiner Satz Ersatzaufsätze, ausdrücklich keine ganzen Laborflaschen garantiert."
+      },
+      "content_fingerprint": "sha256:95cd50d69b9b0a40014affe32ee622a491db1aa5328b8bebe89c1b6821cad862",
+      "ends_at": "2026-11-18T08:45:43Z",
+      "id": "v1|307277126614|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Anwendungsabhängige Chemikalien"
+        ],
+        "next_checks": [
+          "Stückzahl, Materialklasse und Unversehrtheit klären."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Corning 125-ml-Erlenmeyerkolben aus Kunststoff"
+        ],
+        "risks": [
+          "Tatsächliche Materialbeständigkeit und Autoklavierbarkeit nur behauptet.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 11,
+        "useability_reason": "Als skaliertes Laborgefäß für einfache Arbeitsabläufe eigenständig verwendbar.",
+        "useability_score": 94,
+        "value_band": "around_5",
+        "value_reason": "Ein einzelner kleiner Laborbehälter hat nur geringes wirtschaftliches Potenzial."
+      },
+      "content_fingerprint": "sha256:a33a4f864f64401150c31f04c8295a136812cd434e77bc80e93520656a21b494",
+      "ends_at": "2026-11-18T08:46:34Z",
+      "id": "v1|307277128232|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Je nach Medium Laborgrundausstattung"
+        ],
+        "next_checks": [
+          "Material und Risse prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Corning Erlenmeyerkolben 125 ml"
+        ],
+        "risks": [
+          "Nur Titelangaben zu Skala und Temperaturbeständigkeit.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 11,
+        "useability_reason": "Für Flüssigkeiten und Laboransätze ohne Spezialmaschine einsetzbar.",
+        "useability_score": 94,
+        "value_band": "around_5",
+        "value_reason": "Ein einzelnes kleines Laborgefäß bietet geringe wirtschaftliche Substanz."
+      },
+      "content_fingerprint": "sha256:12a37c4dcd2e81d7deafdbe680c71756ccf799d5b0dcaf8ce55f86ad51b6c907",
+      "ends_at": "2026-11-18T08:46:34Z",
+      "id": "v1|307277128266|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kompatible Mikropipette"
+        ],
+        "next_checks": [
+          "Pipettenkompatibilität und versiegelte Packung prüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 200 GELoader-Pipettenspitzen 1–10 µl"
+        ],
+        "risks": [
+          "Sterilität, Verpackungszustand und Passform unbestätigt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 16,
+        "useability_reason": "Benötigen geeignete Pipette mit kompatibler Aufnahme; nicht eigenständig dosierend.",
+        "useability_score": 75,
+        "value_band": "around_5",
+        "value_reason": "200 Verbrauchsspitzen sind ein kleiner Laborposten mit mengenbezogenem Nutzwert."
+      },
+      "content_fingerprint": "sha256:86b48e395afe6f558a86d8eb6a0f607bb4b1e178af78d33a368d19439257663c",
+      "ends_at": "2026-11-18T08:46:34Z",
+      "id": "v1|307277128273|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
         "dependencies": [],
         "next_checks": [
           "Holz und Haken prüfen."
@@ -45789,6 +46734,38 @@
       "reviewed_at": "2026-11-12T13:34:10Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:ec81c65d2737bdb59d7d46817e8b4f3f3b1a9c93327f92b8cf13bc67f282bd6b"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Kompensationsanlage",
+          "Stromwandler",
+          "Parametrierung"
+        ],
+        "next_checks": [
+          "Typvariante, Klemmen, Parametrierbarkeit und Anlagenkompatibilität prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: AEG Beluk BLR-MQ-06 Blindleistungsregler"
+        ],
+        "risks": [
+          "Titel sagt nichts über Funktionsprüfung und vorhandenes Zubehör.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 44,
+        "useability_reason": "Benötigt eine passende Blindleistungskompensationsanlage samt Messwandlern und Schaltstufen.",
+        "useability_score": 27,
+        "value_band": "around_50",
+        "value_reason": "Spezialisierter industrieller Regler mit möglichem Ersatzteil- oder Integrationsnutzen."
+      },
+      "content_fingerprint": "sha256:30431829840a8c3949b429fce7868e8d4c0b44959b0030d7333e9fe74291b4ab",
+      "ends_at": "2026-11-15T13:12:22Z",
+      "id": "v1|307279068197|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -48147,6 +49124,36 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Passende U-Schaft-Sägeaufnahme"
+        ],
+        "next_checks": [
+          "Aufnahme und Blattzustand prüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Bosch U345XF BIM Stichsägeblatt"
+        ],
+        "risks": [
+          "Einzelstück, Lagerung und Zahnschäden ungeprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 8,
+        "useability_reason": "Benötigt kompatible Stichsäge.",
+        "useability_score": 77,
+        "value_band": "around_5",
+        "value_reason": "Ein einzelnes Standard-Sägeblatt ist ein kleiner Verbrauchsposten."
+      },
+      "content_fingerprint": "sha256:1da1b78ea5343498d07745a6c640a2d7f87672f67143dab518b44da663d72987",
+      "ends_at": "2026-11-16T15:47:44Z",
+      "id": "v1|327448171241|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "PC mit Entwicklungsumgebung",
           "Passende Firmware und Schnittstellen"
         ],
@@ -50499,6 +51506,68 @@
       "reviewed_at": "2026-11-11T20:08:09Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:087439fedff9a63adf49f6c114360fa7fb08748e64d784f1a5e8bfea53a99042"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "24-V-Steuerung",
+          "Einbau in Schaltanlage"
+        ],
+        "next_checks": [
+          "Kontaktbelegung, Spulenspannung und Schaltprobe prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Klöckner-Moeller DIL ER-31-G Schütz 24 V DC"
+        ],
+        "risks": [
+          "Kontaktverschleiß und Spulenzustand ungeprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 26,
+        "useability_reason": "Erfordert eine passende Schaltanlage und Verdrahtung.",
+        "useability_score": 32,
+        "value_band": "around_5",
+        "value_reason": "Industrieschütz kann als Ersatzteil nützlich sein, ist kein vollständiges Steuergerät."
+      },
+      "content_fingerprint": "sha256:0304605008d862aada983ed8a65d0119f36814b645a9e8b19e7eb56978c75a71",
+      "ends_at": "2026-11-19T16:45:35Z",
+      "id": "v1|336888747046|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passender Motorschütz",
+          "Motoranlage"
+        ],
+        "next_checks": [
+          "Kompatible Baureihe und Auslösetest prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Klöckner Moeller ZE-0,6 Motorschutzrelais"
+        ],
+        "risks": [
+          "Einstellbereich und Auslöseverhalten nicht geprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 22,
+        "useability_reason": "Nur mit passender Schütz-/Motorschutzkombination sinnvoll.",
+        "useability_score": 24,
+        "value_band": "around_5",
+        "value_reason": "Spezifisches Motorschutzmodul mit begrenztem Einzelwert."
+      },
+      "content_fingerprint": "sha256:81558b22cf797b1c96405ec8670886673cd3b2a2ca0737ece69782e96286fd76",
+      "ends_at": "2026-11-19T16:48:34Z",
+      "id": "v1|336888757580|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -53111,33 +54180,6 @@
       "ends_at": "2026-11-15T11:54:35Z",
       "id": "v1|377623608786|0",
       "reviewed_at": "2026-11-08T20:37:17Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [],
-        "next_checks": [
-          "Tankgröße, Ultraschallfunktion und Dichtheit prüfen."
-        ],
-        "product_kind": "apparatus",
-        "reasons": [
-          "Gebrauchtes vollständiges Reinigungsgerät; Größe und Ausführung fehlen."
-        ],
-        "risks": [
-          "Nur Titel und Zustand vorliegend; Vollständigkeit und Gebrauchstauglichkeit nicht belegt."
-        ],
-        "scalp_score": 29,
-        "useability_reason": "Ultraschallbad arbeitet mit üblicher Versorgung und Reinigungsflüssigkeit eigenständig.",
-        "useability_score": 96,
-        "value_band": "around_50",
-        "value_reason": "Gebrauchtes vollständiges Reinigungsgerät; Größe und Ausführung fehlen."
-      },
-      "content_fingerprint": "sha256:407c58f1bbed94b9cf1c36a62810334b1d4bdf6ee2f35f66f620726b2d4ec54c",
-      "ends_at": "2026-11-12T13:56:13Z",
-      "id": "v1|377623839146|0",
-      "reviewed_at": "2026-11-08T20:21:54Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -62737,6 +63779,66 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Kompatible Stichsäge"
+        ],
+        "next_checks": [
+          "Schafttyp, Blattanzahl und Zahnzustand prüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 18 Stichsägeblätter für Metall und Holz"
+        ],
+        "risks": [
+          "Aufnahmeform, Längen und Zähne unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 14,
+        "useability_reason": "Mit passender Stichsäge einfach nutzbar.",
+        "useability_score": 72,
+        "value_band": "around_5",
+        "value_reason": "Materialset für Werkzeuge mit geringem Einzelwert."
+      },
+      "content_fingerprint": "sha256:ded72c930f70a630961f59d788e03ac00bff6927d854caffbc256ed6d7ac2798",
+      "ends_at": "2026-11-17T17:56:38Z",
+      "id": "v1|377635514674|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "T-Schaft-Stichsäge"
+        ],
+        "next_checks": [
+          "Stückzahl, Blattarten und Verpackung überprüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 97 Wolfcraft/Wilpu-Stichsägeblätter T-Schaft"
+        ],
+        "risks": [
+          "Sortierung und tatsächlicher Verschleiß unklar.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 35,
+        "useability_reason": "In T-Schaft-kompatibler Stichsäge unmittelbar nutzbar.",
+        "useability_score": 79,
+        "value_band": "around_50",
+        "value_reason": "Größerer Markenblattposten besitzt gebündelten praktischen Materialwert."
+      },
+      "content_fingerprint": "sha256:ef7e65666e03a962fba1bebb325e4f4ec084bdea75c73eac7680bf53ff201df1",
+      "ends_at": "2026-11-17T18:26:11Z",
+      "id": "v1|377635556447|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Passendes Diatest-Sondenmesssystem",
           "Kenntnis von Nenndurchmesser und Kalibrieraufgabe"
         ],
@@ -64867,6 +65969,36 @@
       "reviewed_at": "2026-11-10T13:59:39.018000Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:97e0e27c65c840c33e42a0e36b4ac2808b36182c36b772baaa27997872a28d69"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Größen"
+        ],
+        "next_checks": [
+          "Menge, Größen und Material prüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 15 fingerlose Handschuhe mit Flammenmotiv"
+        ],
+        "risks": [
+          "Titel sagt nicht klar, ob Stück oder Paare.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 20,
+        "useability_reason": "Als Bekleidung ohne technische Abhängigkeit verwendbar.",
+        "useability_score": 96,
+        "value_band": "around_5",
+        "value_reason": "Fünfzehn Paar/Exemplare als Modeposten haben geringes bis kleines Materialpotenzial."
+      },
+      "content_fingerprint": "sha256:b0379f12a56e4346bccdef934ed3b0f8f98a7f8a502b3218b48babc3f9b89cd4",
+      "ends_at": "2026-11-18T08:19:05Z",
+      "id": "v1|407354920251|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -70179,6 +71311,100 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Passendes Laminierharz",
+          "Formbauwerkzeuge",
+          "Schutzmaßnahmen"
+        ],
+        "next_checks": [
+          "Flächengewicht, tatsächliche Länge und Lagerzustand prüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 10 m² unidirektionale 800-g-Kohlefasermatte"
+        ],
+        "risks": [
+          "Faserorientierung und Materiallagerung müssen zur Anwendung passen.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 60,
+        "useability_reason": "Für Laminatbau mit gängiger Harz- und Formtechnik nutzbar, allein kein Fertigteil.",
+        "useability_score": 78,
+        "value_band": "around_50",
+        "value_reason": "Zehn Quadratmeter schweres Carbongelege sind ein mengenmäßig substanzieller Werkstoffposten."
+      },
+      "content_fingerprint": "sha256:1a4c7e55ca8cca9c261c3ab76ee340ebf0ed61b62d7531269559a35079e19ebb",
+      "ends_at": "2026-11-17T17:00:00Z",
+      "id": "v1|820339117532|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Laminierharz",
+          "Formwerkzeug",
+          "Schutzmaßnahmen"
+        ],
+        "next_checks": [
+          "Tatsächliche Fläche, Web-/Gelegestruktur und Lagerung prüfen."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 10 m² Glasfasergelege ±45° 450 g/m²"
+        ],
+        "risks": [
+          "Trockenheit und Faserqualität unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 44,
+        "useability_reason": "Im Verbundbau mit Harz und Form nutzbar.",
+        "useability_score": 77,
+        "value_band": "around_50",
+        "value_reason": "Mehrere Quadratmeter technisches Glasfasergelege sind ein nützlicher Materialposten."
+      },
+      "content_fingerprint": "sha256:713f055ccab9a02331bc64655de572936c1acf4f253d7f9d58d393ea4ef37a54",
+      "ends_at": "2026-11-17T17:15:00Z",
+      "id": "v1|820339151773|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Bohrung und Gegenstück"
+        ],
+        "next_checks": [
+          "Durchmesser, Länge und Sicherungsart prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 25 Stück Sicherungs-/Steckbolzen 10×20 mm"
+        ],
+        "risks": [
+          "Werkstoff und Maßtoleranzen unbestätigt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 23,
+        "useability_reason": "In passender Konstruktion als Standardbauteile einsetzbar.",
+        "useability_score": 65,
+        "value_band": "around_5",
+        "value_reason": "Fünfundzwanzig Metallbolzen bilden einen kleinen Montageposten."
+      },
+      "content_fingerprint": "sha256:6dbff3dadbbc7087831b077530cfb60f87708e1713bf42ba5b86fc63550789f5",
+      "ends_at": "2026-11-17T17:37:05Z",
+      "id": "v1|820339226983|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Kompatibler Hilti-Bohrhammer"
         ],
         "next_checks": [
@@ -73327,6 +74553,37 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Passende Platine",
+          "Löttechnik"
+        ],
+        "next_checks": [
+          "Kapazität, Polung und Elektrolytzustand prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 12 Stück 47-µF/40-V-Elkos"
+        ],
+        "risks": [
+          "Alter, Kapazität und ESR unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 9,
+        "useability_reason": "Einbauteile für Elektronikplatinen, kein eigenständiges Gerät.",
+        "useability_score": 42,
+        "value_band": "around_5",
+        "value_reason": "Kleiner Satz gebräuchlicher Kondensatoren ohne besondere Werthaltigkeit."
+      },
+      "content_fingerprint": "sha256:6224eb38440fac8928df636e71cd7f4c38f6dfad6659e2be5ab99d346233191d",
+      "ends_at": "2026-11-19T17:49:20Z",
+      "id": "v1|840111511654|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Passende M3-Montage"
         ],
         "next_checks": [
@@ -74047,6 +75304,37 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Elektronikplatine",
+          "Lötwerkzeug"
+        ],
+        "next_checks": [
+          "Kennzeichen und Diodenfunktion prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 30 Vishay BZX85C 9,1-V-Zenerdioden"
+        ],
+        "risks": [
+          "Bauteilqualität ungetestet.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 10,
+        "useability_reason": "Nur eingebaut in passende Schaltung verwendbar.",
+        "useability_score": 43,
+        "value_band": "around_5",
+        "value_reason": "Kleiner Vorrat spezifizierter Elektronikkomponenten."
+      },
+      "content_fingerprint": "sha256:2113596e2dcdeb6daa800379271f9edec06c9ef2d7e508378a518aa35ad69892",
+      "ends_at": "2026-11-20T01:06:23Z",
+      "id": "v1|840112438218|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Geeignete Verwertung oder Metallbearbeitung"
         ],
         "next_checks": [
@@ -74194,6 +75482,37 @@
       "reviewed_at": "2026-11-12T13:34:10Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:ec81c65d2737bdb59d7d46817e8b4f3f3b1a9c93327f92b8cf13bc67f282bd6b"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Kalibrierlösung",
+          "Funktionsfähige Elektrode"
+        ],
+        "next_checks": [
+          "Sonde, Einschaltfunktion und Kalibrierbarkeit nachweisen lassen."
+        ],
+        "product_kind": "apparatus",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Apera EC20 Messgerät mit ATC-Set im Koffer"
+        ],
+        "risks": [
+          "Sondenalter, Kalibrierung und Messgenauigkeit nicht belegt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 47,
+        "useability_reason": "Messgerät ist mit Sonde und Batterieversorgung prinzipiell eigenständig, Kalibrierung bleibt nötig.",
+        "useability_score": 92,
+        "value_band": "around_50",
+        "value_reason": "Tragbares Leitfähigkeitsmessgerät mit benanntem Zubehör hat brauchbares Messpotenzial."
+      },
+      "content_fingerprint": "sha256:bb3a2417c227af3c73bcc0687bc72c2d3e156151c48c62206fadf2355edeb477",
+      "ends_at": "2026-11-18T18:50:01Z",
+      "id": "v1|840117618370|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -76688,6 +78007,36 @@
       "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
+          "Keine besonderen Anlagen"
+        ],
+        "next_checks": [
+          "Material, Maße und Anzahl kontrollieren."
+        ],
+        "product_kind": "consumable",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 100 Baumwoll-Zugbeutel 37 × 45 cm"
+        ],
+        "risks": [
+          "Nähte, Grammatur und tatsächliche Stückzahl ungeprüft.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 37,
+        "useability_reason": "Ohne zusätzliche Spezialanlage direkt als Beutel verwendbar.",
+        "useability_score": 96,
+        "value_band": "around_50",
+        "value_reason": "Hundert unbedruckte Beutel bieten mengenmäßigen Verpackungsnutzen, kein technisches Gerät."
+      },
+      "content_fingerprint": "sha256:abdcab509425de07d3d68b4d0eed0a30139c56e4a3511ec852b7a4c47e7862ed",
+      "ends_at": "2026-11-17T17:26:01Z",
+      "id": "v1|860130132478|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
           "Passende Größen und Verwendungszweck"
         ],
         "next_checks": [
@@ -78462,6 +79811,38 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Esser-kompatible Brandmeldeanlage",
+          "Sockel",
+          "Prüfung"
+        ],
+        "next_checks": [
+          "Modell, Sockel und Anlagenfreigabe prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Esser IQ8 Quad optischer Rauchmelder"
+        ],
+        "risks": [
+          "Kein eigenständiger Rauchwarnmelder für Wohnräume; Zulassung/Prüfung ungeklärt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 37,
+        "useability_reason": "Nur mit kompatibler Zentrale, Sockel und Abnahme nutzbar.",
+        "useability_score": 22,
+        "value_band": "around_50",
+        "value_reason": "Spezialisierter Melder kann in passender Brandmeldeanlage verwertbar sein."
+      },
+      "content_fingerprint": "sha256:d812adef92e5c9a4e9e74a9082850e5171d52f92509167ffae1590beb5f2e216",
+      "ends_at": "2026-11-16T12:27:19Z",
+      "id": "v1|880098759085|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "low",
         "dependencies": [
           "Sortierung und gegebenenfalls Metallbearbeitung",
@@ -78770,34 +80151,6 @@
       "ends_at": "2026-11-15T09:31:17Z",
       "id": "v1|900067351750|0",
       "reviewed_at": "2026-11-08T20:29:29.286769Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "medium",
-        "dependencies": [
-          "Maschinenprojekt",
-          "Verdrahtung"
-        ],
-        "next_checks": [
-          "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
-        ],
-        "product_kind": "component",
-        "reasons": [],
-        "risks": [
-          "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft."
-        ],
-        "scalp_score": 28,
-        "useability_reason": "Benötigt mechanische Betätigung, Montage und Steuerkreis.",
-        "useability_score": 43,
-        "value_band": "around_50",
-        "value_reason": "Siemens-Rollenschalter bietet mittleres Industrieteilepotenzial."
-      },
-      "content_fingerprint": "sha256:63a09ebdcccb357191d847a8fdd6e1890e215c19f302b486fc5d8a55bf8a9dc8",
-      "ends_at": "2026-11-12T13:48:58Z",
-      "id": "v1|900067995293|0",
-      "reviewed_at": "2026-11-08T20:20:38.700957Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
@@ -80379,6 +81732,98 @@
     },
     {
       "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Druckluftsystem",
+          "Passende Anschlüsse"
+        ],
+        "next_checks": [
+          "Fotos, Typenschild und Anschlüsse erfragen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Unbestimmte Wartungseinheit"
+        ],
+        "risks": [
+          "Hersteller, Druckbereich und konkreter Lieferumfang völlig unklar.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 17,
+        "useability_reason": "Wartungseinheit braucht passende Pneumatikinstallation; eigenständige Funktion begrenzt.",
+        "useability_score": 35,
+        "value_band": "unknown",
+        "value_reason": "Ohne Typ und Maße ist das industrielle Bauteil wirtschaftlich kaum zuzuordnen."
+      },
+      "content_fingerprint": "sha256:d798b754275d103650018437db5f85d7638625bda60552d498cdd52235338440",
+      "ends_at": "2026-11-16T11:01:02Z",
+      "id": "v1|900077421633|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "low",
+        "dependencies": [
+          "Passende Drehmaschinenspindel",
+          "Befestigungsflansch"
+        ],
+        "next_checks": [
+          "Backenanzahl, Aufnahme, Rundlauf und Schäden prüfen."
+        ],
+        "product_kind": "accessory",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Dreibackenfutter 190 mm"
+        ],
+        "risks": [
+          "Backen, Rundlauf und Flansch sind nicht sicher als vollständig belegt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 42,
+        "useability_reason": "Benötigt eine kompatible Drehmaschine und geeignete Montage.",
+        "useability_score": 52,
+        "value_band": "around_50",
+        "value_reason": "Großes Spannfutter kann bei passendem Drehmaschinenanschluss substanziell sein."
+      },
+      "content_fingerprint": "sha256:ae5537643c54f856fcf37e11b610141dce9de3e3081b5fb62b24931c622a848b",
+      "ends_at": "2026-11-16T11:03:19Z",
+      "id": "v1|900077423792|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Exakt passendes Dreibackenfutter"
+        ],
+        "next_checks": [
+          "Backenform, Teilung und Herstellerpassung prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Ersatzbacken für Dreibackenfutter"
+        ],
+        "risks": [
+          "Keine komplette Drehmaschine und auch kein vollständiges Futter angeboten.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 20,
+        "useability_reason": "Sehr enge Abhängigkeit von genauer Verzahnung und Futtermodell.",
+        "useability_score": 9,
+        "value_band": "around_5",
+        "value_reason": "Lose Ersatzbacken sind ausschließlich mit passendem Futter wirtschaftlich nützlich."
+      },
+      "content_fingerprint": "sha256:fa20e5ddcb33495fc2f67958c1aa4d44922cfc4ba9da478f23bd6dc8f855117d",
+      "ends_at": "2026-11-16T11:08:17Z",
+      "id": "v1|900077429920|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
+    },
+    {
+      "assessment": {
         "assessment_confidence": "medium",
         "dependencies": [
           "Passende Knopfzelle; Mitlieferung unbekannt"
@@ -80529,6 +81974,36 @@
       "reviewed_at": "2026-11-12T07:33:35Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:01d5143dca16432bcfffd32f966bedad16c88e1c7915a46d2e490aec5bf2615c"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Einstellring oder Referenzmikrometer"
+        ],
+        "next_checks": [
+          "Messbereich, vollständige Messköpfe und Kalibrierung prüfen."
+        ],
+        "product_kind": "tool",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: Subito SV Innenfeinmessgerät"
+        ],
+        "risks": [
+          "Messbereich, Tastspitzen und Genauigkeit unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 48,
+        "useability_reason": "Benötigt Referenzmaß oder Einstellring zur Kalibrierung, ist aber ein übliches Handmessgerät.",
+        "useability_score": 70,
+        "value_band": "around_50",
+        "value_reason": "Präzisions-Messwerkzeug kann nützlich sein, wenn Messbereich und Zustand passen."
+      },
+      "content_fingerprint": "sha256:f9386019d4c10da0d57bd09107d2b5c13e8059d2294d48e2568691dfcfa75c1a",
+      "ends_at": "2026-11-21T20:00:01Z",
+      "id": "v1|900082121669|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -81613,6 +83088,37 @@
       "reviewed_at": "2026-11-08T20:42:46.670310Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
+    },
+    {
+      "assessment": {
+        "assessment_confidence": "medium",
+        "dependencies": [
+          "Passende Lagerstellen und Maße",
+          "Einbauwerkzeug"
+        ],
+        "next_checks": [
+          "Lagerkennzeichen und Schäden an Laufbahnen sowie 25 Stück prüfen."
+        ],
+        "product_kind": "component",
+        "reasons": [
+          "Tatsächlicher benannter Angebotsgegenstand: 25 gemischte SKF-Wälzlager"
+        ],
+        "risks": [
+          "Gebrauchtzustand, Laufgeräusche und genaue Stückliste unbekannt.",
+          "Kein Verkäufer-Volltext und keine unabhängige Funktions- oder Lieferumfangsprüfung verfügbar."
+        ],
+        "scalp_score": 37,
+        "useability_reason": "Einzelne Lager sind nach Maßprüfung in passenden Baugruppen einsetzbar, nicht als eigenständiges Gerät.",
+        "useability_score": 53,
+        "value_band": "around_50",
+        "value_reason": "25 Markenlager verschiedener Typen sind ein brauchbarer Materialposten; gebrauchte Laufbahnen begrenzen das Potenzial."
+      },
+      "content_fingerprint": "sha256:8bf58a9de677d8b6cb100bc23c86548046a380b559bba11cfa7d7db07d2ba0b0",
+      "ends_at": "2026-11-13T13:40:10Z",
+      "id": "v1|920112192922|0",
+      "reviewed_at": "2026-11-12T14:04:05.160000Z",
+      "score_version": 2,
+      "source_snapshot_id": "sha256:62f9a91cc2befddb8524d3f5b061f9538ee5e7e90fab9148c4a3585834d4ad86"
     },
     {
       "assessment": {
@@ -85653,35 +87159,6 @@
       "ends_at": "2026-11-14T14:24:54Z",
       "id": "v1|960153592734|0",
       "reviewed_at": "2026-11-08T20:28:52Z",
-      "score_version": 2,
-      "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
-    },
-    {
-      "assessment": {
-        "assessment_confidence": "low",
-        "dependencies": [
-          "Kompatible Fries-Gläserkörbe"
-        ],
-        "next_checks": [
-          "Korbsystem, Maße und Stückzahl prüfen."
-        ],
-        "product_kind": "accessory",
-        "reasons": [
-          "Semantische Einordnung des vorliegenden Titels und Zustandslabels."
-        ],
-        "risks": [
-          "Kein Verkäufer-Volltext; Details und Funktion nicht verifiziert."
-        ],
-        "scalp_score": 32,
-        "useability_reason": "Benötigt Kompatible Fries-Gläserkörbe.",
-        "useability_score": 15,
-        "value_band": "around_50",
-        "value_reason": "16 Fries-Korbverlängerungen sind spezifischer Gastronomiezubehörposten."
-      },
-      "content_fingerprint": "sha256:3dd6523f6a97d6a259abbb47005244bfcce00f4c4bf4c22c8ee6c8855eac283d",
-      "ends_at": "2026-11-12T13:51:14Z",
-      "id": "v1|960157857492|0",
-      "reviewed_at": "2026-11-08T20:19:14.740423Z",
       "score_version": 2,
       "source_snapshot_id": "sha256:19472bbbef159e5c17d500fe60633c8445353e7746c2c7df73d7de426193c235"
     },
