@@ -362,6 +362,29 @@
             "$ref": "#/components/schemas/nullableTime"
           },
           "location": {
+            "additionalProperties": false,
+            "description": "Public search context. New exports contain only country and pickup radius, never the private search postcode or city. Deprecated fields describe older snapshots only.",
+            "properties": {
+              "city": {
+                "$ref": "#/components/schemas/nullableText",
+                "deprecated": true,
+                "description": "Legacy private search origin; omitted from new exports."
+              },
+              "country": {
+                "pattern": "^[A-Z]{2}$",
+                "type": "string"
+              },
+              "pickup_radius_km": {
+                "exclusiveMinimum": 0,
+                "maximum": 200,
+                "type": "number"
+              },
+              "postcode": {
+                "$ref": "#/components/schemas/nullableText",
+                "deprecated": true,
+                "description": "Legacy private search origin; omitted from new exports."
+              }
+            },
             "type": "object"
           },
           "provider": {
@@ -761,8 +784,14 @@
             "type": "string"
           },
           "pickup_search_postcode": {
+            "deprecated": true,
+            "description": "Legacy private search origin; omitted from new exports. Use pickup_search_profile_match.",
             "pattern": "^[0-9]{5}$",
             "type": "string"
+          },
+          "pickup_search_profile_match": {
+            "description": "Computed before redaction: valid aggregator pickup evidence matches the internal search postcode and does not exceed the configured radius. Not a verified seller location or current pickup agreement. When present, use this value instead of a legacy postcode comparison.",
+            "type": "boolean"
           },
           "pickup_search_radius_km": {
             "exclusiveMinimum": 0,
@@ -2837,78 +2866,6 @@
           }
         },
         "summary": "Kandidatenseite 73 lesen"
-      }
-    },
-    "/api/candidates/page-074.json": {
-      "get": {
-        "operationId": "readFundgrubeCandidates74",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/candidatePage"
-                }
-              }
-            },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
-          }
-        },
-        "summary": "Kandidatenseite 74 lesen"
-      }
-    },
-    "/api/candidates/page-075.json": {
-      "get": {
-        "operationId": "readFundgrubeCandidates75",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/candidatePage"
-                }
-              }
-            },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
-          }
-        },
-        "summary": "Kandidatenseite 75 lesen"
-      }
-    },
-    "/api/candidates/page-076.json": {
-      "get": {
-        "operationId": "readFundgrubeCandidates76",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/candidatePage"
-                }
-              }
-            },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
-          }
-        },
-        "summary": "Kandidatenseite 76 lesen"
-      }
-    },
-    "/api/candidates/page-077.json": {
-      "get": {
-        "operationId": "readFundgrubeCandidates77",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/candidatePage"
-                }
-              }
-            },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
-          }
-        },
-        "summary": "Kandidatenseite 77 lesen"
       }
     },
     "/api/items/{item_file}": {

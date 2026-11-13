@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T15:45:04Z",
+    "evaluated_at": "2026-11-13T17:02:01Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T15:45:04Z",
+  "generated_at": "2026-11-13T17:02:01Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Neu",
-    "content_updated_at": "2026-11-13T15:21:28Z",
+    "content_updated_at": "2026-11-13T16:38:24Z",
     "country": "",
     "dependencies": [
       "Pneumatiksystem",
@@ -34,12 +34,10 @@
     "detail_path": "api/items/506d9f21ac3e89d86a1d2ab29f7d29997ae76394d147eddec23e11e2a5e70869.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-16T16:52:39Z",
@@ -47,7 +45,7 @@
     "image": "https://i.ebayimg.com/images/g/zYIAAeSwXYxqsVIG/s-l400.jpg",
     "interest_score": 3,
     "is_auction": true,
-    "last_seen_at": "2026-11-13T15:21:28Z",
+    "last_seen_at": "2026-11-13T16:38:24Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -58,6 +56,7 @@
     "pickup_available": null,
     "pickup_radius_km": 50,
     "pickup_search_confirmed": false,
+    "pickup_search_profile_match": false,
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
@@ -70,7 +69,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -86,11 +84,11 @@
     "semantic_interest": 17,
     "semantic_review_mode": "interactive",
     "shipping_eur": 6.0,
-    "source_observed_at": "2026-11-13T15:21:28Z",
+    "source_observed_at": "2026-11-13T16:38:24Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Festo Verschraubungen ACK-1/4-PK-4. Festo Teilenummer: 3713",
     "total_eur": null,
     "total_known_eur": 7.0,
@@ -156,7 +154,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:18edb25be727e5000ee43ad256de7dd68b93749605d3f3df79d4795617345e6f",
+  "snapshot_id": "sha256:248522da95d21cea10c79259deff783d63bd4b568c92c7c3214e614ae305d500",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",

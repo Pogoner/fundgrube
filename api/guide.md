@@ -99,7 +99,7 @@ Quellenalter konservativ und darf nicht durch den späteren Snapshot-Zeitpunkt
 ersetzt werden. Die Lesezeit kann zusätzlichen Verzug bedeuten.
 
 Diese Quelle liefert hier keine vollständigen Beschreibungen, keine bestätigten
-Standorte und keinen Mindestpreisstatus. Daraus keine Nähe zu Heidelberg, keine
+Standorte und keinen Mindestpreisstatus. Daraus keine Nähe zum Suchort, keine
 Funktionsprüfung und keinen fehlenden Mindestpreis ableiten. `pickup_available`
 ist höchstens eine Abholmöglichkeit laut Quelle, nicht die Bestätigung eines
 Abholorts im Suchradius; `null` heißt unbekannt. `coverage.source_claims_only`
@@ -166,7 +166,15 @@ gelesene Angebote werden dadurch nicht erneut bestätigt.
 
 Eine getrennte Umkreissuche kann vorläufige Abhol-Kandidaten liefern.
 `pickup_search_confirmed: true` bedeutet nur, dass der Aggregator das Angebot
-für `pickup_search_postcode` und `pickup_search_radius_km` zurückgegeben hat.
+in einer Abholsuche für `pickup_search_radius_km` zurückgegeben hat.
+`pickup_search_profile_match: true` bestätigt zusätzlich, dass deren intern
+geprüfte Such-PLZ zum konfigurierten Profil passt und der Suchradius dessen
+Radius nicht überschreitet. Such-PLZ und Suchort werden nicht veröffentlicht:
+`location` enthält höchstens Land und Radius; `pickup_search_postcode` entfällt
+in neuen Exporten. Tatsächliche Angebotsstandorte bleiben davon getrennt.
+Leser verwenden den neuen booleschen Profilabgleich. Nur wenn das Feld fehlt,
+können sie bei älteren Snapshots die beiden vorhandenen Such-PLZ-Felder und
+Radien selbst vergleichen; ein vorhandenes `false` darf nicht überstimmt werden.
 `pickup_search_observed_at` datiert diese unabhängige Beobachtung. Eine spätere
 allgemeine Preis-/Gebotsbeobachtung erneuert sie nicht. Auch nach vollständig
 durchlaufenen Abholsuch-Offsets kann ein älterer Abholhinweis bei einem weiterhin

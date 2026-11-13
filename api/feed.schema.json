@@ -361,6 +361,29 @@
           "$ref": "#/$defs/nullableTime"
         },
         "location": {
+          "additionalProperties": false,
+          "description": "Public search context. New exports contain only country and pickup radius, never the private search postcode or city. Deprecated fields describe older snapshots only.",
+          "properties": {
+            "city": {
+              "$ref": "#/$defs/nullableText",
+              "deprecated": true,
+              "description": "Legacy private search origin; omitted from new exports."
+            },
+            "country": {
+              "pattern": "^[A-Z]{2}$",
+              "type": "string"
+            },
+            "pickup_radius_km": {
+              "exclusiveMinimum": 0,
+              "maximum": 200,
+              "type": "number"
+            },
+            "postcode": {
+              "$ref": "#/$defs/nullableText",
+              "deprecated": true,
+              "description": "Legacy private search origin; omitted from new exports."
+            }
+          },
           "type": "object"
         },
         "provider": {
@@ -760,8 +783,14 @@
           "type": "string"
         },
         "pickup_search_postcode": {
+          "deprecated": true,
+          "description": "Legacy private search origin; omitted from new exports. Use pickup_search_profile_match.",
           "pattern": "^[0-9]{5}$",
           "type": "string"
+        },
+        "pickup_search_profile_match": {
+          "description": "Computed before redaction: valid aggregator pickup evidence matches the internal search postcode and does not exceed the configured radius. Not a verified seller location or current pickup agreement. When present, use this value instead of a legacy postcode comparison.",
+          "type": "boolean"
         },
         "pickup_search_radius_km": {
           "exclusiveMinimum": 0,
