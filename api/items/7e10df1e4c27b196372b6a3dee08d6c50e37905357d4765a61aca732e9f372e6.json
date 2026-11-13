@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T14:38:45Z",
+    "evaluated_at": "2026-11-13T15:08:49Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T14:38:45Z",
+  "generated_at": "2026-11-13T15:08:49Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-13T14:14:52Z",
+    "content_updated_at": "2026-11-13T14:44:49Z",
     "country": "",
     "dependencies": [
       "ET200S-System",
@@ -35,12 +35,10 @@
     "detail_path": "api/items/7e10df1e4c27b196372b6a3dee08d6c50e37905357d4765a61aca732e9f372e6.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-16T14:44:50Z",
@@ -48,7 +46,7 @@
     "image": "https://i.ebayimg.com/images/g/fgQAAOSwbn9hvggw/s-l400.jpg",
     "interest_score": 5,
     "is_auction": true,
-    "last_seen_at": "2026-11-13T14:14:52Z",
+    "last_seen_at": "2026-11-13T14:44:49Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -70,7 +68,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -85,11 +82,11 @@
     "semantic_interest": 25,
     "semantic_review_mode": "interactive",
     "shipping_eur": 3.0,
-    "source_observed_at": "2026-11-13T14:14:52Z",
+    "source_observed_at": "2026-11-13T14:44:49Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "-ea- Siemens SIMATIC ET200S 4DO 6ES7132-4BD01-0AA0",
     "total_eur": null,
     "total_known_eur": 4.0,
@@ -155,7 +152,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:9706826c7a06262f789e6165f0640d5771c520db0d0ea9fd046bfcb3fe91835a",
+  "snapshot_id": "sha256:b349e6f5c974f8434af291fc6313138e8b31cce6e6bf8a4b0155efee2c565eb8",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
