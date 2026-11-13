@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T22:56:02Z",
+    "evaluated_at": "2026-11-13T23:28:00Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,19 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T22:56:02Z",
+  "generated_at": "2026-11-13T23:28:00Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
     "carried": false,
     "city": "",
     "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-    "content_updated_at": "2026-11-13T22:34:14Z",
+    "content_updated_at": "2026-11-13T23:06:19Z",
     "country": "",
     "dependencies": [
-      "Bohrmaschine oder Spindel mit kompatibler Aufnahme"
+      "Bohrmaschine oder Dorn mit B18-Aufnahme"
     ],
     "description": "",
     "description_status": "missing",
@@ -44,13 +44,14 @@
     "ends_at": "2026-11-18T15:39:37Z",
     "id": "v1|168855152362|0",
     "image": "https://i.ebayimg.com/images/g/t7YAAeSwRkRoxZKe/s-l400.jpg",
-    "interest_score": 11,
+    "interest_score": 10,
     "is_auction": true,
-    "last_seen_at": "2026-11-13T22:34:14Z",
+    "last_seen_at": "2026-11-13T23:06:19Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Lieferumfang und Zustand im Originalangebot prüfen.",
+      "Kegel, Spannbereich und Rundlauf prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -66,7 +67,7 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Angeboten wird ein Bohrfutter als Werkzeugzubehör, nicht die erwähnte vollständige Bohrmaschine; Ausführung und Qualität bleiben offen."
+      "Ein B18-Bohrfutter ist gebräuchliches Werkzeugzubehör, keine Bohrmaschine."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -74,15 +75,19 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Nur Titel und Zustandsangabe verfügbar, keine Verkäuferbeschreibung.",
+      "Quellenzustand: Neu: Sonstige (siehe Artikelbeschreibung). Nicht unabhängig geprüft.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 25,
-    "score": 11,
+    "scalp_score": 15,
+    "score": 10,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 25,
+    "semantic_assessed_at": "2026-11-13T23:05:23Z",
+    "semantic_interest": 15,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.5,
-    "source_observed_at": "2026-11-13T22:34:14Z",
+    "source_observed_at": "2026-11-13T23:06:19Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
@@ -91,11 +96,11 @@
     "total_eur": null,
     "total_known_eur": 6.5,
     "url": "https://www.ebay.de/itm/168855152362?hash=item27508d26ea%3Ag%3At7YAAeSwRkRoxZKe&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Das Bohrfutter benötigt eine Bohrmaschine oder Spindel mit passender Aufnahme; kein eigenständiger Antrieb.",
-    "useability_score": 45,
+    "useability_reason": "Die Verwendung setzt Bohrmaschine oder Dorn mit B18-Aufnahme voraus. Diese Abhängigkeit ist vom Zustand getrennt zu bewerten.",
+    "useability_score": 66,
     "valid_until": "2026-11-18T15:39:37Z",
-    "value_band": "unknown",
-    "value_reason": "Angeboten wird ein Bohrfutter als Werkzeugzubehör, nicht die erwähnte vollständige Bohrmaschine; Ausführung und Qualität bleiben offen.",
+    "value_band": "around_5",
+    "value_reason": "Ein B18-Bohrfutter ist gebräuchliches Werkzeugzubehör, keine Bohrmaschine.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -152,7 +157,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:286600cc069a02d93f0dc841cd76e65ef2be45250c9abd3d3092b7a08a6e72cc",
+  "snapshot_id": "sha256:ecc8ceb1d3529f24d41f996c9faadf67b8b4b0f73b6e20e6dfdadaf0e9ea3955",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",

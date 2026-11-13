@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T22:56:02Z",
+    "evaluated_at": "2026-11-13T23:28:00Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,20 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T22:56:02Z",
+  "generated_at": "2026-11-13T23:28:00Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
     "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-13T22:37:10Z",
+    "content_updated_at": "2026-11-13T23:09:03Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Geeignetes Bauprojekt",
+      "Montagematerial"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +46,13 @@
     "ends_at": "2026-11-20T14:30:47Z",
     "id": "v1|227612667359|0",
     "image": "https://i.ebayimg.com/images/g/KVAAAeSwTWpq0iXI/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 5,
     "is_auction": true,
-    "last_seen_at": "2026-11-13T22:37:10Z",
+    "last_seen_at": "2026-11-13T23:09:03Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Stückzahl, Maße und Glaszustand prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -62,11 +63,11 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "component",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Titel und Zustandsangabe vollständig gesichtet; Verkäuferbeschreibung fehlt."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -75,15 +76,18 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Anzahl, Risse und Profil unklar.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 10,
+    "score": 5,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-13T23:05:41Z",
+    "semantic_interest": 10,
+    "semantic_review_mode": "interactive",
     "shipping_eur": null,
-    "source_observed_at": "2026-11-13T22:37:10Z",
+    "source_observed_at": "2026-11-13T23:09:03Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
@@ -92,11 +96,11 @@
     "total_eur": null,
     "total_known_eur": null,
     "url": "https://www.ebay.de/itm/227612667359?hash=item34fec5addf%3Ag%3AKVAAAeSwTWpq0iXI&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Benötigen passenden Wandaufbau, Verbinder und Montage.",
+    "useability_score": 49,
     "valid_until": "2026-11-20T14:30:47Z",
     "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_reason": "Glasbausteine in benannter Größe ohne Mengenangabe; begrenzter unbestimmter Baustoffumfang.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -153,7 +157,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:286600cc069a02d93f0dc841cd76e65ef2be45250c9abd3d3092b7a08a6e72cc",
+  "snapshot_id": "sha256:ecc8ceb1d3529f24d41f996c9faadf67b8b4b0f73b6e20e6dfdadaf0e9ea3955",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
