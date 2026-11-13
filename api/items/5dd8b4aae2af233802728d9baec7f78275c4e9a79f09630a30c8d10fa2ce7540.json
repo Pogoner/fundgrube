@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T01:36:01Z",
+    "evaluated_at": "2026-11-13T02:14:39Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,10 +13,10 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T01:36:01Z",
+  "generated_at": "2026-11-13T02:14:39Z",
   "item": {
-    "assessment_basis": "heuristic",
-    "assessment_confidence": "low",
+    "assessment_basis": "llm",
+    "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
     "carried": true,
@@ -25,7 +25,7 @@
     "content_updated_at": "2026-11-12T20:06:02Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Kompatibles Smartphone und App"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +45,13 @@
     "ends_at": "2026-11-22T19:07:10Z",
     "id": "v1|198788316731|0",
     "image": "https://i.ebayimg.com/images/g/AAgAAeSwacBq9N3E/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 31,
     "is_auction": true,
     "last_seen_at": "2026-11-12T20:06:02Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Steckertyp, App-Unterstützung, Zubehör und Livebild prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,12 +61,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "apparatus",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "TOPDON TC002 ist ein konkretes Smartphone-Wärmebildkameramodul mit technischem Nutzen."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -76,14 +76,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Lightning-/USB-C-Kompatibilität aus Titel nicht technisch geprüft.",
+      "Sensor und Adapterfunktion unbekannt.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 48,
+    "score": 31,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-13T01:56:53.921000Z",
+    "semantic_interest": 48,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.99,
     "source_observed_at": "2026-11-12T20:06:02Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -94,11 +98,11 @@
     "total_eur": null,
     "total_known_eur": 6.99,
     "url": "https://www.ebay.de/itm/198788316731?hash=item2e48b4fe3b%3Ag%3AAAgAAeSwacBq9N3E&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Bildgebung setzt kompatibles iPhone bzw. USB-C-Anschluss und geeignete App voraus.",
+    "useability_score": 65,
     "valid_until": "2026-11-22T19:07:10Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "TOPDON TC002 ist ein konkretes Smartphone-Wärmebildkameramodul mit technischem Nutzen.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -155,7 +159,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:a13053899c5abe2f9ae4553e4c97efe482a9f44d3cbbdf78fe76f80ab1dee786",
+  "snapshot_id": "sha256:1de432ad0ca94b1a7f2b01db7e5114b933e59f7d7cb1c3e65fca1f14792494b8",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",

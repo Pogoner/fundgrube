@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T01:36:01Z",
+    "evaluated_at": "2026-11-13T02:14:39Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,19 +13,20 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T01:36:01Z",
+  "generated_at": "2026-11-13T02:14:39Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
     "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-13T01:21:01Z",
+    "content_updated_at": "2026-11-13T01:59:27Z",
     "country": "",
     "dependencies": [
-      "Betriebsmittel und Anschlüsse nach Modellvorgaben"
+      "400-V-Versorgung",
+      "Passender Brenner und gegebenenfalls Schutzgas"
     ],
     "description": "",
     "description_status": "missing",
@@ -44,13 +45,13 @@
     "ends_at": "2026-11-22T19:00:01Z",
     "id": "v1|880104649787|0",
     "image": "https://i.ebayimg.com/images/g/SJAAAeSw9XJqkrO2/s-l400.jpg",
-    "interest_score": 62,
+    "interest_score": 39,
     "is_auction": true,
-    "last_seen_at": "2026-11-13T01:21:01Z",
+    "last_seen_at": "2026-11-13T01:59:27Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Prüfen, ob vollständige Stromquelle, Kabel und Brenner vorhanden sind."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -65,7 +66,7 @@
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Der Titel deutet auf ein eigenständiges Spezialgerät hin; grobe Geräteklasse, kein belegter Gebrauchtwert."
+      "EWM-Tetrix-400-CEL-PWS ist als leistungsstarkes 400-V-Schweißgerät bezeichnet; Umfang der Stromquelle bleibt zu prüfen."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -73,15 +74,19 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Titel 'passend für WIG/TIG' lässt Zubehörumfang offen.",
+      "Betriebsfähigkeit nicht nachgewiesen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 78,
-    "score": 62,
+    "scalp_score": 56,
+    "score": 39,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 78,
+    "semantic_assessed_at": "2026-11-13T01:56:53.921000Z",
+    "semantic_interest": 56,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 9.9,
-    "source_observed_at": "2026-11-13T01:21:01Z",
+    "source_observed_at": "2026-11-13T01:59:27Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
@@ -90,11 +95,11 @@
     "total_eur": null,
     "total_known_eur": 10.9,
     "url": "https://www.ebay.de/itm/880104649787?hash=itemccea53343b%3Ag%3ASJAAAeSw9XJqkrO2&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständiger Gerätetyp, jedoch mit üblichen Betriebsmitteln und modellabhängigen Anschlüssen; keine passende übergeordnete Maschine nötig.",
-    "useability_score": 80,
+    "useability_reason": "Mit geeigneter Drehstromversorgung, Schweißbrenner, Gas und Schutztechnik einsetzbar.",
+    "useability_score": 70,
     "valid_until": "2026-11-22T19:00:01Z",
     "value_band": "around_500",
-    "value_reason": "Der Titel deutet auf ein eigenständiges Spezialgerät hin; grobe Geräteklasse, kein belegter Gebrauchtwert.",
+    "value_reason": "EWM-Tetrix-400-CEL-PWS ist als leistungsstarkes 400-V-Schweißgerät bezeichnet; Umfang der Stromquelle bleibt zu prüfen.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -151,7 +156,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:a13053899c5abe2f9ae4553e4c97efe482a9f44d3cbbdf78fe76f80ab1dee786",
+  "snapshot_id": "sha256:1de432ad0ca94b1a7f2b01db7e5114b933e59f7d7cb1c3e65fca1f14792494b8",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
