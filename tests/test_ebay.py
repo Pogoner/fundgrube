@@ -50,6 +50,7 @@ class QueueTransport:
 def client_with(*responses, **kwargs):
     transport = QueueTransport(*responses)
     delays = []
+    kwargs.setdefault("postcode", "99999")
     client = EbayClient(
         "fake-client-id", "fake-client-secret", transport=transport,
         sleep=delays.append, **kwargs,
@@ -61,7 +62,7 @@ def search(client, **overrides):
     args = {
         "category_id": "181998", "now": NOW, "lookahead_hours": 24,
         "max_price_eur": None, "max_bids": 0, "local_pickup": False,
-        "postcode": "69121", "pickup_radius_km": 50,
+        "postcode": "99999", "pickup_radius_km": 50,
     }
     args.update(overrides)
     return client.search(**args)
@@ -90,7 +91,7 @@ class TestAuthentication(unittest.TestCase):
     def test_environment_credentials(self):
         transport = QueueTransport(token(), collection())
         with patch.dict(os.environ, {"EBAY_CLIENT_ID": "env-id", "EBAY_CLIENT_SECRET": "env-secret"}):
-            client = EbayClient(transport=transport)
+            client = EbayClient(transport=transport, postcode="99999")
         search(client)
         expected = base64.b64encode(b"env-id:env-secret").decode()
         self.assertEqual(transport.calls[0]["headers"]["Authorization"], "Basic " + expected)
@@ -98,7 +99,7 @@ class TestAuthentication(unittest.TestCase):
     def test_missing_credentials_never_calls_transport(self):
         transport = QueueTransport()
         with patch.dict(os.environ, {}, clear=True):
-            client = EbayClient(transport=transport)
+            client = EbayClient(transport=transport, postcode="99999")
         with self.assertRaises(CredentialsMissing):
             search(client)
         self.assertEqual(client.calls_used, 0)
@@ -106,7 +107,7 @@ class TestAuthentication(unittest.TestCase):
 
     def test_explicit_empty_credentials_do_not_fall_back_to_environment(self):
         with patch.dict(os.environ, {"EBAY_CLIENT_ID": "configured", "EBAY_CLIENT_SECRET": "configured"}):
-            client = EbayClient("", "", transport=QueueTransport())
+            client = EbayClient("", "", transport=QueueTransport(), postcode="99999")
         with self.assertRaises(CredentialsMissing):
             search(client)
 
@@ -163,12 +164,12 @@ class TestSearch(unittest.TestCase):
         self.assertIn("buyingOptions:{AUCTION}", filters)
         self.assertIn("bidCount:[..0]", filters)
         self.assertIn("itemEndDate:[2026-11-07T12:00:00.000Z..2026-11-08T12:00:00.000Z]", filters)
-        self.assertIn("deliveryCountry:DE,deliveryPostalCode:69121", filters)
+        self.assertIn("deliveryCountry:DE,deliveryPostalCode:99999", filters)
         self.assertNotIn("price:", filters)
         self.assertNotIn("priceCurrency", filters)
         self.assertNotIn("pickup", filters)
         self.assertEqual(request["headers"]["X-EBAY-C-MARKETPLACE-ID"], "EBAY_DE")
-        self.assertEqual(request["headers"]["X-EBAY-C-ENDUSERCTX"], "contextualLocation=country%3DDE%2Czip%3D69121")
+        self.assertEqual(request["headers"]["X-EBAY-C-ENDUSERCTX"], "contextualLocation=country%3DDE%2Czip%3D99999")
         self.assertFalse(result["price_filter_applied"])
 
     def test_all_five_pickup_filters_in_km(self):
@@ -248,7 +249,7 @@ class TestSearch(unittest.TestCase):
     def test_invalid_search_input_cannot_inject_filters_or_paths(self):
         cases = (
             {"category_id": "1,2"}, {"category_id": "../bad"}, {"category_id": True},
-            {"postcode": "69121,pickupCountry:US"}, {"postcode": 69121},
+            {"postcode": "99999,pickupCountry:US"}, {"postcode": 99999},
             {"max_bids": -1}, {"max_bids": False}, {"max_price_eur": float("nan")},
             {"max_price_eur": "1],sellers:{bad}"}, {"max_price_eur": -1},
             {"local_pickup": "false"}, {"pickup_radius_km": 0},
@@ -320,7 +321,7 @@ class TestItemDetails(unittest.TestCase):
         self.assertEqual(transport.calls[-1]["url"], BASE_API + "/buy/browse/v1/item/v1%7C123456789012%7C0")
         self.assertEqual(client.calls_used, 1)
         self.assertNotIn("fieldgroups", transport.calls[-1]["url"])
-        self.assertIn("contextualLocation=country%3DDE%2Czip%3D69121", transport.calls[-1]["headers"]["X-EBAY-C-ENDUSERCTX"])
+        self.assertIn("contextualLocation=country%3DDE%2Czip%3D99999", transport.calls[-1]["headers"]["X-EBAY-C-ENDUSERCTX"])
 
     def test_unknown_reserve_bid_and_prices_remain_unknown(self):
         client, _, _ = client_with(token(), response({"itemId": ITEM_ID}))
@@ -452,7 +453,7 @@ class TestRobustness(unittest.TestCase):
 
     def test_invalid_client_config(self):
         for kwargs in ({"max_calls": -1}, {"max_calls": True}, {"max_retries": 99},
-                       {"timeout": 61}, {"marketplace": "EBAY_US"}, {"postcode": "69121\n"}):
+                       {"timeout": 61}, {"marketplace": "EBAY_US"}, {"postcode": "99999\n"}):
             with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
                 client_with(**kwargs)
 

@@ -225,7 +225,7 @@ class EbayClient:
 
     def __init__(
         self, client_id: str | None = None, client_secret: str | None = None, *,
-        marketplace: str = "EBAY_DE", postcode: str = "69121", max_calls: int = 90,
+        marketplace: str = "EBAY_DE", postcode: str | None = None, max_calls: int = 90,
         timeout: float = 20.0, max_retries: int = 2,
         transport: Transport | None = None, sleep: Callable[[float], None] | None = None,
     ) -> None:

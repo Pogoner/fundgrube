@@ -44,7 +44,7 @@ test("Info is a short guide with score, source and image help, without private o
   assert.match(html, /Gebote, Zustand, Lieferumfang und Transport/);
   assert.match(html, /Abholhinweis bestätigt keinen Abholort/);
   assert.match(html, /erkennt die Ursache nicht automatisch/);
-  assert.doesNotMatch(html, /69121|Heidelberg|PLZ|Suchradius|Snapshot|Budget|Schnittstelle|coverage|copy-instructions|info-profile|info-review|<table\b/i);
+  assert.doesNotMatch(html, /99999|Teststadt|PLZ|Suchradius|Snapshot|Budget|Schnittstelle|coverage|copy-instructions|info-profile|info-review|<table\b/i);
   assert.match(html, /id="info-status"[^>]*role="status"[^>]*hidden/);
   for (const asset of ["styles.css", "info.js"]) assert(html.includes(`${asset}?v=design-v3.9`));
 });
@@ -97,7 +97,7 @@ test("source errors and disabled sources remain visible and never imply current 
 
 test("network and format failures keep a small actionable note without exposing raw errors", async () => {
   for (const options of [
-    {failure: "private path /69121/Heidelberg <script>bad()</script>"},
+    {failure: "private path /99999/Teststadt <script>bad()</script>"},
     {ok: false},
     {data: null},
     {data: {schema_version: 999, source_status: "live"}},
@@ -107,22 +107,22 @@ test("network and format failures keep a small actionable note without exposing 
     assert.equal(ui.status.hidden, false);
     assert.match(ui.status.textContent, /Datenstatus ist nicht erreichbar/);
     assert.match(ui.status.textContent, /Hinweise im Radar/);
-    assert.doesNotMatch(ui.status.textContent, /69121|Heidelberg|private path|<script>|HTTP|Snapshot/);
+    assert.doesNotMatch(ui.status.textContent, /99999|Teststadt|private path|<script>|HTTP|Snapshot/);
   }
 });
 
 test("private profile data, source messages and markup are not copied into the page", async () => {
-  const privateText = "69121 Heidelberg <img src=x onerror=bad()>";
+  const privateText = "99999 Teststadt <img src=x onerror=bad()>";
   for (const source_status of ["live", "partial", "error", privateText]) {
     const ui = await render({data: {
       ...healthy, source_status,
-      location: {postcode: "69121", city: "Heidelberg", pickup_radius_km: 50},
+      location: {postcode: "99999", city: "Teststadt", pickup_radius_km: 50},
       status_message: privateText,
       blockers: [{code: "other", message: privateText, action: privateText}],
       coverage: {source_url: privateText},
       interactive_review: {reviewer: privateText}
     }});
-    assert.doesNotMatch(ui.status.textContent, /69121|Heidelberg|<img|onerror|reviewer|50/);
+    assert.doesNotMatch(ui.status.textContent, /99999|Teststadt|<img|onerror|reviewer|50/);
   }
   assert.doesNotMatch(source, /innerHTML|\.location\b|postcode|pickup_radius_km|status_message|clipboard/);
 });

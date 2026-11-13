@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from hunter.models import finite_number, parse_time, plain_text
+from hunter.private_search import matching_origin
 
 MEDIA = re.compile(
     r"\b(?:zeitschrift(?:en)?|[a-zäöüß]{0,48}(?:prospekt(?:e|en|s)?|katalog(?:e|en|s)?|preisliste(?:n)?|"
@@ -270,16 +271,14 @@ def _provisional_pickup_match(item: dict[str, Any], settings: dict[str, Any]) ->
     A query match is not a verified article location or pickup agreement. It may
     keep a candidate in review, but can never set local_pickup_confirmed.
     """
-    postcode = settings.get("postcode")
     search_radius = finite_number(item.get("pickup_search_radius_km"))
     requested_radius = finite_number(settings.get("pickup_radius_km", 50))
     return (
         item.get("verification_level") == "aggregator"
         and item.get("source_provider") == "auktionen-ohne-gebot"
         and item.get("pickup_search_confirmed") is True
-        and isinstance(postcode, str)
-        and re.fullmatch(r"[0-9]{5}", postcode) is not None
-        and item.get("pickup_search_postcode") == postcode
+        and settings.get("aog_pickup_enabled", True) is not False
+        and matching_origin(item, settings)
         and search_radius is not None and search_radius > 0
         and requested_radius is not None and requested_radius > 0
         and search_radius <= requested_radius

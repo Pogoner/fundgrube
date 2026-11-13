@@ -20,6 +20,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from hunter.ranking import apply_interest_profile
+from hunter.private_search import matching_origin, valid_postcode, valid_profile
 
 
 SCHEMA_VERSION = 3
@@ -54,6 +55,7 @@ PRIVATE_KEYS = {
     "ebayclientid", "ebayclientsecret", "accesstoken", "refreshtoken",
     "githubtoken", "authorization", "password", "privatekey", "credentials",
     "seller", "sellerid", "sellername", "sellerusername", "username", "email",
+    "profilekey", "hunterprivatesearch",
 }
 ROOT_FIELDS = (
     "generated_at", "last_successful_scan_at", "source_status", "status_message",
@@ -72,7 +74,7 @@ DEAL_FIELDS = (
     "shipping_confirmed", "detail_fetched", "details_fetched", "carried", "stale", "source",
     "category_id", "category_name", "model", "completeness", "condition_claim",
     "source_provider", "source_url", "source_observed_at", "verification_level", "pickup_available",
-    "pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km",
+    "pickup_search_confirmed", "pickup_search_postcode", "pickup_search_profile", "pickup_search_radius_km",
     "pickup_search_observed_at", "personal_interest_excluded", "personal_interest_reason",
     "semantic_review_mode",
     "score_version", "scalp_score", "useability_score", "useability_reason", "dependencies",
@@ -258,12 +260,14 @@ def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, act
         item["local_pickup_confirmed"] = False
     pickup_observed = None
     pickup_fields = ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km", "pickup_search_observed_at")
-    if any(key in item for key in pickup_fields):
+    if any(key in item for key in pickup_fields) or (aggregator and "pickup_search_profile" in item):
         postcode, radius = item.get("pickup_search_postcode"), item.get("pickup_search_radius_km")
+        origin_valid = (valid_profile(item.get("pickup_search_profile")) if "pickup_search_profile" in item
+                        else valid_postcode(postcode))
         pickup_observed = _timestamp(item.get("pickup_search_observed_at", item.get("source_observed_at")))
         valid_context = (
-            aggregator and observed is not None and isinstance(postcode, str)
-            and re.fullmatch(r"[0-9]{5}", postcode) is not None and _number(radius) and 0 < radius <= 200
+            aggregator and observed is not None and origin_valid
+            and _number(radius) and 0 < radius <= 200
             and pickup_observed is not None and pickup_observed <= at
             and item.get("pickup_available") is not False
         )
@@ -273,7 +277,7 @@ def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, act
         profile = pickup_profile or {}
         profile_radius = profile.get("pickup_radius_km")
         item["pickup_search_profile_match"] = bool(
-            item["pickup_search_confirmed"] and postcode == profile.get("postcode")
+            item["pickup_search_confirmed"] and matching_origin(item, profile)
             and _number(profile_radius) and 0 < profile_radius <= 200
             and radius <= profile_radius
         )
@@ -285,6 +289,7 @@ def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, act
             item.pop("pickup_search_observed_at", None)
             pickup_observed = None
     item.pop("pickup_search_postcode", None)
+    item.pop("pickup_search_profile", None)
     for key in ("title", "description", "url", "image", "city", "postcode", "condition", "value_reason"):
         value = item.get(key)
         if value is not None and not isinstance(value, str):

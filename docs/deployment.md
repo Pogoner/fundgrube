@@ -17,9 +17,18 @@ Repository übernehmen; dafür ist kein OpenAI-API-Key nötig.
 
 1. In [Settings → Pages](https://github.com/Pogoner/fundgrube/settings/pages)
    unter **Build and deployment → Source** die Option **GitHub Actions** wählen.
-2. Die Standardquelle benötigt keine Secrets. Unter
+2. `HUNTER_PRIVATE_SEARCH` als Repository-Secret unter
    [Settings → Secrets and variables → Actions](https://github.com/Pogoner/fundgrube/settings/secrets/actions)
-   nur gewünschte Abweichungen setzen: `HUNTER_SOURCE=disabled` schaltet den
+   einrichten. Der Helfer `python scripts/configure_private_search.py` verwendet
+   eine angemeldete GitHub CLI, fragt die PLZ verdeckt ab und erzeugt den
+   zufälligen HMAC-Schlüssel. Das JSON enthält exakt `postcode` (fünf Ziffern)
+   und `profile_key` (64 Hex-Zeichen). Keine tatsächlichen Werte in
+   Repository-Dateien, Kommandozeilenargumente oder Chatnachrichten schreiben.
+   Ein vorhandenes Secret wird nur mit ausdrücklich gewähltem `--replace`
+   ersetzt; ein Schlüsselwechsel macht alte Profilbezüge ungültig.
+   Ohne gültiges Secret wird ein freigegebener Live-Abruf vor dem ersten
+   Quellenzugriff abgebrochen. PR-/Offline-Tests benötigen es nicht.
+   Weitere gewünschte Abweichungen als Variablen setzen: `HUNTER_SOURCE=disabled` schaltet den
    Sammler aus, `HUNTER_PUBLISH_LIVE_DATA=false` stoppt neue Live-Exporte.
    Bestehende Repository-Variablen haben Vorrang vor dem Workflow-Standard;
    insbesondere ein früher gesetztes `false` bleibt wirksam.
@@ -140,9 +149,9 @@ Ablauf und Angebots-/Bildverweise, soweit vorhanden. Quelle und Originalverweis
 bleiben erhalten. **Keine Verkäufer-Volltexte, tatsächlichen Standorte oder
 Mindestpreisbelege werden geliefert oder nachgeladen.**
 
-Die öffentliche Quellensuche unterstützt `abholung=1&plz=69121&km=50`. Treffer
+Die öffentliche Quellensuche unterstützt eine Abholabfrage mit PLZ und Radius. Treffer
 daraus mit ausdrücklicher Abholoption können als **Abholsuche 50 km** erscheinen.
-`pickup_search_confirmed` und zugehörige Such-PLZ/Radius halten fest, dass das
+`pickup_search_confirmed`, schlüsselgebundener Profilbezug und Radius halten fest, dass das
 Angebot aus dieser Suche stammt. `pickup_search_observed_at` datiert diese
 Beobachtung getrennt: Ein neuer Preis-/Gebotsstand aus der allgemeinen Suche
 verjüngt keinen älteren Abholsuchtreffer. Bei einem unvollständigen Abgleich
@@ -155,7 +164,7 @@ Auktionsende oder entfallene Abholung. Erst eine neue ausdrückliche negative
 Abholangabe oder ein nicht mehr passendes Suchprofil hebt den vorherigen
 Hinweis auf. Sein ursprüngliches Alter bleibt sichtbar und wird nach mehr als
 zwei Stunden ausdrücklich gewarnt. Das bestätigt **nicht unabhängig einen
-physischen Standort, eine Entfernung oder die tatsächliche Nähe zu Heidelberg**.
+physischen Standort, eine Entfernung oder die tatsächliche Nähe zum Suchort**.
 Die PLZ ist weiterhin Suchprofil, nicht Artikelstandort. Diese Kandidaten
 bleiben als zu prüfen eingestuft; Abholort und -bedingungen müssen im
 Originalangebot bestätigt werden. Fehlende Werte bleiben unbekannt, auch bei
@@ -351,12 +360,23 @@ allein installiert kein neues Tool in einem Chat.
 - Die Veröffentlichung erlaubt ausschließlich `site/api/`-Dokumente,
   `site/data/deals.json` und `runtime/state.json`. Das Wiederherstellungsmerkmal,
   sonstige Laufzeitdateien, Quellcode und Secrets werden nicht übernommen.
-- Der Datenzweig enthält `state.json` als öffentlichen, geheimnisfreien
+- Der Datenzweig enthält `state.json` als öffentlichen
   technischen Dauerzustand. Im AOG-Standardbetrieb sind insbesondere
-  Angebotstitel, Kurzmetadaten, generierte Einschätzungen und die konfigurierte Such-PLZ
-  **69121 Heidelberg** öffentlich zugänglich. Alles in diesem öffentlichen
-  Repository und auf Pages ist öffentlich. Zugangsdaten gehören auch nicht
-  vorübergehend in Dateien, Ausgaben, Issues oder Commits.
+  Angebotstitel, Kurzmetadaten und generierte Einschätzungen öffentlich zugänglich.
+  Die private Such-PLZ kommt ausschließlich aus dem Secret in den Arbeitsspeicher
+  und die zugelassene Quellenanfrage. In `state.json` bleibt nur ein
+  HMAC-SHA256-Profilbezug; der Schlüssel liegt ausschließlich im Secret.
+  Legacy-Suchbelege werden beim Laden vor möglichen Checkpoints migriert.
+  Website und API enthalten nur `pickup_search_profile_match`, keinen HMAC.
+  Der HMAC ist ein stabiler Profilbezug, keine Garantie vollständiger Anonymität.
+  Zusammengehörige Beobachtungen bleiben erkennbar; auch die Menge der
+  Abholtreffer kann regionale Hinweise enthalten. Die vollständige private
+  Abfrage-URL darf weder in Logs noch im Zustand oder Export gespeichert werden.
+  Ein HMAC schützt keinen tatsächlichen Verkäuferstandort; solche Quellenfakten
+  werden getrennt behandelt. Alte Commits können die frühere Konfiguration
+  weiterhin enthalten; siehe [Historienbereinigung](privacy-removal.md).
+  Zugangsdaten gehören auch nicht vorübergehend in Dateien, Ausgaben, Issues
+  oder Commits.
 - AOG liefert keine Verkäufer-Volltexte; der Standardbetrieb archiviert sie
   deshalb nicht. Die öffentliche Abrufbarkeit und erlaubende Robots-Regeln sind
   keine pauschale Lizenz. Quellenangabe, Nutzungsbedingungen und mögliche Lösch-

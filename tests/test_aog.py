@@ -11,10 +11,14 @@ from hunter.aog import (
 )
 from hunter.models import normalize_item
 from hunter.pipeline import run_pipeline
+from hunter.private_search import load_private_search
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 ROBOTS = "User-agent: *\nDisallow: /intern/\nAllow: /\n# KI willkommen\n"
-SETTINGS = {"aog_max_requests_per_run": 2, "max_price_eur": 1, "postcode": "69121", "pickup_radius_km": 50}
+PRIVATE_ENV = {"HUNTER_PRIVATE_SEARCH": json.dumps({"postcode": "99999", "profile_key": "11" * 32})}
+PRIVATE = load_private_search(PRIVATE_ENV, required=True)
+ORIGIN_SETTINGS = {"postcode": "99999", "pickup_search_profile": PRIVATE.profile}
+SETTINGS = {**ORIGIN_SETTINGS, "aog_max_requests_per_run": 2, "max_price_eur": 1, "pickup_radius_km": 50}
 
 
 def robots(body=ROBOTS, status=200, headers=None):
@@ -176,7 +180,8 @@ class ParsingTests(unittest.TestCase):
         result, _, _ = run([robots(), api([]), api([article(abholung=True, versand=None)])])
         row = result["items"][0]
         self.assertTrue(row["pickup_search_confirmed"])
-        self.assertEqual(row["pickup_search_postcode"], "69121")
+        self.assertEqual(row["pickup_search_profile"], PRIVATE.profile)
+        self.assertNotIn("pickup_search_postcode", row)
         self.assertEqual(row["pickup_search_radius_km"], 50)
         self.assertFalse(row["local_pickup_confirmed"])
         self.assertNotIn("distance_km", row)
@@ -269,8 +274,9 @@ class ParsingTests(unittest.TestCase):
         self.assertEqual(normalized["verification_level"], "aggregator")
         self.assertEqual(normalized["last_seen_at"], "2026-11-07T11:45:10Z")
         self.assertEqual(normalized["price_kind"], "auction_price")
-        feed, state = run_pipeline(SETTINGS, source="aog", at=NOW,
-            environ={"HUNTER_PUBLISH_LIVE_DATA": "true", "HUNTER_LLM_ENABLED": "false"},
+        public_settings = {key: value for key, value in SETTINGS.items() if key not in {"postcode", "pickup_search_profile"}}
+        feed, state = run_pipeline(public_settings, source="aog", at=NOW,
+            environ={**PRIVATE_ENV, "HUNTER_PUBLISH_LIVE_DATA": "true", "HUNTER_LLM_ENABLED": "false"},
             aog_collect=lambda settings, at, source_state: source_result)
         self.assertEqual(len(feed["deals"]), 1)
         self.assertEqual(feed["deals"][0]["verification_level"], "aggregator")
@@ -307,7 +313,7 @@ class SchedulingTests(unittest.TestCase):
         self.assertEqual(general["gratis"], ["0"])
         self.assertNotIn("gratis", pickup)
         self.assertEqual(pickup["abholung"], ["1"])
-        self.assertEqual(pickup["plz"], ["69121"])
+        self.assertEqual(pickup["plz"], ["99999"])
         self.assertEqual(pickup["km"], ["50"])
         self.assertEqual(result["coverage"]["upstream_end_filter"], "alle")
         self.assertEqual(result["coverage"]["local_active_window_hours"], 72)
@@ -358,7 +364,7 @@ class SchedulingTests(unittest.TestCase):
 
     def test_normal_full_scan_fetches_all_general_and_pickup_pages_without_overfetch(self):
         fake, delays = PagedTransport(), []
-        result = collect({"max_price_eur": 1}, NOW, None, transport=fake, sleep=delays.append, monotonic=lambda: 0)
+        result = collect({**ORIGIN_SETTINGS, "max_price_eur": 1}, NOW, None, transport=fake, sleep=delays.append, monotonic=lambda: 0)
         coverage = result["coverage"]
         self.assertEqual(result["status"], "live")
         self.assertTrue(coverage["traversal_completed"])
@@ -394,7 +400,7 @@ class SchedulingTests(unittest.TestCase):
         start = NOW.replace(hour=0)
         for index in range(48):
             fake = PagedTransport(general=96, pickup=48)
-            result = collect({}, start + timedelta(minutes=30 * index), state,
+            result = collect(ORIGIN_SETTINGS, start + timedelta(minutes=30 * index), state,
                              transport=fake, sleep=lambda _: None, monotonic=lambda: 0)
             self.assertEqual(result["status"], "live")
             self.assertEqual(len(fake.requests), 4)
@@ -436,7 +442,7 @@ class SchedulingTests(unittest.TestCase):
 
     def test_page_budget_cannot_be_raised_above_verified_bound(self):
         for settings in ({"aog_max_requests_per_run": 161}, {"aog_page_size": 1000}, {"aog_page_size": 12}, {"max_price_eur": float("inf")},
-                         {"max_price_eur": 10**400}, {"pickup_radius_km": 10**400}, {"postcode": "69121,evil"},
+                         {"max_price_eur": 10**400}, {"pickup_radius_km": 10**400}, {"postcode": "99999,evil"},
                          {"lookahead_hours": True}, {"lookahead_hours": float("inf")}, {"lookahead_hours": 10**400},
                          {"lookahead_hours": 0}, {"aog_max_run_seconds": 1501}, {"aog_max_run_seconds": True}):
             with self.subTest(settings=settings), self.assertRaises(ValueError):
@@ -452,7 +458,7 @@ class SchedulingTests(unittest.TestCase):
 
     def test_time_limit_stops_before_sleep_or_another_request(self):
         fake, delays = PagedTransport(general=96, pickup=96), []
-        result = collect({"aog_max_run_seconds": 45}, NOW, None, transport=fake, sleep=delays.append, monotonic=lambda: 0)
+        result = collect({**ORIGIN_SETTINGS, "aog_max_run_seconds": 45}, NOW, None, transport=fake, sleep=delays.append, monotonic=lambda: 0)
         self.assertEqual(len(fake.requests), 3)
         self.assertEqual(delays, [10, 10])
         self.assertEqual(result["status"], "partial")
@@ -521,7 +527,7 @@ class SchedulingTests(unittest.TestCase):
 
     def test_nonadjacent_repeated_ids_preserve_stop_and_success_timestamps(self):
         previous_success = "2026-11-07T11:00:00Z"
-        state = {"last_successful_full_scan_at": previous_success,
+        state = {"last_successful_full_scan_at": previous_success, "pickup_search_profile": PRIVATE.profile,
                  "last_successful_traversals": {"general": previous_success, "pickup": previous_success}}
         result, fake, delays = run([
             robots(),
@@ -728,10 +734,16 @@ class HttpSafetyTests(unittest.TestCase):
             self.assertEqual(result["warnings"][0]["code"], "response_too_large")
 
     def test_transport_error_never_leaks_its_message(self):
-        result, fake, _ = run([robots(), OSError("private auth token")])
-        self.assertEqual(result["status"], "error")
-        self.assertNotIn("private auth token", json.dumps(result))
-        self.assertEqual(len(fake.requests), 2)
+        private_url = ORIGIN + API_PATH + "?abholung=1&plz=" + PRIVATE.postcode + "&km=50"
+        for message in ("private auth token", private_url + " " + PRIVATE_ENV["HUNTER_PRIVATE_SEARCH"]):
+            with self.subTest(message=message):
+                result, fake, _ = run([robots(), OSError(message)])
+                self.assertEqual(result["status"], "error")
+                serialized = json.dumps(result)
+                self.assertNotIn(message, serialized)
+                self.assertNotIn(private_url, serialized)
+                self.assertNotIn(PRIVATE.postcode, serialized)
+                self.assertEqual(len(fake.requests), 2)
 
     def test_later_page_error_preserves_only_valid_previous_page(self):
         result, fake, _ = run([robots(), api(), api(payload={"malformed": "payload"})])

@@ -33,6 +33,7 @@ from email.utils import parsedate_to_datetime
 from typing import Any, Callable, Mapping
 
 from .models import iso_time, parse_time
+from .private_search import valid_postcode, valid_profile
 
 
 ORIGIN = "https://auktionen-ohne-gebot.de"
@@ -273,7 +274,7 @@ def _cache_observation(headers: Mapping[str, str], at: datetime) -> tuple[dateti
 
 
 def _parse_page(response: HttpResponse, at: datetime, *, page_size: int, offset: int,
-                pickup: bool, postcode: str, radius: float) -> tuple[list[dict], int, datetime]:
+                pickup: bool, profile: str | None, radius: float) -> tuple[list[dict], int, datetime]:
     headers = _headers(response.headers)
     media_type = headers.get("content-type", "").split(";", 1)[0].strip().lower()
     if media_type != "application/json":
@@ -317,7 +318,7 @@ def _parse_page(response: HttpResponse, at: datetime, *, page_size: int, offset:
             "ends_at": iso_time(ending) if ending else None, "condition": condition or "",
             "is_auction": True if ending else None, "pickup_available": available,
             "local_pickup_confirmed": False, "pickup_search_confirmed": confirmed,
-            "pickup_search_postcode": postcode if confirmed else None,
+            "pickup_search_profile": profile if confirmed else None,
             "pickup_search_radius_km": radius if confirmed else None,
             "pickup_search_observed_at": iso_time(observed) if confirmed else None,
             "source_provider": PROVIDER, "source_url": SOURCE_URL, "verification_level": "aggregator",
@@ -357,6 +358,8 @@ def _source_state(value: Any, at: datetime, page_size: int) -> dict:
                 state["last_successful_traversals"][key] = iso_time(parsed)
     if value.get("request_day") == state["request_day"] and type(value.get("requests_today")) is int:
         state["requests_today"] = max(0, min(value["requests_today"], MAX_DAILY_REQUESTS))
+    if valid_profile(value.get("pickup_search_profile")):
+        state["pickup_search_profile"] = value["pickup_search_profile"]
     return state
 
 
@@ -372,7 +375,7 @@ def _merge(items: dict[str, dict], row: dict) -> None:
     candidates = [value for value in (old, row) if value["pickup_search_confirmed"]]
     if candidates and newer.get("pickup_available") is not False:
         evidence = max(candidates, key=lambda value: value["pickup_search_observed_at"])
-        for key in ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km",
+        for key in ("pickup_search_confirmed", "pickup_search_profile", "pickup_search_radius_km",
                     "pickup_search_observed_at", "pickup_available"):
             merged[key] = evidence[key]
     items[row["id"]] = merged
@@ -398,12 +401,13 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
     duration = settings.get("aog_max_run_seconds", MAX_RUN_SECONDS)
     pickup_enabled = settings.get("aog_pickup_enabled", True)
     maximum, radius = settings.get("max_price_eur", 1), settings.get("pickup_radius_km", 50)
-    lookahead, postcode = settings.get("lookahead_hours", 72), settings.get("postcode", "69121")
+    lookahead, postcode = settings.get("lookahead_hours", 72), settings.get("postcode")
+    profile = settings.get("pickup_search_profile")
     if type(page_size) is not int or page_size != PAGE_SIZE or type(limit) is not int or not 1 <= limit <= MAX_API_REQUESTS:
         raise ValueError("unsupported AOG page/request limit")
     if type(duration) is not int or not 30 <= duration <= MAX_RUN_SECONDS:
         raise ValueError("unsupported AOG time limit")
-    if type(pickup_enabled) is not bool or not isinstance(postcode, str) or not re.fullmatch(r"[0-9]{5}", postcode):
+    if type(pickup_enabled) is not bool or (pickup_enabled and (not valid_postcode(postcode) or not valid_profile(profile))):
         raise ValueError("invalid AOG pickup settings")
     if (any(type(value) not in (int, float) for value in (maximum, radius))
             or not 0 <= maximum <= 1000000 or not 0 < radius <= 1000
@@ -413,6 +417,13 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
         raise ValueError("invalid AOG lookahead")
     end_filter = "alle" if lookahead > 24 else "24h"
     state = _source_state(source_state, at, page_size)
+    if pickup_enabled and state.get("pickup_search_profile") != profile:
+        state["last_successful_traversals"].pop("pickup", None)
+        state.pop("last_successful_full_scan_at", None)
+    if valid_profile(profile):
+        state["pickup_search_profile"] = profile
+    else:
+        state.pop("pickup_search_profile", None)
     send, pause, clock = transport or _transport, sleep or time.sleep, monotonic or time.monotonic
     started, virtual_wait_seconds = clock(), 0.0
     warnings, items, observations = [], {}, []
@@ -588,7 +599,7 @@ def collect(settings: Mapping[str, Any], at: datetime, source_state: dict | None
                 meta["started_at"] = iso_time(current_time())
             response = request(url)
             rows, total, observed = _parse_page(response, current_time(), page_size=page_size, offset=offset,
-                                               pickup=pickup, postcode=postcode, radius=radius)
+                                               pickup=pickup, profile=profile, radius=radius)
             observations.append(observed)
             coverage["source_cache_max_age_minutes"] = max(coverage["source_cache_max_age_minutes"],
                                                            math.ceil((current_time() - observed).total_seconds() / 60))

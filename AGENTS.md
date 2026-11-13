@@ -48,7 +48,8 @@
    genaue Entfernung. Verkäuferangaben zur Funktion sind keine eigene Prüfung.
    AOG liefert keine Verkäufer-Volltexte, tatsächlichen Standorte oder
    Mindestpreisbelege. Die eigene Quellensuche unterstützt aber
-   `abholung=1&plz=69121&km=50`. `pickup_search_confirmed` mit Such-PLZ/Radius
+   eine Abholabfrage mit privat konfigurierter PLZ und Radius.
+   `pickup_search_confirmed` mit schlüsselgebundenem Profilbezug/Radius
    ist nur die Herkunft aus dieser Suche, kein unabhängig bestätigter Abholort.
    Bei ausdrücklicher Abholoption darfst du „Abholsuche 50 km“ nennen, aber keine
    tatsächliche Nähe oder genaue Entfernung behaupten. Den Kandidaten weiter
@@ -72,7 +73,7 @@
 8. Priorisiere vollständige interessante Geräte/Werkzeuge, nicht triviales
    Zubehör, Handschuhe, Zeitschriften oder beliebige 1-Euro-Artikel. Standard:
    0 Gebote, bis 1 Euro, Ende in strikt weniger als 72 Stunden; Versand bis 15 Euro oder
-   bestätigte Abholung im 50-km-Radius um 69121 Heidelberg. Tatsächliche Vorgaben
+   bestätigte Abholung im 50-km-Radius um den privat konfigurierten Suchort. Tatsächliche Vorgaben
    aus dem aktuellen Manifest lesen; diese Werte sind konfigurierbar.
 9. Eine Shortlist nennt kurzen Grund, fehlende Belege, Transport, Zeitpunkt und
    nächste Prüfung. Vor einem Gebot muss das Originalangebot erneut geprüft
@@ -208,11 +209,18 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
   und die konkrete [Design-Notiz](docs/design-fundgrube.md). Zweckgebundene,
   ruhige Arbeitsoberfläche statt vorgeschalteter Dokumentation oder dekorativer
   Inszenierung. Halte beide Dokumente bei dauerhaften Designentscheidungen aktuell.
-- Keine private Such-PLZ oder Suchstadt auf der Website oder in öffentlichen
-  Website-/API-Exporten ausgeben. Der Export berechnet den anonymen
-  `pickup_search_profile_match` vor der Redaktion; tatsächliche Verkäuferstandorte
-  bleiben getrennte Angebotsdaten. Die Info-Seite bleibt kurz, technische
-  Betriebsdetails und Agentenanweisungen gehören in die Repository-Dokumentation.
+- Keine private Such-PLZ oder Suchstadt in Quellcode, Beispielen, Logs, Website,
+  API oder öffentlichem Dauerzustand speichern. Die Live-Konfiguration kommt
+  ausschließlich aus `HUNTER_PRIVATE_SEARCH`; bei fehlendem oder ungültigem
+  Secret den Live-Abruf blockieren, keinen öffentlichen Fallback einsetzen.
+  Der interne Profilbezug ist ein HMAC mit zufälligem geheimem Schlüssel; eine
+  ungesalzene PLZ-Prüfsumme wäre leicht durchzuprobieren. Legacy-Suchbelege vor
+  jedem möglichen Checkpoint migrieren. Der Export berechnet
+  `pickup_search_profile_match` und entfernt den internen Profilbezug.
+  Der HMAC ist keine vollständige Anonymisierung. Private Abfrage-URLs weder
+  protokollieren noch in Zustand oder Export übernehmen.
+  Tatsächliche Verkäuferstandorte bleiben getrennte Angebotsdaten. Die Info-Seite
+  bleibt kurz, technische Betriebsdetails gehören in die Repository-Dokumentation.
 - Bewahre die Aufteilung in Sammler (`aog`/`ebay`), Normalisierung (`models`),
   Einordnung (`ranking`/`semantic`), Ablauf (`pipeline`) und Export (`feed`).
   Python 3.12, Standardbibliothek; führe nicht ohne Not neue Abhängigkeiten ein.

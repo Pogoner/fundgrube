@@ -502,8 +502,12 @@ liefern. Dafür sind vier optionale öffentliche Felder vorgesehen:
 Die private Such-PLZ und der Suchort werden in neuen Website-/API-Exporten
 nicht veröffentlicht. `location` enthält höchstens `country` und
 `pickup_radius_km`; `pickup_search_postcode` entfällt in Dashboard, Manifest,
-Kandidatenseiten und Details. Die interne Suchkonfiguration, die eigentlichen
-Quellenanfragen und gespeicherten Quellenbeobachtungen bleiben unverändert.
+Kandidatenseiten und Details. Die private Suchkonfiguration stammt aus dem
+Secret `HUNTER_PRIVATE_SEARCH`. Dauerhafter Zustand bindet Suchbelege mit
+einem schlüsselgebundenen HMAC an das Profil; auch dieser wird nicht in
+Website-/API-Dateien übernommen. Die berechtigte Quellenanfrage enthält
+weiterhin die PLZ, ihre vollständige URL wird jedoch weder gespeichert noch
+protokolliert. Die tatsächlichen Beobachtungszeitpunkte bleiben unverändert.
 `city` und `postcode` eines Angebots bezeichnen gegebenenfalls dessen
 Quellenstandort und werden nicht aus dem privaten Suchprofil gefüllt.
 
