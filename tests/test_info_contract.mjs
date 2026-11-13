@@ -166,6 +166,41 @@ test("completed offset traversal still exposes duplicate and sparse-page gaps", 
   assert.doesNotMatch(text, /100\s*%|Keine Datenlücken/);
 });
 
+test("successful reconciliation reports actual removals and protected newer observations", async () => {
+  for (const removed of [0, 12]) {
+    const ui = await render({source_status: "live", coverage: {
+      traversal_completed: true, complete: false,
+      reconciliation: {policy: "successful_full_scan", applied: true, removed_records: removed, retained_newer_records: 2, reason: "completed"}
+    }});
+    const text = ui.nodes.get("info-coverage").innerHTML;
+    assert.match(text, /Nach erfolgreichem vollständigem Quellenlauf ausgeführt/);
+    assert.ok(text.includes(`Nicht mehr gefundene Angebote gelöscht</small><strong>${removed}</strong>`));
+    assert.match(text, /2 Angebote; der Quellen-Cache dieses Laufs ist älter/);
+    assert.match(text, /Kein Beleg für Auktionsende, neue Gebote/);
+  }
+});
+
+test("skipped and legacy reconciliations never invent a successful cleanup", async () => {
+  const skipped = await render({coverage: {traversal_completed: false, reconciliation: {
+    policy: "successful_full_scan", applied: false, removed_records: 0, retained_newer_records: 0, reason: "incomplete_scan"
+  }}});
+  assert.match(skipped.nodes.get("info-coverage").innerHTML, /Kein bestätigter vollständiger Quellenlauf; keine Angebote wegen Abwesenheit gelöscht/);
+  const legacy = await render({source_status: "live", coverage: {traversal_completed: true}});
+  assert.match(legacy.nodes.get("info-coverage").innerHTML, /Bestandsabgleich<\/small><strong>In diesem Snapshot nicht ausgewiesen/);
+  for (const ui of [skipped, legacy]) assert.doesNotMatch(ui.nodes.get("info-coverage").innerHTML, /Nach erfolgreichem vollständigem Quellenlauf ausgeführt|Nicht mehr gefundene Angebote gelöscht/);
+});
+
+test("invalid cleanup counts and contradictory source status do not appear as confirmed removals", async () => {
+  for (const [status, completed, removed] of [["live", true, -1], ["live", true, "12"], ["live", true, 0.5], ["partial", true, 12], ["live", false, 12]]) {
+    const ui = await render({source_status: status, coverage: {traversal_completed: completed, reconciliation: {
+      policy: "successful_full_scan", applied: true, removed_records: removed, retained_newer_records: 0, reason: "completed"
+    }}});
+    const text = ui.nodes.get("info-coverage").innerHTML;
+    assert.match(text, /Nicht bestätigt; Angaben zum Abgleich sind unvollständig oder widersprüchlich/);
+    assert.doesNotMatch(text, /Nicht mehr gefundene Angebote gelöscht|Nach erfolgreichem vollständigem Quellenlauf ausgeführt/);
+  }
+});
+
 test("all-empty results with a nonzero reported total are not presented as a successful full scan", async () => {
   const ui = await render({source_status: "live", status_message: "Nicht als Erfolg übernehmen", coverage: {
     traversal_completed: true, scan_completed_at: latest, last_successful_full_scan_at: oldest,

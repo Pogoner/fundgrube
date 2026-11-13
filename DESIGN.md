@@ -95,6 +95,11 @@ als flächiges Füllen. Wichtige Bilder im ersten Sichtbereich laden früh; ande
 dürfen verzögert laden. Fehlende oder blockierte Bilder erhalten einen klaren,
 brauchbaren Ersatz und, wenn sinnvoll, einen zulässigen Originalverweis.
 
+Eine eigene Marke braucht eine eigenständige Silhouette, nicht nur eine andere
+Farbe für ein bekanntes Zeichen. Einfache Signets bleiben als lokale Vektoren
+scharf; Kopfzeile und Favicon verwenden dieselbe Form. Die Wortmarke bleibt
+lesbar und der Navigationslink verständlich benannt, auch ohne das Bild.
+
 Fremde Bilder nicht ungeprüft kopieren oder über einen eigenen Proxy verteilen.
 Ladeprobleme rechtfertigen keine Umgehung von Schutz- oder Privatsphäreeinstellungen.
 Konzept- und KI-Bilder nicht als Beweis realer Gegenstände oder Fortschritte

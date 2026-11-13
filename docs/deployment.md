@@ -92,8 +92,14 @@ Quellenlauf beweist keine verlustlose Übernahme in den begrenzten Bestand.
 `config/settings.json` setzt `lookahead_hours=72`. Aktiv ist ein bekanntes Angebot
 bei **strikt weniger als 72 Stunden** positiver Restlaufzeit, wenn Interest und
 übrige Filter passen. Angebotsmetadaten bleiben unabhängig von ihrem
-Beobachtungsalter **bis zum Auktionsende** erhalten, auch wenn spätere Teilscans
-das Angebot nicht wieder enthalten. Die zusätzliche Höchstzahl von 5.000
+Beobachtungsalter **höchstens bis zum Auktionsende** erhalten. Fehlt ein Angebot
+nach einem erfolgreichen vollständigen AOG-Crawl in allen aktivierten Suchen,
+wird es aus Zustand und aktuellem Export gelöscht. Spätere Teilscans, Fehler,
+Abrufpausen oder widersprüchliche Leerantworten löschen keine fehlenden Einträge.
+Ein bestätigter leerer Vollscan darf dagegen den Bestand leeren. Neuere bekannte
+Beobachtungen werden nicht durch ältere Cache-Antworten entfernt; die Info-Seite
+und `coverage.reconciliation` weisen diese Zurückstellung und Löschzahlen aus.
+Die zusätzliche Höchstzahl von 5.000
 Datensätzen bleibt bestehen. Bereits früher
 aus dem aktuellen Zustand entfernte Angebote werden nicht aus der Git-Historie
 wiederhergestellt; erst ein neuer zulässiger Quellenfund nimmt sie wieder auf.
@@ -141,7 +147,9 @@ Angebot aus dieser Suche stammt. `pickup_search_observed_at` datiert diese
 Beobachtung getrennt: Ein neuer Preis-/Gebotsstand aus der allgemeinen Suche
 verjüngt keinen älteren Abholsuchtreffer. Bei einem unvollständigen Abgleich
 kann frühere Radius-Evidenz erhalten bleiben; das gilt auch dann, wenn alle
-Seitenpositionen durchlaufen wurden und das Angebot dort fehlt.
+Seitenpositionen der Abholsuche durchlaufen wurden und das Angebot nur noch in
+der allgemeinen Suche vorkommt. Fehlt es im erfolgreichen Gesamtcrawl, greift
+die oben beschriebene Bestandsbereinigung für den gesamten Datensatz.
 `absence_is_evidence=false`: Abwesenheit ist kein Beleg für neue Gebote,
 Auktionsende oder entfallene Abholung. Erst eine neue ausdrückliche negative
 Abholangabe oder ein nicht mehr passendes Suchprofil hebt den vorherigen

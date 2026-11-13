@@ -8,7 +8,9 @@ Echte ChatGPT-Bewertungen aus einer interaktiven Sichtung im Gespräch können
 zusätzlich in die GUI übernommen werden, ohne diesen API-Zugang einzurichten.
 
 Der aktuelle Feed verwendet **`schema_version: 3`**: Angebotsmetadaten bleiben
-bis zum Auktionsende erhalten, unabhängig vom Alter ihres Quellenstands. Das
+höchstens bis zum Auktionsende erhalten, unabhängig vom Alter ihres Quellenstands.
+Ein erfolgreicher vollständiger AOG-Crawl entfernt zusätzlich nicht mehr
+gefundene Angebote aus dem aktuellen Bestand. Das
 aktive Zeitfenster umfasst standardmäßig strikt weniger als 72 Stunden
 Restlaufzeit. Die duale Score-Rubrik und neue Bewertungs-Batches verwenden
 weiterhin Version 2; der dauerhafte artikelbezogene Review-Store verwendet
@@ -358,7 +360,10 @@ API-Bewertung hat Vorrang vor dem älteren interaktiven Review.
 `semantic_review_mode: interactive` und einen Bewertungszeitpunkt in
 `semantic_assessed_at`. Neue, veränderte oder nicht mehr passend bewertete
 Angebote nutzen ohne andere gültige LLM-Bewertung die lokale Heuristik.
-Die Angebotsmetadaten bleiben bis zum Auktionsende gespeichert. Die Beschreibung
+Die Angebotsmetadaten bleiben höchstens bis zum Auktionsende gespeichert;
+ein erfolgreicher vollständiger AOG-Abgleich kann fehlende Angebote vorher
+entfernen. Gespeicherte Bewertungen erzeugen keine fehlenden Angebotsdatensätze.
+Die Beschreibung
 hat gegebenenfalls eine eigene kürzere Frist; verschwindet zuvor gelesener Text,
 passt die alte Inhaltsbindung nicht mehr. Eine neue Bewertung erneuert keinen
 Quellenstand. Neue Angebote machen alte absolute Scores nicht schlechter.
@@ -497,7 +502,8 @@ Ein neuer allgemeiner Quellenfund kann Preis, Gebote und `source_observed_at`
 aktualisieren, ohne einen früheren Umkreistreffer erneut zu bestätigen. Dessen
 `pickup_search_observed_at` bleibt dann unverändert. Bei Teilfehlern darf diese
 frühere vorläufige Evidenz erhalten bleiben. Das gilt auch nach einem bis zum
-gemeldeten Ende durchlaufenen Offset-Bereich, wenn die ID dort nicht vorkommt:
+gemeldeten Ende durchlaufenen Offset-Bereich der Abholsuche, wenn die ID dort
+nicht vorkommt, aber weiterhin zur allgemeinen Suche gehört:
 `absence_is_evidence` bleibt immer `false`. Fehlende IDs beweisen weder
 entfallene Abholung noch neue Gebote oder Auktionsende. Nur neue ausdrückliche
 negative Abhol-Evidenz oder ein nicht mehr passendes Suchprofil hebt den
@@ -505,7 +511,8 @@ gespeicherten Suchhinweis auf. Der alte Hinweis wird nach mehr als zwei
 Stunden separat gewarnt; dadurch werden nicht künstlich die frischeren
 allgemeinen Preise gealtert. Bei Legacy-Daten ohne eigenen Abholzeitpunkt kann
 der Export den zugehörigen vorhandenen `source_observed_at` verwenden, niemals
-den neuen Importzeitpunkt.
+den neuen Importzeitpunkt. Fehlt der ganze Datensatz im erfolgreichen
+Gesamtabgleich, entfernt die Bestandsbereinigung auch seinen Abholhinweis.
 `local_pickup_confirmed` bleibt bei diesem Provider `false`; Stadt und Entfernung
 werden nicht erfunden. Als offenen Prüffall nennen:
 **„Abholung laut Umkreissuche; Standort im Original prüfen.“** Bei ungültiger
@@ -537,6 +544,50 @@ ungültigen Angaben keinen Nähe-Bonus erhalten.
 | `complete` / `pagination_is_stable` | Für diesen Provider weiterhin `false`, auch bei vollständig durchlaufenem Quellenverzeichnis |
 | `searches.general` / `searches.pickup` | Getrennter Fortschritt und Status der allgemeinen und der Abholsuche |
 | `reported_nonempty_but_no_records` | Mindestens eine aktivierte Suche meldet Treffer, lieferte aber keinen einzigen Datensatz; Quellenstatus `partial`, kein neuer erfolgreicher Vollabgleich |
+| `reconciliation` | Ergebnis der Bestandsbereinigung nach einem erfolgreichen vollständigen AOG-Crawl; optional in älteren V3-Snapshots |
+
+### Bestandsbereinigung nach einem vollständigen AOG-Crawl
+
+Die beauftragte Bestandsregel löscht zuvor gespeicherte Angebote, die nach
+einem erfolgreichen vollständigen Crawl in **keiner** aktivierten Suche mehr
+vorkommen. Es zählt die Vereinigungsmenge der tatsächlich gelesenen IDs aus
+allgemeiner Suche und Abholsuche, vor Interest-Filtern und Speicherbegrenzung.
+Ein Treffer aus nur einer der beiden Suchen bleibt erhalten. Auch ein
+erfolgreich bestätigter leerer Gesamtbestand kann alte Einträge entfernen.
+
+Voraussetzung sind `source_status: live`, vollständig durchlaufene erwartete
+Suchen mit `stop_reason: reported_end`, verwendbare Datensätze und ein gültiger
+Beobachtungszeitpunkt. Bei Teilabrufen, Fehlern, Abrufpausen, Zeit-/Anfragelimits,
+widersprüchlichen Leerantworten oder unvollständigen Metadaten findet keine
+Abwesenheitsbereinigung statt. Dünne Seiten und Duplikate allein verhindern
+den Abgleich nicht, wenn alle gemeldeten Offsets regulär gelesen wurden.
+Ist eine gespeicherte Beobachtung neuer als der älteste konservative
+Seitenbeobachtungszeitpunkt dieses Crawls, bleibt dieser fehlende Datensatz
+bis zu einem ausreichend aktuellen erfolgreichen Abgleich erhalten.
+
+| Feld in `coverage.reconciliation` | Bedeutung |
+|---|---|
+| `policy` | `successful_full_scan` |
+| `applied` | Ob der Abgleich ausgeführt wurde; auch bei null Löschungen `true` |
+| `removed_records` | Wegen Abwesenheit gelöschte zuvor gespeicherte Angebote; Auktionsablauf und Kapazitätskürzungen zählen getrennt |
+| `retained_newer_records` | Fehlende Einträge, deren bekannte Beobachtung neuer als der Quellenstand dieses Crawls ist und die deshalb erhalten bleiben |
+| `reason` | `completed`, `incomplete_scan`, `invalid_records` oder `invalid_observation` |
+
+Die Bereinigung entfernt den Datensatz aus `state.records`, dem aktuellen
+Feed, Kandidatenseiten und Detaildateien sowie dem zugehörigen semantischen
+Cache. Ein späterer Teilabruf darf den gelöschten Datensatz nicht aus altem
+Zustand wieder übernehmen. Dauerhafte inhaltsgebundene Reviews bleiben davon
+getrennt: Sie erzeugen keine Angebote und können erst nach einem neuen
+passenden Quellenfund wieder angewendet werden. Öffentliche alte Git-Commits
+werden durch die Bereinigung nicht rückwirkend gelöscht.
+
+Das ist eine Bestandsregel, kein Beweis für den Grund des Verschwindens:
+Keine Gebote, Endzeiten oder Abholbedingungen hinzuerfinden.
+`absence_is_evidence: false` und `coverage.complete: false` bleiben bestehen.
+`freshness.retention_basis: auction_end` bezeichnet weiterhin die zeitliche
+Obergrenze, nicht die Zusage, jedes Angebot bis dahin zu behalten. Die neuen
+Metadaten sind eine abwärtskompatible Ergänzung von Feed-Version 3 und werden
+in Manifest, JSON Schema und daraus erzeugtem OpenAPI gemeinsam veröffentlicht.
 
 Die beiden Objekte unter `searches` haben folgende Felder:
 
@@ -554,7 +605,7 @@ Die beiden Objekte unter `searches` haben folgende Felder:
 | `sparse_pages` / `sparse_slots_estimate` | Seiten mit weniger Einträgen als `min(48, gemeldete Gesamtzahl − Offset)` erwarten ließe / geschätzte unbesetzte Seitenplätze; keine Menge eindeutig fehlender IDs |
 | `repeated_pages` | Wiederholte, nicht leere Seiten als eigener Paginierungsfehler |
 | `reported_nonempty_but_no_records` | Diese Suche meldet Treffer, lieferte insgesamt aber keinen Datensatz; getrennt vom Erreichen des Offset-Endes |
-| `absence_is_evidence` | Auch pro Suche immer `false`; keine Statusänderung aus fehlenden IDs ableiten |
+| `absence_is_evidence` | Auch pro Suche immer `false`; keinen konkreten Auktions- oder Abholstatus aus fehlenden IDs ableiten. Die getrennte Bestandsregel steht unter `reconciliation`. |
 | `stop_reason` | Zum Beispiel `reported_end`, `repeated_page`, `source_growth_limit`, `source_run_budget`, `source_run_deadline` oder ein Quellen-/Robotsfehler; alte Snapshots können noch `short_page`/`empty_page` als frühere Abbruchregel enthalten |
 
 `source_status: live` kann einen vollständig durchlaufenen AOG-Abruf bezeichnen,
@@ -576,9 +627,10 @@ Vollabdeckung von eBay oder einen gemeinsamen Beobachtungszeitpunkt aller Artike
 
 ## Aktualität, Sicherheit und Grenzen
 
-**Metadaten bleiben bis zum Auktionsende erhalten; ihr Alter ist keine
+**Metadaten bleiben höchstens bis zum Auktionsende erhalten; ihr Alter ist keine
 Aktualitätsgarantie.** Auch mehr als 24 Stunden alte Funde bleiben in einem
-begrenzten Bestand erhalten, solange ihre Auktion noch läuft und gültige,
+begrenzten Bestand erhalten, solange sie nicht im erfolgreichen AOG-Abgleich
+entfernt wurden, ihre Auktion noch läuft und gültige,
 nicht-zukünftige Beobachtungszeitstempel bekannt sind. Preis und „0 Gebote“
 bedeuten ausschließlich den Stand dieser Beobachtung, nicht den jetzigen
 Zustand der Auktion. Mehr als zwei Stunden alte Angaben tragen `stale` und
@@ -588,7 +640,7 @@ Diese Zeitregeln sind voneinander unabhängig:
 
 | Grenze | Bedeutung |
 |---|---|
-| Metadaten bis Auktionsende | Kein Quellenalter-Ablauf; Bestand auf höchstens 5.000 Einträge begrenzt |
+| Metadaten höchstens bis Auktionsende | Kein Quellenalter-Ablauf; fehlende AOG-Treffer nach erfolgreichem vollständigem Abgleich früher entfernt; Bestand auf höchstens 5.000 Einträge begrenzt |
 | Aktives Fenster: Restlaufzeit strikt unter 72 Stunden | `jetzt < ends_at < jetzt + Fenster`; konfigurierbar, keine Speicherdauer |
 | Warnung nach mehr als 2 Stunden | Alter Quellenstand bleibt sichtbar, wird aber nicht als neu geprüft dargestellt |
 | Beschreibung höchstens 24 Stunden | Separate TTL ab `content_updated_at`; bei Ablauf wird nur der Text entfernt |
@@ -626,6 +678,9 @@ Quellenliste entfernen, ohne dass der Sammler eine negative Statusmeldung
 erhält. Abwesenheit aus einem Teilabruf oder einem vollständig durchlaufenen
 Offset-Bereich beweist deshalb weder Verfügbarkeit noch Nichtverfügbarkeit;
 `absence_is_evidence=false` gilt unabhängig vom Abschluss der Pagination.
+Die ausdrücklich beauftragte Bestandsregel entfernt solche fehlenden Einträge
+nach einem erfolgreichen vollständigen AOG-Abgleich trotzdem aus dem aktuellen
+Export, ohne einen bestimmten Grund für das Verschwinden zu behaupten.
 Auch ein in einem Lauf vollständig durchlaufenes
 Quellenverzeichnis ist nicht atomar und bestätigt nicht sämtliche älteren
 Quellenfakten zum gleichen Zeitpunkt.

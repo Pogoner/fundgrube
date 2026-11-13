@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://pogoner.github.io/fundgrube/api/feed.schema.json",
   "title": "Fundgrube static snapshot documents",
-  "description": "V3 read-only observations retained until auction end, with a separate strict remaining-time window and description TTL. Not a live feed, appraisal or transaction API. Score version 2 is independent.",
+  "description": "V3 read-only observations retained at most until auction end; successful full AOG scans also reconcile missing listings. Separate strict remaining-time window and description TTL. Not a live feed, appraisal or transaction API. Score version 2 is independent.",
   "oneOf": [
     {"$ref": "#/$defs/dashboard"},
     {"$ref": "#/$defs/manifest"},
@@ -71,7 +71,7 @@
         "empty_pages": {"type": "integer", "minimum": 0},
         "sparse_pages": {"type": "integer", "minimum": 0},
         "sparse_slots_estimate": {"type": "integer", "minimum": 0, "description": "Estimated unfilled reported positions, not a known count of missing unique auctions."},
-        "absence_is_evidence": {"const": false, "description": "Missing IDs from mutable aggregator lists never disprove an older observation."},
+        "absence_is_evidence": {"const": false, "description": "Missing IDs do not prove bids, auction end or lost pickup availability. Inventory reconciliation is a separate policy under coverage.reconciliation."},
         "reported_nonempty_but_no_records": {"type": "boolean", "description": "Positive reported totals but no records returned; offset completion is not a successful source refresh."},
         "total_reported_initial": {"type": ["integer", "null"], "minimum": 0},
         "total_reported_latest": {"type": ["integer", "null"], "minimum": 0},
@@ -84,6 +84,18 @@
         "short_pages": {"type": "integer", "minimum": 0},
         "repeated_pages": {"type": "integer", "minimum": 0},
         "stop_reason": {"type": ["string", "null"]}
+      }
+    },
+    "sourceReconciliation": {
+      "type": "object",
+      "description": "Inventory reconciliation against the union of all enabled AOG searches after a successful complete scan; no claim about why a listing disappeared. Optional for older V3 snapshots.",
+      "required": ["policy", "applied", "removed_records", "retained_newer_records", "reason"],
+      "properties": {
+        "policy": {"const": "successful_full_scan"},
+        "applied": {"type": "boolean", "description": "Whether reconciliation ran, including successful scans with zero removals or genuinely empty results."},
+        "removed_records": {"type": "integer", "minimum": 0, "description": "Previously retained listings removed because they were absent from the successful complete scan; excludes expiry and capacity pruning."},
+        "retained_newer_records": {"type": "integer", "minimum": 0, "description": "Missing listings retained because their known observation is newer than the oldest page observation in the scan."},
+        "reason": {"enum": ["completed", "incomplete_scan", "invalid_records", "invalid_observation"]}
       }
     },
     "header": {
@@ -147,6 +159,7 @@
             "schedule_interval_minutes": {"type": "number", "exclusiveMinimum": 0},
             "pagination_is_stable": {"type": "boolean"},
             "searches": {"type": "object", "properties": {"general": {"$ref": "#/$defs/sourceTraversal"}, "pickup": {"$ref": "#/$defs/sourceTraversal"}}},
+            "reconciliation": {"$ref": "#/$defs/sourceReconciliation"},
             "retention_capacity": {"type": "integer", "minimum": 1, "maximum": 5000, "description": "Effective maximum retained inventory size; not a promise of source coverage."},
             "next_offset": {"type": ["integer", "null"], "minimum": 0},
             "capped": {"type": "boolean"},
@@ -171,7 +184,7 @@
           "type": "object",
           "required": ["retention_basis", "maximum_source_age_hours", "active_window_hours", "source_warning_after_hours", "description_maximum_age_hours", "evaluated_at", "recheck_at_read_time"],
           "properties": {
-            "retention_basis": {"const": "auction_end"},
+            "retention_basis": {"const": "auction_end", "description": "Time-based upper retention limit; successful AOG reconciliation may remove missing listings earlier."},
             "maximum_source_age_hours": {"const": null, "description": "V3 does not expire candidate metadata by source age. Null is not zero and is not a promise of currentness."},
             "active_window_hours": {"type": "number", "exclusiveMinimum": 0, "maximum": 744, "description": "Active only when read-time now < ends_at < now + this window; default 72 hours, upper boundary excluded."},
             "source_warning_after_hours": {"const": 2, "description": "Observations older than this are visibly stale/carried, not removed by age alone."},
