@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T02:49:06Z",
+    "evaluated_at": "2026-11-13T06:46:45Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T02:49:06Z",
+  "generated_at": "2026-11-13T06:46:45Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -37,6 +37,7 @@
     "eligibility": "excluded",
     "eligibility_reasons": [
       "Ablauf außerhalb des Suchfensters",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
@@ -71,10 +72,13 @@
     "reserve_status": "unknown",
     "risks": [
       "Ablauf außerhalb des Suchfensters",
+      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Nur Titel und Zustandsangabe liegen vor; Beschaffenheit und Lieferumfang sind nicht unabhängig geprüft.",
+      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 4,
@@ -88,7 +92,7 @@
     "source_observed_at": "2026-11-13T01:53:58Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": false,
+    "stale": true,
     "time_window_eligible": false,
     "title": "2 Stück VA2 V2A Edelstahl Inbusschraube DIN 912 M6 x 80 Innensechskant Neu #5",
     "total_eur": null,
@@ -155,7 +159,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:bbdff107798c8be7203a73987bac716ee3a1cd9690b1efc31c22e16a3e4e9433",
+  "snapshot_id": "sha256:d36c6cfc1d0797c135c9954b1a1f3e60207d2200104768b61a0e22a24ab6664e",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
