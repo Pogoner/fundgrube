@@ -44,7 +44,7 @@ unmittelbar vor dem Eingriff erneut prüfen. Als betroffenes älteres
 Pages-Artefakt wurde `14052993113` aus Lauf `43452753853` gefunden; eine kurze
 Artefakt-Aufbewahrung ersetzt keine Prüfung von Logs und Caches.
 
-Alle Remote-Refs und ihre aktuellen SHAs festhalten. Das vollständige Inventar
+Alle Remote-Refs und ihre aktuellen SHAs festhalten. Das vollständige Ref-/Commit-Inventar
 vom 13. November 2026, 22:39 UTC, umfasst 219 erreichbare Commits, sieben
 Zweige (`main`, `data`, vier bereits integrierte Arbeitszweige und den Zweig
 dieser Codekorrektur), keine Tags sowie PR-Referenzen der PRs 1 bis 5.
@@ -53,6 +53,11 @@ Autor-/Committer-Adressen sind noreply-Adressen. Neue Arbeit kann diese
 Bestände verändern. Vor dem eigentlichen Rewrite muss auch dieser PR
 integriert sein. Alte PR-Head-Refs werden von GitHub separat verwaltet und
 verschwinden nicht durch normales Löschen eines Zweigs.
+
+Die Suche nach den bekannten privaten Werten deckt die Quellhistorie und alle
+historischen Daten-Manifeste ab. Der weitergehende State-/Dashboard-Lauf wurde
+durch eine Host-Unterbrechung beendet; eine vollständige Prüfung der zu
+erhaltenden Inhalte bleibt vor dem Rewrite erforderlich.
 
 Den letzten konsistenten Datenstand und den vollständigen Review-Store
 verschlüsselt bzw. in einem privaten Arbeitsverzeichnis sichern. Die Sicherung
