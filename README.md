@@ -54,7 +54,7 @@ Die Vorgaben stehen in [config/settings.json](config/settings.json):
 | Gebote | 0 zum letzten Abrufzeitpunkt |
 | Transport | Versand höchstens 15 € **oder** bestätigte Abholung innerhalb 50 km um 69121 Heidelberg |
 | Aktives Auktionsfenster | strikt weniger als 72 Stunden Restlaufzeit; bereits abgelaufene Angebote ausgeschlossen |
-| Speicherfrist im aktuellen Export | bis zum bekannten Auktionsende, unabhängig vom Alter der Quellenbeobachtung; höchstens 5.000 Datensätze |
+| Speicherfrist im aktuellen Export | höchstens bis zum bekannten Auktionsende; nicht mehr gefundene Angebote werden nach erfolgreichem vollständigem AOG-Crawl früher entfernt; höchstens 5.000 Datensätze |
 
 **Aufbewahrung ist nicht Aktualität.** Bereits gefundene, noch laufende Angebote
 werden über mehrere Teilsuchen hinweg nach Artikel-ID zusammengeführt. Ein
@@ -69,7 +69,7 @@ dem Auktionsende, `freshness.retention_basis` ist `auction_end`. Die GUI prüft
 können bereits im Bestand liegen; die Anzeige aktiviert sie erst im Zeitfenster.
 Unbekannte oder zukünftige Beobachtungszeiten werden nicht als verlässlich
 angenommen. Die Grenze von 5.000 Datensätzen gilt zusätzlich. Alte Git-Snapshots
-werden durch das Entfernen abgelaufener Angebote nicht gelöscht.
+werden durch das Entfernen abgelaufener oder nicht mehr gefundener Angebote nicht gelöscht.
 
 Beschreibungstexte haben weiterhin eine **getrennte** Frist von 24 Stunden
 (`description_max_age_hours`); die Standardquelle liefert ohnehin keine
@@ -127,8 +127,19 @@ sichtbar. `traversal_completed` meldet besuchte Seitenpositionen, nicht eine
 vollständige oder atomare eBay-Marktabdeckung. Vollständig leere Antworten trotz
 positiver Trefferzahl bleiben als `partial` markiert und erneuern weder den
 erfolgreichen Zeitpunkt dieser Suche noch den des Volldurchlaufs. Ein echter
-Teilabruf der anderen Suche kann separat erfolgreich sein. Fehlende IDs beweisen auch nach einem Durchlauf
-keine Löschung; frühere Beobachtungen behalten ihr ursprüngliches Datum.
+Teilabruf der anderen Suche kann separat erfolgreich sein.
+
+**Nach einem erfolgreichen vollständigen AOG-Crawl werden nicht mehr gefundene
+Angebote aus dem gespeicherten Bestand und dem aktuellen Export gelöscht.**
+Maßgeblich ist die gemeinsame ID-Menge aller aktivierten Suchen, einschließlich
+der Abholsuche. Ein bestätigter leerer Gesamtbestand löscht ebenfalls alte
+Einträge. Bei Teilabrufen, Fehlern, Abrufpausen oder widersprüchlichen Leerantworten
+bleiben frühere Beobachtungen mit ihrem ursprünglichen Datum erhalten.
+Ältere Cache-Antworten dürfen neuere bekannte Beobachtungen nicht löschen.
+`coverage.reconciliation` weist den ausgeführten Abgleich, die Löschzahl und
+zurückgestellte neuere Beobachtungen aus. Die Info-Seite zeigt diese Zahlen.
+Ein fehlender Treffer ist kein Beweis für ein bestimmtes Gebot oder Auktionsende;
+die Bereinigung hält den aktuellen Fundgrube-Bestand passend zur Quellensuche.
 Verkäufer-Volltexte werden nicht nachgeladen.
 
 Für den optionalen eBay-Adapter gelten **4.500 Browse-Aufrufe pro UTC-Tag**, höchstens **85 pro

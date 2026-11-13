@@ -1167,6 +1167,9 @@ class FeedTests(unittest.TestCase):
                     "pagination_is_stable": False, "reported_nonempty_but_no_records": False,
                     "searches": {"general": search,
                     "pickup": {"enabled": False, "status": "disabled", "traversal_completed": False}}}
+        reconciliation = {"policy": "successful_full_scan", "applied": True,
+                          "removed_records": 12, "retained_newer_records": 1, "reason": "completed"}
+        coverage["reconciliation"] = reconciliation
         publisher.write_feed(self.site, sample([aggregator_deal()], provider="auktionen-ohne-gebot", coverage=coverage))
         for path in ("api/manifest.json", "data/deals.json"):
             document = self.read(path)
@@ -1174,11 +1177,18 @@ class FeedTests(unittest.TestCase):
             self.assertTrue(document["coverage"]["traversal_completed"])
             self.assertFalse(document["coverage"]["complete"])
             self.assertEqual(document["coverage"]["searches"]["general"], search)
+            self.assertEqual(document["coverage"]["reconciliation"], reconciliation)
+            invalid = copy.deepcopy(document)
+            invalid["coverage"]["reconciliation"]["removed_records"] = -1
+            self.assertTrue(schema_errors(invalid, self.schema, self.schema))
+        api = self.read("api/openapi.json")
+        self.assertEqual(api["components"]["schemas"]["sourceReconciliation"], self.schema["$defs"]["sourceReconciliation"])
         guide = (self.site / "api/guide.md").read_text(encoding="utf-8")
         for phrase in ("alle 30 Minuten", "traversal_completed", "personal_interest_excluded",
                        "pickup_search_observed_at", "Teil E1", "BROSCHÜRE 12 Seiten",
                        "sparse_slots_estimate", "absence_is_evidence",
-                       "reported_nonempty_but_no_records", "angefragten 48 Positionen"):
+                       "reported_nonempty_but_no_records", "angefragten 48 Positionen",
+                       "coverage.reconciliation", "removed_records", "retained_newer_records"):
             self.assertIn(phrase, guide)
 
 

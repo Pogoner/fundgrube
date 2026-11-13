@@ -100,7 +100,7 @@
     const source = demo ? "Fiktive Demo" : aog ? '<a href="https://auktionen-ohne-gebot.de/business-industrie/" target="_blank" rel="noopener noreferrer">Auktionen ohne Gebot ↗</a> · zwischengespeicherte Aggregatordaten, nicht direkt bei eBay verifiziert' : esc(provider() || "Quelle nicht angegeben");
     $("#info-source").innerHTML = `<p><strong>Quelle dieses Snapshots:</strong> ${source}</p><p>Erstellt: ${demo ? "fiktiver Datenstand" : esc(dateText(feed.generated_at))} · letzter erfolgreicher Abruf: ${demo ? "kein echter Abruf" : esc(dateText(feed.last_successful_scan_at))} (Berlin).</p>`;
     const hours = activeWindowHours();
-    $("#info-retention").textContent = `Aktives Fenster: jetzt < Auktionsende < jetzt + ${hours} Stunden. Metadaten bleiben bis zum Auktionsende erhalten, unabhängig vom Quellenalter. Das ist keine erneute Prüfung oder Aktualitätszusage. Über zwei Stunden alte Angaben bleiben als ältere Beobachtung markiert; ein Import erneuert keine Quellenfakten. Unbekannte Endzeiten sowie fehlende oder zukünftige Quellenzeitstempel werden standardmäßig ausgeblendet. valid_until entspricht in Feed-Version 3 dem Auktionsende; eine alte altersbasierte V1/V2-Frist verkürzt das neue Fenster nicht. Beschreibungstexte haben eine eigene Beobachtungsfrist.`;
+    $("#info-retention").textContent = `Aktives Fenster: jetzt < Auktionsende < jetzt + ${hours} Stunden. Metadaten bleiben höchstens bis zum Auktionsende erhalten, unabhängig vom Quellenalter. Ein erfolgreicher vollständiger AOG-Abgleich entfernt zusätzlich nicht mehr gefundene Angebote. Teilabrufe und Fehler bewahren ältere Beobachtungen. Das ist keine erneute Prüfung oder Aktualitätszusage. Über zwei Stunden alte Angaben bleiben als ältere Beobachtung markiert; ein Import erneuert keine Quellenfakten. Unbekannte Endzeiten sowie fehlende oder zukünftige Quellenzeitstempel werden standardmäßig ausgeblendet. valid_until entspricht in Feed-Version 3 dem Auktionsende als zeitlicher Obergrenze; es garantiert keinen Verbleib im Bestand bis dahin. Beschreibungstexte haben eine eigene Beobachtungsfrist.`;
     const review = feed.interactive_review;
     const reviewStatus = {none:"noch keine", expired:"abgelaufen", invalid:"ungültig"};
     let reviewed = "Keine interaktive Sichtungsmetadaten vorhanden.";
@@ -127,6 +127,19 @@
       if (number(coverage.source_cache_max_age_minutes) !== null) cells.push(["Angesetzter Cache-Abstand", `bis ${coverage.source_cache_max_age_minutes} Min. in diesem Lauf; keine eBay-Frischegarantie`]);
       cells.push(["Abdeckung", reportedWithoutRecords(coverage) ? "Quellenabgleich nicht bestätigt; gemeldete Treffer ohne Datensätze" : coverage.traversal_completed === true ? "Seitenpositionen durchlaufen; Lücken und Duplikate möglich, keine eBay-Vollabdeckung" : coverage.complete === true ? "Quellenliste eingelesen; keine eBay-Vollabdeckung" : "Begrenzter Ausschnitt, keine Vollabdeckung"]);
       cells.push(["Fehlende Angebots-IDs", "Kein Beleg für Auktionsende, neue Gebote oder entfallene Abholung — auch nach einem durchlaufenen Offset-Bereich"]);
+      const reconciliation = coverage.reconciliation;
+      if (reconciliation?.policy !== "successful_full_scan") {
+        cells.push(["Bestandsabgleich", "In diesem Snapshot nicht ausgewiesen"]);
+      } else if (reconciliation.applied === true && status === "live" && coverage.traversal_completed === true && !paused && count(reconciliation.removed_records) !== null) {
+        cells.push(["Bestandsabgleich", "Nach erfolgreichem vollständigem Quellenlauf ausgeführt"]);
+        cells.push(["Nicht mehr gefundene Angebote gelöscht", String(reconciliation.removed_records)]);
+        if (count(reconciliation.retained_newer_records) > 0) cells.push(["Neuere Beobachtungen erhalten", `${reconciliation.retained_newer_records} Angebote; der Quellen-Cache dieses Laufs ist älter als ihr bekannter Stand`]);
+      } else if (reconciliation.applied === false) {
+        const reasons = {incomplete_scan: "Kein bestätigter vollständiger Quellenlauf", invalid_records: "Quelldatensätze nicht vollständig verwendbar", invalid_observation: "Quellenzeitpunkt nicht verlässlich"};
+        cells.push(["Bestandsabgleich", `${reasons[reconciliation.reason] || "Voraussetzungen nicht bestätigt"}; keine Angebote wegen Abwesenheit gelöscht`]);
+      } else {
+        cells.push(["Bestandsabgleich", "Nicht bestätigt; Angaben zum Abgleich sind unvollständig oder widersprüchlich"]);
+      }
     } else {
       if (number(coverage.categories_scanned) !== null || number(coverage.categories_total) !== null) cells.push(["Unterkategorien im Teilscan", `${number(coverage.categories_scanned) ?? "?"} / ${number(coverage.categories_total) ?? "?"}`]);
       if (number(coverage.cycle_estimate_hours) !== null) cells.push([coverage.cycle_estimate_is_lower_bound ? "Theoretische Mindestdauer" : "Geschätzte Durchlaufdauer", `${coverage.cycle_estimate_is_lower_bound ? "Mindestens" : "Ca."} ${coverage.cycle_estimate_hours} Std.; vollständige Abdeckung nicht garantiert`]);
@@ -137,7 +150,7 @@
     if (count(coverage.retention_omitted_records) !== null) cells.push(["Durch Speichergrenze ausgelassen", `${coverage.retention_omitted_records} Datensätze; getrennt vom Quellenlauf`]);
     else if (coverage.all_collected_records_retained === false) cells.push(["Speicherübernahme unvollständig", "Nicht alle Datensätze übernommen; genaue Zahl nicht angegeben"]);
     cells.push(["Aktive Auktionsenden", `Weniger als ${hours} Stunden`]);
-    cells.push(["Metadaten aufbewahrt", "Bis zum Auktionsende, nicht nach Quellenalter"]);
+    cells.push(["Metadaten aufbewahrt", aog ? "Höchstens bis zum Auktionsende; fehlende Angebote nach erfolgreichem Vollabgleich entfernt" : "Bis zum Auktionsende, nicht nach Quellenalter"]);
     $("#info-coverage").innerHTML = cells.map(([label, value]) => `<div class="coverage-cell"><small>${esc(label)}</small><strong>${esc(value)}</strong></div>`).join("");
     $("#info-summary").textContent = `${array(feed.deals).length} gespeicherte Angebotsdatensätze. Die aktive Ansicht richtet sich nach der Restlaufzeit, nicht dem Funddatum. ${demo ? "Fiktive Beispiele." : "Lesen oder Neuladen startet keinen neuen Quellenabruf."}`;
   }
@@ -164,9 +177,9 @@
       "Lies api/manifest.json und alle paginierten Angebotsseiten samt benötigten Details unter demselben Commit-SHA; gleiche die Anzahl mit counts.total ab.",
       "Prüfe Quellenstatus, Abdeckung, snapshot_id, Quellenzeitstempel, ends_at und valid_until.",
       "Prüfe coverage.traversal_completed, den letzten vollständigen Quellenlauf, die Teilsuchen und retention_omitted_records: Ein abgeschlossener Quellenlauf ist keine atomare oder garantierte eBay-Vollabdeckung und belegt keine verlustlose Speicherübernahme. Der geplante 30-Minuten-Takt ist keine Aktualitätszusage.",
-      "traversal_completed bestätigt nur durchlaufene Seitenpositionen. Beachte sparse_pages, empty_pages, sparse_slots_estimate, duplicate_records und reported_nonempty_but_no_records: Gemeldete Treffer ohne gelieferte Datensätze sind kein erfolgreicher vollständiger Abgleich. absence_is_evidence ist false; aus fehlenden IDs niemals Ende, neue Gebote oder entfallene Abholung ableiten. Frühere Abhol-Evidenz behält ihren eigenen alten Zeitpunkt.",
+      "traversal_completed bestätigt nur durchlaufene Seitenpositionen. Beachte sparse_pages, empty_pages, sparse_slots_estimate, duplicate_records und reported_nonempty_but_no_records: Gemeldete Treffer ohne gelieferte Datensätze sind kein erfolgreicher vollständiger Abgleich. absence_is_evidence ist false; aus fehlenden IDs niemals Ende, neue Gebote oder entfallene Abholung ableiten. Die getrennte Bestandsregel löscht nach einem erfolgreichen vollständigen AOG-Crawl nicht mehr gefundene Angebote aus dem aktuellen Export. coverage.reconciliation nennt applied, removed_records, retained_newer_records und reason; bei älteren Snapshots ohne diese Angaben keinen Abgleich behaupten. Teilabrufe und ältere Cache-Stände löschen keine fehlenden neueren Beobachtungen. Frühere Abhol-Evidenz bei weiterhin gefundenen Angeboten behält ihren eigenen alten Zeitpunkt.",
       `Das aktive Fenster ist strikt jetzt < ends_at < jetzt + ${activeWindowHours()} Stunden, zur tatsächlichen Lesezeit neu berechnet.`,
-      "Metadaten bleiben unabhängig vom Quellenalter bis Auktionsende erhalten; valid_until entspricht in Feed-Version 3 diesem Ende.",
+      "Metadaten bleiben unabhängig vom Quellenalter höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. valid_until bezeichnet in Feed-Version 3 die zeitliche Obergrenze.",
       "Eine alte altersbasierte V1/V2-Frist darf bekannte laufende Auktionen nicht aus dem neuen Fenster verdrängen.",
       "Für nachträglichen Fenstereintritt nur eine explizite eligibility_without_time_window als Grundlage verwenden, nie Gründe aus Freitext erraten.",
       "Ältere Beobachtungen weiter zeigen, aber über zwei Stunden als nicht aktuell bestätigt kennzeichnen; erneuere niemals Zeitstempel ohne echte neue Beobachtung. Beschreibungstexte haben eine separate Beobachtungsfrist.",

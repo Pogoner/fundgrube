@@ -199,7 +199,7 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
-  assert(versions.has("design-v3.7"), "new design cannot reuse an older asset cache key");
+  assert(versions.has("design-v3.8"), "new design cannot reuse an older asset cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {
@@ -490,7 +490,7 @@ test("browsing ranks unique below-threshold offers by each axis, with stable tie
   h.tick(60000);
   assert.deepEqual(h.browseIds("scalp"), before, "an off-list expiration does not reorder the top ten");
   assert.match(h.nodes.get("browse-summary").textContent, /19 vollständig bewertete Angebote/);
-  assert.match(h.nodes.get("result-summary").textContent, /Bestand bis Auktionsende · aktiv: Restlaufzeit < 72 Std\./);
+  assert.match(h.nodes.get("result-summary").textContent, /Bestand höchstens bis Auktionsende · aktiv: Restlaufzeit < 72 Std\./);
 });
 
 test("browsing follows the current Interest slider, computes the dual score and handles zero honestly", async () => {

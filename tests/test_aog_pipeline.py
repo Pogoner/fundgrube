@@ -1,10 +1,16 @@
 """Public-source integration tests: no network and no eBay credentials."""
 
 import copy
+import json
+import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
-from hunter.models import iso_time, normalize_item
+from hunter.aog import HttpResponse, collect
+from hunter.feed import write_feed
+from hunter.models import iso_time, normalize_item, parse_time
 from hunter.pipeline import ConfigurationError, new_state, run_pipeline
 from hunter.reviews import content_fingerprint
 
@@ -41,6 +47,23 @@ def response(items=None, *, status="partial", pages=2, **changes):
                      "source_cache_max_age_minutes": 15, "complete": False},
     }
     result.update(changes)
+    return result
+
+
+def full_response(items, *, at=NOW + timedelta(minutes=30), pickup_enabled=True, observed_at=None):
+    cutoff = observed_at or min([at - timedelta(minutes=15)] + [observed for row in items
+                               if (observed := parse_time(row.get("source_observed_at"))) is not None])
+    result = response(items, status="live", pages=2 if pickup_enabled else 1,
+                      finished_at=iso_time(at + timedelta(seconds=20)),
+                      observed_at=iso_time(cutoff))
+    result["coverage"].update(
+        traversal_completed=True, reported_nonempty_but_no_records=False,
+        scan_started_at=iso_time(at), scan_completed_at=result["finished_at"],
+        unique_records=len({row.get("id") for row in items}),
+        searches={name: {"enabled": enabled, "status": "completed" if enabled else "disabled",
+                         "traversal_completed": enabled, "stop_reason": "reported_end" if enabled else "disabled",
+                         "pages_fetched": int(enabled), "reported_nonempty_but_no_records": False}
+                  for name, enabled in (("general", True), ("pickup", pickup_enabled))})
     return result
 
 
@@ -359,6 +382,169 @@ class PublicSourcePipelineTests(unittest.TestCase):
         self.assertTrue(feed["deals"][0]["carried"])
         self.assertEqual(feed["deals"][0]["source_observed_at"], iso_time(OBSERVED))
         self.assertEqual(feed["coverage"]["last_successful_full_scan_at"], iso_time(NOW - timedelta(hours=1)))
+
+    def test_full_scan_removes_absent_items_from_state_feed_and_public_details(self):
+        kept = item(id="v1|123456789013|0", url="https://www.ebay.de/itm/123456789013")
+        added = item(id="v1|123456789014|0", url="https://www.ebay.de/itm/123456789014")
+        old_feed, previous = run(response([item(), kept]))
+        result = full_response([kept, added])
+        checkpoints = []
+        feed, state = run(result, state=previous, at=NOW + timedelta(minutes=30),
+                          checkpoint=lambda value: checkpoints.append(copy.deepcopy(value)))
+        self.assertEqual({row["id"] for row in feed["deals"]}, {kept["id"], added["id"]})
+        self.assertEqual(state["records"], feed["deals"])
+        self.assertEqual([row["id"] for row in checkpoints[-1]["records"]], [kept["id"]])
+        self.assertEqual(feed["coverage"]["reconciliation"], {
+            "policy": "successful_full_scan", "applied": True, "removed_records": 1,
+            "retained_newer_records": 0, "reason": "completed"})
+        self.assertFalse(feed["coverage"]["complete"])
+        with tempfile.TemporaryDirectory() as directory:
+            site = Path(directory)
+            write_feed(site, old_feed)
+            old_details = set((site / "api" / "items").glob("*.json"))
+            self.assertEqual(len(old_details), 2)
+            write_feed(site, feed)
+            details = set((site / "api" / "items").glob("*.json"))
+            self.assertEqual(len(details), 2)
+            self.assertEqual(len(old_details - details), 1)
+            self.assertEqual({row["id"] for row in json.loads((site / "data" / "deals.json").read_text())["deals"]},
+                             {kept["id"], added["id"]})
+            manifest = json.loads((site / "api" / "manifest.json").read_text())
+            self.assertEqual(manifest["counts"]["total"], 2)
+            pages = [json.loads((site / page["path"]).read_text()) for page in manifest["pages"]]
+            self.assertEqual({row["id"] for page in pages for row in page["items"]}, {kept["id"], added["id"]})
+        # A subsequent failed run must not bring the deleted item back.
+        later, _ = run(response([], status="error", pages=0), state=state, at=NOW + timedelta(hours=1))
+        self.assertEqual({row["id"] for row in later["deals"]}, {kept["id"], added["id"]})
+
+    def test_successful_empty_full_scan_removes_all_old_items_and_cache_even_on_enrichment_error(self):
+        _, previous = run()
+        previous["semantic_cache"] = {item()["id"]: {"assessment": {"scalp_score": 80}}}
+        document = {
+            "schema_version": 1, "source_snapshot_id": "sha256:" + "a" * 64,
+            "reviewed_at": iso_time(NOW), "reviewer": "ChatGPT",
+            "reviews": [{"id": item()["id"], "content_fingerprint": content_fingerprint(normalize_item(item(), NOW)),
+                "assessment": {"semantic_interest": 60, "value_band": "around_500",
+                    "assessment_confidence": "low", "product_kind": "apparatus",
+                    "value_reason": "Plausible Geräteklasse, ungeprüfter Zustand.",
+                    "reasons": [], "risks": [], "next_checks": []}}],
+        }
+        def failing_enrichment(*args, **kwargs):
+            raise ValueError("optional enrichment failed")
+        feed, state = run(full_response([]), state=previous, at=NOW + timedelta(minutes=30),
+                          enrich=failing_enrichment, review_doc=document)
+        self.assertEqual(feed["deals"], [])
+        self.assertEqual(state["records"], [])
+        self.assertEqual(state["semantic_cache"], {})
+        self.assertEqual(feed["coverage"]["reconciliation"]["removed_records"], 1)
+        self.assertEqual(feed["source_status"], "live")
+        self.assertEqual(feed["interactive_review"]["applied"], 0)
+        self.assertEqual(len(document["reviews"]), 1)
+
+    def test_real_collector_preserves_union_of_general_and_pickup_results(self):
+        _, previous = run(response([item(), item(id="v1|123456789014|0", url="https://www.ebay.de/itm/123456789014")]))
+        def transport(*, url, **kwargs):
+            if url.endswith("robots.txt"):
+                return HttpResponse(200, {"content-type": "text/plain"}, b"User-agent: *\nAllow: /\n")
+            pickup = "abholung" in parse_qs(urlsplit(url).query)
+            number = "123456789014" if pickup else "123456789013"
+            payload = {"gesamt": 1, "artikel": [{"titel": "Autoklav", "link": f"https://www.ebay.de/itm/{number}",
+                       "ende": iso_time(NOW + timedelta(hours=4)), "preis": 1, "gebote": 0, "abholung": pickup}]}
+            return HttpResponse(200, {"content-type": "application/json"}, json.dumps(payload).encode())
+        def collector(settings, at, state):
+            return collect(settings, at, state, transport=transport, sleep=lambda _: None, monotonic=lambda: 0)
+        feed, state = run(state=previous, at=NOW + timedelta(minutes=30), aog_collect=collector)
+        self.assertEqual({row["id"] for row in feed["deals"]}, {"v1|123456789013|0", "v1|123456789014|0"})
+        self.assertEqual(feed["coverage"]["reconciliation"]["removed_records"], 1)
+        self.assertEqual(state["records"], feed["deals"])
+        self.assertTrue(next(row for row in feed["deals"] if row["id"] == "v1|123456789014|0")["pickup_search_confirmed"])
+
+    def test_incomplete_failed_or_unconfirmed_scans_do_not_remove_absent_items(self):
+        _, previous = run()
+        variants = []
+        for status in ("partial", "error", "cooldown"):
+            result = full_response([])
+            result["status"] = status
+            variants.append((status, result))
+        for field, value in (("traversal_completed", False), ("reported_nonempty_but_no_records", True),
+                             ("searches", {}), ("scan_started_at", iso_time(NOW)), ("scan_completed_at", None)):
+            result = full_response([])
+            result["coverage"][field] = value
+            variants.append((field, result))
+        for field, value in (("enabled", False), ("status", "partial"), ("traversal_completed", False),
+                             ("stop_reason", "repeated_page"), ("pages_fetched", 0),
+                             ("reported_nonempty_but_no_records", True)):
+            result = full_response([])
+            result["coverage"]["searches"]["pickup"][field] = value
+            variants.append(("pickup." + field, result))
+        for code in ("source_run_budget", "source_run_deadline", "source_daily_budget", "source_growth_limit"):
+            result = full_response([])
+            result["warnings"] = [{"code": code, "message": "Durchlauf begrenzt"}]
+            variants.append((code, result))
+        result = full_response([])
+        result["coverage"]["api_requests_this_run"] = 3
+        variants.append(("failed_request", result))
+        for name, result in variants:
+            with self.subTest(case=name):
+                feed, state = run(result, state=previous, at=NOW + timedelta(minutes=30))
+                self.assertEqual([row["id"] for row in state["records"]], [item()["id"]])
+                self.assertFalse(feed["coverage"]["reconciliation"]["applied"])
+                self.assertEqual(feed["coverage"]["reconciliation"]["reason"], "incomplete_scan")
+
+    def test_invalid_received_records_cannot_turn_a_full_scan_into_deletion(self):
+        _, previous = run()
+        for changes in ({"source_observed_at": None}, {"source_observed_at": iso_time(NOW + timedelta(hours=1))},
+                        {"source_provider": "other"}, {"source_url": "https://example.invalid/"}, {"id": ""}):
+            with self.subTest(changes=changes):
+                feed, state = run(full_response([item(**changes)]), state=previous, at=NOW + timedelta(minutes=30))
+                self.assertEqual([row["id"] for row in state["records"]], [item()["id"]])
+                self.assertEqual(feed["coverage"]["reconciliation"]["reason"], "invalid_records")
+                self.assertFalse(feed["coverage"]["reconciliation"]["applied"])
+
+    def test_missing_or_future_scan_observation_prevents_deletion(self):
+        _, previous = run()
+        for observed in (None, "invalid", iso_time(NOW + timedelta(hours=1))):
+            with self.subTest(observed=observed):
+                result = full_response([])
+                result["observed_at"] = observed
+                feed, state = run(result, state=previous, at=NOW + timedelta(minutes=30))
+                self.assertEqual(len(state["records"]), 1)
+                self.assertEqual(feed["coverage"]["reconciliation"]["reason"], "invalid_observation")
+                self.assertFalse(feed["coverage"]["reconciliation"]["applied"])
+
+    def test_newer_stored_observation_survives_older_full_scan_but_not_fresh_absence(self):
+        _, previous = run()
+        result = full_response([], observed_at=NOW - timedelta(minutes=30))
+        feed, state = run(result, state=previous, at=NOW + timedelta(minutes=30))
+        self.assertEqual(len(state["records"]), 1)
+        self.assertEqual(state["records"][0]["last_seen_at"], iso_time(OBSERVED))
+        self.assertTrue(feed["coverage"]["reconciliation"]["applied"])
+        self.assertEqual(feed["coverage"]["reconciliation"]["retained_newer_records"], 1)
+        self.assertEqual(feed["coverage"]["reconciliation"]["removed_records"], 0)
+        fresh, _ = run(full_response([], at=NOW + timedelta(hours=1)), state=state, at=NOW + timedelta(hours=1))
+        self.assertEqual(fresh["deals"], [])
+        self.assertEqual(fresh["coverage"]["reconciliation"]["removed_records"], 1)
+
+    def test_seen_item_survives_even_when_older_cache_keeps_it_marked_carried(self):
+        _, previous = run(response([item(price_eur=5, bid_count=1)]))
+        cached = item(source_observed_at=iso_time(NOW - timedelta(minutes=30)))
+        feed, _ = run(full_response([cached], observed_at=NOW - timedelta(minutes=30)),
+                      state=previous, at=NOW + timedelta(minutes=30))
+        row = feed["deals"][0]
+        self.assertEqual(row["price_eur"], 5)
+        self.assertEqual(row["bid_count"], 1)
+        self.assertTrue(row["carried"])
+        self.assertTrue(feed["coverage"]["reconciliation"]["applied"])
+        self.assertEqual(feed["coverage"]["reconciliation"]["removed_records"], 0)
+
+    def test_disabled_pickup_search_does_not_prevent_general_full_scan_reconciliation(self):
+        _, previous = run()
+        result = full_response([], pickup_enabled=False)
+        feed, state = run_pipeline({**SETTINGS, "aog_pickup_enabled": False}, source="aog", state=previous,
+                                   at=NOW + timedelta(minutes=30), environ=ENV,
+                                   aog_collect=lambda *args: copy.deepcopy(result))
+        self.assertEqual(state["records"], [])
+        self.assertTrue(feed["coverage"]["reconciliation"]["applied"])
 
     def test_older_cached_page_cannot_restore_obsolete_zero_bid_price(self):
         _, previous = run(response([item(price_eur=5, bid_count=1)]))

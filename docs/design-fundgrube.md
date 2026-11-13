@@ -16,6 +16,13 @@ Systemschrift, tabellarische Zahlen und wiederkehrende Abstände halten den
 Arbeitsbereich ruhig. Kein übergroßer Hero, kein dekoratives Dauerleuchten,
 keine zusätzliche Abhängigkeit von externen Schrift- oder Grafikdiensten.
 
+Die Marke zeigt ein facettiertes Fundstück über einer offenen, winkligen Grube.
+Die eigenständige Silhouette ohne Buchstaben oder Hintergrundkachel verbindet
+Suchen und Finden mit dem Kupferakzent. Beide Kopfzeilen und das Browser-Favicon
+nutzen dieselbe lokale SVG-Datei `site/favicon.svg`; die Wortmarke bleibt als
+Text erhalten. Das Signet ist neben dem bereits benannten Startseitenlink für
+assistive Technik dekorativ und hat feste Abmessungen gegen Layoutsprünge.
+
 ## Hierarchie und Interaktion
 
 1. Fundgrube, Navigation zur Info-Seite und tatsächlicher Datenstatus.
@@ -49,8 +56,12 @@ ohne Hover; Fokus, Touch-Ziele und Dialogbedienung bleiben sichtbar.
 Aktiv ist ein bekanntes Angebot bei `0 < Restlaufzeit < 72 Stunden`, sofern es
 die eingestellte Interest-Schwelle und die übrigen Filter erfüllt. Das Alter
 der Quellenbeobachtung ist **kein Ablaufdatum des Angebots**. Der gespeicherte
-Bestand bleibt bis zum Auktionsende erhalten, begrenzt durch die dokumentierte
+Bestand bleibt höchstens bis zum Auktionsende erhalten, begrenzt durch die dokumentierte
 Kapazität von 5.000 Datensätzen und die tatsächlich erreichte Quellenabdeckung.
+Nach einem erfolgreichen vollständigen AOG-Crawl werden Angebote entfernt,
+die in keiner aktivierten Suche mehr vorkommen. Teilabrufe und Fehler bewahren
+ältere Beobachtungen; ein bestätigt leerer Vollscan darf den Bestand leeren.
+Neuere bekannte Beobachtungen werden nicht durch ältere Cache-Antworten gelöscht.
 Die GUI berechnet den Zeithorizont auch bei einer länger geöffneten Seite neu.
 
 Ältere Quellenstände bleiben als solche markiert. Ein Fund wird durch
@@ -79,6 +90,10 @@ veränderlichen Quelle noch eine eBay-Vollabdeckungszusage. Aus fehlenden IDs
 werden keine negativen Zustands- oder Abholangaben abgeleitet. Ein erfolgreiches
 Deployment ersetzt diesen Status nicht. Die Hauptseite bleibt kompakt und
 suggeriert keine direkte eBay-Verifikation.
+Die Info-Seite zeigt getrennt, ob der Bestandsabgleich ausgeführt wurde,
+wie viele fehlende Angebote gelöscht und wie viele neuere Beobachtungen
+zurückgestellt wurden. Ältere Snapshots ohne diese Metadaten erhalten keine
+erfundene Löschzahl und keinen behaupteten erfolgreichen Abgleich.
 
 ## Bilder, Bewegung und Fehler
 

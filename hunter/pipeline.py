@@ -174,15 +174,77 @@ def _public_record(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _retained(item: Any, at: datetime) -> bool:
-    """Keep known, ongoing auctions until their end, not until a source TTL.
+    """Bound retained auctions by their end, not by a source TTL.
 
     Observation age is a warning about facts, never a listing lifetime. The
     active lookahead window is a separate eligibility check, recomputed each run.
+    A successful full AOG scan can separately remove records absent upstream.
     """
     if not isinstance(item, dict) or not isinstance(item.get("id"), str) or not item["id"]:
         return False
     end, seen = parse_time(item.get("ends_at")), parse_time(item.get("last_seen_at"))
     return bool(end and seen and at < end and seen <= at)
+
+
+def _reconcile_aog_records(records: dict, state: dict, result: dict, settings: Mapping,
+                           scan: dict, started_at: datetime, at: datetime,
+                           seen_ids: set[str], invalid_records: bool) -> dict:
+    """Apply the requested inventory policy only to a confirmed full source run.
+
+    Absence does not prove a bid, auction end, or changed pickup terms. Both
+    source searches contribute to one presence set; their mutable offsets and
+    cache clocks must not turn a partial or older view into a deletion signal.
+    """
+    summary = {"policy": "successful_full_scan", "applied": False,
+               "removed_records": 0, "retained_newer_records": 0, "reason": "incomplete_scan"}
+    coverage = result["coverage"]
+    searches = coverage.get("searches")
+    expected = {"general": True, "pickup": settings.get("aog_pickup_enabled", True)}
+    if (result["status"] != "live" or coverage.get("traversal_completed") is not True
+            or coverage.get("reported_nonempty_but_no_records") is not False
+            or scan["searches_failed"] or scan["budget_limited"]
+            or parse_time(coverage.get("scan_started_at")) != started_at
+            or parse_time(coverage.get("scan_completed_at")) != at
+            or parse_time(result.get("finished_at")) != at
+            or not isinstance(searches, dict) or set(searches) != set(expected)):
+        return summary
+    for name, enabled in expected.items():
+        search = searches[name]
+        if not isinstance(search, dict) or search.get("enabled") is not enabled:
+            return summary
+        if enabled and (search.get("status") != "completed"
+                        or search.get("traversal_completed") is not True
+                        or search.get("stop_reason") != "reported_end"
+                        or search.get("reported_nonempty_but_no_records") is not False
+                        or type(search.get("pages_fetched")) is not int or search["pages_fetched"] < 1):
+            return summary
+    if scan["searches_succeeded"] != sum(searches[name]["pages_fetched"] for name, enabled in expected.items() if enabled):
+        return summary
+    if (invalid_records or type(coverage.get("unique_records")) is not int
+            or coverage["unique_records"] != len(seen_ids) or len(seen_ids) != len(result["items"])):
+        summary["reason"] = "invalid_records"
+        return summary
+    observed = parse_time(result.get("observed_at"))
+    if (observed is None or observed > at
+            or any(parse_time(row["source_observed_at"]) < observed for row in result["items"])):
+        summary["reason"] = "invalid_observation"
+        return summary
+    absent = set(records) - seen_ids
+    # The collector's cutoff is the oldest cache-adjusted page observation.
+    # A stored observation newer than that view remains until a fresh full run.
+    newer = {item_id for item_id in absent if parse_time(records[item_id]["last_seen_at"]) > observed}
+    removed = absent - newer
+    for item_id in removed:
+        records.pop(item_id)
+    # Checkpoints must not resurrect removed rows if optional enrichment fails.
+    state["records"] = [row for row in state["records"]
+                        if not isinstance(row, dict) or row.get("id") not in removed]
+    if isinstance(state.get("semantic_cache"), dict):
+        for item_id in removed:
+            state["semantic_cache"].pop(item_id, None)
+    summary.update(applied=True, removed_records=len(removed),
+                   retained_newer_records=len(newer), reason="completed")
+    return summary
 
 
 def _sort_key(item: Mapping[str, Any]) -> tuple[Any, ...]:
@@ -515,6 +577,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
     elif source == "aog":
         if aog_collect is None:
             from .aog import collect as aog_collect
+        scan_started_at = at
         result = aog_collect(settings, at, state.get("aog"))
         if (not isinstance(result, dict) or result.get("status") not in {"live", "partial", "error", "cooldown"}
                 or not isinstance(result.get("items"), list) or len(result["items"]) > 160 * 48
@@ -550,14 +613,17 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         scan["categories_scanned"] = int(scan["searches_succeeded"] > 0)
         scan["categories_total"] = scan["categories_planned"] = 1
         scan["categories_completed"] = int(source_coverage.get("traversal_completed") is True)
+        seen_ids, invalid_records = set(), False
         for raw in result["items"]:
             if not isinstance(raw, dict):
                 raise ConfigurationError("Public source item is not an object.")
             observed = parse_time(raw.get("source_observed_at"))
             if observed is None or observed > at or raw.get("source_provider") != provider:
+                invalid_records = True
                 continue
             item = normalize(raw, at, local_pickup_confirmed=False, pickup_radius_km=settings["pickup_radius_km"])
             if item is not None:
+                seen_ids.add(item["id"])
                 previous = records.get(item["id"], {})
                 old_pickup_at = parse_time(previous.get("pickup_search_observed_at") or previous.get("source_observed_at"))
                 if (not item.get("pickup_search_confirmed") and item.get("pickup_available") is not False
@@ -573,12 +639,16 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                     item["pickup_search_observed_at"] = iso_time(old_pickup_at)
                     item["pickup_available"] = True
                 _upsert(records, item, at, settings, assess)
+            else:
+                invalid_records = True
         for warning in result.get("warnings", []):
             if isinstance(warning, dict) and isinstance(warning.get("code"), str) and isinstance(warning.get("message"), str):
                 if warning["code"] in {"source_run_budget", "source_run_deadline", "source_daily_budget", "source_growth_limit"}:
                     scan["budget_limited"] = True
                 _block(blockers, warning["code"], warning["message"],
                        "Quellenstand und Abdeckung beachten; vor einem Gebot das Originalangebot prüfen. Der nächste geplante Lauf berücksichtigt Wartezeiten.")
+        source_coverage["reconciliation"] = _reconcile_aog_records(
+            records, state, result, settings, scan, scan_started_at, at, seen_ids, invalid_records)
         source_status = result["status"]
         status = ("partial" if records else "error") if source_status in {"cooldown", "error"} else source_status
         if scan["searches_succeeded"] and (scan["received"] or not source_coverage.get("reported_nonempty_but_no_records")):

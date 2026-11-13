@@ -21,9 +21,12 @@
    Kandidatendetails nur über die im Snapshot vorhandenen `detail_path`-Pfade
    unter `api/items/` laden. Gekürzte Beschreibungen nicht als Volltext ausgeben.
 4. Prüfe bei jedem Angebot zur aktuellen Zeit `last_seen_at` und `ends_at`.
-   Seit Feed-Version 3 bleiben bekannte Metadaten bis zum Auktionsende erhalten,
+   Seit Feed-Version 3 bleiben bekannte Metadaten höchstens bis zum Auktionsende erhalten,
    unabhängig vom Beobachtungsalter: `valid_until = ends_at`,
    `freshness.retention_basis = auction_end`, `maximum_source_age_hours = null`.
+   Ein erfolgreicher vollständiger AOG-Crawl entfernt zusätzlich nicht mehr
+   gefundene Angebote aus dem aktuellen Bestand; `coverage.reconciliation`
+   dokumentiert diesen Abgleich. Teilabrufe erlauben keine Abwesenheitslöschung.
    Aktiv sind Kandidaten nur bei `0 < Restlaufzeit < lookahead_hours`
    (Standard 72 Stunden), erfülltem Interest und passenden übrigen Filtern.
    Die `eligibility_without_time_window` trennt Faktenfilter vom Zeitfenster;
@@ -227,7 +230,8 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
   für Quelle, Weitergabe, Archivierung und KI-Verarbeitung separat klären.
 - Der öffentliche Zweig `data` bewahrt alte Commits. Das Entfernen abgelaufener
   Angebote aus dem aktuellen Export bedeutet keine Löschung der Historie.
-  Speicherfrist (bis Auktionsende), aktiver Suchhorizont (strikt unter 72 Stunden),
+  Speicherfrist (höchstens bis Auktionsende, bei erfolgreichem AOG-Abgleich ggf. kürzer),
+  aktiver Suchhorizont (strikt unter 72 Stunden),
   getrennte Beschreibungstextfrist (24 Stunden) und der vom Anbieter genannte
   Quellcache (bis 15 Minuten) sind unterschiedliche Dinge. AOG unterstützt über
   seine öffentliche Suche `endet=alle` für spätere Enden; für unser größeres
@@ -262,8 +266,17 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
   Teilabruf dokumentieren, wenn die andere Suche tatsächlich Artikel lieferte.
   `coverage.complete` bleibt für AOG `false`: veränderliche
   Offset-Listen sind weder atomar noch eine Garantie vollständiger eBay-Daten.
-  `searches.*.absence_is_evidence` bleibt `false`: Fehlende IDs sind auch nach
-  vollständig durchlaufenen Offsets kein Löschbeweis. Die Speicherkapazität
+  Nach einem erfolgreichen vollständigen AOG-Lauf wird der gespeicherte Bestand
+  gegen die gemeinsame ID-Menge aller aktivierten Suchen abgeglichen: Fehlende
+  Angebote werden aus Zustand und aktuellem Export entfernt. Erfolgreich
+  bestätigte leere Suchen erlauben einen leeren Bestand; Teilfehler, Limits,
+  Abrufpausen und widersprüchliche Leerantworten erlauben keine Bereinigung.
+  Neuere bekannte Beobachtungen als der älteste Quellenstand dieses Crawls
+  bleiben bis zu einem ausreichend aktuellen erfolgreichen Abgleich erhalten.
+  `coverage.reconciliation` dokumentiert Ausführung, Löschzahl und diese
+  zurückgestellten Einträge. `searches.*.absence_is_evidence` bleibt `false`:
+  Aus dem Verschwinden keinen konkreten Grund wie Gebot, Auktionsende oder
+  entfallene Abholung erfinden. Die Speicherkapazität
   bleibt 5.000; ausgelassene Datensätze ausdrücklich zählen.
 - Erhalte mindestens zehn Sekunden Anfrageabstand und den gespeicherten
   29-minütigen Doppelstartschutz ab Scanbeginn. Echte längere
