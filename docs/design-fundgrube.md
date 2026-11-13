@@ -8,7 +8,8 @@ Fundgrube ist eine **Arbeitsoberfläche zum Sichten von Auktionen**, keine
 Landingpage und keine Scroll-Erzählung. Die erste Ansicht soll beantworten:
 Was ist interessant, warum, wie lange läuft es noch, und was muss ich prüfen?
 Eine kompakte Kopfzeile, nachvollziehbare Filter und bildgeführte Angebotskarten
-tragen diese Aufgabe. Methoden- und Betriebsdokumentation bleiben auf `info.html`.
+tragen diese Aufgabe. `info.html` erklärt nur Scores, Quellenstand und Bildhilfe.
+Betriebs- und API-Dokumentation bleibt in den Repository-Dokumenten.
 
 Visuelle Richtung: dunkle neutrale Grundflächen, präzise Typografie,
 zurückhaltende räumliche Ebenen, ein warmer Kupferakzent und kühler Fokus.
@@ -25,7 +26,7 @@ assistive Technik dekorativ und hat feste Abmessungen gegen Layoutsprünge.
 
 ## Hierarchie und Interaktion
 
-1. Fundgrube, Navigation zur Info-Seite und tatsächlicher Datenstatus.
+1. Fundgrube, Navigation zur Info-Seite und die Aktion „Neu laden“.
 2. Suche, Mindest-Interest und die wenigen häufig benötigten Filter.
 3. Angebotsbild, Titel und Interest als zentrale Vergleichsgröße.
 4. Scalp/Useability, semantische Begründung, Preis-/Transportangaben und Restzeit.
@@ -42,9 +43,9 @@ bleiben ohne ein zweites Raster aus zwanzig großen Bildkarten erkennbar.
 Ein separates persönliches Profil blendet allein angebotene Prospekte,
 Broschüren, Kataloge, Anleitungen und Zeitschriften aus Haupt- und Stöberlisten
 aus, auch bei Interest 0 und Diagnosefiltern. Die Anzeige verändert dafür keine
-gespeicherten Scalp-/Useability-Werte und keine Bewertungsherkunft. Zahl und
-Begründung der Profilausschlüsse stehen auf der Info-Seite, nicht in einer neuen
-Filterreihe. Maschinen mit beiliegenden Unterlagen und echte Gerätekomponenten
+gespeicherten Scalp-/Useability-Werte und keine Bewertungsherkunft. Technische
+Zähler und Profilregeln werden nicht als zusätzliche Informationsblöcke auf der
+Website ausgegeben. Maschinen mit beiliegenden Unterlagen und echte Gerätekomponenten
 werden nicht allein wegen ähnlicher Titelwörter ausgeschlossen.
 
 Auf schmalen Bildschirmen bilden Karten und Filter eine gut bedienbare Spalte.
@@ -77,23 +78,29 @@ keine relativen Rangplätze: Neue Angebote verändern bestehende Scores nicht.
 Jeder Artikel behält den Zeitpunkt seiner tatsächlichen Bewertung. Die Anzeige
 eines neuen Snapshots ist weder eine neue Bewertung noch eine Quellenprüfung.
 
-Der geplante 30-Minuten-Abgleich versucht, die allgemeine und die Abholsuche
-jedes Mal vollständig zu durchlaufen. Die Info-Seite zeigt den tatsächlichen
-Durchlaufstatus, Seitenfortschritt, Abbrüche und den letzten erfolgreichen
-vollständigen Quellenlauf. Durchlaufene Seitenpositionen sind nicht automatisch
-alle eindeutigen Artikel: Leere/dünn besetzte Antworten und Duplikate werden
-getrennt ausgewiesen, auch nach erreichtem Offset-Ende. Fehlen trotz gemeldeter
-Treffer sämtliche Datensätze einer Suche, bleibt der Abgleich unbestätigt;
-ein durchlaufener Offset-Bereich darf dann nicht als gesunder Vollscan erscheinen.
-Das Erreichen aller gemeldeten Seiten ist weder ein atomarer Snapshot der
-veränderlichen Quelle noch eine eBay-Vollabdeckungszusage. Aus fehlenden IDs
-werden keine negativen Zustands- oder Abholangaben abgeleitet. Ein erfolgreiches
-Deployment ersetzt diesen Status nicht. Die Hauptseite bleibt kompakt und
-suggeriert keine direkte eBay-Verifikation.
-Die Info-Seite zeigt getrennt, ob der Bestandsabgleich ausgeführt wurde,
-wie viele fehlende Angebote gelöscht und wie viele neuere Beobachtungen
-zurückgestellt wurden. Ältere Snapshots ohne diese Metadaten erhalten keine
-erfundene Löschzahl und keinen behaupteten erfolgreichen Abgleich.
+Der geplante Quellenabgleich versucht, die allgemeine und die Abholsuche
+jedes Mal vollständig zu durchlaufen. Vollständige, unvollständige und
+unbestätigte Quellenantworten bleiben in den Exportmetadaten unterscheidbar.
+Ein erfolgreiches Deployment ersetzt keinen erfolgreichen Quellenabruf.
+Die Website suggeriert keine direkte eBay-Verifikation.
+
+Ein normal geladener Bestand benötigt keine „Snapshot geladen“-Box, Scan-Zähler,
+Cache-Erklärungen oder Speicherstatistik. Nur Fehler, unvollständige oder alte
+Daten erhalten einen kurzen Hinweis mit der Auswirkung für die Nutzung.
+Quellenalter und Risiken des einzelnen Angebots bleiben an den Karten und in
+Details sichtbar. „Neu laden“ holt die zuletzt veröffentlichten Daten; es startet
+keinen Quellenlauf. Die Ergebniszeile nennt nur Trefferzahl und Zeitfenster.
+
+Die private Such-PLZ und Suchstadt werden weder auf den Seiten angezeigt noch
+als Suchprofil in Website-/API-Exporten ausgeliefert. Der Export berechnet vor
+der Redaktion `pickup_search_profile_match`; damit bleibt der Abholfilter ohne
+Offenlegung der Suchregion möglich. Vorhandene Legacy-Snapshots bleiben lesbar,
+aber ihre Suchregion wird ebenfalls nicht dargestellt. Tatsächliche
+Verkäuferstandorte sind Angebotsdaten und bleiben davon getrennt.
+
+Die Info-Seite enthält drei kurze Abschnitte: Scores, Prüfung des Originalangebots
+und Bildhilfe. Keine Betriebsdiagnostik, Review-Zähler, Rubriktabellen oder
+Agentenanweisungen. Solche Details gehören in `docs/` und die API-Dokumentation.
 
 ## Bilder, Bewegung und Fehler
 
@@ -119,8 +126,9 @@ Score-Logik und Faktenintegrität unverändert testen; strikte 72-Stunden-Grenze
 Stöberlisten bei veränderter Interest-Schwelle, Sachfiltern und Zeitgrenzen
 mitprüfen; abgelaufene oder unvollständig bewertete Angebote nicht einschleusen.
 Profilausschlüsse auch bei hohen LLM-Scores und Interesse 0 in allen Listen
-prüfen; echte Geräte mit Anleitung dürfen dabei nicht verschwinden. Vollständige,
-unvollständige und ältere Quellenlauf-Metadaten müssen unterscheidbar bleiben.
+prüfen; echte Geräte mit Anleitung dürfen dabei nicht verschwinden. Fehler, Teilabrufe
+und alte Quellenstände müssen trotz reduzierter Oberfläche erkennbar bleiben.
+Anonymer Abholabgleich und Legacy-Fallback werden ohne Anzeige der Suchregion geprüft.
 HTML/CSS/JS-Versionen in beiden Seiten gemeinsam anheben. Nach Deployment
 Dashboard, Info-Navigation, Filter, Detailabruf, Bilder und Daten-Snapshot prüfen.
 Nicht verfügbare Browser-/Viewport-Prüfungen ausdrücklich offenlassen.

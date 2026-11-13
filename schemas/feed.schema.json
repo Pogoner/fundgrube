@@ -124,7 +124,17 @@
             "properties": {"code": {"type": "string"}, "message": {"type": "string"}, "action": {"type": "string"}}
           }
         },
-        "location": {"type": "object"},
+        "location": {
+          "type": "object",
+          "description": "Public search context. New exports contain only country and pickup radius, never the private search postcode or city. Deprecated fields describe older snapshots only.",
+          "properties": {
+            "country": {"type": "string", "pattern": "^[A-Z]{2}$"},
+            "pickup_radius_km": {"type": "number", "exclusiveMinimum": 0, "maximum": 200},
+            "postcode": {"$ref": "#/$defs/nullableText", "deprecated": true, "description": "Legacy private search origin; omitted from new exports."},
+            "city": {"$ref": "#/$defs/nullableText", "deprecated": true, "description": "Legacy private search origin; omitted from new exports."}
+          },
+          "additionalProperties": false
+        },
         "criteria": {"type": "object"},
         "stats": {"type": "object", "properties": {
           "personal_interest_excluded": {"type": "integer", "minimum": 0, "description": "Retained media listings excluded by the personal profile, independently of factual eligibility or scores."},
@@ -265,7 +275,8 @@
         "local_pickup_confirmed": {"type": "boolean"},
         "pickup_available": {"type": ["boolean", "null"]},
         "pickup_search_confirmed": {"type": "boolean"},
-        "pickup_search_postcode": {"type": "string", "pattern": "^[0-9]{5}$"},
+        "pickup_search_profile_match": {"type": "boolean", "description": "Computed before redaction: valid aggregator pickup evidence matches the internal search postcode and does not exceed the configured radius. Not a verified seller location or current pickup agreement. When present, use this value instead of a legacy postcode comparison."},
+        "pickup_search_postcode": {"type": "string", "pattern": "^[0-9]{5}$", "deprecated": true, "description": "Legacy private search origin; omitted from new exports. Use pickup_search_profile_match."},
         "pickup_search_radius_km": {"type": "number", "exclusiveMinimum": 0, "maximum": 200},
         "pickup_search_observed_at": {"type": "string", "format": "date-time", "description": "Independent observation time of the aggregator radius match; a later general-search refresh does not renew it."},
         "pickup_radius_km": {"$ref": "#/$defs/nullableNumber"},

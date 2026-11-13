@@ -144,7 +144,9 @@ kommentarlos verschwinden zu lassen.
 Sprache ist konkret, ruhig und zum Publikum passend. Technische Implementierungs-
 oder Agentenhinweise gehören in Entwicklerdokumentation, nicht in den normalen
 Arbeitsablauf. Methodik und längere Erklärungen sind gut erreichbar, ohne jede
-Nutzung mit derselben Einleitung zu beginnen.
+Nutzung mit derselben Einleitung zu beginnen. Erfolgreiche Routinezustände
+brauchen keine dauerhafte Statusbox. Persönliche Such- oder Profildaten dürfen
+nur dann öffentlich ausgeliefert werden, wenn sie für die Nutzung notwendig sind.
 
 Daten, redaktionelle Interpretation und Darstellung bleiben getrennt. Unbekannt
 ist nicht null; ein Score ist nicht automatisch eine Wahrscheinlichkeit;

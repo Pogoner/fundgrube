@@ -1,287 +1,138 @@
-/** Dependency-free Info metadata tests; no browser or live-network access. */
+import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import vm from "node:vm";
-import test from "node:test";
 
-const info = new URL("../site/info.html", import.meta.url);
-const html = readFileSync(info, "utf8");
-const source = readFileSync(new URL("info.js", info), "utf8");
-const latest = "2026-11-08T09:00:00Z";
-const oldest = "2026-11-03T07:30:00Z";
-const review = overrides => ({status: "applied", reviewer: "ChatGPT", applied: 2, unreviewed: 3, reviewed_at: latest, oldest_reviewed_at: oldest, latest_reviewed_at: latest, expires_at: null, retention_basis: "content_and_auction", ...overrides});
+const html = readFileSync(new URL("../site/info.html", import.meta.url), "utf8");
+const source = readFileSync(new URL("../site/info.js", import.meta.url), "utf8");
+const healthy = {schema_version: 3, kind: "manifest", source_status: "live"};
 
-async function render(overrides = {}) {
-  const nodes = new Map([...html.matchAll(/\bid="([^"]+)"/g)].map(match => [match[1], {
-    innerHTML: "", textContent: "", listeners: new Map(),
-    addEventListener(name, handler) { this.listeners.set(name, handler); }
+async function render({data = healthy, search = "", ok = true, failure = null} = {}) {
+  const nodes = new Map([...html.matchAll(/<[^>]*\bid="([^"]+)"[^>]*>/g)].map(match => [match[1], {
+    textContent: "", hidden: /\bhidden\b/.test(match[0]), href: "./"
   }]));
-  const feed = {schema_version: 3, source_status: "partial", source_provider: "aog", generated_at: latest, last_successful_scan_at: latest, ai_enabled: false, deals: [], stats: {received: 144, carried: 600}, coverage: {complete: false, source_total_reported: 4174, retention_capacity: 5000}, interactive_review: review(), ...overrides};
-  let copied = "";
+  const requests = [];
   vm.runInNewContext(source, {
-    document: {querySelector(selector) { const node = nodes.get(selector.slice(1)); assert(node, `Expected Info node ${selector}`); return node; }},
-    URLSearchParams, Intl, Date, location: {search: ""},
-    navigator: {clipboard: {async writeText(value) { copied = value; }}},
-    fetch: async () => ({ok: true, json: async () => structuredClone(feed)})
+    document: {querySelector(selector) {
+      const node = nodes.get(selector.slice(1));
+      assert(node, `Expected Info node ${selector}`);
+      return node;
+    }},
+    URLSearchParams, location: {search},
+    fetch: async (url, options) => {
+      requests.push({url, options});
+      if (failure) throw new Error(failure);
+      return {ok, json: async () => structuredClone(data)};
+    }
   }, {filename: "site/info.js"});
   await new Promise(resolve => setImmediate(resolve));
-  return {nodes, get copied() { return copied; }, async copy() { await nodes.get("copy-instructions").listeners.get("click")(); }};
+  return {nodes, requests, status: nodes.get("info-status")};
 }
 
-test("Info shows the range of original per-item review times, not one new shared date", async () => {
+test("Info is a short guide with score, source and image help, without private or operational detail", () => {
+  const body = html.split("<body")[1].replace(/^[^>]*>/, "").replace(/<[^>]+>/g, " ").trim();
+  const words = body.split(/\s+/).length;
+  assert(words >= 150 && words <= 250, `Expected a compact guide, got ${words} words`);
+  for (const id of ["scores", "source", "bilder", "images"]) assert.match(html, new RegExp(`id="${id}"`));
+  assert.match(html, /wirtschaftliche Potenzial/);
+  assert.match(html, /eigenständig.*Geräte oder Systeme/);
+  assert.match(html, /Interest = Scalp × Useability ÷ 100/);
+  assert.match(html, /90 × 95 ergibt 86/);
+  assert.match(html, /weder Marktwert noch Vollständigkeit oder Funktion/);
+  assert.match(html, /zwischengespeicherten/);
+  assert.match(html, /Originalangebot/);
+  assert.match(html, /Gebote, Zustand, Lieferumfang und Transport/);
+  assert.match(html, /Abholhinweis bestätigt keinen Abholort/);
+  assert.match(html, /erkennt die Ursache nicht automatisch/);
+  assert.doesNotMatch(html, /69121|Heidelberg|PLZ|Suchradius|Snapshot|Budget|Schnittstelle|coverage|copy-instructions|info-profile|info-review|<table\b/i);
+  assert.match(html, /id="info-status"[^>]*role="status"[^>]*hidden/);
+  for (const asset of ["styles.css", "info.js"]) assert(html.includes(`${asset}?v=design-v3.9`));
+});
+
+test("healthy data adds no success box and only requests the small manifest", async () => {
   const ui = await render();
-  const text = ui.nodes.get("info-review").innerHTML;
-  assert.match(text, /ChatGPT-Sichtung: 2 Angebote/);
-  assert.match(text, /Gespeicherte Bewertungszeitpunkte: 03\.11\.26, 08:30 bis 08\.11\.26, 10:00 \(Berlin\)/);
-  assert.match(text, /3 Angebote ohne angewendete vollständige ChatGPT-Sichtung/);
-  assert.match(text, /Automatische LLM-Aufrufe aus/);
-  assert.doesNotMatch(text, /abgelaufen|Datum:|48 Stunden/);
+  assert.equal(ui.status.hidden, true);
+  assert.equal(ui.status.textContent, "");
+  assert.equal(ui.requests.length, 1);
+  assert.equal(ui.requests[0].url, "./api/manifest.json");
+  assert.equal(ui.requests[0].options.cache, "no-store");
 });
 
-test("legacy metadata remains readable without implying that every article was re-reviewed", async () => {
-  const ui = await render({interactive_review: review({oldest_reviewed_at: undefined, latest_reviewed_at: undefined, reviewed_at: oldest})});
-  const text = ui.nodes.get("info-review").innerHTML;
-  assert.match(text, /Letzter ausgewiesener Bewertungszeitpunkt: 03\.11\.26, 08:30/);
-  assert.match(text, /einzelne Angebote können früher bewertet worden sein/);
-  assert.doesNotMatch(text, /abgelaufen|Gespeicherte Bewertungszeitpunkte:/);
+test("partial updates and deferred requests stay distinguishable without crawl diagnostics", async () => {
+  const partial = await render({data: {...healthy, source_status: "partial"}});
+  assert.equal(partial.status.hidden, false);
+  assert.match(partial.status.textContent, /nur teilweise aktualisiert/);
+  const paused = await render({data: {...healthy, source_status: "partial", blockers: [{code: "source_cooldown"}]}});
+  assert.equal(paused.status.hidden, false);
+  assert.match(paused.status.textContent, /keinen neuen Abruf/);
+  assert.doesNotMatch(paused.status.textContent, /teilweise|erfolgreich|aktuell bestätigt|Snapshot|Cooldown|Seiten|Budget/);
 });
 
-test("missing and invalid review dates do not become a valid time range", async () => {
-  for (const fields of [
-    {oldest_reviewed_at: null, latest_reviewed_at: null, reviewed_at: null},
-    {oldest_reviewed_at: "<script>bad</script>", latest_reviewed_at: "not a date", reviewed_at: "invalid"}
+test("a contradictory live result cannot hide an unconfirmed source response", async () => {
+  for (const coverage of [
+    {reported_nonempty_but_no_records: true, traversal_completed: true},
+    {searches: {pickup: {enabled: true, reported_nonempty_but_no_records: true}}},
+    {searches: {general: {enabled: true, stop_reason: "reported_nonempty_but_no_records"}}}
   ]) {
-    const ui = await render({interactive_review: review(fields)});
-    const text = ui.nodes.get("info-review").innerHTML;
-    assert.match(text, /Bewertungszeitpunkte nicht angegeben/);
-    assert.doesNotMatch(text, /Gespeicherte Bewertungszeitpunkte:|Invalid Date|<script>/);
+    const ui = await render({data: {...healthy, coverage}});
+    assert.equal(ui.status.hidden, false);
+    assert.match(ui.status.textContent, /nicht bestätigt/);
+    assert.doesNotMatch(ui.status.textContent, /erfolgreich|vollständig aktualisiert/);
   }
-  const reversed = await render({interactive_review: review({oldest_reviewed_at: latest, latest_reviewed_at: oldest})});
-  assert.doesNotMatch(reversed.nodes.get("info-review").innerHTML, /Gespeicherte Bewertungszeitpunkte:/);
+  const inactive = await render({data: {...healthy, coverage: {searches: {pickup: {enabled: false, reported_nonempty_but_no_records: true}}}}});
+  assert.equal(inactive.status.hidden, true);
 });
 
-test("malformed applied and pending counts are not displayed as real counts", async () => {
-  for (const invalid of [-1, 1.5, "2", null]) {
-    const ui = await render({interactive_review: review({applied: invalid})});
-    assert.match(ui.nodes.get("info-review").innerHTML, /ChatGPT-Sichtung: Status unklar/);
-  }
-  const pending = await render({interactive_review: review({unreviewed: -1})});
-  assert.doesNotMatch(pending.nodes.get("info-review").innerHTML, /-1 Angebote/);
-  const zero = await render({interactive_review: review({applied: 0, unreviewed: 0})});
-  assert.match(zero.nodes.get("info-review").innerHTML, /ChatGPT-Sichtung: 0 Angebote/);
-});
-
-test("storage capacity is bounded metadata, not a source coverage fraction", async () => {
-  const ui = await render();
-  const text = ui.nodes.get("info-coverage").innerHTML;
-  assert.match(text, /Speicherkapazität/);
-  assert.match(text, /5\.000 Datensätze; keine Vollabdeckungszusage/);
-  assert.match(text, /In diesem Lauf erhalten/);
-  assert.match(text, /Allgemeine Treffer laut Quelle/);
-  assert.match(text, /Begrenzter Ausschnitt, keine Vollabdeckung/);
-  assert.doesNotMatch(text, /144 \/ 4174|600 \/ 4174/);
-  assert.match(ui.nodes.get("info-summary").textContent, /Restlaufzeit, nicht dem Funddatum/);
-  for (const invalid of [undefined, 0, -1, 5001, 42.5, "5000"]) {
-    const other = await render({coverage: {retention_capacity: invalid}});
-    assert.doesNotMatch(other.nodes.get("info-coverage").innerHTML, /Speicherkapazität/);
+test("source errors and disabled sources remain visible and never imply current offers", async () => {
+  const failed = await render({data: {...healthy, source_status: "error"}});
+  assert.equal(failed.status.hidden, false);
+  assert.match(failed.status.textContent, /konnten zuletzt nicht aktualisiert werden/);
+  for (const source_status of ["disabled", "unconfigured"]) {
+    const ui = await render({data: {...healthy, source_status}});
+    assert.equal(ui.status.hidden, false);
+    assert.match(ui.status.textContent, /nicht aktiv/);
+    assert.doesNotMatch(ui.status.textContent, /aktualisiert|neue Angebote/);
   }
 });
 
-test("completed source traversal is distinct from stable pagination or full eBay coverage", async () => {
-  const ui = await render({source_status: "live", coverage: {
-    complete: false, pagination_is_stable: false, traversal_completed: true,
-    source_total_reported: 4174, planned_interval_minutes: 30, pages_fetched: 93,
-    elapsed_seconds: 940, max_run_seconds: 1500, max_api_requests_per_run: 160,
-    requests_today: 95, daily_request_budget: 8000,
-    scan_started_at: "2026-11-08T08:44:00Z", scan_finished_at: latest, scan_completed_at: latest,
-    last_successful_full_scan_at: latest, source_cache_max_age_minutes: 15,
-    searches: {
-      general: {enabled: true, traversal_completed: true, pages_fetched: 87, unique_records: 4160, duplicate_records: 14, total_reported_initial: 4177, total_reported_latest: 4174, total_changed: true, stop_reason: "reported_end"},
-      pickup: {enabled: true, traversal_completed: true, pages_fetched: 6, unique_records: 260, duplicate_records: 0, total_reported_initial: 260, total_reported_latest: 260, total_changed: false, stop_reason: "reported_end"}
-    }
-  }});
-  const text = ui.nodes.get("info-coverage").innerHTML;
-  assert.match(text, /Alle gemeldeten Seitenpositionen der aktivierten Suchen durchlaufen/);
-  assert.match(text, /Beginn \/ Ende des Quellenlaufs/);
-  assert.match(text, /08\.11\.26, 09:44 \/ 08\.11\.26, 10:00 \(Berlin\)/);
-  assert.match(text, /Letzter vollständiger Quellenlauf<\/small><strong>08\.11\.26, 10:00/);
-  assert.match(text, /Allgemeine Suche<\/small><strong>Seitenpositionen bis Listenende durchlaufen · 87 Seiten · 4160 unterschiedliche Treffer · 14 wiederholte Treffer/);
-  assert.match(text, /4177 bei Start \/ 4174 zuletzt · während des Laufs verändert/);
-  assert.match(text, /Abholsuche<\/small><strong>Seitenpositionen bis Listenende durchlaufen · 6 Seiten · 260 unterschiedliche Treffer/);
-  assert.match(text, /30 Min\.; Ausführung kann sich verzögern/);
-  assert.match(text, /Angesetzter Cache-Abstand<\/small><strong>bis 15 Min\. in diesem Lauf; keine eBay-Frischegarantie/);
-  assert.match(text, /Tatsächliche Laufdauer<\/small><strong>15 Min\. 40 Sek\./);
-  assert.match(text, /Limit der Datenanfragen pro Lauf<\/small><strong>160/);
-  assert.match(text, /95 \/ 8000; einschließlich robots\.txt/);
-  assert.match(text, /1500 Sekunden; kein zugesicherter Abschluss/);
-  assert.match(text, /Seitenpositionen durchlaufen; Lücken und Duplikate möglich, keine eBay-Vollabdeckung/);
-  assert.doesNotMatch(text, /Begrenzter Ausschnitt|Keine Datenlücken|100\s*%/);
+test("network and format failures keep a small actionable note without exposing raw errors", async () => {
+  for (const options of [
+    {failure: "private path /69121/Heidelberg <script>bad()</script>"},
+    {ok: false},
+    {data: null},
+    {data: {schema_version: 999, source_status: "live"}},
+    {data: {schema_version: 3}}
+  ]) {
+    const ui = await render(options);
+    assert.equal(ui.status.hidden, false);
+    assert.match(ui.status.textContent, /Datenstatus ist nicht erreichbar/);
+    assert.match(ui.status.textContent, /Hinweise im Radar/);
+    assert.doesNotMatch(ui.status.textContent, /69121|Heidelberg|private path|<script>|HTTP|Snapshot/);
+  }
 });
 
-test("partial traversals keep the last completed scan and explain per-search interruption", async () => {
-  const ui = await render({coverage: {
-    traversal_completed: false, complete: false, scan_started_at: "2026-11-08T08:44:00Z", scan_finished_at: latest,
-    scan_completed_at: null, last_successful_full_scan_at: oldest,
-    searches: {
-      general: {enabled: true, traversal_completed: false, pages_fetched: 3, unique_records: 96, total_reported_initial: 4174, total_reported_latest: 4200, total_changed: true, unobserved_estimate: 4104, stop_reason: "repeated_page"},
-      pickup: {enabled: true, traversal_completed: true, pages_fetched: 1, unique_records: 12, total_reported_initial: 12, total_reported_latest: 12, stop_reason: "reported_end"}
-    }
-  }});
-  const text = ui.nodes.get("info-coverage").innerHTML;
-  assert.match(text, /Nicht vollständig durchlaufen; Teilstände möglich/);
-  assert.match(text, /Letzter vollständiger Quellenlauf<\/small><strong>03\.11\.26, 08:30/);
-  assert.match(text, /Allgemeine Suche · Unterbrechung<\/small><strong>Wiederholte Quellseite/);
-  assert.match(text, /4104 laut Schätzung; veränderliche Ergebnisliste/);
-  assert.match(text, /Abholsuche<\/small><strong>Seitenpositionen bis Listenende durchlaufen/);
-  assert.doesNotMatch(text, /Alle gemeldeten Seitenpositionen der aktivierten Suchen durchlaufen/);
-});
-
-test("a completed traversal cannot hide records omitted by the storage bound", async () => {
-  const ui = await render({coverage: {
-    complete: false, traversal_completed: true, retention_capacity: 5000,
-    retention_omitted_records: 74, all_collected_records_retained: false
-  }});
-  const text = ui.nodes.get("info-coverage").innerHTML;
-  assert.match(text, /Alle gemeldeten Seitenpositionen der aktivierten Suchen durchlaufen/);
-  assert.match(text, /Durch Speichergrenze ausgelassen<\/small><strong>74 Datensätze; getrennt vom Quellenlauf/);
-  const unknown = await render({coverage: {retention_omitted_records: -1, all_collected_records_retained: false}});
-  assert.match(unknown.nodes.get("info-coverage").innerHTML, /Speicherübernahme unvollständig/);
-  assert.doesNotMatch(unknown.nodes.get("info-coverage").innerHTML, /-1 Datensätze/);
-});
-
-test("completed offset traversal still exposes duplicate and sparse-page gaps", async () => {
-  const ui = await render({source_status: "live", coverage: {
-    complete: false, traversal_completed: true, absence_is_evidence: false,
-    searches: {
-      general: {enabled: true, traversal_completed: true, pages_fetched: 89, records_read: 4242, unique_records: 3641, duplicate_records: 601, total_reported_latest: 4242, unobserved_estimate: 601, sparse_pages: 0, empty_pages: 0, sparse_slots_estimate: 0, absence_is_evidence: false},
-      pickup: {enabled: true, traversal_completed: true, pages_fetched: 6, records_read: 12, unique_records: 12, duplicate_records: 0, total_reported_latest: 248, unobserved_estimate: 236, sparse_pages: 6, empty_pages: 2, sparse_slots_estimate: 236, absence_is_evidence: false}
-    }
-  }});
-  const text = ui.nodes.get("info-coverage").innerHTML;
-  assert.match(text, /3641 unterschiedliche Treffer · 601 wiederholte Treffer/);
-  assert.match(text, /Allgemeine Suche · noch nicht beobachtet<\/small><strong>601 laut Schätzung/);
-  assert.match(text, /Abholsuche · Seiten mit Lücken<\/small><strong>6 dünn besetzte \/ 2 leere Seiten · geschätzt 236 unbesetzte Seitenplätze/);
-  assert.match(text, /keine eindeutige Fehlmenge/);
-  assert.match(text, /Kein Beleg für Auktionsende, neue Gebote oder entfallene Abholung/);
-  assert.doesNotMatch(text, /100\s*%|Keine Datenlücken/);
-});
-
-test("successful reconciliation reports actual removals and protected newer observations", async () => {
-  for (const removed of [0, 12]) {
-    const ui = await render({source_status: "live", coverage: {
-      traversal_completed: true, complete: false,
-      reconciliation: {policy: "successful_full_scan", applied: true, removed_records: removed, retained_newer_records: 2, reason: "completed"}
+test("private profile data, source messages and markup are not copied into the page", async () => {
+  const privateText = "69121 Heidelberg <img src=x onerror=bad()>";
+  for (const source_status of ["live", "partial", "error", privateText]) {
+    const ui = await render({data: {
+      ...healthy, source_status,
+      location: {postcode: "69121", city: "Heidelberg", pickup_radius_km: 50},
+      status_message: privateText,
+      blockers: [{code: "other", message: privateText, action: privateText}],
+      coverage: {source_url: privateText},
+      interactive_review: {reviewer: privateText}
     }});
-    const text = ui.nodes.get("info-coverage").innerHTML;
-    assert.match(text, /Nach erfolgreichem vollständigem Quellenlauf ausgeführt/);
-    assert.ok(text.includes(`Nicht mehr gefundene Angebote gelöscht</small><strong>${removed}</strong>`));
-    assert.match(text, /2 Angebote; der Quellen-Cache dieses Laufs ist älter/);
-    assert.match(text, /Kein Beleg für Auktionsende, neue Gebote/);
+    assert.doesNotMatch(ui.status.textContent, /69121|Heidelberg|<img|onerror|reviewer|50/);
   }
+  assert.doesNotMatch(source, /innerHTML|\.location\b|postcode|pickup_radius_km|status_message|clipboard/);
 });
 
-test("skipped and legacy reconciliations never invent a successful cleanup", async () => {
-  const skipped = await render({coverage: {traversal_completed: false, reconciliation: {
-    policy: "successful_full_scan", applied: false, removed_records: 0, retained_newer_records: 0, reason: "incomplete_scan"
-  }}});
-  assert.match(skipped.nodes.get("info-coverage").innerHTML, /Kein bestätigter vollständiger Quellenlauf; keine Angebote wegen Abwesenheit gelöscht/);
-  const legacy = await render({source_status: "live", coverage: {traversal_completed: true}});
-  assert.match(legacy.nodes.get("info-coverage").innerHTML, /Bestandsabgleich<\/small><strong>In diesem Snapshot nicht ausgewiesen/);
-  for (const ui of [skipped, legacy]) assert.doesNotMatch(ui.nodes.get("info-coverage").innerHTML, /Nach erfolgreichem vollständigem Quellenlauf ausgeführt|Nicht mehr gefundene Angebote gelöscht/);
-});
-
-test("invalid cleanup counts and contradictory source status do not appear as confirmed removals", async () => {
-  for (const [status, completed, removed] of [["live", true, -1], ["live", true, "12"], ["live", true, 0.5], ["partial", true, 12], ["live", false, 12]]) {
-    const ui = await render({source_status: status, coverage: {traversal_completed: completed, reconciliation: {
-      policy: "successful_full_scan", applied: true, removed_records: removed, retained_newer_records: 0, reason: "completed"
-    }}});
-    const text = ui.nodes.get("info-coverage").innerHTML;
-    assert.match(text, /Nicht bestätigt; Angaben zum Abgleich sind unvollständig oder widersprüchlich/);
-    assert.doesNotMatch(text, /Nicht mehr gefundene Angebote gelöscht|Nach erfolgreichem vollständigem Quellenlauf ausgeführt/);
-  }
-});
-
-test("all-empty results with a nonzero reported total are not presented as a successful full scan", async () => {
-  const ui = await render({source_status: "live", status_message: "Nicht als Erfolg übernehmen", coverage: {
-    traversal_completed: true, scan_completed_at: latest, last_successful_full_scan_at: oldest,
-    reported_nonempty_but_no_records: true, absence_is_evidence: false,
-    searches: {pickup: {enabled: true, traversal_completed: true, pages_fetched: 6, unique_records: 0, total_reported_latest: 248, sparse_pages: 6, empty_pages: 6, sparse_slots_estimate: 248, reported_nonempty_but_no_records: true, stop_reason: "reported_end"}}
-  }});
-  const text = ui.nodes.get("info-coverage").innerHTML;
-  assert.match(ui.nodes.get("info-status").innerHTML, /Quellenabgleich nicht bestätigt/);
-  assert.doesNotMatch(ui.nodes.get("info-status").innerHTML, /Nicht als Erfolg übernehmen/);
-  assert.match(text, /Seitenpositionen durchlaufen; gemeldete Treffer nicht durch Datensätze bestätigt/);
-  assert.match(text, /Treffer gemeldet, aber kein einziger Datensatz geliefert/);
-  assert.match(text, /Letzter vollständiger Quellenlauf<\/small><strong>03\.11\.26, 08:30/);
-  assert.doesNotMatch(text, /Alle gemeldeten Seitenpositionen der aktivierten Suchen durchlaufen/);
-});
-
-test("invalid traversal fields cannot imply completion or inject HTML", async () => {
-  const ui = await render({coverage: {
-    traversal_completed: false, planned_interval_minutes: -30,
-    scan_started_at: "invalid", scan_finished_at: "<script>bad</script>", last_successful_full_scan_at: null,
-    searches: {
-      general: {enabled: true, traversal_completed: "true", pages_fetched: -1, unique_records: "100", duplicate_records: 1.5, total_reported_initial: -1, unobserved_estimate: -5, stop_reason: "<img src=x onerror=bad()>"},
-      pickup: {enabled: false, traversal_completed: true}
-    }
-  }});
-  const text = ui.nodes.get("info-coverage").innerHTML;
-  assert.match(text, /Noch nicht belegt/);
-  assert.match(text, /unbekannt \/ unbekannt/);
-  assert.match(text, /Allgemeine Suche<\/small><strong>Nicht vollständig durchlaufen/);
-  assert.match(text, /Abholsuche<\/small><strong>Nicht aktiviert/);
-  assert.match(text, /&lt;img src=x/);
-  assert.doesNotMatch(text, /<script>|<img |-1 Seiten|-5 laut|100 unterschiedliche|1\.5 wiederholte|Geplanter Startabstand|Listenende erreicht/);
-});
-
-test("personal-profile counts do not reinterpret stored LLM scores", async () => {
-  const ui = await render({deals: [
-    {title: "Ungewöhnliche Drucksache", personal_interest_excluded: true, assessment_basis: "llm", scalp_score: 90, useability_score: 99},
-    {title: "KAESER MOBILAIR M 27 BROSCHÜRE 12 Seiten RAR", assessment_basis: "llm", scalp_score: 90, useability_score: 99},
-    {title: "Bohrmaschine mit Bedienungsanleitung", personal_interest_excluded: false, scalp_score: 80, useability_score: 90},
-    {title: "Prospekthalter aus Metall", scalp_score: 30, useability_score: 95}
-  ]});
-  const text = ui.nodes.get("info-profile").textContent;
-  assert.match(text, /2 von 4 gespeicherten Angeboten durch das persönliche Profil ausgeblendet/);
-  assert.match(text, /Hauptliste und beide Top 10, unabhängig von der Interest-Schwelle/);
-  assert.match(text, /unveränderten Scores/);
-  assert.match(text, /personal_interest_excluded/);
-});
-
-test("copied triage instructions preserve absolute scores and separate source freshness", async () => {
-  const ui = await render();
-  await ui.copy();
-  assert.match(ui.copied, /ursprünglichen Zeitpunkt weiter/);
-  assert.match(ui.copied, /keine pauschale altersbasierte Bewertungsfrist/);
-  assert.match(ui.copied, /niedrige Heuristikwerte sind kein Ausschluss/);
-  assert.match(ui.copied, /nicht relativ zu den anderen Funden/);
-  assert.match(ui.copied, /Ein neues gutes Angebot senkt keine vorhandene Bewertung/);
-  assert.match(ui.copied, /Preis, Gebote und Verfügbarkeit separat/);
-  assert.match(ui.copied, /coverage\.traversal_completed/);
-  assert.match(ui.copied, /reported_nonempty_but_no_records/);
-  assert.match(ui.copied, /absence_is_evidence ist false/);
-  assert.match(ui.copied, /30-Minuten-Takt ist keine Aktualitätszusage/);
-  assert.match(ui.copied, /personal_interest_excluded unabhängig von Scores/);
-  assert.match(ui.copied, /Verändere für diesen Profilausschluss keine gespeicherten LLM-Scores/);
-  assert.match(ui.copied, /Keine Gebote, Käufe oder externen Schreibaktionen/);
-  assert.doesNotMatch(ui.copied, /Bewertungen haben separate Fristen|48.Stunden.Frist/);
-});
-
-test("static Info explains incremental merge without a semantic age expiry", () => {
-  assert.match(html, /pro Artikel nach einem festen Maßstab/);
-  assert.match(html, /ursprünglichen Bewertungszeitpunkt/);
-  assert.match(html, /höchstens 5\.000 Datensätzen/);
-  assert.match(html, /verfallen nicht pauschal nach 48 Stunden/);
-  assert.match(html, /nicht nach einer pauschalen Stundenfrist/);
-  assert.doesNotMatch(html, /Kapazitätsgrenze ist 800|eigene Frist von 48 Stunden/);
-  assert.match(html, /kein Nachweis für deinen Browser/);
-  assert.match(html, /alle 30 Minuten/);
-  assert.match(html, /Minute 07 und 37/);
-  const workflow = readFileSync(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
-  assert.match(workflow, /cron: "7,37 \* \* \* \*"/);
-  assert.match(html, /abgeschlossenen Quellenlauf/);
-  assert.match(html, /kein atomarer Snapshot und keine garantierte Vollabdeckung/);
-  assert.match(html, /Separat angebotene Prospekte, Broschüren/);
-  assert.match(html, /Ein echtes Gerät mit beiliegender Anleitung bleibt dagegen im Profil/);
-  assert.doesNotMatch(html, /alle zehn Minuten|13, 23, 33|rotierende Folgeseiten|vier Daten-API/);
+test("demo mode preserves navigation and clearly labels fictitious offers", async () => {
+  const ui = await render({search: "?demo=1"});
+  assert.equal(ui.nodes.get("home-link").href, "./?demo=1");
+  assert.equal(ui.requests.length, 0);
+  assert.equal(ui.status.hidden, false);
+  assert.match(ui.status.textContent, /Demo.*fiktiv/);
+  const demoFeed = await render({data: {...healthy, source_status: "demo"}});
+  assert.match(demoFeed.status.textContent, /fiktiv/);
 });
