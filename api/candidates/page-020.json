@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T08:06:05Z",
+    "evaluated_at": "2026-11-13T08:39:04Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,8 +13,92 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T08:06:05Z",
+  "generated_at": "2026-11-13T08:39:04Z",
   "items": [
+    {
+      "assessment_basis": "llm",
+      "assessment_confidence": "low",
+      "bid_count": 0,
+      "buying_options": [],
+      "carried": true,
+      "city": "",
+      "condition": "Gebraucht",
+      "content_updated_at": "2026-11-13T07:35:05Z",
+      "country": "",
+      "dependencies": [
+        "Bauprojekt"
+      ],
+      "description": "",
+      "description_status": "missing",
+      "description_truncated": false,
+      "detail_path": "api/items/69bdb697af93350eb08baf28d638c6fe0ba6bed359dcd4dd664c0144b6749ad1.json",
+      "details_fetched": false,
+      "distance_km": null,
+      "eligibility": "review",
+      "eligibility_reasons": [
+        "Weder Versandkosten noch passende Abholung bestätigt",
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
+      ],
+      "eligibility_without_time_window": "review",
+      "ends_at": "2026-11-13T14:30:39Z",
+      "id": "v1|227601248806|0",
+      "image": "https://i.ebayimg.com/images/g/KVAAAeSwTWpq0iXI/s-l400.jpg",
+      "interest_score": 6,
+      "is_auction": true,
+      "last_seen_at": "2026-11-13T07:35:05Z",
+      "local_pickup_confirmed": false,
+      "minimum_bid_eur": null,
+      "next_checks": [
+        "Lieferumfang, Maße und Zustand im Originalangebot prüfen."
+      ],
+      "personal_interest_excluded": false,
+      "personal_interest_reason": null,
+      "pickup_available": null,
+      "pickup_radius_km": 50,
+      "pickup_search_confirmed": false,
+      "postcode": "",
+      "price_eur": 1.0,
+      "price_kind": "auction_price",
+      "product_kind": "component",
+      "reasons": [
+        "Beobachteter Auktionspreis höchstens 1 €",
+        "Zum Abrufzeitpunkt keine Gebote"
+      ],
+      "reserve_status": "unknown",
+      "risks": [
+        "Weder Versandkosten noch passende Abholung bestätigt",
+        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
+        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
+        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+        "Nur Titel und Zustandsangabe verfügbar; Umfang und Funktion nicht unabhängig geprüft.",
+        "Stückzahl und Kanten-/Glaszustand unbekannt.",
+        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
+      ],
+      "scalp_score": 12,
+      "score": 6,
+      "score_version": 2,
+      "semantic_assessed": true,
+      "semantic_assessed_at": "2026-11-08T20:22:31.869802Z",
+      "semantic_interest": 12,
+      "semantic_review_mode": "interactive",
+      "shipping_eur": null,
+      "source_observed_at": "2026-11-13T07:35:05Z",
+      "source_provider": "auktionen-ohne-gebot",
+      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
+      "stale": false,
+      "time_window_eligible": true,
+      "title": "Glasbausteine (24x24cm)",
+      "total_eur": null,
+      "total_known_eur": null,
+      "url": "https://www.ebay.de/itm/227601248806?hash=item34fe177226%3Ag%3AKVAAAeSwTWpq0iXI&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
+      "useability_reason": "Benötigen Bauprojekt und geeignete Montage.",
+      "useability_score": 51,
+      "valid_until": "2026-11-13T14:30:39Z",
+      "value_band": "around_50",
+      "value_reason": "Gebrauchte Glasbausteine bieten kleines Baumaterialpotenzial; Menge fehlt.",
+      "verification_level": "aggregator"
+    },
     {
       "assessment_basis": "llm",
       "assessment_confidence": "medium",
@@ -23,7 +107,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-13T07:35:05Z",
+      "content_updated_at": "2026-11-13T08:08:19Z",
       "country": "",
       "dependencies": [
         "Passender Verteiler",
@@ -46,7 +130,7 @@
       "image": "https://i.ebayimg.com/images/g/rcYAAOSwxbBgy20K/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:35:05Z",
+      "last_seen_at": "2026-11-13T08:08:19Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -82,7 +166,7 @@
       "semantic_interest": 21,
       "semantic_review_mode": "interactive",
       "shipping_eur": 4.9,
-      "source_observed_at": "2026-11-13T07:35:05Z",
+      "source_observed_at": "2026-11-13T08:08:19Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -106,7 +190,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:35:05Z",
+      "content_updated_at": "2026-11-13T08:08:19Z",
       "country": "",
       "dependencies": [
         "Kompatibles Absauggerät, insbesondere CT 33"
@@ -128,7 +212,7 @@
       "image": "https://i.ebayimg.com/images/g/vcoAAeSw~jxq8z5H/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:35:05Z",
+      "last_seen_at": "2026-11-13T08:08:19Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -165,7 +249,7 @@
       "semantic_interest": 27,
       "semantic_review_mode": "interactive",
       "shipping_eur": 7.49,
-      "source_observed_at": "2026-11-13T07:35:05Z",
+      "source_observed_at": "2026-11-13T08:08:19Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -189,7 +273,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-13T07:35:26Z",
+      "content_updated_at": "2026-11-13T08:08:19Z",
       "country": "",
       "dependencies": [],
       "description": "",
@@ -209,7 +293,7 @@
       "image": "https://i.ebayimg.com/images/g/OKQAAOSwHM1aoT~-/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:35:26Z",
+      "last_seen_at": "2026-11-13T08:08:19Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -246,7 +330,7 @@
       "semantic_interest": 6,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.8,
-      "source_observed_at": "2026-11-13T07:35:26Z",
+      "source_observed_at": "2026-11-13T08:08:19Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -270,7 +354,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-13T07:35:26Z",
+      "content_updated_at": "2026-11-13T08:08:19Z",
       "country": "",
       "dependencies": [
         "12-V-Versorgung",
@@ -294,7 +378,7 @@
       "image": "https://i.ebayimg.com/images/g/KgwAAeSwbxRq8LB2/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:35:26Z",
+      "last_seen_at": "2026-11-13T08:08:19Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -331,7 +415,7 @@
       "semantic_interest": 12,
       "semantic_review_mode": "interactive",
       "shipping_eur": 4.95,
-      "source_observed_at": "2026-11-13T07:35:26Z",
+      "source_observed_at": "2026-11-13T08:08:19Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -355,7 +439,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-13T07:35:26Z",
+      "content_updated_at": "2026-11-13T08:08:41Z",
       "country": "",
       "dependencies": [],
       "description": "",
@@ -375,7 +459,7 @@
       "image": "https://i.ebayimg.com/images/g/zroAAeSwsZJq3I7W/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:35:26Z",
+      "last_seen_at": "2026-11-13T08:08:41Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -412,7 +496,7 @@
       "semantic_interest": 6,
       "semantic_review_mode": "interactive",
       "shipping_eur": 2.7,
-      "source_observed_at": "2026-11-13T07:35:26Z",
+      "source_observed_at": "2026-11-13T08:08:41Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -436,7 +520,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-13T07:35:26Z",
+      "content_updated_at": "2026-11-13T08:08:41Z",
       "country": "",
       "dependencies": [
         "Versorgung",
@@ -460,7 +544,7 @@
       "image": "https://i.ebayimg.com/images/g/I58AAeSwgyhq8GMI/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:35:26Z",
+      "last_seen_at": "2026-11-13T08:08:41Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -497,7 +581,7 @@
       "semantic_interest": 12,
       "semantic_review_mode": "interactive",
       "shipping_eur": 2.9,
-      "source_observed_at": "2026-11-13T07:35:26Z",
+      "source_observed_at": "2026-11-13T08:08:41Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -521,7 +605,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-13T07:35:48Z",
+      "content_updated_at": "2026-11-13T08:08:41Z",
       "country": "",
       "dependencies": [
         "Schaltungsprojekt",
@@ -544,7 +628,7 @@
       "image": "https://i.ebayimg.com/images/g/kqMAAeSwfotq8GQU/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:35:48Z",
+      "last_seen_at": "2026-11-13T08:08:41Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -581,7 +665,7 @@
       "semantic_interest": 12,
       "semantic_review_mode": "interactive",
       "shipping_eur": 2.9,
-      "source_observed_at": "2026-11-13T07:35:48Z",
+      "source_observed_at": "2026-11-13T08:08:41Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -605,7 +689,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-13T07:35:48Z",
+      "content_updated_at": "2026-11-13T08:08:41Z",
       "country": "",
       "dependencies": [
         "Passende Bohrungs-/Bolzenabmessung"
@@ -627,7 +711,7 @@
       "image": "https://i.ebayimg.com/images/g/yPwAAeSwt-ZqRqes/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:35:48Z",
+      "last_seen_at": "2026-11-13T08:08:41Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -664,7 +748,7 @@
       "semantic_interest": 6,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.95,
-      "source_observed_at": "2026-11-13T07:35:48Z",
+      "source_observed_at": "2026-11-13T08:08:41Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -688,7 +772,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:35:48Z",
+      "content_updated_at": "2026-11-13T08:09:02Z",
       "country": "",
       "dependencies": [
         "Passendes Installationsprojekt"
@@ -710,7 +794,7 @@
       "image": "https://i.ebayimg.com/images/g/dH8AAeSwlPlo2Pzr/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:35:48Z",
+      "last_seen_at": "2026-11-13T08:09:02Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -747,7 +831,7 @@
       "semantic_interest": 12,
       "semantic_review_mode": "interactive",
       "shipping_eur": 7.69,
-      "source_observed_at": "2026-11-13T07:35:48Z",
+      "source_observed_at": "2026-11-13T08:09:02Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -771,7 +855,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:36:09Z",
+      "content_updated_at": "2026-11-13T08:09:02Z",
       "country": "",
       "dependencies": [
         "Schaltungsprojekt",
@@ -794,7 +878,7 @@
       "image": "https://i.ebayimg.com/images/g/TNgAAOSwts5n9tXn/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:36:09Z",
+      "last_seen_at": "2026-11-13T08:09:02Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -830,7 +914,7 @@
       "semantic_interest": 12,
       "semantic_review_mode": "interactive",
       "shipping_eur": 7.69,
-      "source_observed_at": "2026-11-13T07:36:09Z",
+      "source_observed_at": "2026-11-13T08:09:02Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -941,7 +1025,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-13T07:36:30Z",
+      "content_updated_at": "2026-11-13T08:09:24Z",
       "country": "",
       "dependencies": [
         "Tacker mit passendem Klammersystem"
@@ -963,7 +1047,7 @@
       "image": "https://i.ebayimg.com/images/g/bPsAAeSwxKZqjfw6/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:36:30Z",
+      "last_seen_at": "2026-11-13T08:09:24Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1000,7 +1084,7 @@
       "semantic_interest": 7,
       "semantic_review_mode": "interactive",
       "shipping_eur": 4.19,
-      "source_observed_at": "2026-11-13T07:36:30Z",
+      "source_observed_at": "2026-11-13T08:09:24Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1024,7 +1108,7 @@
       "carried": false,
       "city": "",
       "condition": "New other (see details)",
-      "content_updated_at": "2026-11-13T07:36:30Z",
+      "content_updated_at": "2026-11-13T08:09:24Z",
       "country": "",
       "dependencies": [
         "Tacker mit passendem Klammersystem"
@@ -1046,7 +1130,7 @@
       "image": "https://i.ebayimg.com/images/g/7ycAAeSwVJFq5OCF/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:36:30Z",
+      "last_seen_at": "2026-11-13T08:09:24Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1083,7 +1167,7 @@
       "semantic_interest": 7,
       "semantic_review_mode": "interactive",
       "shipping_eur": 12.69,
-      "source_observed_at": "2026-11-13T07:36:30Z",
+      "source_observed_at": "2026-11-13T08:09:24Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1107,7 +1191,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu",
-      "content_updated_at": "2026-11-13T07:36:30Z",
+      "content_updated_at": "2026-11-13T08:09:45Z",
       "country": "",
       "dependencies": [
         "50-mm-Paketklebeband"
@@ -1129,7 +1213,7 @@
       "image": "https://i.ebayimg.com/images/g/RW4AAeSw9-xq7sfU/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:36:30Z",
+      "last_seen_at": "2026-11-13T08:09:45Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1166,7 +1250,7 @@
       "semantic_interest": 6,
       "semantic_review_mode": "interactive",
       "shipping_eur": 4.19,
-      "source_observed_at": "2026-11-13T07:36:30Z",
+      "source_observed_at": "2026-11-13T08:09:45Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1190,7 +1274,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-13T07:36:52Z",
+      "content_updated_at": "2026-11-13T08:09:56Z",
       "country": "",
       "dependencies": [
         "Tacker mit passendem Klammersystem"
@@ -1212,7 +1296,7 @@
       "image": "https://i.ebayimg.com/images/g/w14AAOSw-RJnnfDJ/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:36:52Z",
+      "last_seen_at": "2026-11-13T08:09:56Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1249,7 +1333,7 @@
       "semantic_interest": 7,
       "semantic_review_mode": "interactive",
       "shipping_eur": 2.5,
-      "source_observed_at": "2026-11-13T07:36:52Z",
+      "source_observed_at": "2026-11-13T08:09:56Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1273,7 +1357,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-13T07:36:52Z",
+      "content_updated_at": "2026-11-13T08:10:07Z",
       "country": "",
       "dependencies": [
         "Elektronische Zielschaltung"
@@ -1295,7 +1379,7 @@
       "image": "https://i.ebayimg.com/images/g/PmgAAeSwIyhpk33o/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:36:52Z",
+      "last_seen_at": "2026-11-13T08:10:07Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1332,7 +1416,7 @@
       "semantic_interest": 21,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:36:52Z",
+      "source_observed_at": "2026-11-13T08:10:07Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1356,7 +1440,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-13T07:37:03Z",
+      "content_updated_at": "2026-11-13T08:10:07Z",
       "country": "",
       "dependencies": [
         "Passendes Gegenstück",
@@ -1379,7 +1463,7 @@
       "image": "https://i.ebayimg.com/images/g/~M4AAeSwUIlqYdx2/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:03Z",
+      "last_seen_at": "2026-11-13T08:10:07Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1416,7 +1500,7 @@
       "semantic_interest": 23,
       "semantic_review_mode": "interactive",
       "shipping_eur": 5.79,
-      "source_observed_at": "2026-11-13T07:37:03Z",
+      "source_observed_at": "2026-11-13T08:10:07Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1440,7 +1524,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-13T07:37:03Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Elektronikprojekt und Montagewerkzeug"
@@ -1462,7 +1546,7 @@
       "image": "https://i.ebayimg.com/images/g/UEYAAeSwNnlpVD7E/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:03Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1499,7 +1583,7 @@
       "semantic_interest": 15,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:03Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1523,7 +1607,7 @@
       "carried": false,
       "city": "",
       "condition": "Gebraucht",
-      "content_updated_at": "2026-11-13T07:37:03Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Passende Hochspannungsschaltung"
@@ -1545,7 +1629,7 @@
       "image": "https://i.ebayimg.com/images/g/ejoAAeSwEABo2XBw/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:03Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1582,7 +1666,7 @@
       "semantic_interest": 18,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:03Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1606,7 +1690,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltungsprojekt"
@@ -1628,7 +1712,7 @@
       "image": "https://i.ebayimg.com/images/g/YtUAAeSwCZpokOYY/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1666,7 +1750,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1690,7 +1774,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -1712,7 +1796,7 @@
       "image": "https://i.ebayimg.com/images/g/a4wAAeSw9XdqP6PC/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1750,7 +1834,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1774,7 +1858,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -1796,7 +1880,7 @@
       "image": "https://i.ebayimg.com/images/g/K7MAAeSwQONqP6Nv/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1834,7 +1918,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1858,7 +1942,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -1880,7 +1964,7 @@
       "image": "https://i.ebayimg.com/images/g/-d8AAeSwkvJqP6KD/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -1918,7 +2002,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -1942,7 +2026,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -1964,7 +2048,7 @@
       "image": "https://i.ebayimg.com/images/g/~3wAAeSwF~BqP6GM/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2002,7 +2086,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2026,7 +2110,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2048,7 +2132,7 @@
       "image": "https://i.ebayimg.com/images/g/FLAAAeSwvBFqP6DX/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2086,7 +2170,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2110,7 +2194,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2132,7 +2216,7 @@
       "image": "https://i.ebayimg.com/images/g/SfYAAeSwp91qP6AN/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2170,7 +2254,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2191,7 +2275,7 @@
       "assessment_confidence": "low",
       "bid_count": 0,
       "buying_options": [],
-      "carried": false,
+      "carried": true,
       "city": "",
       "condition": "Gebraucht",
       "content_updated_at": "2026-11-13T07:37:13Z",
@@ -2279,7 +2363,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2301,7 +2385,7 @@
       "image": "https://i.ebayimg.com/images/g/FvsAAeSwnudqP5-Z/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2339,7 +2423,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2363,7 +2447,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2385,7 +2469,7 @@
       "image": "https://i.ebayimg.com/images/g/7MAAAeSwh8lqP53N/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2423,7 +2507,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2447,7 +2531,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:18Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2469,7 +2553,7 @@
       "image": "https://i.ebayimg.com/images/g/kOkAAeSw599qP51z/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:18Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2507,7 +2591,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:18Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2531,7 +2615,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2553,7 +2637,7 @@
       "image": "https://i.ebayimg.com/images/g/TckAAeSwbFFqP5xd/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2591,7 +2675,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2615,7 +2699,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2637,7 +2721,7 @@
       "image": "https://i.ebayimg.com/images/g/SKgAAeSwyIFqP5wg/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2675,7 +2759,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2699,7 +2783,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2721,7 +2805,7 @@
       "image": "https://i.ebayimg.com/images/g/j24AAeSwwlRqP5so/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2759,7 +2843,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2783,7 +2867,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2805,7 +2889,7 @@
       "image": "https://i.ebayimg.com/images/g/H4wAAeSwubhqP5rj/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2843,7 +2927,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2867,7 +2951,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2889,7 +2973,7 @@
       "image": "https://i.ebayimg.com/images/g/wv8AAeSwn75qP5mG/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -2927,7 +3011,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -2951,7 +3035,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -2973,7 +3057,7 @@
       "image": "https://i.ebayimg.com/images/g/aagAAOSwya5m-mWZ/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3011,7 +3095,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3035,7 +3119,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3057,7 +3141,7 @@
       "image": "https://i.ebayimg.com/images/g/gBkAAeSwE2hqPusy/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3095,7 +3179,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3119,7 +3203,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3141,7 +3225,7 @@
       "image": "https://i.ebayimg.com/images/g/P6UAAeSwOgVqPuqY/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3179,7 +3263,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3203,7 +3287,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3225,7 +3309,7 @@
       "image": "https://i.ebayimg.com/images/g/kKoAAeSwn75qPuov/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3263,7 +3347,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3287,7 +3371,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3309,7 +3393,7 @@
       "image": "https://i.ebayimg.com/images/g/YWkAAeSwp2JqGeZo/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3347,7 +3431,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3371,7 +3455,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3393,7 +3477,7 @@
       "image": "https://i.ebayimg.com/images/g/dCMAAeSwArRqPulR/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3431,7 +3515,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3455,7 +3539,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3477,7 +3561,7 @@
       "image": "https://i.ebayimg.com/images/g/4KcAAeSwqWhqPubK/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3515,7 +3599,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3539,7 +3623,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3561,7 +3645,7 @@
       "image": "https://i.ebayimg.com/images/g/XWAAAeSwf1FqPuXc/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3599,7 +3683,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3623,7 +3707,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3645,7 +3729,7 @@
       "image": "https://i.ebayimg.com/images/g/XtIAAeSwHk1qPuSj/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3683,7 +3767,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3707,7 +3791,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3729,7 +3813,7 @@
       "image": "https://i.ebayimg.com/images/g/VQsAAeSwGiFqPuMy/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3767,7 +3851,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3791,7 +3875,7 @@
       "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:37:13Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3813,7 +3897,7 @@
       "image": "https://i.ebayimg.com/images/g/FM0AAOSwXB1m~7eu/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:37:13Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3851,7 +3935,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:37:13Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3872,10 +3956,10 @@
       "assessment_confidence": "medium",
       "bid_count": 0,
       "buying_options": [],
-      "carried": true,
+      "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:06:26Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3897,7 +3981,7 @@
       "image": "https://i.ebayimg.com/images/g/GpQAAeSw6tJqPuIw/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:06:26Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -3935,7 +4019,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:06:26Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -3956,10 +4040,10 @@
       "assessment_confidence": "medium",
       "bid_count": 0,
       "buying_options": [],
-      "carried": true,
+      "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:06:26Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -3981,7 +4065,7 @@
       "image": "https://i.ebayimg.com/images/g/ldwAAOSwce1nAULx/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:06:26Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -4019,7 +4103,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:06:26Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -4040,10 +4124,10 @@
       "assessment_confidence": "medium",
       "bid_count": 0,
       "buying_options": [],
-      "carried": true,
+      "carried": false,
       "city": "",
       "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:06:26Z",
+      "content_updated_at": "2026-11-13T08:10:28Z",
       "country": "",
       "dependencies": [
         "Schaltung und Montage"
@@ -4065,7 +4149,7 @@
       "image": "https://i.ebayimg.com/images/g/KZQAAeSwJslqPt4A/s-l400.jpg",
       "interest_score": 6,
       "is_auction": true,
-      "last_seen_at": "2026-11-13T07:06:26Z",
+      "last_seen_at": "2026-11-13T08:10:28Z",
       "local_pickup_confirmed": false,
       "minimum_bid_eur": null,
       "next_checks": [
@@ -4103,7 +4187,7 @@
       "semantic_interest": 13,
       "semantic_review_mode": "interactive",
       "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:06:26Z",
+      "source_observed_at": "2026-11-13T08:10:28Z",
       "source_provider": "auktionen-ohne-gebot",
       "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
       "stale": false,
@@ -4115,90 +4199,6 @@
       "useability_reason": "Ohne geeignetes Elektronikprojekt nicht eigenständig nutzbar.",
       "useability_score": 43,
       "valid_until": "2026-11-14T11:40:09Z",
-      "value_band": "around_5",
-      "value_reason": "Serienlose meist 100–125 niederohmiger bis hochohmiger 1/4-W-Festwiderstände; geringer Einzelwert.",
-      "verification_level": "aggregator"
-    },
-    {
-      "assessment_basis": "llm",
-      "assessment_confidence": "medium",
-      "bid_count": 0,
-      "buying_options": [],
-      "carried": true,
-      "city": "",
-      "condition": "Neu: Sonstige (siehe Artikelbeschreibung)",
-      "content_updated_at": "2026-11-13T07:06:26Z",
-      "country": "",
-      "dependencies": [
-        "Schaltung und Montage"
-      ],
-      "description": "",
-      "description_status": "missing",
-      "description_truncated": false,
-      "detail_path": "api/items/323834bb4c1038507d7b9954a2b8f35e7c5acb573f7b06c069b5abb7a85ecd49.json",
-      "details_fetched": false,
-      "distance_km": null,
-      "eligibility": "review",
-      "eligibility_reasons": [
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
-      ],
-      "eligibility_without_time_window": "review",
-      "ends_at": "2026-11-14T11:40:49Z",
-      "id": "v1|377632721051|0",
-      "image": "https://i.ebayimg.com/images/g/0qAAAeSw7vNqPt9b/s-l400.jpg",
-      "interest_score": 6,
-      "is_auction": true,
-      "last_seen_at": "2026-11-13T07:06:26Z",
-      "local_pickup_confirmed": false,
-      "minimum_bid_eur": null,
-      "next_checks": [
-        "Beschriftung und Widerstandswerte prüfen."
-      ],
-      "personal_interest_excluded": false,
-      "personal_interest_reason": null,
-      "pickup_available": null,
-      "pickup_radius_km": 50,
-      "pickup_search_confirmed": false,
-      "postcode": "",
-      "price_eur": 1.0,
-      "price_kind": "auction_price",
-      "product_kind": "component",
-      "reasons": [
-        "Beobachteter Auktionspreis höchstens 1 €",
-        "Zum Abrufzeitpunkt keine Gebote",
-        "Ausgewiesene Versandkosten im Suchlimit",
-        "Serienlose meist 100–125 niederohmiger bis hochohmiger 1/4-W-Festwiderstände; geringer Einzelwert."
-      ],
-      "reserve_status": "unknown",
-      "risks": [
-        "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-        "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-        "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-        "Werte, Toleranzen und Lagerqualität nicht belegt.",
-        "Beschreibung im Quellenfeed nicht vorhanden; Funktions- und Zustandsangaben nicht unabhängig geprüft.",
-        "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
-      ],
-      "scalp_score": 13,
-      "score": 6,
-      "score_version": 2,
-      "semantic_assessed": true,
-      "semantic_assessed_at": "2026-11-12T01:49:20Z",
-      "semantic_interest": 13,
-      "semantic_review_mode": "interactive",
-      "shipping_eur": 1.85,
-      "source_observed_at": "2026-11-13T07:06:26Z",
-      "source_provider": "auktionen-ohne-gebot",
-      "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-      "stale": false,
-      "time_window_eligible": true,
-      "title": "125 Stück 180 kOhm +/- 5% 0,25W Widerstand ungebraucht",
-      "total_eur": null,
-      "total_known_eur": 2.85,
-      "url": "https://www.ebay.de/itm/377632721051?hash=item57ecaa089b%3Ag%3A0qAAAeSw7vNqPt9b&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-      "useability_reason": "Ohne geeignetes Elektronikprojekt nicht eigenständig nutzbar.",
-      "useability_score": 43,
-      "valid_until": "2026-11-14T11:40:49Z",
       "value_band": "around_5",
       "value_reason": "Serienlose meist 100–125 niederohmiger bis hochohmiger 1/4-W-Festwiderstände; geringer Einzelwert.",
       "verification_level": "aggregator"
@@ -4261,7 +4261,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:423636660ed59ee5b3bd16f0cd6ed4368946e5d8728150b68c816ae398ac12d9",
+  "snapshot_id": "sha256:de2996a03bcc38a08fd1fc19c67df1f663205155a93234f3cad1b2c98a6dc206",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
