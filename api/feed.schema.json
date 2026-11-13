@@ -166,6 +166,9 @@
               "exclusiveMinimum": 0,
               "type": "number"
             },
+            "reconciliation": {
+              "$ref": "#/$defs/sourceReconciliation"
+            },
             "records_read": {
               "minimum": 0,
               "type": "integer"
@@ -275,7 +278,8 @@
               "const": true
             },
             "retention_basis": {
-              "const": "auction_end"
+              "const": "auction_end",
+              "description": "Time-based upper retention limit; successful AOG reconciliation may remove missing listings earlier."
             },
             "retention_not_revalidation": {
               "const": true
@@ -1334,12 +1338,50 @@
         "null"
       ]
     },
+    "sourceReconciliation": {
+      "description": "Inventory reconciliation against the union of all enabled AOG searches after a successful complete scan; no claim about why a listing disappeared. Optional for older V3 snapshots.",
+      "properties": {
+        "applied": {
+          "description": "Whether reconciliation ran, including successful scans with zero removals or genuinely empty results.",
+          "type": "boolean"
+        },
+        "policy": {
+          "const": "successful_full_scan"
+        },
+        "reason": {
+          "enum": [
+            "completed",
+            "incomplete_scan",
+            "invalid_records",
+            "invalid_observation"
+          ]
+        },
+        "removed_records": {
+          "description": "Previously retained listings removed because they were absent from the successful complete scan; excludes expiry and capacity pruning.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "retained_newer_records": {
+          "description": "Missing listings retained because their known observation is newer than the oldest page observation in the scan.",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "policy",
+        "applied",
+        "removed_records",
+        "retained_newer_records",
+        "reason"
+      ],
+      "type": "object"
+    },
     "sourceTraversal": {
       "description": "A bounded walk through one changing aggregator search, not an atomic market snapshot.",
       "properties": {
         "absence_is_evidence": {
           "const": false,
-          "description": "Missing IDs from mutable aggregator lists never disprove an older observation."
+          "description": "Missing IDs do not prove bids, auction end or lost pickup availability. Inventory reconciliation is a separate policy under coverage.reconciliation."
         },
         "completed_at": {
           "$ref": "#/$defs/nullableTime"
@@ -1476,7 +1518,7 @@
   },
   "$id": "https://pogoner.github.io/fundgrube/api/feed.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "V3 read-only observations retained until auction end, with a separate strict remaining-time window and description TTL. Not a live feed, appraisal or transaction API. Score version 2 is independent.",
+  "description": "V3 read-only observations retained at most until auction end; successful full AOG scans also reconcile missing listings. Separate strict remaining-time window and description TTL. Not a live feed, appraisal or transaction API. Score version 2 is independent.",
   "oneOf": [
     {
       "$ref": "#/$defs/dashboard"

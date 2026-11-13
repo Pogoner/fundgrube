@@ -167,6 +167,9 @@
                 "exclusiveMinimum": 0,
                 "type": "number"
               },
+              "reconciliation": {
+                "$ref": "#/components/schemas/sourceReconciliation"
+              },
               "records_read": {
                 "minimum": 0,
                 "type": "integer"
@@ -276,7 +279,8 @@
                 "const": true
               },
               "retention_basis": {
-                "const": "auction_end"
+                "const": "auction_end",
+                "description": "Time-based upper retention limit; successful AOG reconciliation may remove missing listings earlier."
               },
               "retention_not_revalidation": {
                 "const": true
@@ -1335,12 +1339,50 @@
           "null"
         ]
       },
+      "sourceReconciliation": {
+        "description": "Inventory reconciliation against the union of all enabled AOG searches after a successful complete scan; no claim about why a listing disappeared. Optional for older V3 snapshots.",
+        "properties": {
+          "applied": {
+            "description": "Whether reconciliation ran, including successful scans with zero removals or genuinely empty results.",
+            "type": "boolean"
+          },
+          "policy": {
+            "const": "successful_full_scan"
+          },
+          "reason": {
+            "enum": [
+              "completed",
+              "incomplete_scan",
+              "invalid_records",
+              "invalid_observation"
+            ]
+          },
+          "removed_records": {
+            "description": "Previously retained listings removed because they were absent from the successful complete scan; excludes expiry and capacity pruning.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "retained_newer_records": {
+            "description": "Missing listings retained because their known observation is newer than the oldest page observation in the scan.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "policy",
+          "applied",
+          "removed_records",
+          "retained_newer_records",
+          "reason"
+        ],
+        "type": "object"
+      },
       "sourceTraversal": {
         "description": "A bounded walk through one changing aggregator search, not an atomic market snapshot.",
         "properties": {
           "absence_is_evidence": {
             "const": false,
-            "description": "Missing IDs from mutable aggregator lists never disprove an older observation."
+            "description": "Missing IDs do not prove bids, auction end or lost pickup availability. Inventory reconciliation is a separate policy under coverage.reconciliation."
           },
           "completed_at": {
             "$ref": "#/components/schemas/nullableTime"
@@ -1495,7 +1537,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 1 lesen"
@@ -1513,7 +1555,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 2 lesen"
@@ -1531,7 +1573,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 3 lesen"
@@ -1549,7 +1591,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 4 lesen"
@@ -1567,7 +1609,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 5 lesen"
@@ -1585,7 +1627,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 6 lesen"
@@ -1603,7 +1645,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 7 lesen"
@@ -1621,7 +1663,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 8 lesen"
@@ -1639,7 +1681,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 9 lesen"
@@ -1657,7 +1699,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 10 lesen"
@@ -1675,7 +1717,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 11 lesen"
@@ -1693,7 +1735,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 12 lesen"
@@ -1711,7 +1753,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 13 lesen"
@@ -1729,7 +1771,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 14 lesen"
@@ -1747,7 +1789,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 15 lesen"
@@ -1765,7 +1807,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 16 lesen"
@@ -1783,7 +1825,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 17 lesen"
@@ -1801,7 +1843,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 18 lesen"
@@ -1819,7 +1861,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 19 lesen"
@@ -1837,7 +1879,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 20 lesen"
@@ -1855,7 +1897,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 21 lesen"
@@ -1873,7 +1915,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 22 lesen"
@@ -1891,7 +1933,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 23 lesen"
@@ -1909,7 +1951,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 24 lesen"
@@ -1927,7 +1969,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 25 lesen"
@@ -1945,7 +1987,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 26 lesen"
@@ -1963,7 +2005,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 27 lesen"
@@ -1981,7 +2023,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 28 lesen"
@@ -1999,7 +2041,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 29 lesen"
@@ -2017,7 +2059,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 30 lesen"
@@ -2035,7 +2077,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 31 lesen"
@@ -2053,7 +2095,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 32 lesen"
@@ -2071,7 +2113,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 33 lesen"
@@ -2089,7 +2131,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 34 lesen"
@@ -2107,7 +2149,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 35 lesen"
@@ -2125,7 +2167,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 36 lesen"
@@ -2143,7 +2185,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 37 lesen"
@@ -2161,7 +2203,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 38 lesen"
@@ -2179,7 +2221,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 39 lesen"
@@ -2197,7 +2239,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 40 lesen"
@@ -2215,7 +2257,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 41 lesen"
@@ -2233,7 +2275,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 42 lesen"
@@ -2251,7 +2293,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 43 lesen"
@@ -2269,7 +2311,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 44 lesen"
@@ -2287,7 +2329,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 45 lesen"
@@ -2305,7 +2347,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 46 lesen"
@@ -2323,7 +2365,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 47 lesen"
@@ -2341,7 +2383,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 48 lesen"
@@ -2359,7 +2401,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 49 lesen"
@@ -2377,7 +2419,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 50 lesen"
@@ -2395,7 +2437,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 51 lesen"
@@ -2413,7 +2455,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 52 lesen"
@@ -2431,7 +2473,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 53 lesen"
@@ -2449,7 +2491,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 54 lesen"
@@ -2467,7 +2509,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 55 lesen"
@@ -2485,7 +2527,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 56 lesen"
@@ -2503,7 +2545,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 57 lesen"
@@ -2521,7 +2563,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 58 lesen"
@@ -2539,7 +2581,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 59 lesen"
@@ -2557,7 +2599,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 60 lesen"
@@ -2575,7 +2617,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 61 lesen"
@@ -2593,7 +2635,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 62 lesen"
@@ -2611,7 +2653,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 63 lesen"
@@ -2629,7 +2671,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 64 lesen"
@@ -2647,7 +2689,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 65 lesen"
@@ -2665,7 +2707,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 66 lesen"
@@ -2683,7 +2725,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 67 lesen"
@@ -2701,7 +2743,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 68 lesen"
@@ -2719,7 +2761,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 69 lesen"
@@ -2737,7 +2779,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 70 lesen"
@@ -2755,7 +2797,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 71 lesen"
@@ -2773,7 +2815,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 72 lesen"
@@ -2791,7 +2833,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 73 lesen"
@@ -2809,7 +2851,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 74 lesen"
@@ -2827,7 +2869,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 75 lesen"
@@ -2845,7 +2887,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 76 lesen"
@@ -2863,7 +2905,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 77 lesen"
@@ -2881,7 +2923,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 78 lesen"
@@ -2899,7 +2941,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 79 lesen"
@@ -2917,7 +2959,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 80 lesen"
@@ -2935,7 +2977,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 81 lesen"
@@ -2953,7 +2995,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 82 lesen"
@@ -2971,7 +3013,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 83 lesen"
@@ -2989,7 +3031,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 84 lesen"
@@ -3007,7 +3049,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 85 lesen"
@@ -3025,7 +3067,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 86 lesen"
@@ -3043,7 +3085,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 87 lesen"
@@ -3061,7 +3103,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 88 lesen"
@@ -3079,7 +3121,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 89 lesen"
@@ -3097,7 +3139,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 90 lesen"
@@ -3115,7 +3157,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 91 lesen"
@@ -3133,7 +3175,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 92 lesen"
@@ -3151,7 +3193,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 93 lesen"
@@ -3169,7 +3211,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 94 lesen"
@@ -3187,7 +3229,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 95 lesen"
@@ -3205,7 +3247,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 96 lesen"
@@ -3223,7 +3265,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 97 lesen"
@@ -3241,7 +3283,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 98 lesen"
@@ -3259,7 +3301,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 99 lesen"
@@ -3277,7 +3319,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Kandidatenseite 100 lesen"
@@ -3307,7 +3349,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           },
           "404": {
             "description": "Diese statische Datei existiert nicht (mehr)."
@@ -3328,7 +3370,7 @@
                 }
               }
             },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben bis Auktionsende erhalten; das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
+            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
           }
         },
         "summary": "Status und alle Kandidatenseiten lesen"
