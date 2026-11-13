@@ -221,7 +221,8 @@ def _provenance(value: dict[str, Any], at: datetime, *, provider: Any = None) ->
     return aggregator, observed
 
 
-def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, active_window: timedelta, *, provider: Any = None) -> dict[str, Any] | None:
+def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, active_window: timedelta, *,
+                 provider: Any = None, pickup_profile: dict[str, Any] | None = None) -> dict[str, Any] | None:
     if not isinstance(raw, dict):
         raise ValueError("Every deal must be a JSON object")
     identifier = raw.get("id")
@@ -267,6 +268,15 @@ def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, act
             and item.get("pickup_available") is not False
         )
         item["pickup_search_confirmed"] = item.get("pickup_search_confirmed") is True and valid_context
+        # Match the private search origin before removing it from every public
+        # representation. Never trust an input-supplied derived match flag.
+        profile = pickup_profile or {}
+        profile_radius = profile.get("pickup_radius_km")
+        item["pickup_search_profile_match"] = bool(
+            item["pickup_search_confirmed"] and postcode == profile.get("postcode")
+            and _number(profile_radius) and 0 < profile_radius <= 200
+            and radius <= profile_radius
+        )
         if item["pickup_search_confirmed"]:
             item["pickup_search_observed_at"] = _iso(pickup_observed)
         else:
@@ -274,6 +284,7 @@ def _public_item(raw: Any, at: datetime, description_maximum_age: timedelta, act
             item.pop("pickup_search_radius_km", None)
             item.pop("pickup_search_observed_at", None)
             pickup_observed = None
+    item.pop("pickup_search_postcode", None)
     for key in ("title", "description", "url", "image", "city", "postcode", "condition", "value_reason"):
         value = item.get(key)
         if value is not None and not isinstance(value, str):
@@ -404,6 +415,16 @@ def _prepare(feed: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]]
         meta.setdefault(key, {})
         if not isinstance(meta[key], dict):
             raise ValueError(f"{key} must be an object")
+    # The runtime profile remains private to this export operation. Retain only
+    # coarse public context; unknown location fields must not become new leaks.
+    pickup_profile = meta["location"]
+    public_location = {}
+    country, radius = pickup_profile.get("country"), pickup_profile.get("pickup_radius_km")
+    if isinstance(country, str) and re.fullmatch(r"[A-Z]{2}", country):
+        public_location["country"] = country
+    if _number(radius) and 0 < radius <= 200:
+        public_location["pickup_radius_km"] = radius
+    meta["location"] = public_location
     if not isinstance(meta["blockers"], list) or not isinstance(meta["ai_enabled"], bool):
         raise ValueError("Invalid feed status metadata")
     description_hours = meta["criteria"].get("description_max_age_hours", meta["criteria"].get("max_freshness_hours", MAX_DESCRIPTION_AGE_HOURS))
@@ -458,7 +479,8 @@ def _prepare(feed: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]]
     omitted = 0
     if status not in {"unconfigured", "disabled"}:
         for raw in raw_items:
-            item = _public_item(raw, at, description_maximum_age, active_window, provider=provider)
+            item = _public_item(raw, at, description_maximum_age, active_window,
+                                provider=provider, pickup_profile=pickup_profile)
             if item is None:
                 omitted += 1
                 continue
@@ -647,7 +669,7 @@ Quellenalter konservativ und darf nicht durch den späteren Snapshot-Zeitpunkt
 ersetzt werden. Die Lesezeit kann zusätzlichen Verzug bedeuten.
 
 Diese Quelle liefert hier keine vollständigen Beschreibungen, keine bestätigten
-Standorte und keinen Mindestpreisstatus. Daraus keine Nähe zu Heidelberg, keine
+Standorte und keinen Mindestpreisstatus. Daraus keine Nähe zum Suchort, keine
 Funktionsprüfung und keinen fehlenden Mindestpreis ableiten. `pickup_available`
 ist höchstens eine Abholmöglichkeit laut Quelle, nicht die Bestätigung eines
 Abholorts im Suchradius; `null` heißt unbekannt. `coverage.source_claims_only`
@@ -714,7 +736,15 @@ gelesene Angebote werden dadurch nicht erneut bestätigt.
 
 Eine getrennte Umkreissuche kann vorläufige Abhol-Kandidaten liefern.
 `pickup_search_confirmed: true` bedeutet nur, dass der Aggregator das Angebot
-für `pickup_search_postcode` und `pickup_search_radius_km` zurückgegeben hat.
+in einer Abholsuche für `pickup_search_radius_km` zurückgegeben hat.
+`pickup_search_profile_match: true` bestätigt zusätzlich, dass deren intern
+geprüfte Such-PLZ zum konfigurierten Profil passt und der Suchradius dessen
+Radius nicht überschreitet. Such-PLZ und Suchort werden nicht veröffentlicht:
+`location` enthält höchstens Land und Radius; `pickup_search_postcode` entfällt
+in neuen Exporten. Tatsächliche Angebotsstandorte bleiben davon getrennt.
+Leser verwenden den neuen booleschen Profilabgleich. Nur wenn das Feld fehlt,
+können sie bei älteren Snapshots die beiden vorhandenen Such-PLZ-Felder und
+Radien selbst vergleichen; ein vorhandenes `false` darf nicht überstimmt werden.
 `pickup_search_observed_at` datiert diese unabhängige Beobachtung. Eine spätere
 allgemeine Preis-/Gebotsbeobachtung erneuert sie nicht. Auch nach vollständig
 durchlaufenen Abholsuch-Offsets kann ein älterer Abholhinweis bei einem weiterhin

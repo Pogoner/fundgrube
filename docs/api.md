@@ -48,7 +48,7 @@ Ein passender Auftrag in ChatGPT lautet:
 > Priorisiere vollständige, nutzbare Geräte und Werkzeuge gegenüber Kleinteilen,
 > Verbrauchsmaterial und Zeitschriften. Nutze die groben Klassen eher 5 / 50 / 500 €
 > nur als unsichere Orientierung. Nenne eine kurze Shortlist mit Begründung,
-> Unsicherheiten, Versand oder Abholung um 69121 Heidelberg und Auktionsende.
+> Unsicherheiten, Versand oder Abholung im konfigurierten Suchgebiet und Auktionsende.
 > Führe keine Gebote, Käufe oder Verkäufernachrichten aus.
 
 Mit direktem HTTPS-Zugriff muss der Leser jede `snapshot_id` vergleichen. GitHub
@@ -482,21 +482,39 @@ vom aktiven Zeitfenster und von der Speicherkapazität ausgewiesen.
 
 Die verwendete Quelle liefert Titel, Bild, Preis, Versand, Gebotszahl, Ende,
 Zustandsangabe und eBay-Link, aber hier **keine vollständigen Beschreibungen, keine
-bestätigten Standorte und keinen Mindestpreisstatus**. Keine Nähe zu Heidelberg,
+bestätigten Standorte und keinen Mindestpreisstatus**. Keine Nähe zum Suchort,
 Vollständigkeit, Funktionsfähigkeit oder Mindestpreisfreiheit hinzuerfinden.
 `pickup_available: true` bedeutet höchstens „Abholung laut Quelle möglich“ und
 ist nicht `local_pickup_confirmed: true`; `null` bleibt unbekannt.
 
 Eine zusätzliche Abhol-Umkreissuche der Quelle kann **vorläufige** Kandidaten
-liefern. Dafür sind vier optionale Felder vorgesehen:
+liefern. Dafür sind vier optionale öffentliche Felder vorgesehen:
 
 - `pickup_search_confirmed`: Der Aggregator hat das Angebot in dieser Suche
   zurückgegeben; kein unabhängig bestätigter Standort.
-- `pickup_search_postcode`: Die fünfstellige Such-Postleitzahl, etwa `69121`,
-  **nicht** die Postleitzahl des Verkäufers.
+- `pickup_search_profile_match`: Der Export hat vor der Redaktion geprüft,
+  dass die Such-PLZ zum internen Profil passt und der Suchradius dessen Radius
+  nicht überschreitet. Das ist ein boolescher Profilabgleich, kein Standortbeleg.
 - `pickup_search_radius_km`: Der angefragte Radius, **keine** gemessene Entfernung.
 - `pickup_search_observed_at`: Eigenständiger, zeitzonenbehafteter Stand genau
   dieser Abholsuche, nicht der zuletzt gelesenen allgemeinen Preisangaben.
+
+Die private Such-PLZ und der Suchort werden in neuen Website-/API-Exporten
+nicht veröffentlicht. `location` enthält höchstens `country` und
+`pickup_radius_km`; `pickup_search_postcode` entfällt in Dashboard, Manifest,
+Kandidatenseiten und Details. Die interne Suchkonfiguration, die eigentlichen
+Quellenanfragen und gespeicherten Quellenbeobachtungen bleiben unverändert.
+`city` und `postcode` eines Angebots bezeichnen gegebenenfalls dessen
+Quellenstandort und werden nicht aus dem privaten Suchprofil gefüllt.
+
+Verbraucher verwenden `pickup_search_profile_match`, wenn das Feld vorhanden
+ist, und prüfen zusätzlich Radius, Zeitfenster und Beobachtungszeit. Nur wenn
+das Feld fehlt, dürfen sie für ältere Snapshots die vorhandene Such-PLZ mit
+`location.postcode` vergleichen. Ein vorhandenes `false`, `null` oder ein anderer
+ungültiger Wert darf durch diesen Legacy-Vergleich nicht zu `true` werden.
+Die bisherigen PLZ-Felder bleiben im Schema als veraltet beschrieben, damit
+ältere Version-3-Snapshots lesbar bleiben; der Export übernimmt keine von außen
+gelieferten Profilabgleich-Flags ungeprüft.
 
 Ein neuer allgemeiner Quellenfund kann Preis, Gebote und `source_observed_at`
 aktualisieren, ohne einen früheren Umkreistreffer erneut zu bestätigen. Dessen

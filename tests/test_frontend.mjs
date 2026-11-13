@@ -106,7 +106,7 @@ class Element {
 }
 
 function fixture(overrides = {}) {
-  return {schema_version: 3, snapshot_id: "snapshot-a", generated_at: iso(0), last_successful_scan_at: iso(0), source_status: "live", blockers: [], location: demo.location, criteria: {...demo.criteria, lookahead_hours: 72}, freshness: {retention_basis: "auction_end", maximum_source_age_hours: null, active_window_hours: 72, source_warning_after_hours: 2}, ai_enabled: false, stats: {received: 0}, coverage: {}, deals: [], ...overrides};
+  return {schema_version: 3, snapshot_id: "snapshot-a", generated_at: iso(0), last_successful_scan_at: iso(0), source_status: "live", blockers: [], location: {...demo.location, postcode: "12345", city: "PrivateTestLocation"}, criteria: {...demo.criteria, lookahead_hours: 72}, freshness: {retention_basis: "auction_end", maximum_source_age_hours: null, active_window_hours: 72, source_warning_after_hours: 2}, ai_enabled: false, stats: {received: 0}, coverage: {}, deals: [], ...overrides};
 }
 function offer(overrides = {}) {
   return {...structuredClone(demo.deals[0]), id: "offer-a", last_seen_at: iso(0), ends_at: iso(4 * hour), title: "Eigenständiges Messgerät", description: "Gespeicherter Kurztext.", url: "https://www.ebay.de/itm/123456789012", detail_path: "api/items/offer-a.json", score_version: 2, scalp_score: 80, useability_score: 80, interest_score: 64, score: 64, assessment_basis: "heuristic", semantic_assessed: true, assessment_confidence: "low", ...overrides};
@@ -157,7 +157,7 @@ function harness(data = fixture(), options = {}) {
   };
 }
 
-test("home is a compact radar; long documentation lives on a real linked Info page", () => {
+test("home prioritizes offers and links to concise essential guidance", () => {
   const home = pages.index.html;
   const info = pages.info.html;
   assert.match(home, /href="\.\/info\.html"/);
@@ -165,17 +165,13 @@ test("home is a compact radar; long documentation lives on a real linked Info pa
   assert.match(home, /href="#browse-heading"/);
   assert.match(home, /Top 10 Scalp/);
   assert.match(home, /Top 10 Useability/);
-  assert.doesNotMatch(home, /class="hero|id="interface"|id="coverage-details"|id="copy-instructions"|id="tool-instructions"|class="footnote"/);
+  assert.doesNotMatch(home, /class="hero|status-band|id="location-label"|id="sync-status"|id="metric-|id="criteria"|id="copy-instructions"/);
   assert(home.indexOf('id="minimum-interest"') < home.indexOf('id="cards"'));
+  assert(home.indexOf('id="demo-button"') > home.indexOf('<footer>'));
   assert.match(info, /id="home-link"[^>]*href="\.\/"/);
-  assert.match(info, /src="\.\/info\.js\?v=[^"]+"/);
-  for (const path of ["manifest.json", "openapi.json", "guide.md"]) assert(info.includes(`href="./api/${path}"`));
-  for (const anchor of ["0–9", "10–24", "25–44", "45–64", "65–79", "80–89", "90–100"]) assert(info.includes(anchor));
-  assert.match(info, /Interest = ⌊\(Scalp × Useability \+ 50\) \/ 100⌋/);
-  assert.match(info, /Useability ist nicht der Zustand/);
-  assert.match(info, /defektes, aber eigenständig nutzbares Gerät/);
-  assert.match(info, /Sensoren, Verdrahtung und eine konkrete Messaufgabe/);
-  assert.match(info, /kein laufender MCP-Server/);
+  for (const anchor of ["scores", "source", "bilder"]) assert(info.includes(`id="${anchor}"`));
+  assert.match(info, /Interest = Scalp × Useability ÷ 100/);
+  assert.doesNotMatch(info, /Snapshot geladen|Quellabrufe|Seitenfortschritt|MCP-Server|copy-instructions/);
 });
 
 test("both pages use one shared asset version and reference existing local CSS and JS", () => {
@@ -199,7 +195,7 @@ test("both pages use one shared asset version and reference existing local CSS a
     assert.deepEqual(filenames.sort(), [name === "index" ? "app.js" : "info.js", "styles.css"]);
   }
   assert.equal(versions.size, 1, "CSS and both scripts share one deployment cache key");
-  assert(versions.has("design-v3.8"), "new design cannot reuse an older asset cache key");
+  assert(versions.has("design-v3.9"), "new design cannot reuse an older asset cache key");
 });
 
 test("cards without seller text show the semantic rationale before generic price reasons", async () => {
@@ -253,15 +249,11 @@ test("image loading is early for visible cards, dimensioned and has a safe recov
   assert.equal(h.requests.length, 1, "No image proxy, image prefetch or unexpected API call is introduced");
 });
 
-test("image help and automation guidance are reachable without claiming a Firefox fix or automatic LLM", () => {
-  assert.match(pages.info.html, /href="#images"/);
+test("short image help keeps existing anchors and avoids claiming a detected browser cause", () => {
   assert.match(pages.info.html, /id="images"/);
-  assert.match(pages.info.html, /Schild links neben der Firefox-Adresszeile/);
-  assert.match(pages.info.html, /mögliche Ursache, kein Nachweis für deinen Browser/);
-  assert.match(pages.info.html, /id="automation"/);
-  assert.match(pages.info.html, /Ein eingestellter Zeitplan belegt noch keinen ausgeführten Abruf/);
-  assert.match(pages.info.html, /Eine reine Shortlist-Aufgabe verändert keine GUI-Scores/);
-  assert.match(pages.info.html, /docs\/recurring-triage\.md/);
+  assert.match(pages.info.html, /id="bilder"/);
+  assert.match(pages.info.html, /Schild neben der Adresszeile/);
+  assert.match(pages.info.html, /Fundgrube erkennt die Ursache nicht automatisch/);
 });
 
 test("cached, missing and unsafe pictures use honest fallbacks without fabricated photos", async () => {
@@ -305,43 +297,41 @@ test("dialog close returns keyboard focus, even after the selected auction expir
   assert.equal(h.document.activeElement, h.nodes.get("search"));
 });
 
-test("loading, missing source, blockers and refresh failure remain visible on the lean home", async () => {
+test("loading and failures stay actionable without exposing technical or private source messages", async () => {
   let release; const waiting = new Promise(resolve => { release = resolve; });
-  const data = fixture({source_status: "unconfigured", last_successful_scan_at: null, blockers: [{message: "<script>Not configured</script>", action: "Add credentials"}]});
+  const data = fixture({source_status: "unconfigured", last_successful_scan_at: null, blockers: [{message: "<script>PrivateSourceText</script>", action: "Add credentials"}]});
   const h = harness(data, {fetch: async () => { await waiting; return {ok: true, json: async () => data}; }});
   assert.equal(h.nodes.get("cards").attributes.get("aria-busy"), "true");
   assert.equal(h.nodes.get("refresh-button").disabled, true);
   release(); await flush();
   assert.equal(h.count, 0); assert.equal(h.nodes.get("empty").hidden, false);
-  assert.match(h.nodes.get("notice").innerHTML, /&lt;script&gt;Not configured/);
-  assert.match(h.nodes.get("notice").innerHTML, /info\.html#source/);
+  assert.match(h.nodes.get("notice").innerHTML, /Noch keine Angebotsdaten/);
+  assert.doesNotMatch(h.nodes.get("notice").innerHTML, /PrivateSourceText|credentials|script/);
+  assert.equal(h.nodes.get("refresh-button").disabled, false);
   const ready = harness(fixture({deals: [offer()]})); await flush();
   const before = ready.nodes.get("cards").innerHTML;
-  ready.setFetch(async () => { throw Error("Offline"); }); await ready.click("refresh-button");
+  ready.setFetch(async () => { throw Error("PrivateSourceText"); }); await ready.click("refresh-button");
   assert.equal(ready.nodes.get("cards").innerHTML, before);
-  assert.match(ready.nodes.get("notice").innerHTML, /zuletzt geladene Snapshot bleibt sichtbar/);
-  assert.match(ready.nodes.get("sync-status").className, /error/);
+  assert.match(ready.nodes.get("notice").innerHTML, /Die bisherigen Angebote bleiben sichtbar/);
+  assert.match(ready.nodes.get("notice").className, /error/);
+  assert.doesNotMatch(ready.nodes.get("notice").innerHTML, /PrivateSourceText/);
 });
 
-test("routine partial scans are compact while real blockers and aged partial snapshots stay prominent", async () => {
+test("healthy snapshots stay quiet while partial, failed and aged data get short notices", async () => {
   const standard = [{code: "aggregator_claims_only", message: "Long routine source explanation"}, {code: "bounded_coverage", message: "Long routine coverage explanation"}];
   const data = fixture({source_status: "partial", provider: "auktionen-ohne-gebot", blockers: standard});
   const current = harness(data); await flush();
-  assert.match(current.nodes.get("notice").className, /compact-notice/);
-  assert.match(current.nodes.get("notice").innerHTML, /Begrenzter Teilscan/);
-  assert.match(current.nodes.get("notice").innerHTML, /info\.html#coverage/);
+  assert.equal(current.nodes.get("notice").hidden, false);
+  assert.match(current.nodes.get("notice").innerHTML, /Aktualisierung unvollständig/);
   assert.doesNotMatch(current.nodes.get("notice").innerHTML, /Long routine/);
-  const blocked = harness({...data, blockers: [...standard, {code: "upstream_error", message: "Source returned an error"}]}); await flush();
-  assert.doesNotMatch(blocked.nodes.get("notice").className, /compact-notice/);
-  assert.match(blocked.nodes.get("notice").innerHTML, /Source returned an error/);
+  const blocked = harness({...data, source_status: "error", blockers: [{code: "upstream_error", message: "Private backend error"}]}); await flush();
+  assert.match(blocked.nodes.get("notice").innerHTML, /Aktualisierung gestört/);
+  assert.doesNotMatch(blocked.nodes.get("notice").innerHTML, /Private backend error/);
   const aged = harness({...data, last_successful_scan_at: iso(-3 * hour)}); await flush();
-  assert.doesNotMatch(aged.nodes.get("notice").className, /compact-notice/);
-  assert.match(aged.nodes.get("notice").innerHTML, /Datenstand prüfen/);
+  assert.match(aged.nodes.get("notice").innerHTML, /Älterer Datenstand/);
   const completed = harness({...data, source_status: "live", blockers: standard.slice(0, 1), coverage: {complete: false, traversal_completed: true}}); await flush();
-  assert.match(completed.nodes.get("notice").className, /compact-notice/);
-  assert.match(completed.nodes.get("notice").innerHTML, /Quellseiten durchlaufen/);
-  assert.match(completed.nodes.get("notice").innerHTML, /keine direkte eBay-Prüfung/);
-  assert.doesNotMatch(completed.nodes.get("notice").innerHTML, /Begrenzter Teilscan/);
+  assert.equal(completed.nodes.get("notice").hidden, true);
+  assert.equal(completed.nodes.get("notice").innerHTML, "");
 });
 
 test("reported nonempty searches without records never look like a healthy completed source scan", async () => {
@@ -350,15 +340,14 @@ test("reported nonempty searches without records never look like a healthy compl
     {traversal_completed: true, searches: {pickup: {enabled: true, traversal_completed: true, reported_nonempty_but_no_records: true, stop_reason: "reported_end"}}}
   ]) {
     const h = harness(fixture({provider: "auktionen-ohne-gebot", source_status: "live", coverage, blockers: [{code: "aggregator_claims_only"}], status_message: "Ein vermeintlich vollständiger Lauf"})); await flush();
-    assert.match(h.nodes.get("notice").innerHTML, /Quellenabgleich nicht bestätigt/);
-    assert.match(h.nodes.get("notice").innerHTML, /keinen einzigen Datensatz/);
+    assert.equal(h.nodes.get("notice").hidden, false);
+    assert.match(h.nodes.get("notice").innerHTML, /Aktualisierung unvollständig/);
+    assert.match(h.nodes.get("notice").innerHTML, /nicht alle angefragten Daten/);
     assert.doesNotMatch(h.nodes.get("notice").innerHTML, /Quellseiten durchlaufen|vermeintlich vollständiger Lauf/);
-    assert.match(h.nodes.get("sync-status").className, /partial/);
-    assert.doesNotMatch(h.nodes.get("notice").className, /compact-notice/);
   }
 });
 
-test("cooldown without source requests is a pause, not a failed scan or empty inventory", async () => {
+test("cooldown keeps offers and only warns when the previous observation is old", async () => {
   const data = fixture({source_status: "partial", provider: "auktionen-ohne-gebot", stats: {received: 0},
     generated_at: iso(0), last_successful_scan_at: iso(-3 * hour),
     blockers: [{code: "source_cooldown", message: "Die Abrufpause ist noch nicht abgelaufen."}],
@@ -366,22 +355,12 @@ test("cooldown without source requests is a pause, not a failed scan or empty in
     deals: [aggregate({source_observed_at: iso(-3 * hour), detail_path: null})]});
   const h = harness(data); await flush();
   assert.equal(h.count, 1);
-  assert.equal(h.nodes.get("sync-label").textContent, "Abrufpause");
-  assert.match(h.nodes.get("sync-status").className, /stale/);
-  assert.equal(h.nodes.get("metric-scanned").textContent, "—");
-  assert.equal(h.nodes.get("metric-scanned-note").textContent, "Kein neuer Quellenabruf");
-  assert.equal(h.nodes.get("metric-updated").textContent, "02.01.30, 10:00");
-  assert.equal(h.nodes.get("metric-source").textContent, "Letzter erfolgreicher Quellenabruf");
-  assert.match(h.nodes.get("notice").innerHTML, /Abrufpause · kein neuer Quellenabruf/);
-  assert.match(h.nodes.get("notice").innerHTML, /älter als zwei Stunden oder ungeklärt/);
-  assert.doesNotMatch(h.nodes.get("notice").innerHTML, /teilweise abgeschlossen|Begrenzter Teilscan|Import fehlgeschlagen/);
+  assert.match(h.nodes.get("notice").innerHTML, /Älterer Datenstand/);
+  assert.doesNotMatch(h.nodes.get("notice").innerHTML, /unvollständig|gestört/);
   assert.match(h.nodes.get("cards").innerHTML, /ältere Beobachtung, nicht aktuell bestätigt/);
-  const info = harness(data, {page: "info"}); await flush();
-  assert.match(info.nodes.get("info-status").innerHTML, /Abrufpause/);
-  assert.doesNotMatch(info.nodes.get("info-status").innerHTML, /Begrenzter Teilabruf/);
-  assert.match(info.nodes.get("info-coverage").innerHTML, /Nicht gestartet · Abrufpause/);
-  assert.doesNotMatch(info.nodes.get("info-coverage").innerHTML, /Nicht vollständig durchlaufen/);
-  assert.match(info.nodes.get("info-source").innerHTML, /letzter erfolgreicher Abruf: 02\.01\.30, 10:00/);
+  const recent = harness({...data, last_successful_scan_at: iso(-hour)}); await flush();
+  assert.equal(recent.nodes.get("notice").hidden, true);
+  assert.equal(recent.count, 1);
   assert.equal(data.source_status, "partial");
 });
 
@@ -392,10 +371,8 @@ test("actual seven-item demo is fictitious and starts at Interest 40", async () 
   assert.equal(demo.deals[3].interest_score, 18);
   const h = harness(undefined, {demo: true}); await flush();
   assert.equal(h.nodes.get("minimum-interest").value, "40"); assert.equal(h.count, 4);
-  assert.equal(h.nodes.get("result-count").textContent, "(4 / 7)");
+  assert.equal(h.nodes.get("result-count").textContent, "(4)");
   assert.deepEqual(h.ids, ["demo-001", "demo-002", "demo-007", "demo-003"]);
-  assert.equal(h.nodes.get("metric-candidates").textContent, "5");
-  assert.equal(h.nodes.get("metric-highvalue").textContent, "4");
   assert.deepEqual(h.browseIds("scalp"), ["demo-004"]);
   assert.deepEqual(h.browseIds("useability"), ["demo-004"]);
   assert.equal(h.nodes.get("info-link").href, "./info.html?demo=1");
@@ -413,7 +390,7 @@ test("actual seven-item demo is fictitious and starts at Interest 40", async () 
   await h.value("search", ""); await h.click("empty-show-all-interest"); assert.equal(h.count, 5);
   await h.check("show-expired", true); assert.equal(h.count, 6);
   await h.check("show-stale", true); assert.equal(h.count, 6);
-  assert.match(h.nodes.get("result-summary").textContent, /ACHTUNG/);
+  assert.match(h.nodes.get("result-summary").textContent, /Auch unklare Zeitstempel sichtbar/);
 });
 
 test("Interest is half-up multiplication; all three sorts and minimum filtering work", async () => {
@@ -455,7 +432,7 @@ test("legacy or incomplete pairs never relabel an old score as new Interest; nul
   assert.match(markup, /Scalp · Altwert/);
   await h.detail("missing-useability");
   assert.match(h.nodes.get("dialog-content").innerHTML, /Useability<\/small><strong>Noch offen/);
-  assert.match(h.nodes.get("dialog-content").innerHTML, /alter Gesamtwert wird nicht als neuer Interest übernommen/);
+  assert.match(h.nodes.get("dialog-content").innerHTML, /Noch keine vollständige Bewertung vorhanden/);
 });
 
 test("browsing ranks unique below-threshold offers by each axis, with stable ties and a top-ten cap", async () => {
@@ -490,7 +467,7 @@ test("browsing ranks unique below-threshold offers by each axis, with stable tie
   h.tick(60000);
   assert.deepEqual(h.browseIds("scalp"), before, "an off-list expiration does not reorder the top ten");
   assert.match(h.nodes.get("browse-summary").textContent, /19 vollständig bewertete Angebote/);
-  assert.match(h.nodes.get("result-summary").textContent, /Bestand höchstens bis Auktionsende · aktiv: Restlaufzeit < 72 Std\./);
+  assert.match(h.nodes.get("result-summary").textContent, /Ende in weniger als 72 Stunden/);
 });
 
 test("browsing follows the current Interest slider, computes the dual score and handles zero honestly", async () => {
@@ -532,8 +509,6 @@ test("personal exclusions suppress even high LLM scores in the main list and bot
   assert.deepEqual(h.ids, ["machine"]);
   assert.deepEqual(h.browseIds("scalp"), ["component", "tool"]);
   assert.deepEqual(h.browseIds("useability"), ["tool", "component"]);
-  assert.equal(h.nodes.get("metric-candidates").textContent, "3");
-  assert.equal(h.nodes.get("metric-highvalue").textContent, "1");
   assert.doesNotMatch(h.nodes.get("browse-useability-list").innerHTML, /media-useability|Historische Drucksache/);
   await h.click("show-all-interest");
   await h.check("show-expired", true); await h.check("show-stale", true);
@@ -542,9 +517,6 @@ test("personal exclusions suppress even high LLM scores in the main list and bot
   assert.equal(rows[0].useability_score, 99, "personal selection never rewrites the authored score");
   assert.equal(rows[0].assessment_basis, "llm");
   assert.equal(rows[0].semantic_assessed_at, iso(-hour));
-  const info = harness(fixture({deals: rows}), {page: "info"}); await flush();
-  assert.match(info.nodes.get("info-profile").textContent, /4 von 7 gespeicherten Angeboten/);
-  assert.match(info.nodes.get("info-profile").textContent, /unveränderten Scores/);
 });
 
 test("old snapshots exclude offered brochures, not real machines bundled with manuals or media holders", async () => {
@@ -572,15 +544,9 @@ test("old snapshots exclude offered brochures, not real machines bundled with ma
   await h.click("show-all-interest"); assert.deepEqual(h.ids, expected);
   await h.check("show-expired", true); await h.check("show-stale", true);
   assert.deepEqual(h.ids, expected);
-  const info = harness(fixture({deals: rows}), {page: "info"}); await flush();
-  assert.match(info.nodes.get("info-profile").textContent, /8 von 19 gespeicherten Angeboten/);
 });
 
-test("dashboard and Info share the same conservative legacy profile guard", () => {
-  const guard = script => script.match(/  function personalInterestExcluded\(item\) \{[\s\S]*?\n  \}/)?.[0];
-  assert(guard(pages.index.script));
-  assert.equal(guard(pages.index.script), guard(pages.info.script));
-});
+
 
 test("media-title plus signs and ampersands cannot masquerade as bundled manuals", async () => {
   const papers = [
@@ -610,8 +576,6 @@ test("media-title plus signs and ampersands cannot masquerade as bundled manuals
   await h.click("show-all-interest");
   await h.check("show-expired", true); await h.check("show-stale", true);
   assert.deepEqual(h.ids, wanted);
-  const info = harness(fixture({deals: rows}), {page: "info"}); await flush();
-  assert.match(info.nodes.get("info-profile").textContent, /4 von 9 gespeicherten Angeboten/);
   assert.equal(rows[0].useability_score, 99, "profile exclusion does not rewrite an authored score");
 });
 
@@ -650,14 +614,12 @@ test("known printed compounds are excluded without a generic book or prospect pr
   await h.click("show-all-interest");
   await h.check("show-expired", true); await h.check("show-stale", true);
   assert.deepEqual(h.ids, wanted);
-  const info = harness(fixture({deals: rows}), {page: "info"}); await flush();
-  assert.match(info.nodes.get("info-profile").textContent, new RegExp(`^${papers.length} von ${rows.length} gespeicherten Angeboten`));
 });
 
 test("browsing shares search, transport, value and eligible/review filters but never factual exclusions", async () => {
   const rows = [
     offer({id: "ship", title: "Labormodul", scalp_score: 80, useability_score: 30, value_band: "around_500", shipping_eur: 6, local_pickup_confirmed: false, pickup_available: false, eligibility: "eligible"}),
-    aggregate({id: "pickup", title: "Prozesssensor", scalp_score: 70, useability_score: 30, value_band: "unknown", shipping_eur: null, pickup_available: true, pickup_search_confirmed: true, pickup_search_postcode: "69121", pickup_search_radius_km: 50, eligibility: "review"}),
+    aggregate({id: "pickup", title: "Prozesssensor", scalp_score: 70, useability_score: 30, value_band: "unknown", shipping_eur: null, pickup_available: true, pickup_search_confirmed: true, pickup_search_postcode: "12345", pickup_search_radius_km: 50, eligibility: "review"}),
     offer({id: "small", scalp_score: 20, useability_score: 100, value_band: "around_5", shipping_eur: 8, local_pickup_confirmed: false, pickup_available: false, eligibility: "eligible"}),
     offer({id: "excluded", scalp_score: 99, useability_score: 20, eligibility: "excluded", eligibility_without_time_window: "excluded"})
   ];
@@ -771,7 +733,7 @@ test("same-snapshot details cannot replace prices, scores or dependencies", asyn
 });
 
 test("mixed snapshot IDs and wrong item IDs cannot leak new description text", async () => {
-  for (const [snapshot, id, expected] of [["snapshot-b", "offer-a", /Snapshot neu laden/], [null, "offer-a", /Snapshot neu laden/], ["snapshot-a", "wrong", /Detail-Feed nicht verfügbar/]]) {
+  for (const [snapshot, id, expected] of [["snapshot-b", "offer-a", /Bitte neu laden/], [null, "offer-a", /Bitte neu laden/], ["snapshot-a", "wrong", /Angebotsdetails konnten nicht geladen werden/]]) {
     const h = harness(fixture({deals: [offer()]})); await flush();
     h.setFetch(async () => ({ok: true, json: async () => ({snapshot_id: snapshot, item: offer({id, description: "MIXED_TEXT"})})}));
     await h.detail("offer-a");
@@ -789,7 +751,7 @@ test("observations older than three days remain visible, marked and never rejuve
   assert.match(h.nodes.get("cards").innerHTML, /Quellenstand: vor 23 Std\. · ältere Beobachtung, nicht aktuell bestätigt/);
   assert.match(h.nodes.get("cards").innerHTML, /Quellenstand: vor 4 Tagen · ältere Beobachtung, nicht aktuell bestätigt/);
   assert.equal(h.nodes.get("cards").querySelectorAll("[data-last-seen]").filter(node => node.classList.contains("freshness-warning")).length, 3);
-  assert.match(h.nodes.get("retention-note").textContent, /weniger als 72 Stunden/);
+  assert.match(h.nodes.get("result-summary").textContent, /weniger als 72 Stunden/);
   h.tick(hour);
   assert(h.ids.includes("twenty-three")); assert(h.ids.includes("four-days"));
   h.setFetch(async () => ({ok: true, json: async () => fixture({provider: "auktionen-ohne-gebot", generated_at: iso(hour), deals: rows.map(item => ({...item, last_seen_at: iso(hour)}))})}));
@@ -803,8 +765,7 @@ test("active window is strict at both boundaries and unknown or future observati
   const rows = [offer({id: "just-started", ends_at: iso(1)}), offer({id: "almost-72", ends_at: iso(72 * hour - 1)}), offer({id: "at-72", ends_at: iso(72 * hour)}), offer({id: "over-72", ends_at: iso(72 * hour + 1)}), offer({id: "just-ended", ends_at: iso(0)}), offer({id: "unknown-end", ends_at: null}), offer({id: "future-source", last_seen_at: iso(1)}), offer({id: "unknown-source", last_seen_at: null})];
   const h = harness(fixture({deals: rows})); await flush();
   assert.deepEqual(h.ids, ["almost-72", "just-started"]);
-  assert.match(h.nodes.get("criteria").innerHTML, /Ende &lt; 72 Std\./);
-  assert.match(h.nodes.get("result-summary").textContent, /3 außerhalb Zeitfenster.*3 Zeitstempel ungeklärt/);
+  assert.equal(h.nodes.get("result-summary").textContent, "Ende in weniger als 72 Stunden");
   await h.check("show-expired", true); assert.equal(h.count, 5);
   await h.check("show-stale", true); assert.equal(h.count, 8);
   assert.match(h.nodes.get("cards").innerHTML, /Nur durch Debug-Filter sichtbar/);
@@ -814,20 +775,17 @@ test("V1/V2 migration ignores legacy age limits and valid_until but keeps auctio
   for (const schema_version of [1, 2, 3]) {
     const h = harness(fixture({schema_version, criteria: {...demo.criteria, lookahead_hours: schema_version < 3 ? 24 : 72, max_freshness_hours: 6}, freshness: {maximum_source_age_hours: schema_version < 3 ? 6 : null}, deals: [offer({id: "old", last_seen_at: iso(-120 * hour), ends_at: iso(70 * hour), valid_until: iso(-96 * hour)}), offer({id: "null-validity", valid_until: null}), offer({id: "expired", ends_at: iso(0), valid_until: iso(hour)})]})); await flush();
     assert.deepEqual(h.ids, ["null-validity", "old"]);
-    assert.match(h.nodes.get("retention-note").textContent, /72 Stunden/);
+    assert.match(h.nodes.get("result-summary").textContent, /72 Stunden/);
     assert.doesNotMatch(h.nodes.get("cards").innerHTML, /Pufferfrist/);
   }
 });
 
-test("valid V3 configured horizons override the 72-hour default consistently on both pages", async () => {
+test("valid V3 configured horizons override the 72-hour default", async () => {
   for (const freshness of [{active_window_hours: 96, maximum_source_age_hours: null}, {maximum_source_age_hours: null}]) {
     const data = fixture({criteria: {...demo.criteria, lookahead_hours: 96}, freshness, deals: [offer({id: "inside-96", ends_at: iso(80 * hour), last_seen_at: iso(-120 * hour)}), offer({id: "at-96", ends_at: iso(96 * hour)})]});
     const h = harness(data); await flush();
     assert.deepEqual(h.ids, ["inside-96"]);
-    assert.match(h.nodes.get("retention-note").textContent, /weniger als 96 Stunden/);
-    const info = harness(data, {page: "info"}); await flush(); await info.click("copy-instructions");
-    assert.match(info.nodes.get("info-retention").textContent, /jetzt \+ 96 Stunden/);
-    assert.match(info.copied, /jetzt < ends_at < jetzt \+ 96 Stunden/);
+    assert.match(h.nodes.get("result-summary").textContent, /weniger als 96 Stunden/);
   }
 });
 
@@ -851,8 +809,8 @@ test("timer admits retained future items only with explicit factual baseline and
 });
 
 test("aggregator pickup claims are provisional, scoped and independently aged", async () => {
-  const pickup = overrides => aggregate({pickup_available: true, pickup_search_confirmed: true, pickup_search_postcode: "69121", pickup_search_radius_km: 50, shipping_eur: null, eligibility: "review", ...overrides});
-  const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [pickup({id: "matching"}), pickup({id: "smaller", pickup_search_radius_km: 25}), pickup({id: "wrong-postcode", pickup_search_postcode: "69115"}), pickup({id: "wide", pickup_search_radius_km: 51}), pickup({id: "only-available", pickup_search_confirmed: false}), pickup({id: "old", source_observed_at: iso(-25 * hour)}), pickup({id: "unknown", source_observed_at: null})]})); await flush();
+  const pickup = overrides => aggregate({pickup_available: true, pickup_search_confirmed: true, pickup_search_postcode: "12345", pickup_search_radius_km: 50, shipping_eur: null, eligibility: "review", ...overrides});
+  const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [pickup({id: "matching"}), pickup({id: "smaller", pickup_search_radius_km: 25}), pickup({id: "wrong-postcode", pickup_search_postcode: "54321"}), pickup({id: "wide", pickup_search_radius_km: 51}), pickup({id: "only-available", pickup_search_confirmed: false}), pickup({id: "old", source_observed_at: iso(-25 * hour)}), pickup({id: "unknown", source_observed_at: null})]})); await flush();
   await h.value("transport", "pickup"); assert.deepEqual(h.ids, ["matching", "old", "smaller"]);
   const markup = h.nodes.get("cards").innerHTML;
   assert.match(markup, /Abholsuche · 50 km/); assert.match(markup, /Abholsuche · 25 km/);
@@ -867,10 +825,36 @@ test("aggregator pickup claims are provisional, scoped and independently aged", 
   aging.tick(4 * hour); assert.equal(aging.count, 0);
 });
 
+test("anonymous pickup matching works and legacy private query fields are never rendered", async () => {
+  const pickup = overrides => aggregate({pickup_available: true, pickup_search_confirmed: true,
+    pickup_search_radius_km: 50, pickup_search_observed_at: iso(-hour),
+    pickup_search_profile_match: true, shipping_eur: null, detail_path: null, ...overrides});
+  const anonymous = harness(fixture({location: {country: "DE", pickup_radius_km: 50}, deals: [
+    pickup({id: "matches", city: "Verkäuferstadt"}),
+    pickup({id: "outside", pickup_search_profile_match: false}),
+    pickup({id: "wide", pickup_search_radius_km: 51})
+  ]})); await flush();
+  await anonymous.value("transport", "pickup");
+  assert.deepEqual(anonymous.ids, ["matches"]);
+  assert.match(anonymous.nodes.get("cards").innerHTML, /Verkäuferstadt/);
+  const legacy = harness(fixture({deals: [
+    pickup({id: "legacy", pickup_search_postcode: "12345", pickup_search_profile_match: undefined}),
+    ...[false, null, "true"].map((flag, i) => pickup({id: `denied-${i}`, pickup_search_postcode: "12345", pickup_search_profile_match: flag}))
+  ].map(item => {
+    if (item.id === "legacy") delete item.pickup_search_profile_match;
+    return item;
+  })})); await flush();
+  await legacy.value("transport", "pickup");
+  assert.deepEqual(legacy.ids, ["legacy"], "present false/invalid flags cannot fall back to old postcodes");
+  await legacy.detail("legacy");
+  const rendered = [...legacy.nodes.values()].map(node => node.innerHTML + node.textContent).join(" ");
+  assert.doesNotMatch(rendered, /\b12345\b|PrivateTestLocation/);
+});
+
 test("older pickup-search evidence never ages a fresh price observation or masquerades as new evidence", async () => {
   const h = harness(fixture({provider: "auktionen-ohne-gebot", deals: [aggregate({
     id: "independent-pickup", pickup_available: true, pickup_search_confirmed: true,
-    pickup_search_postcode: "69121", pickup_search_radius_km: 50,
+    pickup_search_postcode: "12345", pickup_search_radius_km: 50,
     pickup_search_observed_at: iso(-2 * hour + 60000), source_observed_at: iso(-60000),
     eligibility: "review", detail_path: null
   })]})); await flush();
@@ -902,48 +886,5 @@ test("ChatGPT, API LLM and heuristic bases remain separate on cards and details"
   const h = harness(fixture({interactive_review: {status: "applied", reviewer: "ChatGPT", applied: 1, unreviewed: 2, reviewed_at: iso(-hour)}, deals: [offer({id: "chatgpt", assessment_basis: "llm", semantic_review_mode: "interactive", semantic_assessed_at: iso(-hour), detail_path: null}), offer({id: "heuristic", semantic_review_mode: "interactive"}), offer({id: "api", assessment_basis: "llm", semantic_review_mode: "api"})]})); await flush();
   const cards = h.nodes.get("cards").innerHTML;
   assert.match(cards, /ChatGPT · Konfidenz niedrig/); assert.match(cards, /Heuristik · Konfidenz niedrig/); assert.match(cards, /LLM · Konfidenz niedrig/);
-  assert.match(h.nodes.get("metric-source").textContent, /ChatGPT-Sichtung: 1 Angebot/);
   await h.detail("chatgpt"); assert.match(h.nodes.get("dialog-content").innerHTML, /ChatGPT-Sichtung \(Berlin\)/);
-});
-
-test("Info fetches relative data, preserves provenance, explains bounded coverage and current review status", async () => {
-  const data = fixture({provider: "auktionen-ohne-gebot", stats: {received: 80}, interactive_review: {status: "applied", reviewer: "ChatGPT", applied: 2, available: 2, unreviewed: 1, reviewed_at: iso(-hour)}, coverage: {source_total_reported: 1200, pages_fetched: 2, requests_this_run: 3, page_size: 48, request_cap: 4, source_cache_max_age_minutes: 15, complete: false, categories_total: 999, cycle_estimate_hours: 4321}, deals: [aggregate()]});
-  const h = harness(data, {page: "info"}); await flush();
-  assert.equal(h.requests[0].url, "./data/deals.json");
-  assert.equal(h.nodes.get("home-link").href, "./");
-  assert.match(h.nodes.get("info-source").innerHTML, /https:\/\/auktionen-ohne-gebot\.de\/business-industrie\//);
-  assert.match(h.nodes.get("info-source").innerHTML, /nicht direkt bei eBay verifiziert/);
-  assert.match(h.nodes.get("info-coverage").innerHTML, /80 \/ 1200|Quellseiten|Quellabrufe|bis 15 Min\./);
-  assert.doesNotMatch(h.nodes.get("info-coverage").innerHTML, /4321|Unterkategorien/);
-  assert.match(h.nodes.get("info-review").innerHTML, /ChatGPT-Sichtung: 2 Angebote/);
-  assert.match(h.nodes.get("info-review").innerHTML, /Automatische LLM-Aufrufe aus/);
-  assert.match(h.nodes.get("info-retention").textContent, /jetzt \+ 72 Stunden.*unabhängig vom Quellenalter.*keine erneute Prüfung/);
-  h.setFetch(async () => { throw Error("Offline"); }); await h.click("info-refresh");
-  assert.match(h.nodes.get("info-status").innerHTML, /Abruf fehlgeschlagen/);
-  assert.match(h.nodes.get("info-status").innerHTML, /zuletzt geladene Snapshot bleibt unverändert sichtbar/);
-  assert.match(h.nodes.get("info-source").innerHTML, /Auktionen ohne Gebot/);
-});
-
-test("Info copy handoff is pinned, dual-score aware, read-only; demo/back navigation and fallback work", async () => {
-  const h = harness(fixture({criteria: {...demo.criteria, max_freshness_hours: 12}}), {page: "info"}); await flush(); await h.click("copy-instructions");
-  for (const phrase of ["demselben Commit-SHA", "alle paginierten Angebotsseiten", "counts.total", "jetzt < ends_at < jetzt + 72 Stunden", "ends_at und valid_until", "eligibility_without_time_window", "floor((Scalp * Useability + 50) / 100)", "Useability", "Keine Gebote", "ausdrücklichen Speicherauftrag"]) assert(h.copied.includes(phrase), phrase);
-  assert.match(h.copied, /Fehlende Useability bleibt null/);
-  const fallback = harness(undefined, {page: "info", demo: true, clipboardFailure: true}); await flush();
-  assert.equal(fallback.requests[0].url, "./data/demo.json");
-  assert.equal(fallback.nodes.get("home-link").href, "./?demo=1");
-  assert.match(fallback.nodes.get("info-status").innerHTML, /fiktiv|Fiktive/);
-  await fallback.click("copy-instructions");
-  assert.match(fallback.nodes.get("tool-instructions").textContent, /Scalp und Useability getrennt/);
-  assert.match(fallback.nodes.get("copy-status").textContent, /manuell/);
-});
-
-test("Info exposes full blocker actions safely and never treats expired review counts as applied", async () => {
-  for (const [status, label] of [["none", "noch keine"], ["expired", "abgelaufen"], ["invalid", "ungültig"]]) {
-    const h = harness(fixture({source_status: "error", blockers: [{message: "<script>Blocked</script>", action: '<img src=x onerror="bad()">'}], interactive_review: {status, reviewer: "ChatGPT", applied: 0, available: 408, unreviewed: 1}}), {page: "info"}); await flush();
-    assert.match(h.nodes.get("info-status").innerHTML, /&lt;script&gt;Blocked/);
-    assert.match(h.nodes.get("info-status").innerHTML, /&lt;img/);
-    assert.match(h.nodes.get("info-status").className, /error/);
-    assert(h.nodes.get("info-review").innerHTML.includes(`ChatGPT-Sichtung: ${label}`));
-    assert.doesNotMatch(h.nodes.get("info-review").innerHTML, /ChatGPT-Sichtung: 408/);
-  }
 });

@@ -6,17 +6,16 @@
     <meta name="theme-color" content="#060b10" />
     <meta name="description" content="Fundgrube: interessante eBay-Auktionen nach Scalp, Useability und Interest sortieren." />
     <title>Fundgrube — Auktionsradar</title>
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=design-v3.8" />
-    <link rel="stylesheet" href="./styles.css?v=design-v3.8" />
-    <script src="./app.js?v=design-v3.8" defer></script>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=design-v3.9" />
+    <link rel="stylesheet" href="./styles.css?v=design-v3.9" />
+    <script src="./app.js?v=design-v3.9" defer></script>
   </head>
   <body class="dashboard-page">
     <a class="skip-link" href="#results-heading">Direkt zu den Angeboten</a>
     <div class="shell">
       <header class="topbar">
-        <a href="./" class="brand" aria-label="Fundgrube Startseite"><img class="brand-symbol" src="./favicon.svg?v=design-v3.8" width="35" height="35" alt="" aria-hidden="true" /><span>fund<span class="brand-accent">grube</span></span></a>
+        <a href="./" class="brand" aria-label="Fundgrube Startseite"><img class="brand-symbol" src="./favicon.svg?v=design-v3.9" width="35" height="35" alt="" aria-hidden="true" /><span>fund<span class="brand-accent">grube</span></span></a>
         <div class="topbar-right">
-          <span id="location-label" class="location-pill">Suchprofil wird geladen</span>
           <a id="info-link" class="nav-info" href="./info.html">Info <span aria-hidden="true">↗</span></a>
         </div>
       </header>
@@ -24,19 +23,10 @@
       <main>
         <div class="dashboard-heading">
           <div><p class="eyebrow">GEWERBE &amp; INDUSTRIE</p><h1>Auktionsradar<span class="heading-dot" aria-hidden="true">.</span></h1></div>
-          <div class="actions"><button id="demo-button" class="secondary-button" type="button">Demo</button><button id="refresh-button" class="secondary-button" type="button" title="Veröffentlichten Snapshot neu laden, keinen neuen eBay-Scan starten">↻ Neu laden</button></div>
+          <div class="actions"><button id="refresh-button" class="secondary-button" type="button">↻ Neu laden</button></div>
         </div>
         <section id="notice" class="notice compact-notice" role="status" aria-live="polite" hidden></section>
-        <noscript><p class="notice">Für die Angebotsfilter wird JavaScript benötigt. <a href="./info.html">Info und Schnittstelle öffnen</a>.</p></noscript>
-        <section class="status-band" aria-label="Snapshot und Suchprofil">
-          <div class="metric-strip">
-            <div class="metric"><p>Letzter Abruf</p><strong id="metric-scanned">—</strong><span id="metric-scanned-note">Angebote eingelesen</span></div>
-            <div class="metric"><p>Im Zeitfenster</p><strong id="metric-candidates">—</strong><span id="metric-candidate-note">Kandidaten &amp; Prüffälle</span></div>
-            <div class="metric metric-interest"><p id="metric-highvalue-label">Interest ≥ 40</p><strong id="metric-highvalue">—</strong><span>vor weiteren Filtern</span></div>
-            <div class="metric metric-last"><p><span id="sync-status" class="sync-status"><span class="sync-light" aria-hidden="true"></span><span id="sync-label">Lade Daten</span></span></p><strong id="metric-updated" class="metric-date">—</strong><span id="metric-source">Warte auf Datenquelle</span></div>
-          </div>
-          <div class="status-band-foot"><div id="criteria" class="criteria" aria-label="Aktuelle Suchkriterien"><span>Suchkriterien werden geladen</span></div><div class="source-summary"><span id="source-attribution"></span><span id="retention-note"></span></div></div>
-        </section>
+        <noscript><p class="notice">Für die Angebotsfilter wird JavaScript benötigt.</p></noscript>
 
         <section class="results" aria-label="Angebote">
           <div class="filter-panel">
@@ -49,7 +39,7 @@
             <label for="minimum-interest">Mindest-Interest <strong id="minimum-interest-value">40</strong></label>
             <input id="minimum-interest" type="range" min="0" max="100" step="1" value="40" aria-describedby="minimum-interest-help" />
             <button id="show-all-interest" type="button" class="secondary-button">Alles (0)</button>
-            <span id="minimum-interest-help">0 zeigt auch unvollständige Bewertungen. Dein Suchprofil gilt weiter.</span>
+            <span id="minimum-interest-help">0 zeigt auch unbewertete Angebote.</span>
           </div>
           <details class="advanced-filters">
             <summary>Weitere Filter</summary>
@@ -84,7 +74,7 @@
           </section>
         </section>
       </main>
-      <footer><span>Fundgrube · Sichten. Einordnen. Selbst prüfen.</span><a href="./info.html">Quellen, Scores &amp; Schnittstelle ↗</a></footer>
+      <footer><span>Daten: <a href="https://auktionen-ohne-gebot.de/" target="_blank" rel="noopener noreferrer">Auktionen ohne Gebot</a></span><div class="footer-links"><button id="demo-button" class="text-button" type="button">Demo</button><a href="./info.html">Quelle &amp; Bewertungen ↗</a></div></footer>
     </div>
     <dialog id="detail-dialog" class="detail-dialog" aria-labelledby="dialog-title"><div class="dialog-inner"><button id="close-dialog" class="dialog-close" type="button" aria-label="Schließen">✕</button><p class="eyebrow">ANGEBOT &amp; EINORDNUNG</p><h2 id="dialog-title"></h2><div id="dialog-content"></div></div></dialog>
   </body>

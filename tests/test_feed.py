@@ -53,7 +53,7 @@ def sample(items=None, **changes):
     result = {
         "schema_version": 3, "generated_at": iso(NOW), "last_successful_scan_at": iso(NOW),
         "source_status": "live", "status_message": "Nur eine Test-Fixture.", "blockers": [],
-        "location": {"postcode": "69121"}, "criteria": {"lookahead_hours": 72, "description_max_age_hours": 24},
+        "location": {"postcode": "69121", "pickup_radius_km": 50}, "criteria": {"lookahead_hours": 72, "description_max_age_hours": 24},
         "stats": {"received": len(items or [])}, "coverage": {"categories_scanned": 1},
         "ai_enabled": False, "deals": items or [],
     }
@@ -1052,14 +1052,115 @@ class FeedTests(unittest.TestCase):
         self.assertSchema(dashboard)
         item = dashboard["deals"][0]
         self.assertTrue(item["pickup_search_confirmed"])
-        self.assertEqual(item["pickup_search_postcode"], "69121")
+        self.assertTrue(item["pickup_search_profile_match"])
+        self.assertNotIn("pickup_search_postcode", item)
         self.assertEqual(item["pickup_search_radius_km"], 50)
         self.assertFalse(item["local_pickup_confirmed"])
         self.assertIsNone(item["distance_km"])
         self.assertEqual(item["city"], "")
         detail = self.read(item["detail_path"])["item"]
         self.assertTrue(detail["pickup_search_confirmed"])
+        self.assertTrue(detail["pickup_search_profile_match"])
         self.assertEqual(detail["source_observed_at"], iso(NOW))
+
+    def test_private_search_origin_is_absent_from_all_exports_without_changing_input(self):
+        origin = {"postcode": "98765", "city": "PrivaterSuchort", "country": "DE",
+                  "pickup_radius_km": 50, "address": {"label": "PrivateAdresse"}}
+        pickup = aggregator_deal(
+            pickup_available=True, pickup_search_confirmed=True,
+            pickup_search_postcode=origin["postcode"], pickup_search_radius_km=50,
+            pickup_search_observed_at=iso(NOW - timedelta(hours=3)),
+        )
+        seller = deal(2, city="Angebotsort", postcode="12345")
+        source = sample([pickup, seller], location=origin)
+        before = copy.deepcopy(source)
+        publisher.write_feed(self.site, source)
+        self.assertEqual(source, before)
+
+        for path in self.site.rglob("*"):
+            if not path.is_file():
+                continue
+            with self.subTest(path=path.relative_to(self.site)):
+                text = path.read_text(encoding="utf-8")
+                for private in (origin["postcode"], origin["city"], "PrivateAdresse"):
+                    self.assertNotIn(json.dumps(private, ensure_ascii=False), text)
+                if path.suffix == ".json":
+                    document = json.loads(text)
+                    if "location" in document:
+                        self.assertEqual(document["location"], {"country": "DE", "pickup_radius_km": 50})
+                    rows = document.get("deals", document.get("items", []))
+                    if document.get("kind") == "item":
+                        rows = [document["item"]]
+                    for row in rows:
+                        self.assertNotIn("pickup_search_postcode", row)
+                        if row["id"] == pickup["id"]:
+                            self.assertTrue(row["pickup_search_profile_match"])
+                            self.assertEqual(row["pickup_search_observed_at"], pickup["pickup_search_observed_at"])
+                        elif row["id"] == seller["id"]:
+                            self.assertEqual((row["city"], row["postcode"]), (seller["city"], seller["postcode"]))
+        for path in ("data/deals.json", "api/manifest.json", "api/candidates/page-001.json"):
+            self.assertSchema(self.read(path))
+        guide = (self.site / "api/guide.md").read_text(encoding="utf-8")
+        self.assertIn("pickup_search_profile_match", guide)
+        self.assertIn("Such-PLZ und Suchort werden nicht veröffentlicht", guide)
+        for text in (guide, (self.site / "api/feed.schema.json").read_text(encoding="utf-8"),
+                     (self.site / "api/openapi.json").read_text(encoding="utf-8")):
+            self.assertNotIn("69121", text)
+            self.assertNotIn("Heidelberg", text)
+
+    def test_static_examples_do_not_expose_the_private_search_region(self):
+        data_dir = Path(__file__).resolve().parents[1] / "site" / "data"
+        for name in ("deals.json", "demo.json"):
+            with self.subTest(file=name):
+                text = (data_dir / name).read_text(encoding="utf-8")
+                self.assertNotIn("69121", text)
+                self.assertNotIn("Heidelberg", text)
+                document = json.loads(text)
+                self.assertLessEqual(set(document["location"]), {"country", "pickup_radius_km"})
+                self.assertTrue(all("pickup_search_postcode" not in row for row in document["deals"]))
+
+    def test_anonymous_pickup_match_requires_current_internal_profile_not_input_flag(self):
+        base = {"pickup_search_confirmed": True, "pickup_search_postcode": "98765",
+                "pickup_search_radius_km": 50, "pickup_available": True,
+                "pickup_search_observed_at": iso(NOW)}
+        profile = {"postcode": "98765", "pickup_radius_km": 50}
+        cases = [
+            ("matching", {}, {}, True),
+            ("smaller_radius", {"pickup_search_radius_km": 25}, {}, True),
+            ("wrong_postcode", {"pickup_search_postcode": "98764", "pickup_search_profile_match": True}, {}, False),
+            ("wide_radius", {"pickup_search_radius_km": 51}, {}, False),
+            ("missing_origin", {"pickup_search_postcode": None}, {}, False),
+            ("unknown_profile_origin", {}, {"postcode": None}, False),
+            ("unknown_profile_radius", {}, {"pickup_radius_km": None}, False),
+            ("text_profile_radius", {}, {"pickup_radius_km": "50"}, False),
+            ("boolean_profile_radius", {}, {"pickup_radius_km": True}, False),
+            ("zero_profile_radius", {}, {"pickup_radius_km": 0}, False),
+            ("oversized_profile_radius", {}, {"pickup_radius_km": 201}, False),
+            ("future_observation", {"pickup_search_observed_at": iso(NOW + timedelta(seconds=1))}, {}, False),
+            ("unconfirmed", {"pickup_search_confirmed": False, "pickup_search_profile_match": True}, {}, False),
+        ]
+        for name, fields, profile_changes, expected in cases:
+            with self.subTest(case=name):
+                publisher.write_feed(self.site, sample(
+                    [aggregator_deal(**{**base, **fields})], location={**profile, **profile_changes}))
+                document = self.read("data/deals.json")
+                self.assertIs(document["deals"][0]["pickup_search_profile_match"], expected)
+                self.assertSchema(document)
+
+    def test_anonymous_pickup_schema_is_boolean_and_legacy_snapshots_remain_readable(self):
+        publisher.write_feed(self.site, sample([aggregator_deal(
+            pickup_search_confirmed=True, pickup_search_postcode="69121", pickup_search_radius_km=50)]))
+        current = self.read("data/deals.json")
+        invalid = copy.deepcopy(current)
+        invalid["deals"][0]["pickup_search_profile_match"] = "true"
+        self.assertTrue(schema_errors(invalid, self.schema, self.schema))
+        legacy = copy.deepcopy(current)
+        legacy["location"].update(postcode="69121", city="Legacy-Ort")
+        legacy["deals"][0].pop("pickup_search_profile_match")
+        legacy["deals"][0]["pickup_search_postcode"] = "69121"
+        self.assertSchema(legacy)
+        api = self.read("api/openapi.json")
+        self.assertIn("pickup_search_profile_match", api["components"]["schemas"]["item"]["properties"])
 
     def test_invalid_radius_or_postcode_drops_search_claim(self):
         changes = [
@@ -1075,6 +1176,7 @@ class FeedTests(unittest.TestCase):
                 publisher.write_feed(self.site, sample([aggregator_deal(**fields)]))
                 item = self.read("data/deals.json")["deals"][0]
                 self.assertFalse(item["pickup_search_confirmed"])
+                self.assertFalse(item["pickup_search_profile_match"])
                 self.assertFalse(item["local_pickup_confirmed"])
                 self.assertNotIn("pickup_search_postcode", item)
                 self.assertNotIn("pickup_search_radius_km", item)
@@ -1146,6 +1248,7 @@ class FeedTests(unittest.TestCase):
                 publisher.write_feed(self.site, sample([aggregator_deal(**fields)]))
                 item = self.read("data/deals.json")["deals"][0]
                 self.assertFalse(item["pickup_search_confirmed"])
+                self.assertFalse(item["pickup_search_profile_match"])
                 for key in ("pickup_search_postcode", "pickup_search_radius_km", "pickup_search_observed_at"):
                     self.assertNotIn(key, item)
 

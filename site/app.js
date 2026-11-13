@@ -2,10 +2,8 @@
   "use strict";
   const $ = (selector) => document.querySelector(selector);
   const els = Object.fromEntries([
-    "sync-status", "sync-label", "notice", "source-attribution", "metric-scanned", "metric-scanned-note", "metric-candidates",
-    "metric-candidate-note", "metric-highvalue", "metric-highvalue-label", "metric-updated",
-    "metric-source", "location-label", "criteria", "result-count", "result-summary", "search", "info-link",
-    "transport", "sort", "eligibility", "value-filter", "show-expired", "show-stale", "show-stale-label", "retention-note", "reset-filters",
+    "notice", "result-count", "result-summary", "search", "info-link",
+    "transport", "sort", "eligibility", "value-filter", "show-expired", "show-stale", "show-stale-label", "reset-filters",
     "cards", "empty", "empty-description", "detail-dialog", "dialog-title", "dialog-content",
     "browse", "browse-summary", "browse-scalp-list", "browse-scalp-count", "browse-scalp-empty", "browse-useability-list", "browse-useability-count", "browse-useability-empty",
     "demo-button", "refresh-button", "minimum-interest", "minimum-interest-value", "show-all-interest", "empty-show-all-interest"
@@ -13,10 +11,6 @@
   const offerLists = [els.cards, els["browse-scalp-list"], els["browse-useability-list"]];
   const euro = new Intl.NumberFormat("de-DE", {style: "currency", currency: "EUR"});
   const time = new Intl.DateTimeFormat("de-DE", {dateStyle: "short", timeStyle: "short", timeZone: "Europe/Berlin"});
-  const statuses = {
-    unconfigured: "Datenquelle offen", live: "Snapshot geladen", partial: "Teilscan / Hinweise",
-    error: "Import gestört", disabled: "Import deaktiviert", demo: "Demo-Modus"
-  };
   let feed = null;
   let isDemo = false;
   let loading = false;
@@ -37,7 +31,6 @@
   const aggregatorSourceUrl = "https://auktionen-ohne-gebot.de/business-industrie/";
   const providerOf = item => item?.source_provider || feed?.provider || feed?.source_provider || (typeof feed?.source === "string" ? feed.source : feed?.source?.provider) || "";
   const isAggregator = item => providerOf(item) === aggregatorProvider || item?.verification_level === "aggregator";
-  const aggregatorFeed = () => !isDemo && (isAggregator() || array(feed?.deals).some(isAggregator));
   const cooldownSnapshot = () => !isDemo && number(feed?.coverage?.requests_this_run) === 0 && array(feed?.blockers).some(blocker => blocker?.code === "source_cooldown");
   const reportedWithoutRecords = coverage => coverage?.reported_nonempty_but_no_records === true || ["general", "pickup"].some(key => {
     const search = coverage?.searches?.[key];
@@ -106,13 +99,6 @@
   const confidenceText = item => ({low:"niedrig", medium:"mittel", high:"hoch"})[item.assessment_confidence] || "nicht angegeben";
   const interactiveAssessed = item => semanticAssessed(item) && item.assessment_basis === "llm" && item.semantic_review_mode === "interactive";
   const basisText = item => !semanticAssessed(item) ? "Noch nicht eingeordnet" : interactiveAssessed(item) ? "ChatGPT" : ({heuristic:"Heuristik", llm:"LLM"})[item.assessment_basis] || "Basis unbekannt";
-  const automaticLlmText = () => feed?.ai_enabled ? "Automatische LLM-Aufrufe aktiv" : "Automatische LLM-Aufrufe aus";
-  function interactiveReviewText() {
-    const review = feed?.interactive_review;
-    if (!review || review.reviewer !== "ChatGPT") return "";
-    if (review.status === "applied" && number(review.applied) !== null) return `ChatGPT-Sichtung: ${review.applied} ${review.applied === 1 ? "Angebot" : "Angebote"}`;
-    return ({none:"ChatGPT-Sichtung: noch keine", expired:"ChatGPT-Sichtung: abgelaufen", invalid:"ChatGPT-Sichtung: ungültig"})[review.status] || "ChatGPT-Sichtung: Status unklar";
-  }
   const sourceLink = item => !isDemo && providerOf(item) === aggregatorProvider ? `<a href="${aggregatorSourceUrl}" target="_blank" rel="noopener noreferrer">Auktionen ohne Gebot ↗</a>` : "";
   const descriptionText = item => typeof item.description === "string" && item.description.trim() ? item.description : isAggregator(item) ? "Quelle liefert keinen Beschreibungstext. Originalanzeige bei eBay prüfen." : "Beschreibung nicht verfügbar – Originalanzeige prüfen.";
 
@@ -195,8 +181,12 @@
     const searchRadius = number(item.pickup_search_radius_km);
     const profileRadius = number(feed?.location?.pickup_radius_km);
     const postcode = item.pickup_search_postcode;
-    return isAggregator(item) && item.pickup_search_confirmed === true && active(item)
-      && typeof postcode === "string" && /^\d{5}$/.test(postcode) && postcode === feed?.location?.postcode
+    // New exports validate the private profile server-side. Legacy snapshots
+    // still work, but neither path renders the search postcode or city.
+    const profileMatch = Object.prototype.hasOwnProperty.call(item, "pickup_search_profile_match")
+      ? item.pickup_search_profile_match === true
+      : typeof postcode === "string" && /^\d{5}$/.test(postcode) && postcode === feed?.location?.postcode;
+    return isAggregator(item) && item.pickup_search_confirmed === true && active(item) && profileMatch
       && searchRadius !== null && searchRadius > 0 && profileRadius !== null && searchRadius <= profileRadius;
   }
   function nearby(item) {
@@ -254,7 +244,7 @@
     els["refresh-button"].disabled = true;
     els["demo-button"].disabled = true;
     els.cards.setAttribute("aria-busy", "true");
-    els["sync-label"].textContent = "Lade Snapshot";
+    els["refresh-button"].textContent = "Lädt …";
     try {
       const response = await fetch(demo ? "./data/demo.json" : "./data/deals.json", {cache: "no-store"});
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -268,89 +258,69 @@
       els["demo-button"].textContent = isDemo ? "Produktivdaten" : "Demo";
       render();
     } catch (error) {
-      loadError = `Snapshot konnte nicht geladen werden (${error.message}).`;
+      loadError = "Die Angebote konnten nicht neu geladen werden.";
       if (feed) render();
       else {
         renderStatus();
         els.empty.hidden = false;
-        els["empty-description"].textContent = "Keine Daten verfügbar. Versuche den Snapshot erneut zu laden oder öffne die explizit gekennzeichnete Demo.";
+        els["empty-description"].textContent = "Keine Daten verfügbar. Bitte später erneut laden.";
       }
     } finally {
       loading = false;
       els.cards.setAttribute("aria-busy", "false");
       els["refresh-button"].disabled = false;
+      els["refresh-button"].textContent = "↻ Neu laden";
       els["demo-button"].disabled = false;
     }
   }
 
   function renderStatus() {
-    const paused = cooldownSnapshot();
+    const status = feed?.source_status || "unconfigured";
     const unconfirmed = !isDemo && reportedWithoutRecords(feed?.coverage);
-    const rawStatus = feed?.source_status || "unconfigured";
-    const status = isDemo ? "demo" : unconfirmed && ["live", "partial"].includes(rawStatus) ? "partial" : rawStatus;
-    const generated = timestamp(feed?.generated_at);
-    const scan = timestamp(feed?.last_successful_scan_at);
-    const aged = !isDemo && ["live", "partial"].includes(status) && (!Number.isFinite(scan) || Date.now() - scan > 7200000 || !Number.isFinite(generated) || Date.now() - generated > 7200000);
-    els["sync-status"].className = "sync-status " + (loadError ? "error" : aged ? "stale" : status);
-    els["sync-label"].textContent = loadError ? "Ladefehler" : paused ? "Abrufpause" : aged ? "Stand älter / ungeklärt" : statuses[status] || "Status unbekannt";
-    const notices = [];
-    const blockers = array(feed?.blockers).filter(blocker => blocker && typeof blocker === "object");
-    const routineCodes = ["aggregator_claims_only", "bounded_coverage"];
-    const completedTraversal = feed?.coverage?.traversal_completed === true && !unconfirmed;
-    const routinePartial = !loadError && !aged && !unconfirmed && (status === "partial" || status === "live" && completedTraversal) && aggregatorFeed()
-      && blockers.length > 0 && blockers.every(blocker => routineCodes.includes(blocker.code));
-    if (loadError) notices.push(`<strong>Abruf fehlgeschlagen</strong><p>${esc(loadError)}${feed ? " Der zuletzt geladene Snapshot bleibt sichtbar; sein Datenstand ist unverändert." : ""}</p>`);
-    if (isDemo) notices.push("<strong>DEMO · Keine echten Angebote</strong><p>Fiktive Artikel, Preise und Scores. Keine echten Auktionslinks.</p>");
-    else if (paused) {
-      notices.push(`<strong>Abrufpause · kein neuer Quellenabruf.</strong><p>Dieser Lauf hat keine Anfrage an die Quelle gestellt. Vorhandene Angebote behalten ihren ursprünglichen Quellenstand. Letzter erfolgreicher Quellenabruf: ${esc(dateText(feed.last_successful_scan_at))} (Berlin).${aged ? " Dieser Abrufstand ist älter als zwei Stunden oder ungeklärt; nicht aktuell bestätigt." : " Das ist keine erneute Prüfung der Angebote."} <a href="./info.html#coverage">Abrufdetails ↗</a></p>`);
+    const paused = cooldownSnapshot();
+    const aged = !isDemo && ["live", "partial"].includes(status)
+      && (staleTimestamp(feed?.last_successful_scan_at) || staleTimestamp(feed?.generated_at));
+    let heading = "", message = "";
+    if (loadError) {
+      heading = "Aktualisierung fehlgeschlagen.";
+      message = loadError + (feed ? " Die bisherigen Angebote bleiben sichtbar." : " Bitte später erneut laden.");
+    } else if (isDemo) {
+      heading = "Demo · Keine echten Angebote.";
+      message = "Alle Artikel, Preise und Bewertungen sind fiktiv.";
+    } else if (status === "error") {
+      heading = "Aktualisierung gestört.";
+      message = "Die angezeigten Angebote können veraltet sein. Aktuelle Angaben bei eBay prüfen.";
+    } else if (status === "disabled") {
+      heading = "Aktualisierung pausiert.";
+      message = "Es werden derzeit keine neuen Angebote eingelesen.";
+    } else if (status === "unconfigured") {
+      heading = "Noch keine Angebotsdaten.";
+      message = "Die Datenquelle ist noch nicht eingerichtet.";
+    } else if (unconfirmed) {
+      heading = "Aktualisierung unvollständig.";
+      message = "Die Quelle hat nicht alle angefragten Daten geliefert. Aktuelle Angaben bei eBay prüfen.";
+    } else if (aged) {
+      heading = "Älterer Datenstand.";
+      message = "Der letzte Abruf ist älter als zwei Stunden oder nicht belegt. Aktuelle Angaben bei eBay prüfen.";
+    } else if (status === "partial" && !paused) {
+      heading = "Aktualisierung unvollständig.";
+      message = "Ein Teil der Angebote konnte nicht aktualisiert werden. Aktuelle Angaben bei eBay prüfen.";
+    } else if (!["live", "partial"].includes(status)) {
+      heading = "Datenstand ungeklärt.";
+      message = "Aktuelle Angaben im Originalangebot prüfen.";
     }
-    else if (unconfirmed) {
-      notices.push('<p><strong>Quellenabgleich nicht bestätigt.</strong> Mindestens eine Suche meldet Treffer, lieferte aber keinen einzigen Datensatz. Durchlaufene Seitenpositionen bestätigen hier keinen vollständigen Datenbestand. Vorhandene ältere Beobachtungen bleiben entsprechend datiert. <a href="./info.html#coverage">Abrufdetails ↗</a></p>');
-    }
-    else if (routinePartial) {
-      notices.push(`<p><strong>${completedTraversal ? "Quellseiten durchlaufen." : "Begrenzter Teilscan."}</strong> Aggregator-Cache; Lücken und Duplikate möglich, keine direkte eBay-Prüfung. Vor einem Gebot im Original prüfen. <a href="./info.html#coverage">Quelle &amp; Status ↗</a></p>`);
-    } else if (feed && (status !== "live" || aged || blockers.length)) {
-      const defaults = {unconfigured: "Die Datenquelle ist noch nicht vollständig eingerichtet.", partial: "Der Scan ist nur teilweise abgeschlossen; Hinweise unten beachten.", error: "Der letzte Import ist fehlgeschlagen. Bereits gespeicherte Angebote können veraltet sein.", disabled: "Der automatische Import ist derzeit deaktiviert."};
-      notices.push(`<strong>${esc(aged ? "Datenstand prüfen" : statuses[status] || "Unbekannter Quellenstatus")}</strong><p>${esc(String(feed.status_message || defaults[status] || "Dieser Snapshot ist keine Echtzeit-Abfrage.").slice(0, 240))}${aged ? " Abrufstand älter als zwei Stunden oder ungeklärt." : ""} <a href="./info.html#source">Statusdetails ↗</a></p>`);
-      const important = blockers.filter(blocker => !routineCodes.includes(blocker.code));
-      if (blockers.length) notices.push(`<p>${(important.length ? important : blockers).slice(0, 2).map(blocker => esc(String(blocker.message || blocker.code || "Offener Einrichtungsschritt").slice(0, 180))).join(" · ")}</p>`);
-    }
-    els.notice.hidden = !notices.length;
-    els.notice.className = "notice" + (routinePartial ? " compact-notice" : "") + (loadError || status === "error" ? " error" : "");
-    els.notice.innerHTML = notices.join("");
+    // Routine success, cache notes and a fresh cooldown need no dashboard box.
+    els.notice.hidden = !heading;
+    els.notice.className = "notice compact-notice" + (loadError || status === "error" ? " error" : "");
+    els.notice.innerHTML = heading ? `<strong>${esc(heading)}</strong> ${esc(message)}` : "";
   }
 
-  function renderProfile() {
-    const loc = feed.location || {};
-    const criteria = feed.criteria || {};
-    const place = loc.city || (loc.postcode === "69121" ? "Heidelberg" : "");
-    els["location-label"].textContent = [place, loc.postcode].filter(Boolean).join(" · ") || "Suchgebiet offen";
-    els["info-link"].href = isDemo ? "./info.html?demo=1" : "./info.html";
-    const badges = [];
-    if (number(criteria.max_price_eur) !== null) badges.push(`bis ${money(criteria.max_price_eur)}`);
-    if (number(criteria.max_bids) !== null) badges.push(criteria.max_bids === 0 ? "0 Gebote gesucht" : `bis ${criteria.max_bids} Gebote`);
-    if (number(criteria.max_shipping_eur) !== null) badges.push(`Versand ≤ ${money(criteria.max_shipping_eur)}`);
-    if (number(loc.pickup_radius_km) !== null) badges.push(`Abholsuche ${loc.pickup_radius_km} km`);
-    badges.push(`Ende < ${activeWindowHours()} Std.`);
-    els.criteria.innerHTML = (badges.length ? badges : ["Suchkriterien offen"]).map(value => `<span>${esc(value)}</span>`).join("");
-    const buffered = feed.deals.filter(item => !personalInterestExcluded(item) && active(item) && eligibility(item) !== "excluded");
-    const pending = buffered.filter(item => !scores(item).complete).length;
-    const review = buffered.filter(item => eligibility(item) === "review").length;
+  function renderControls() {
     const minimum = minimumInterest();
-    const paused = cooldownSnapshot();
-    els["metric-scanned"].textContent = paused || number(feed.stats?.received) === null ? "—" : String(feed.stats.received);
-    els["metric-scanned-note"].textContent = paused ? "Kein neuer Quellenabruf" : isDemo ? "fiktive Datensätze" : aggregatorFeed() ? "Aggregator-Datensätze" : "eingelesene Datensätze";
-    els["metric-candidates"].textContent = String(buffered.length);
-    els["metric-candidate-note"].textContent = `${review} Prüffälle${pending ? ` · ${pending} Scores offen` : ""}`;
-    els["metric-highvalue-label"].textContent = minimum ? `INTEREST ≥ ${minimum}` : "ALLE SCORE-STÄNDE";
-    els["metric-highvalue"].textContent = String(buffered.filter(meetsInterest).length);
+    els["info-link"].href = isDemo ? "./info.html?demo=1" : "./info.html";
     els["minimum-interest-value"].textContent = String(minimum);
     els["show-all-interest"].setAttribute("aria-pressed", String(minimum === 0));
     els["show-stale-label"].textContent = "Unklare Zeitstempel anzeigen";
-    els["retention-note"].textContent = `${windowLabel()} · Quellenalter bleibt sichtbar`;
-    els["metric-updated"].textContent = isDemo ? "DEMO" : dateText(paused ? feed.last_successful_scan_at : feed.generated_at);
-    els["metric-source"].textContent = paused ? "Letzter erfolgreicher Quellenabruf" : isDemo ? "Keine echten Auktionen" : interactiveReviewText() || statuses[feed.source_status] || "Status unbekannt";
-    els["source-attribution"].innerHTML = isDemo ? "Fiktive Beispieldaten" : aggregatorFeed() ? `Aggregator-Cache · nicht direkt verifiziert · ${sourceLink() || sourceLink(feed.deals.find(item => providerOf(item) === aggregatorProvider)) || "Drittquelle"}` : "Quellenstand aus veröffentlichtem Snapshot";
   }
 
   function matchesFilters(item, strictActive = false) {
@@ -514,25 +484,25 @@
     const activeId = document.activeElement?.classList?.contains("detail-open") ? document.activeElement.dataset.id : null;
     const activeListId = activeId ? offerLists.find(container => container.contains(document.activeElement))?.id : null;
     visibleIds = resultsSignature(list, browsing);
-    els["result-count"].textContent = `(${list.length} / ${feed.deals.length})`;
+    els["result-count"].textContent = `(${list.length})`;
     els.cards.innerHTML = list.map(card).join("");
     initializeImages();
     renderBrowse(browsing);
-    const profileDeals = feed.deals.filter(item => !personalInterestExcluded(item));
-    const hiddenOutside = profileDeals.filter(outsideWindow).length;
-    const hiddenUnknown = profileDeals.filter(item => unknownTime(item) && (els["show-expired"].checked || !outsideWindow(item))).length;
-    const pending = profileDeals.filter(item => active(item) && !scores(item).complete).length;
     const minimum = minimumInterest();
-    els["result-summary"].textContent = `${list.length} von ${feed.deals.length} gespeicherten Angeboten sichtbar · Bestand höchstens bis Auktionsende · aktiv: Restlaufzeit < ${activeWindowHours()} Std. · ${minimum ? `Interest ≥ ${minimum}` : "alle Score-Stände"}${pending ? ` · ${pending} duale Bewertungen offen` : ""}${!els["show-expired"].checked && hiddenOutside ? ` · ${hiddenOutside} außerhalb Zeitfenster` : ""}${!els["show-stale"].checked && hiddenUnknown ? ` · ${hiddenUnknown} Zeitstempel ungeklärt` : ""}${els["show-stale"].checked || els["show-expired"].checked ? " · ACHTUNG: Debug-Filter lässt ungültige Zeitstände zu" : ""}${isDemo ? " · fiktive Beispiele" : ""}`;
+    const notes = [windowLabel()];
+    if (els["show-expired"].checked) notes.push("Auch außerhalb des Zeitfensters sichtbar");
+    if (els["show-stale"].checked) notes.push("Auch unklare Zeitstempel sichtbar");
+    if (isDemo) notes.push("Fiktive Beispiele");
+    els["result-summary"].textContent = notes.join(" · ");
     els.empty.hidden = list.length > 0;
     els["empty-show-all-interest"].hidden = minimum === 0 || !feed.deals.length;
-    els["empty-description"].textContent = feed.deals.length ? `Kein Angebot erfüllt diese Filter${minimum ? ` und Interest ≥ ${minimum}` : ""}. „Alles (0)“ zeigt auch unvollständige Bewertungen; dein Suchprofil gilt weiter. Aktives Zeitfenster: ${windowLabel().toLowerCase()}; bereits abgelaufene Angebote bleiben ausgeblendet.` : "Noch keine Angebote im Snapshot. Den Quellenstatus oben prüfen; die Demo enthält ausschließlich fiktive Beispiele.";
+    els["empty-description"].textContent = feed.deals.length ? `Suche oder Filter anpassen${minimum ? " — „Alles (0)“ zeigt auch unbewertete Angebote" : ""}.` : "Zurzeit sind keine Angebote verfügbar.";
     if (activeId) (detailButton(activeId, activeListId) || els.search).focus({preventScroll: true});
   }
   function render() {
     if (!feed) return;
     renderStatus();
-    renderProfile();
+    renderControls();
     renderCards();
   }
 
@@ -540,13 +510,11 @@
     els["dialog-title"].textContent = item.title || "Angebotsdetails";
     const list = entries => array(entries).length ? `<ul>${array(entries).map(text => `<li>${esc(text)}</li>`).join("")}</ul>` : "<p>Keine Angaben vorhanden.</p>";
     const url = isDemo ? null : itemUrl(item.url);
-    const jsonUrl = isDemo ? null : detailUrl(item.detail_path);
     const evidence = comparisons(item);
     const rating = scores(item);
     const fields = [
       [isAggregator(item) ? "Gebotspreis laut Quelle" : "Gebotspreis beim Scan", money(item.price_eur), false], [isAggregator(item) ? "Gebote laut Quelle" : "Gebote beim Scan", bidText(item), number(item.bid_count) === null],
       ["Auktionsende (Berlin)", dateText(item.ends_at), !Number.isFinite(timestamp(item.ends_at))], ["Mindestpreis", reserveText(item), !["none", "met"].includes(item.reserve_status)],
-      ["Metadaten bis Auktionsende", dateText(item.ends_at), expired(item) || unknownTime(item)],
       ["Versand", money(item.shipping_eur), number(item.shipping_eur) === null], ["Standort", [item.city, item.postcode].filter(Boolean).join(" · ") || "Unbekannt", false],
       [isAggregator(item) ? "Zustand laut Quelle" : "Zustand laut Anzeige", item.condition || "Unbekannt", !item.condition], ["Prüfstatus", ({eligible:"Kandidat", review:"Noch zu prüfen", excluded:"Ausgeschlossen"})[eligibility(item)], eligibility(item) !== "eligible"],
       ["Interest", rating.interest === null ? "Noch offen" : `${rating.interest} / 100`, rating.interest === null],
@@ -557,19 +525,19 @@
     if (interactiveAssessed(item)) fields.push(["ChatGPT-Sichtung (Berlin)", dateText(item.semantic_assessed_at), !Number.isFinite(timestamp(item.semantic_assessed_at))]);
     if (isAggregator(item) && item.pickup_search_confirmed === true) fields.push(["Abholsuchstand (Berlin)", `${dateText(item.pickup_search_observed_at)}${pickupObservationState(item) === "old" ? " · älter als 2 Std.; nicht aktuell bestätigt" : pickupObservationState(item) === "unknown" ? " · Zeitpunkt nicht belegt" : ""}`, pickupObservationState(item) !== "current"]);
     els["dialog-content"].innerHTML = `${isDemo ? '<p class="demo-stamp">FIKTIVES BEISPIEL · KEINE ECHTE AUKTION</p>' : ""}
-      <p class="detail-disclaimer">${isDemo ? "Alle folgenden Angaben sind erfunden und dienen nur zur Demonstration." : `${isAggregator(item) ? "Beim Aggregator beobachtet" : "Quellenstand"}: ${esc(dateText(observedAt(item)))} (Berlin). ${isAggregator(item) ? "Zwischengespeicherte Drittquelle, nicht direkt bei eBay verifiziert. " : ""}${stale(item) ? "Ältere Quellenbeobachtung oder Datenalter nicht belegt: nicht aktuell bestätigt. " : ""}${outsideWindow(item) || unknownTime(item) ? "Außerhalb des aktiven Zeitfensters oder Zeitstempel ungeklärt. " : ""}Metadaten bleiben höchstens bis zum Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt nicht mehr gefundene Angebote früher. Ihr Quellenalter wird dadurch nicht erneuert. Aktive Auswahl: ${esc(windowLabel().toLowerCase())}. Vor jedem Gebot Preise, Mitbieter, Zustand, Versand und Mindestpreis bei eBay kontrollieren.`}</p>
+      <p class="detail-disclaimer">${isDemo ? "Fiktive Beispieldaten." : `${isAggregator(item) ? "Beim Aggregator beobachtet" : "Quellenstand"}: ${esc(dateText(observedAt(item)))} (Berlin). ${stale(item) ? "Ältere oder ungeklärte Beobachtung. " : ""}${outsideWindow(item) || unknownTime(item) ? "Außerhalb des aktiven Zeitfensters oder Zeitstempel ungeklärt. " : ""}Preis, Gebote, Zustand und Transport vor dem Bieten bei eBay prüfen.`}</p>
       <div class="detail-grid">${fields.map(([label, value, warning]) => `<div class="detail-cell${warning ? " warning" : ""}"><small>${esc(label)}</small><strong>${esc(value)}</strong></div>`).join("")}</div>
       <p>${esc(transportText(item))}</p>
       <div class="dialog-section"><h3>Warum auf der Liste?</h3>${list(item.reasons)}</div>
       <div class="dialog-section"><h3>Scalp: Fundpotenzial</h3><p>${esc(item.value_reason || "Noch keine Scalp-Begründung vorhanden.")}</p><p>${esc(valueText(item))} · grobe Größenordnung, keine Wertermittlung.</p></div>
       <div class="dialog-section"><h3>Useability: eigenständige Nutzbarkeit</h3><p>${esc(item.useability_reason || "Useability ist noch nicht bewertet.")}</p><h3>Abhängigkeiten</h3>${list(item.dependencies)}<p>Useability bestätigt keine Funktionsfähigkeit. Defekte und Reparaturbedarf sind getrennte Risiken.</p></div>
-      <div class="dialog-section"><h3>Interest: kombinierte Priorität</h3><p>${rating.complete ? `${rating.scalp} × ${rating.useability} / 100, auf ganze Punkte gerundet → ${rating.interest}.` : "Die vollständige duale Bewertung in Version 2 fehlt. Interest bleibt unbekannt; ein alter Gesamtwert wird nicht als neuer Interest übernommen."} <a href="./info.html#scores">Score-Erklärung ↗</a></p></div>
+      <div class="dialog-section"><h3>Interest: kombinierte Priorität</h3><p>${rating.complete ? `${rating.scalp} × ${rating.useability} / 100, auf ganze Punkte gerundet → ${rating.interest}.` : "Noch keine vollständige Bewertung vorhanden."} <a href="./info.html#scores">Score-Erklärung ↗</a></p></div>
       ${evidence.length && !isDemo ? `<div class="dialog-section"><h3>Vergleichsquellen</h3><ul class="comparison-list">${evidence.map(entry => `<li><a target="_blank" rel="noopener noreferrer" href="${esc(entry.url)}">${esc(entry.title || entry.label || new URL(entry.url).hostname)} ↗</a>${entry.kind || number(entry.price_eur) !== null ? `<small>${esc([entry.kind, number(entry.price_eur) !== null ? money(entry.price_eur) : ""].filter(Boolean).join(" · "))}</small>` : ""}</li>`).join("")}</ul></div>` : ""}
       <div class="dialog-section risk"><h3>Vor dem Bieten prüfen</h3>${list(item.risks)}</div>
       <div class="dialog-section"><h3>Angebotsbeschreibung</h3><p class="offer-text">${esc(descriptionText(item))}</p></div>
-      ${!isDemo && isAggregator(item) ? `<p class="detail-source">Datenquelle: ${sourceLink(item) || "Aggregator"}. Keine direkte eBay-Verifikation; fehlender Standort und Mindestpreisstatus bleiben unbekannt.</p>` : ""}
-      <p class="detail-load-status" role="status">${esc(detailState)}</p>
-      <div class="dialog-links">${url ? `<a class="dialog-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Originalangebot bei eBay ↗</a>` : ""}${jsonUrl ? `<a class="detail-json-link" href="${esc(jsonUrl)}" target="_blank" rel="noopener noreferrer">Angebot als JSON ↗</a>` : ""}</div>`;
+      ${!isDemo && isAggregator(item) ? `<p class="detail-source">Datenquelle: ${sourceLink(item) || "Aggregator"}. Zwischengespeichert, nicht direkt bei eBay geprüft.</p>` : ""}
+      ${detailState ? `<p class="detail-load-status" role="status">${esc(detailState)}</p>` : ""}
+      <div class="dialog-links">${url ? `<a class="dialog-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Originalangebot bei eBay ↗</a>` : ""}</div>`;
   }
   async function showDetail(id, listId = "cards") {
     const item = feed?.deals.find(deal => deal.id === id);
@@ -580,7 +548,7 @@
     const dashboardSnapshot = feed.snapshot_id;
     const url = isDemo ? null : detailUrl(item.detail_path);
     const cached = detailCache.get(id);
-    renderDetail(cached || item, url && !cached ? "Veröffentlichten Detaildatensatz laden …" : "");
+    renderDetail(cached || item, url && !cached ? "Beschreibung wird geladen …" : "");
     if (!els["detail-dialog"].open) els["detail-dialog"].showModal();
     if (!url || cached) return;
     try {
@@ -590,22 +558,22 @@
       const raw = data.item || data;
       if (!raw || typeof raw !== "object" || raw.id !== id) throw new Error("Detaildatensatz passt nicht zum Angebot");
       if (!dashboardSnapshot || data.snapshot_id !== dashboardSnapshot || feed.snapshot_id !== dashboardSnapshot) {
-        if (selectedId === id && sequence === detailSequence && els["detail-dialog"].open) renderDetail(item, "Die Detaildaten gehören zu einem anderen oder nicht belegten Veröffentlichungsstand. Bitte den Snapshot neu laden; die Beschreibung wurde nicht übernommen.");
+        if (selectedId === id && sequence === detailSequence && els["detail-dialog"].open) renderDetail(item, "Die Angebotsdetails passen nicht zum geladenen Stand. Bitte neu laden; die bisherigen Angaben bleiben sichtbar.");
         return;
       }
       // Even within one verified snapshot, detail text must not overwrite price or scoring fields.
       const detail = {...item, description: typeof raw.description === "string" ? raw.description : item.description};
       detailCache.set(id, detail);
-      if (selectedId === id && sequence === detailSequence && els["detail-dialog"].open) renderDetail(detail, `${detail.description ? "Beschreibung aus dem Detail-Feed." : isAggregator(item) ? "Quelle liefert keinen Beschreibungstext." : "Detaildatensatz enthält keinen Beschreibungstext."} Preis- und Statusangaben stammen unverändert aus diesem Dashboard-Snapshot.`);
+      if (selectedId === id && sequence === detailSequence && els["detail-dialog"].open) renderDetail(detail);
     } catch {
-      if (selectedId === id && sequence === detailSequence && els["detail-dialog"].open) renderDetail(item, "Detail-Feed nicht verfügbar. Die Angaben aus dem geladenen Snapshot bleiben sichtbar.");
+      if (selectedId === id && sequence === detailSequence && els["detail-dialog"].open) renderDetail(item, "Die Angebotsdetails konnten nicht geladen werden. Die bisherigen Angaben bleiben sichtbar.");
     }
   }
 
-  [els.search, els.transport, els.sort, els.eligibility, els["value-filter"], els["show-expired"], els["show-stale"], els["minimum-interest"]].forEach(control => control.addEventListener(control === els.search || control === els["minimum-interest"] ? "input" : "change", () => { if (feed) { renderProfile(); renderCards(); } }));
+  [els.search, els.transport, els.sort, els.eligibility, els["value-filter"], els["show-expired"], els["show-stale"], els["minimum-interest"]].forEach(control => control.addEventListener(control === els.search || control === els["minimum-interest"] ? "input" : "change", () => { if (feed) { renderControls(); renderCards(); } }));
   function showAllInterest() {
     els["minimum-interest"].value = "0";
-    if (feed) { renderProfile(); renderCards(); }
+    if (feed) { renderControls(); renderCards(); }
   }
   els["show-all-interest"].addEventListener("click", showAllInterest);
   els["empty-show-all-interest"].addEventListener("click", showAllInterest);
@@ -618,7 +586,7 @@
     els["show-expired"].checked = false;
     els["show-stale"].checked = false;
     els["minimum-interest"].value = "40";
-    if (feed) { renderProfile(); renderCards(); }
+    if (feed) { renderControls(); renderCards(); }
   });
   offerLists.forEach(container => container.addEventListener("click", event => {
     const button = event.target.closest(".detail-open");
@@ -638,7 +606,7 @@
   setInterval(() => {
     if (!feed || loading || document.hidden) return;
     renderStatus();
-    renderProfile();
+    renderControls();
     if (resultsSignature(visibleDeals(), browseSelections()) !== visibleIds) renderCards();
     else {
       offerLists.forEach(container => {

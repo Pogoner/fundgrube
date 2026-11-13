@@ -208,6 +208,11 @@ python scripts/pack_reviews.py --feed site/data/deals.json --ratings reviews/rat
   und die konkrete [Design-Notiz](docs/design-fundgrube.md). Zweckgebundene,
   ruhige Arbeitsoberfläche statt vorgeschalteter Dokumentation oder dekorativer
   Inszenierung. Halte beide Dokumente bei dauerhaften Designentscheidungen aktuell.
+- Keine private Such-PLZ oder Suchstadt auf der Website oder in öffentlichen
+  Website-/API-Exporten ausgeben. Der Export berechnet den anonymen
+  `pickup_search_profile_match` vor der Redaktion; tatsächliche Verkäuferstandorte
+  bleiben getrennte Angebotsdaten. Die Info-Seite bleibt kurz, technische
+  Betriebsdetails und Agentenanweisungen gehören in die Repository-Dokumentation.
 - Bewahre die Aufteilung in Sammler (`aog`/`ebay`), Normalisierung (`models`),
   Einordnung (`ranking`/`semantic`), Ablauf (`pipeline`) und Export (`feed`).
   Python 3.12, Standardbibliothek; führe nicht ohne Not neue Abhängigkeiten ein.
