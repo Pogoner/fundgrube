@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T02:14:39Z",
+    "evaluated_at": "2026-11-13T02:49:06Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,9 +13,9 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T02:14:39Z",
+  "generated_at": "2026-11-13T02:49:06Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
@@ -25,7 +25,7 @@
     "content_updated_at": "2026-11-10T08:26:53Z",
     "country": "",
     "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
+      "Elektronikverwertung oder Teileprojekt"
     ],
     "description": "",
     "description_status": "missing",
@@ -45,13 +45,13 @@
     "ends_at": "2026-11-16T18:45:17Z",
     "id": "v1|227606177874|0",
     "image": "https://i.ebayimg.com/images/g/YRQAAeSwf6hq8hSq/s-l400.jpg",
-    "interest_score": 18,
+    "interest_score": 19,
     "is_auction": true,
     "last_seen_at": "2026-11-10T08:26:53Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Gewicht und Boardtypen prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,12 +61,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "consumable",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "14 kg gebrauchte PC-Mainboards können als Materialposten verwertbar sein."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -76,15 +76,18 @@
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
-      "Defekt, ungeprüft oder unvollständig angegeben; keine Funktion unterstellen",
+      "Platinenarten und tatsächliche Masse unklar.",
+      "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet.",
       "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
-    "score": 18,
+    "scalp_score": 33,
+    "score": 19,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-13T02:31:51.460000Z",
+    "semantic_interest": 33,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 0.0,
     "source_observed_at": "2026-11-10T08:26:53Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -95,11 +98,11 @@
     "total_eur": null,
     "total_known_eur": 1.0,
     "url": "https://www.ebay.de/itm/227606177874?hash=item34fe62a852%3Ag%3AYRQAAeSwf6hq8hSq&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Nur für Teilegewinnung oder fachgerechte Elektronikverwertung nutzbar.",
+    "useability_score": 59,
     "valid_until": "2026-11-16T18:45:17Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "14 kg gebrauchte PC-Mainboards können als Materialposten verwertbar sein.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -156,7 +159,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:1de432ad0ca94b1a7f2b01db7e5114b933e59f7d7cb1c3e65fca1f14792494b8",
+  "snapshot_id": "sha256:bbdff107798c8be7203a73987bac716ee3a1cd9690b1efc31c22e16a3e4e9433",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
