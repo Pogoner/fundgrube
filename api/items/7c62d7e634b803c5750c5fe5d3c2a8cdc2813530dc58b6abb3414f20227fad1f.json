@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T14:05:46Z",
+    "evaluated_at": "2026-11-13T14:38:45Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T14:05:46Z",
+  "generated_at": "2026-11-13T14:38:45Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -34,13 +34,11 @@
     "detail_path": "api/items/7c62d7e634b803c5750c5fe5d3c2a8cdc2813530dc58b6abb3414f20227fad1f.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-16T14:37:10Z",
@@ -71,7 +69,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
@@ -94,7 +91,7 @@
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": true,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Kanefusa HM Kreissägeblatt 303x3,2x30 Z 60 DHC BOARD PRO Top Qualität aus Japan",
     "total_eur": null,
     "total_known_eur": 7.19,
@@ -160,7 +157,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:961834b03d4b0799a5f79d2e2d381aec3aa3b99622c811dfa9fe8d4564b88bad",
+  "snapshot_id": "sha256:9706826c7a06262f789e6165f0640d5771c520db0d0ea9fd046bfcb3fe91835a",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
