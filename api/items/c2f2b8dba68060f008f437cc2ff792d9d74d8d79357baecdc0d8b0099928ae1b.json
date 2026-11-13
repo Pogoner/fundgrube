@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T20:17:35Z",
+    "evaluated_at": "2026-11-13T21:40:19Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T20:17:35Z",
+  "generated_at": "2026-11-13T21:40:19Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-13T19:44:09Z",
+    "content_updated_at": "2026-11-13T21:16:35Z",
     "country": "",
     "dependencies": [
       "Klebeband oder anderes Verschlussmaterial"
@@ -33,12 +33,10 @@
     "detail_path": "api/items/c2f2b8dba68060f008f437cc2ff792d9d74d8d79357baecdc0d8b0099928ae1b.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-16T20:43:59Z",
@@ -46,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/t3IAAeSwBDpqZfCc/s-l400.jpg",
     "interest_score": 12,
     "is_auction": true,
-    "last_seen_at": "2026-11-13T19:44:09Z",
+    "last_seen_at": "2026-11-13T21:16:35Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -70,7 +68,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -85,11 +82,11 @@
     "semantic_interest": 12,
     "semantic_review_mode": "interactive",
     "shipping_eur": 11.99,
-    "source_observed_at": "2026-11-13T19:44:09Z",
+    "source_observed_at": "2026-11-13T21:16:35Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Pappkarton Verpackungsmaterial Versandmaterial Konvolut Verschiedene Größen",
     "total_eur": null,
     "total_known_eur": 12.99,
@@ -155,10 +152,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:0e2efdae9e48cd4708c0232276fe1b029afbd3cdc3d043d1f44d15bc7d1a57d9",
+  "snapshot_id": "sha256:6965feba55d3c5db99b1739f988049088db26cf8307b4e3c6b78b2b408ce2760",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "partial",
+  "source_status": "live",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
