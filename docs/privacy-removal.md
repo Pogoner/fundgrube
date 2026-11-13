@@ -44,12 +44,15 @@ unmittelbar vor dem Eingriff erneut prüfen. Als betroffenes älteres
 Pages-Artefakt wurde `14052993113` aus Lauf `43452753853` gefunden; eine kurze
 Artefakt-Aufbewahrung ersetzt keine Prüfung von Logs und Caches.
 
-Alle Remote-Refs und ihre aktuellen SHAs festhalten. Beim Audit bestanden
-sechs Zweige (`main`, `data` und vier bereits integrierte Arbeitszweige),
-keine Tags und keine offenen Pull Requests. Neue Arbeit kann diese Bestände
-verändern. Vor dem eigentlichen Rewrite muss auch der PR für diese
-Codekorrektur integriert sein. Alte PR-Head-Refs werden von GitHub separat
-verwaltet und verschwinden nicht durch normales Löschen eines Zweigs.
+Alle Remote-Refs und ihre aktuellen SHAs festhalten. Das vollständige Inventar
+vom 13. November 2026, 22:39 UTC, umfasst 219 erreichbare Commits, sieben
+Zweige (`main`, `data`, vier bereits integrierte Arbeitszweige und den Zweig
+dieser Codekorrektur), keine Tags sowie PR-Referenzen der PRs 1 bis 5.
+Commit-Nachrichten enthalten keine bekannten privaten Suchwerte; sämtliche
+Autor-/Committer-Adressen sind noreply-Adressen. Neue Arbeit kann diese
+Bestände verändern. Vor dem eigentlichen Rewrite muss auch dieser PR
+integriert sein. Alte PR-Head-Refs werden von GitHub separat verwaltet und
+verschwinden nicht durch normales Löschen eines Zweigs.
 
 Den letzten konsistenten Datenstand und den vollständigen Review-Store
 verschlüsselt bzw. in einem privaten Arbeitsverzeichnis sichern. Die Sicherung
@@ -74,6 +77,18 @@ Datei-Hashes. Historische generierte Snapshots und Zustände bei Bedarf
 vollständig aus der erhaltenen Historie entfernen und den aktuellen
 Datenzweig aus einem konsistent neu erzeugten, bereinigten Snapshot aufbauen.
 Dabei den gesicherten Zustand einschließlich Anfragegrenzen fortführen.
+
+Der bestehende Datenzweig ist nicht unabhängig von der Quellhistorie: Seine
+103 eigenen Snapshot-Commits hängen an zwei frühen Quellvorfahren, von denen
+der spätere bereits private Konfiguration enthält. Nur generierte Dateien aus
+`data` zu entfernen würde diesen Vorfahren weiter erreichbar lassen. Auch
+diese Elternkette muss bereinigt werden. Ein verifiziert sauberer, parentloser
+Ursprungscommit mit ausschließlich `.gitignore` ist vorhanden; ein neuer
+bereinigter Verlauf kann technisch auf ihm aufbauen, ohne ein neues
+Repository anzulegen. Ein solcher Neuaufbau würde zusätzliche Historie
+verwerfen und ist vor der Veröffentlichung gesondert im Wartungsplan zu
+entscheiden. Ein gezielter Filter muss entsprechend alle betroffenen
+Quellvorfahren erfassen.
 
 Den Review-Store inhaltlich erhalten. Historische `source_snapshot_id`-Werte
 und ursprüngliche `reviewed_at`-Zeitpunkte sind Provenienz, keine Angaben,
