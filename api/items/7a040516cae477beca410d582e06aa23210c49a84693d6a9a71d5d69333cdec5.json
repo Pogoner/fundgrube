@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T08:39:04Z",
+    "evaluated_at": "2026-11-13T13:35:22Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T08:39:04Z",
+  "generated_at": "2026-11-13T13:35:22Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Neu",
-    "content_updated_at": "2026-11-11T14:59:40Z",
+    "content_updated_at": "2026-11-13T13:11:39Z",
     "country": "",
     "dependencies": [
       "Passende Schleifmaschine"
@@ -33,13 +33,10 @@
     "detail_path": "api/items/7a040516cae477beca410d582e06aa23210c49a84693d6a9a71d5d69333cdec5.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-16T13:07:57Z",
@@ -47,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/PIYAAeSwc5Jq8cWI/s-l400.jpg",
     "interest_score": 4,
     "is_auction": true,
-    "last_seen_at": "2026-11-11T14:59:40Z",
+    "last_seen_at": "2026-11-13T13:11:39Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -70,15 +67,11 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Durchmesser, Bindung, Haltbarkeit und zulässige Drehzahl fehlen.",
       "Nur Kurzmetadaten ohne Verkäuferbeschreibung; Funktions- und Lieferumfangsangaben sind nicht verifiziert.",
-      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 9,
@@ -89,11 +82,11 @@
     "semantic_interest": 9,
     "semantic_review_mode": "interactive",
     "shipping_eur": 7.69,
-    "source_observed_at": "2026-11-11T14:59:40Z",
+    "source_observed_at": "2026-11-13T13:11:39Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": true,
-    "time_window_eligible": false,
+    "stale": false,
+    "time_window_eligible": true,
     "title": "Schleifscheibe",
     "total_eur": null,
     "total_known_eur": 8.69,
@@ -159,7 +152,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:de2996a03bcc38a08fd1fc19c67df1f663205155a93234f3cad1b2c98a6dc206",
+  "snapshot_id": "sha256:7c0a85d33f80a2c2be803f7de5d55fdd58521bfae38edf61706b79ad042e5501",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",

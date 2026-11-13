@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T08:39:04Z",
+    "evaluated_at": "2026-11-13T13:35:22Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T08:39:04Z",
+  "generated_at": "2026-11-13T13:35:22Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Gebraucht",
-    "content_updated_at": "2026-11-13T08:15:33Z",
+    "content_updated_at": "2026-11-13T13:11:18Z",
     "country": "",
     "dependencies": [
       "Passende Größe"
@@ -33,12 +33,10 @@
     "detail_path": "api/items/7ce67227d04f083cd433465a93445af9bba80c09bde317856a8827204f03ba10.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-16T08:56:17Z",
@@ -46,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/fxgAAeSwpoZo58mt/s-l400.jpg",
     "interest_score": 8,
     "is_auction": true,
-    "last_seen_at": "2026-11-13T08:15:33Z",
+    "last_seen_at": "2026-11-13T13:11:18Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -69,7 +67,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -85,11 +82,11 @@
     "semantic_interest": 8,
     "semantic_review_mode": "interactive",
     "shipping_eur": 2.7,
-    "source_observed_at": "2026-11-13T08:15:33Z",
+    "source_observed_at": "2026-11-13T13:11:18Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Clinic dress Poloshirt Gr. 34/36",
     "total_eur": null,
     "total_known_eur": 3.7,
@@ -155,7 +152,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:de2996a03bcc38a08fd1fc19c67df1f663205155a93234f3cad1b2c98a6dc206",
+  "snapshot_id": "sha256:7c0a85d33f80a2c2be803f7de5d55fdd58521bfae38edf61706b79ad042e5501",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
