@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T23:28:00Z",
+    "evaluated_at": "2026-11-13T23:36:42Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,20 +13,18 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T23:28:00Z",
+  "generated_at": "2026-11-13T23:36:42Z",
   "item": {
-    "assessment_basis": "heuristic",
+    "assessment_basis": "llm",
     "assessment_confidence": "low",
     "bid_count": 0,
     "buying_options": [],
-    "carried": false,
+    "carried": true,
     "city": "",
     "condition": "Neu",
     "content_updated_at": "2026-11-13T23:08:52Z",
     "country": "",
-    "dependencies": [
-      "Benötigtes Umfeld und Lieferumfang noch unbekannt"
-    ],
+    "dependencies": [],
     "description": "",
     "description_status": "missing",
     "description_truncated": false,
@@ -50,7 +48,7 @@
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
-      "Genaue Modellbezeichnung, Lieferumfang und Zustand im Originalangebot prüfen"
+      "Menge, Material und Verschlüsse prüfen."
     ],
     "personal_interest_excluded": false,
     "personal_interest_reason": null,
@@ -61,12 +59,12 @@
     "postcode": "",
     "price_eur": 1.0,
     "price_kind": "auction_price",
-    "product_kind": "unknown",
+    "product_kind": "accessory",
     "reasons": [
       "Beobachteter Auktionspreis höchstens 1 €",
       "Zum Abrufzeitpunkt keine Gebote",
       "Ausgewiesene Versandkosten im Suchlimit",
-      "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten."
+      "Vollständiger Titel und Zustandsangabe gesichtet; Verkäuferbeschreibung fehlt."
     ],
     "reserve_status": "unknown",
     "risks": [
@@ -74,13 +72,16 @@
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
+      "Material, Verschlüsse und Stückzahl ungeprüft.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
-    "scalp_score": 35,
+    "scalp_score": 18,
     "score": 18,
     "score_version": 2,
     "semantic_assessed": true,
-    "semantic_interest": 35,
+    "semantic_assessed_at": "2026-11-13T23:33:04Z",
+    "semantic_interest": 18,
+    "semantic_review_mode": "interactive",
     "shipping_eur": 5.9,
     "source_observed_at": "2026-11-13T23:08:52Z",
     "source_provider": "auktionen-ohne-gebot",
@@ -91,11 +92,11 @@
     "total_eur": null,
     "total_known_eur": 6.9,
     "url": "https://www.ebay.de/itm/407360069431?hash=item5ed88d5f37%3Ag%3A1n0AAeSwROhqbICN&mkevt=1&mkcid=1&mkrid=707-53477-19255-0&campid=5338945155&customid=aog-suche&toolid=10049",
-    "useability_reason": "Eigenständigkeit und benötigtes Umfeld sind unbekannt; der mittlere Heuristikwert ist keine geprüfte Nutzbarkeitsaussage.",
-    "useability_score": 50,
+    "useability_reason": "Fertiger Schmuck unmittelbar tragbar.",
+    "useability_score": 98,
     "valid_until": "2026-11-20T10:43:06Z",
-    "value_band": "unknown",
-    "value_reason": "Aus dem Titel ist die Geräte- und Wertklasse nicht zuverlässig erkennbar; für semantische Sichtung offenhalten.",
+    "value_band": "around_50",
+    "value_reason": "35 Motiv-Halsketten; einfacher Modeschmuckposten ohne belegten Materialwert.",
     "verification_level": "aggregator"
   },
   "kind": "item",
@@ -152,10 +153,10 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:ecc8ceb1d3529f24d41f996c9faadf67b8b4b0f73b6e20e6dfdadaf0e9ea3955",
+  "snapshot_id": "sha256:6242bd5de12e26f027c2d0f74ea5cde52620657b00cb552f1208e49389f0609d",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
-  "source_status": "live",
+  "source_status": "partial",
   "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
   "untrusted_listing_text": true,
   "verification_level": "aggregator"
