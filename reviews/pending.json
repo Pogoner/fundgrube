@@ -1,1 +1,1401 @@
-{"request":null,"schema_version":1}
+{
+  "schema_version": 1,
+  "request": {
+    "id": "fg-20261113T023151460Z-triage56",
+    "source_commit": "0f00531a8d8db2b82e4c13d43e8506406bd18c20",
+    "ratings": {
+      "schema_version": 2,
+      "source_snapshot_id": "sha256:1de432ad0ca94b1a7f2b01db7e5114b933e59f7d7cb1c3e65fca1f14792494b8",
+      "reviewed_at": "2026-11-13T02:31:51.460Z",
+      "reviewer": "ChatGPT",
+      "groups": [
+        {
+          "ids": [
+            "v1|206689180152|0"
+          ],
+          "assessment": {
+            "scalp_score": 12,
+            "useability_score": 96,
+            "useability_reason": "Bei passendem Einsatzgebiet direkt als Verbrauchsmittel verwendbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Ein Liter übliche Schnelldesinfektion bietet nur kleines wirtschaftliches Potenzial.",
+            "reasons": [
+              "Ein Liter übliche Schnelldesinfektion bietet nur kleines wirtschaftliches Potenzial."
+            ],
+            "risks": [
+              "Wirkstoff, Zulassung und Haltbarkeit unklar.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Packungszustand und Haltbarkeit überprüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|137915453556|0"
+          ],
+          "assessment": {
+            "scalp_score": 46,
+            "useability_score": 26,
+            "useability_reason": "Funktion erfordert passende Steuerung, Empfänger und Kopplung.",
+            "dependencies": [
+              "Passende LJU-Anlage",
+              "Kopplung und Anschluss"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "LJU-FB-706-Fernbedienung plus MU-705-Modul können wertige industrielle Systemteile sein.",
+            "reasons": [
+              "LJU-FB-706-Fernbedienung plus MU-705-Modul können wertige industrielle Systemteile sein."
+            ],
+            "risks": [
+              "Paarung, Funkfrequenz und Zubehör unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Modellschilder und Systemkompatibilität kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|960183645250|0"
+          ],
+          "assessment": {
+            "scalp_score": 24,
+            "useability_score": 42,
+            "useability_reason": "Nur in dazu passender Lagerstelle einsetzbar.",
+            "dependencies": [
+              "Passende Maschine und Lagerstelle"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "SKF 6211-2RS1 ist ein Marken-Rillenkugellager mit begrenztem Ersatzteilwert.",
+            "reasons": [
+              "SKF 6211-2RS1 ist ein Marken-Rillenkugellager mit begrenztem Ersatzteilwert."
+            ],
+            "risks": [
+              "Lagerzustand trotz Neu-sonstige ungeprüft.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Abmessungen, Dichtungen und Zustand prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|206687532273|0"
+          ],
+          "assessment": {
+            "scalp_score": 11,
+            "useability_score": 94,
+            "useability_reason": "Mit passend großem Kochgefäß direkt verwendbar.",
+            "dependencies": [
+              "Geeignetes Kochgefäß"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "accessory",
+            "value_reason": "Ein einzelner runder Edelstahl-Einlegerost ist einfaches Küchenzubehör.",
+            "reasons": [
+              "Ein einzelner runder Edelstahl-Einlegerost ist einfaches Küchenzubehör."
+            ],
+            "risks": [
+              "Durchmesser und tatsächlich enthaltene Teile unklar.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Maße und Lieferumfang prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|327448284034|0"
+          ],
+          "assessment": {
+            "scalp_score": 52,
+            "useability_score": 91,
+            "useability_reason": "Mit Stromversorgung und erforderlicher Bedienung grundsätzlich spielbar.",
+            "dependencies": [
+              "Geeignete Stromversorgung"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "apparatus",
+            "value_reason": "LiberLive C1 bezeichnet ein elektronisches Musikinstrument mit eigenständigem Nutzwert.",
+            "reasons": [
+              "LiberLive C1 bezeichnet ein elektronisches Musikinstrument mit eigenständigem Nutzwert."
+            ],
+            "risks": [
+              "Akku, Funktionsfähigkeit und Zubehör unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Funktion, Ladegerät und genaue Modellversion verifizieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237173658515|0"
+          ],
+          "assessment": {
+            "scalp_score": 13,
+            "useability_score": 65,
+            "useability_reason": "Nur in passenden Gehäuseöffnungen mit geeigneten Leitungen sinnvoll.",
+            "dependencies": [
+              "Passendes Gehäuse",
+              "Passende Leitung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Sechs PG-Verschraubungen sind ein kleiner Elektro-Montageposten.",
+            "reasons": [
+              "Sechs PG-Verschraubungen sind ein kleiner Elektro-Montageposten."
+            ],
+            "risks": [
+              "Dichtungen und Gewindegrößen unbestätigt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Alle sechs Größen und Dichtungen prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|960175338763|0"
+          ],
+          "assessment": {
+            "scalp_score": 20,
+            "useability_score": 97,
+            "useability_reason": "Als normale Handwerkzeuge ohne spezifisches Gerät nutzbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "tool",
+            "value_reason": "Gebrauchte Innensechskant- und Steckschlüssel bieten praktischen, begrenzten Werkzeugwert.",
+            "reasons": [
+              "Gebrauchte Innensechskant- und Steckschlüssel bieten praktischen, begrenzten Werkzeugwert."
+            ],
+            "risks": [
+              "Anzahl, Marken und Schlüsselweiten fehlen.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Werkzeugumfang und Verschleiß prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|168850715580|0"
+          ],
+          "assessment": {
+            "scalp_score": 9,
+            "useability_score": 99,
+            "useability_reason": "Ohne weitere Komponenten unmittelbar nutzbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Zwei gebrauchte Aschenbecher sind ein geringwertiger Haushaltskleinposten.",
+            "reasons": [
+              "Zwei gebrauchte Aschenbecher sind ein geringwertiger Haushaltskleinposten."
+            ],
+            "risks": [
+              "Material und Bruchschäden nicht bekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Anzahl, Material und Zustand prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|307274737605|0"
+          ],
+          "assessment": {
+            "scalp_score": 5,
+            "useability_score": 99,
+            "useability_reason": "Als Textil direkt verwendbar, wenn sie passt.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Eine einzelne Kinder-Backmütze hat kaum wirtschaftliches Potenzial.",
+            "reasons": [
+              "Eine einzelne Kinder-Backmütze hat kaum wirtschaftliches Potenzial."
+            ],
+            "risks": [
+              "Größe und Material fehlen.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Größe und Zustand feststellen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237173666633|0"
+          ],
+          "assessment": {
+            "scalp_score": 16,
+            "useability_score": 73,
+            "useability_reason": "Mit geeigneter Bohrung und tragfähigem Untergrund verwendbar.",
+            "dependencies": [
+              "Geeigneter Untergrund",
+              "Montagewerkzeug"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Ein längerer 12-mm-Metallschwerlastdübel ist spezielles Befestigungsmaterial.",
+            "reasons": [
+              "Ein längerer 12-mm-Metallschwerlastdübel ist spezielles Befestigungsmaterial."
+            ],
+            "risks": [
+              "Einzelstückzahl, Zulassung und Lastklasse unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Maße, Stückzahl und Tragfähigkeitsangaben prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|128185205083|0"
+          ],
+          "assessment": {
+            "scalp_score": 50,
+            "useability_score": 39,
+            "useability_reason": "Benötigen passende Führungsschienen und mechanischen Einbau; kein fertiges Gerät.",
+            "dependencies": [
+              "Kompatible Schienen",
+              "Mechanisches Projekt"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Vier THK-SR15W-Führungskomponenten besitzen potenzielles Präzisionsteilepotenzial.",
+            "reasons": [
+              "Vier THK-SR15W-Führungskomponenten besitzen potenzielles Präzisionsteilepotenzial."
+            ],
+            "risks": [
+              "Der Titel belegt nicht, ob Schienen dazugehören; Spiel unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Ausführung, Anzahl Wagen und Schienen prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237177149702|0"
+          ],
+          "assessment": {
+            "scalp_score": 48,
+            "useability_score": 94,
+            "useability_reason": "Als Laden- oder Ausstellungsfiguren direkt nutzbar.",
+            "dependencies": [],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "apparatus",
+            "value_reason": "Fünf Schaufensterfiguren sind ein substantieller Präsentationsposten.",
+            "reasons": [
+              "Fünf Schaufensterfiguren sind ein substantieller Präsentationsposten."
+            ],
+            "risks": [
+              "Beschädigungen und Standfüße ungewiss; Transport nicht ausgewiesen.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Vollständigkeit, Maße und Abholung klären."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377633158236|0"
+          ],
+          "assessment": {
+            "scalp_score": 46,
+            "useability_score": 94,
+            "useability_reason": "Als Abdeckung oder Zuschnittmaterial weitgehend eigenständig verwendbar.",
+            "dependencies": [],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Eine PVC-Gewebeplane von 1,5 mal 8 m ist ein nennenswerter Materialposten.",
+            "reasons": [
+              "Eine PVC-Gewebeplane von 1,5 mal 8 m ist ein nennenswerter Materialposten."
+            ],
+            "risks": [
+              "B-Ware kann deutliche Materialfehler haben.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Fläche, Grammatur und B-Ware-Mängel belegen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|287716818183|0"
+          ],
+          "assessment": {
+            "scalp_score": 18,
+            "useability_score": 44,
+            "useability_reason": "Nur mit passender Motorbeschaltung und fachgerechtem Einbau nutzbar.",
+            "dependencies": [
+              "Kompatibler Motor",
+              "Elektrofachgerechter Anschluss"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Gebrauchter 16-µF-Motorkondensator ist kleines Ersatzmaterial.",
+            "reasons": [
+              "Gebrauchter 16-µF-Motorkondensator ist kleines Ersatzmaterial."
+            ],
+            "risks": [
+              "Restkapazität und Isolation nicht gemessen.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Typwerte und Messzustand prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|287716818247|0"
+          ],
+          "assessment": {
+            "scalp_score": 18,
+            "useability_score": 44,
+            "useability_reason": "Benötigt eine kompatible Motor- oder Anlaufschaltung.",
+            "dependencies": [
+              "Passender Motor",
+              "Fachgerechte Installation"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Ein gebrauchter 15-µF-CBB60-Kondensator hat kleinen Teilewert.",
+            "reasons": [
+              "Ein gebrauchter 15-µF-CBB60-Kondensator hat kleinen Teilewert."
+            ],
+            "risks": [
+              "Kapazität und Spannungsfestigkeit nicht überprüft.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Beschriftung und Kapazität nachprüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|377633383810|0"
+          ],
+          "assessment": {
+            "scalp_score": 19,
+            "useability_score": 47,
+            "useability_reason": "Ohne passende Schaltung und Einbau nicht eigenständig nutzbar.",
+            "dependencies": [
+              "Passende Elektronikschaltung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Fünf Brückengleichrichter sind ein begrenzter Elektronikbauteileposten.",
+            "reasons": [
+              "Fünf Brückengleichrichter sind ein begrenzter Elektronikbauteileposten."
+            ],
+            "risks": [
+              "Typdaten und Funktionsfähigkeit nicht gesichert.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Typenkennung und Stückzahl verifizieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237173288107|0"
+          ],
+          "assessment": {
+            "scalp_score": 43,
+            "useability_score": 48,
+            "useability_reason": "Benötigt kompatibles M12-System sowie passende Filter und Versorgung.",
+            "dependencies": [
+              "Kompatibles M12-Werkzeug",
+              "Filter und eventuell Akku"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "accessory",
+            "value_reason": "Milwaukee-HAMMERVAC-Absaugung ist potenziell nützliches professionelles Werkzeugzubehör.",
+            "reasons": [
+              "Milwaukee-HAMMERVAC-Absaugung ist potenziell nützliches professionelles Werkzeugzubehör."
+            ],
+            "risks": [
+              "Filterzustand und Adapter fehlen als Beleg.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Modell, Akkus, Filter und Adapter prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237173679099|0"
+          ],
+          "assessment": {
+            "scalp_score": 24,
+            "useability_score": 24,
+            "useability_reason": "Nur zusammen mit einer passenden SIMATIC-Baugruppe nutzbar.",
+            "dependencies": [
+              "Passende SIMATIC-Baugruppe"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "component",
+            "value_reason": "Siemens 6ES7 392-1AM00 bezeichnet Anschlusszubehör des SIMATIC-Systems, keine SPS-CPU.",
+            "reasons": [
+              "Siemens 6ES7 392-1AM00 bezeichnet Anschlusszubehör des SIMATIC-Systems, keine SPS-CPU."
+            ],
+            "risks": [
+              "Kontaktzustand und exakte Variante nicht geprüft.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Teilenummer und Anschlusstyp abgleichen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|820335732877|0"
+          ],
+          "assessment": {
+            "scalp_score": 19,
+            "useability_score": 33,
+            "useability_reason": "Benötigen geeignete zugelassene Sauerstoffquelle.",
+            "dependencies": [
+              "Kompatibler Sauerstoffkonzentrator oder Versorgung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Sauerstoffschlauch, Befeuchter und Nasenbrillen sind Zubehör, keine komplette Sauerstoffanlage.",
+            "reasons": [
+              "Sauerstoffschlauch, Befeuchter und Nasenbrillen sind Zubehör, keine komplette Sauerstoffanlage."
+            ],
+            "risks": [
+              "Sterilität, Ablaufdatum und medizinische Sicherheit unbewiesen.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Hygienestatus und Zulassung prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|940078841207|0"
+          ],
+          "assessment": {
+            "scalp_score": 31,
+            "useability_score": 98,
+            "useability_reason": "Als Schuhe bei passender Größe ohne Technik nutzbar.",
+            "dependencies": [],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Atlas-S3-Sicherheitsschuhe können professionell brauchbar sein.",
+            "reasons": [
+              "Atlas-S3-Sicherheitsschuhe können professionell brauchbar sein."
+            ],
+            "risks": [
+              "Schutznorm und tatsächliche Passform nicht unabhängig bestätigt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Normkennzeichnung und Größe 45 kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|920122518241|0"
+          ],
+          "assessment": {
+            "scalp_score": 39,
+            "useability_score": 75,
+            "useability_reason": "Mit geeigneten Harzen für Verbundarbeiten nutzbar.",
+            "dependencies": [
+              "Epoxidharz",
+              "Laminierwerkzeug"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "30 Quadratmeter C-Glasvlies ergeben ein relevantes Laminiermateriallos.",
+            "reasons": [
+              "30 Quadratmeter C-Glasvlies ergeben ein relevantes Laminiermateriallos."
+            ],
+            "risks": [
+              "Menge und chemische Beständigkeit nicht verifiziert.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Materialtyp und Quadratmeterzahl kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|267838833749|0"
+          ],
+          "assessment": {
+            "scalp_score": 9,
+            "useability_score": 99,
+            "useability_reason": "Als Tragetaschen direkt verwendbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Zwei unbedruckte Baumwolltaschen bilden einen einfachen Kleinposten.",
+            "reasons": [
+              "Zwei unbedruckte Baumwolltaschen bilden einen einfachen Kleinposten."
+            ],
+            "risks": [
+              "Größe und Stoffdicke nicht bestätigt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Tatsächliche Anzahl und Maße prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237173691399|0",
+            "v1|237173692126|0",
+            "v1|237173692521|0"
+          ],
+          "assessment": {
+            "scalp_score": 18,
+            "useability_score": 59,
+            "useability_reason": "Nur in passenden Druckern und richtiger Farbvariante nutzbar.",
+            "dependencies": [
+              "Kompatibler Canon-Drucker"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Zwei Einheiten GI50-Druckertinte haben begrenzten Verbrauchsmaterialwert.",
+            "reasons": [
+              "Zwei Einheiten GI50-Druckertinte haben begrenzten Verbrauchsmaterialwert."
+            ],
+            "risks": [
+              "Farbe, Füllstand und Versiegelung unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Farbe, Packungsgröße und Haltbarkeit kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237173692392|0"
+          ],
+          "assessment": {
+            "scalp_score": 13,
+            "useability_score": 80,
+            "useability_reason": "Mit passendem Holzuntergrund leicht einsetzbar.",
+            "dependencies": [
+              "Geeigneter Untergrund"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Zehn Ringschrauben mit Holzgewinde sind kleines Befestigungsmaterial.",
+            "reasons": [
+              "Zehn Ringschrauben mit Holzgewinde sind kleines Befestigungsmaterial."
+            ],
+            "risks": [
+              "Zulässige Zuglast und Gewinde nicht belegt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Abmessungen und Stückzahl prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237173693210|0"
+          ],
+          "assessment": {
+            "scalp_score": 10,
+            "useability_score": 59,
+            "useability_reason": "Erfordert passenden Drucker und passende Farbe.",
+            "dependencies": [
+              "Kompatibler Canon-Drucker"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "consumable",
+            "value_reason": "Eine unbestimmte GI50-Tinteneinheit hat kleines Potenzial.",
+            "reasons": [
+              "Eine unbestimmte GI50-Tinteneinheit hat kleines Potenzial."
+            ],
+            "risks": [
+              "Farbe, Menge und Haltbarkeit nicht angegeben.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Farbnummer und Flascheninhalt prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|168850760809|0"
+          ],
+          "assessment": {
+            "scalp_score": 19,
+            "useability_score": 52,
+            "useability_reason": "Nur in zulässiger Elektroverteilung fachgerecht einsetzbar.",
+            "dependencies": [
+              "Zulässiger Verteiler",
+              "Elektrofachkraft"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "Zwei gebrauchte Leitungsschutzschalter bekannter Hersteller sind begrenzte Elektroteile.",
+            "reasons": [
+              "Zwei gebrauchte Leitungsschutzschalter bekannter Hersteller sind begrenzte Elektroteile."
+            ],
+            "risks": [
+              "Gebrauchte Sicherheitsteile haben ungeprüftes Auslöseverhalten.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Normdaten, Typen und Zustand prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|407351421465|0"
+          ],
+          "assessment": {
+            "scalp_score": 17,
+            "useability_score": 81,
+            "useability_reason": "Mit kompatiblen Geräten direkt einsetzbar.",
+            "dependencies": [
+              "Passende Endgeräte"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "accessory",
+            "value_reason": "Gemischte Lade- und Netzkabel sind ein kleiner praktischer Zubehörposten.",
+            "reasons": [
+              "Gemischte Lade- und Netzkabel sind ein kleiner praktischer Zubehörposten."
+            ],
+            "risks": [
+              "Steckertypen und Anzahl nicht angegeben.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Anschlussformen und Schäden prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|267838842612|0"
+          ],
+          "assessment": {
+            "scalp_score": 9,
+            "useability_score": 98,
+            "useability_reason": "Als textile Abdeckung ohne spezielles Gerät nutzbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "accessory",
+            "value_reason": "Vermutlich eine gebrauchte Tischdecke; auch bei Textunsicherheit geringer Sachwert.",
+            "reasons": [
+              "Vermutlich eine gebrauchte Tischdecke; auch bei Textunsicherheit geringer Sachwert."
+            ],
+            "risks": [
+              "Titel uneindeutig; Größe und Sauberkeit unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Gegenstandsart und Maße verifizieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|128184575293|0"
+          ],
+          "assessment": {
+            "scalp_score": 26,
+            "useability_score": 98,
+            "useability_reason": "Direkt tragbar bei passender Größe 42.",
+            "dependencies": [],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Neue Sicherheitsschuhe mit Stahlkappe sind eigenständig brauchbare Berufsausrüstung.",
+            "reasons": [
+              "Neue Sicherheitsschuhe mit Stahlkappe sind eigenständig brauchbare Berufsausrüstung."
+            ],
+            "risks": [
+              "Schutznorm und Passform nicht unabhängig überprüft.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Normangaben und Größe kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|407351438730|0"
+          ],
+          "assessment": {
+            "scalp_score": 13,
+            "useability_score": 84,
+            "useability_reason": "Mit passenden Buchsen unmittelbar nutzbar.",
+            "dependencies": [
+              "Kompatible Anschlüsse"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "PC-, Monitor- und Druckerkabel besitzen kleinen Anschlusszubehörwert.",
+            "reasons": [
+              "PC-, Monitor- und Druckerkabel besitzen kleinen Anschlusszubehörwert."
+            ],
+            "risks": [
+              "Steckerstandard und Zustand unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Kabeltypen und Anzahl prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|267838845622|0"
+          ],
+          "assessment": {
+            "scalp_score": 8,
+            "useability_score": 86,
+            "useability_reason": "Für passende Kartons oder Transportaufgaben direkt einsetzbar.",
+            "dependencies": [
+              "Passende Kartongröße"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Vier Karton-Kantenschutzstücke sind geringwertiges Verpackungszubehör.",
+            "reasons": [
+              "Vier Karton-Kantenschutzstücke sind geringwertiges Verpackungszubehör."
+            ],
+            "risks": [
+              "Maße und Belastbarkeit fehlen.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Material und Maße prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|366797326815|0"
+          ],
+          "assessment": {
+            "scalp_score": 37,
+            "useability_score": 91,
+            "useability_reason": "Mit handelsüblicher Kartuschenpistole gut verwendbar.",
+            "dependencies": [
+              "Kartuschenpistole"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Zehn 310-ml-Neutralsilikonkartuschen ergeben einen deutlichen Dichtstoffposten.",
+            "reasons": [
+              "Zehn 310-ml-Neutralsilikonkartuschen ergeben einen deutlichen Dichtstoffposten."
+            ],
+            "risks": [
+              "Lagerzeit und Aushärtbarkeit unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Mindesthaltbarkeit und Kartuschenzustand prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|960175497483|0"
+          ],
+          "assessment": {
+            "scalp_score": 30,
+            "useability_score": 97,
+            "useability_reason": "Mechanisch ohne weiteres Gerät einsetzbar.",
+            "dependencies": [],
+            "value_band": "around_50",
+            "assessment_confidence": "medium",
+            "product_kind": "tool",
+            "value_reason": "Ein Kanon-Messschieber ist ein nützliches Werkstattmessmittel.",
+            "reasons": [
+              "Ein Kanon-Messschieber ist ein nützliches Werkstattmessmittel."
+            ],
+            "risks": [
+              "Messgenauigkeit und Backenverschleiß nicht geprüft.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Nullpunkt und Messflächen kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|128185436294|0"
+          ],
+          "assessment": {
+            "scalp_score": 74,
+            "useability_score": 76,
+            "useability_reason": "Als Rohstoff über Verwertung oder Metallverarbeitung nutzbar, nicht als eigenständiges Gerät.",
+            "dependencies": [
+              "Materialverwertung oder Weiterverarbeitung"
+            ],
+            "value_band": "around_500",
+            "assessment_confidence": "low",
+            "product_kind": "consumable",
+            "value_reason": "18 kg als Millberry bezeichnetes Kupfer können erhebliche Materialsubstanz sein.",
+            "reasons": [
+              "18 kg als Millberry bezeichnetes Kupfer können erhebliche Materialsubstanz sein."
+            ],
+            "risks": [
+              "Kupferqualität, Gewicht und Herkunft nicht belegt; Quelle mehrere Tage alt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Masse und Reinheitsgrad nachweisen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|820335836194|0"
+          ],
+          "assessment": {
+            "scalp_score": 11,
+            "useability_score": 76,
+            "useability_reason": "Bei korrektem Mischungsverhältnis für Kleinprojekte nutzbar.",
+            "dependencies": [
+              "Mischutensilien",
+              "Schutzausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "160 g Epoxidharz mit Härter sind eine kleine Materialmenge.",
+            "reasons": [
+              "160 g Epoxidharz mit Härter sind eine kleine Materialmenge."
+            ],
+            "risks": [
+              "Alter, Mischungsverhältnis und Aushärtung nicht bestätigt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Härtermenge und Haltbarkeit prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|840111630141|0"
+          ],
+          "assessment": {
+            "scalp_score": 47,
+            "useability_score": 90,
+            "useability_reason": "Mit Netzstrom und Transfermaterial grundsätzlich eigenständig verwendbar.",
+            "dependencies": [
+              "Transfermaterial"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "apparatus",
+            "value_reason": "Eine T-Shirt-Transferpresse könnte ein substanzielles kleines Werkstattgerät sein.",
+            "reasons": [
+              "Eine T-Shirt-Transferpresse könnte ein substanzielles kleines Werkstattgerät sein."
+            ],
+            "risks": [
+              "Heizfunktion und Plattengröße ungeprüft; Transport unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Funktionstest, Maße und Transport klären."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|227606177874|0"
+          ],
+          "assessment": {
+            "scalp_score": 33,
+            "useability_score": 59,
+            "useability_reason": "Nur für Teilegewinnung oder fachgerechte Elektronikverwertung nutzbar.",
+            "dependencies": [
+              "Elektronikverwertung oder Teileprojekt"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "consumable",
+            "value_reason": "14 kg gebrauchte PC-Mainboards können als Materialposten verwertbar sein.",
+            "reasons": [
+              "14 kg gebrauchte PC-Mainboards können als Materialposten verwertbar sein."
+            ],
+            "risks": [
+              "Platinenarten und tatsächliche Masse unklar.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Gewicht und Boardtypen prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|237173720220|0"
+          ],
+          "assessment": {
+            "scalp_score": 34,
+            "useability_score": 52,
+            "useability_reason": "Material ist zur Prüfung oder Verwertung geeignet, kein fertiges Gebrauchsgerät.",
+            "dependencies": [
+              "Materialprüfung und Edelmetallverwertung"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "consumable",
+            "value_reason": "3,31 g als Zahngold bezeichnete Altlegierung können potenziellen Edelmetallanteil enthalten.",
+            "reasons": [
+              "3,31 g als Zahngold bezeichnete Altlegierung können potenziellen Edelmetallanteil enthalten."
+            ],
+            "risks": [
+              "Feingehalt und Netto-Goldanteil nicht belegt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Legierung und Gewicht unabhängig prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|227606180530|0"
+          ],
+          "assessment": {
+            "scalp_score": 16,
+            "useability_score": 99,
+            "useability_reason": "Direkt tragbar, wenn Größe 40 passt.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Vier gebrauchte Kochjacken sind kleine Arbeitskleidungsposten.",
+            "reasons": [
+              "Vier gebrauchte Kochjacken sind kleine Arbeitskleidungsposten."
+            ],
+            "risks": [
+              "Verschleiß und Flecken möglich.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Zustand, Maße und Hygiene prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|366802382738|0"
+          ],
+          "assessment": {
+            "scalp_score": 7,
+            "useability_score": 99,
+            "useability_reason": "Bei intaktem Material direkt nutzbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "accessory",
+            "value_reason": "Vier gebrauchte Mehrwegbecher haben nur geringen Sachwert.",
+            "reasons": [
+              "Vier gebrauchte Mehrwegbecher haben nur geringen Sachwert."
+            ],
+            "risks": [
+              "Kratzer und Lebensmitteltauglichkeit nicht unabhängig geprüft.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Material und Schäden prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|257820193609|0"
+          ],
+          "assessment": {
+            "scalp_score": 19,
+            "useability_score": 85,
+            "useability_reason": "Ohne technische Zusatzsysteme nutzbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "accessory",
+            "value_reason": "Mehrere magnetische Kugelpaare sind ein kleiner Deko- oder Haptikposten.",
+            "reasons": [
+              "Mehrere magnetische Kugelpaare sind ein kleiner Deko- oder Haptikposten."
+            ],
+            "risks": [
+              "Verschluckte Magnete sind gefährlich; Materialangabe nicht bestätigt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Magnetgröße und Sicherheitshinweise prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|800897314245|0"
+          ],
+          "assessment": {
+            "scalp_score": 51,
+            "useability_score": 93,
+            "useability_reason": "Mit Kraftstoff, Kettenöl und Schutzausrüstung eigenständig einsetzbar.",
+            "dependencies": [
+              "Kraftstoff und Kettenöl",
+              "Schutzausrüstung"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "tool",
+            "value_reason": "Dolmar-PS32-Motorsäge ist ein vollständiges benanntes Motorwerkzeug mit substantiellem Potenzial.",
+            "reasons": [
+              "Dolmar-PS32-Motorsäge ist ein vollständiges benanntes Motorwerkzeug mit substantiellem Potenzial."
+            ],
+            "risks": [
+              "Behauptete Einsatzfähigkeit unbewiesen; mehrere Tage alter Quellenstand.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Kaltstart, Kettenbremse, Lauf und Umfang prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|800904619860|0"
+          ],
+          "assessment": {
+            "scalp_score": 8,
+            "useability_score": 99,
+            "useability_reason": "Zum Zuschneiden und Nähen eigenständig nutzbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Adventskalender-Canvas-Stoff von 60 mal 140 cm ist geringwertiges Bastelmaterial.",
+            "reasons": [
+              "Adventskalender-Canvas-Stoff von 60 mal 140 cm ist geringwertiges Bastelmaterial."
+            ],
+            "risks": [
+              "Motiv und Zuschnitt nicht geprüft.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Stoffmaße und Druckzustand bestätigen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|287716751441|0"
+          ],
+          "assessment": {
+            "scalp_score": 36,
+            "useability_score": 92,
+            "useability_reason": "Mit passender Energie und Aufzeichnungsmedium nutzbar.",
+            "dependencies": [
+              "Batterie und gegebenenfalls spezielles Aufnahmemedium"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "apparatus",
+            "value_reason": "Olympus Note Corder 200 ist ein älteres eigenständiges Diktiergerät.",
+            "reasons": [
+              "Olympus Note Corder 200 ist ein älteres eigenständiges Diktiergerät."
+            ],
+            "risks": [
+              "Titel widerspricht sich bei Neu und Used; Funktion ungeprüft.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Modell, Testaufnahme und benötigte Medien klären."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|940078934058|0"
+          ],
+          "assessment": {
+            "scalp_score": 3,
+            "useability_score": 96,
+            "useability_reason": "Bei korrekter Ausführung sofort tragbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Ein Paar einfache Gehörschutzstöpsel besitzt minimalen Sachwert.",
+            "reasons": [
+              "Ein Paar einfache Gehörschutzstöpsel besitzt minimalen Sachwert."
+            ],
+            "risks": [
+              "Hygiene und zertifizierter Schutz nicht belegt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Verpackung, Norm und Zustand prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|860128653382|0"
+          ],
+          "assessment": {
+            "scalp_score": 42,
+            "useability_score": 70,
+            "useability_reason": "Nur bei kompatiblen Rohrsystemen sinnvoll einsetzbar.",
+            "dependencies": [
+              "Passendes Prevost-Rohrsystem"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "tool",
+            "value_reason": "Prevost-PPS-Rohrwerkzeug-Set hat potenziellen Installationsnutzen.",
+            "reasons": [
+              "Prevost-PPS-Rohrwerkzeug-Set hat potenziellen Installationsnutzen."
+            ],
+            "risks": [
+              "Zusammensetzung und Zustand des Sets unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Typ, Zubehör und Verschleiß prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|880099789116|0"
+          ],
+          "assessment": {
+            "scalp_score": 18,
+            "useability_score": 77,
+            "useability_reason": "Mit geeigneten Werkstücken und Werkzeug verwendbar.",
+            "dependencies": [
+              "Passende Werkstoffe und Montagewerkzeug"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "component",
+            "value_reason": "228 Halbrundkerbnägel sind ein brauchbarer kleiner Befestigungsposten.",
+            "reasons": [
+              "228 Halbrundkerbnägel sind ein brauchbarer kleiner Befestigungsposten."
+            ],
+            "risks": [
+              "Norm und Mengenangabe nicht verifiziert.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Durchmesser, Länge und Anzahl prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|287716479223|0"
+          ],
+          "assessment": {
+            "scalp_score": 22,
+            "useability_score": 77,
+            "useability_reason": "Mit geeignetem 115-mm-Winkelschleifer verwendbar.",
+            "dependencies": [
+              "Winkelschleifer",
+              "Schutzausrüstung"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "Zehn Bosch-Fächerschleifscheiben sind ein kleiner Werkstattverbrauchsposten.",
+            "reasons": [
+              "Zehn Bosch-Fächerschleifscheiben sind ein kleiner Werkstattverbrauchsposten."
+            ],
+            "risks": [
+              "Schleifscheibenzustand und Körnung nicht vollständig belegt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Durchmesser und Scheibenalter kontrollieren."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|327448349697|0",
+            "v1|327448349721|0",
+            "v1|327448349722|0"
+          ],
+          "assessment": {
+            "scalp_score": 6,
+            "useability_score": 91,
+            "useability_reason": "Mit passender Größe und Schutzklasse unmittelbar tragbar.",
+            "dependencies": [],
+            "value_band": "around_5",
+            "assessment_confidence": "low",
+            "product_kind": "consumable",
+            "value_reason": "Kindermasken ohne gesicherte Stückzahl sind wirtschaftlich klein.",
+            "reasons": [
+              "Kindermasken ohne gesicherte Stückzahl sind wirtschaftlich klein."
+            ],
+            "risks": [
+              "Medizinische Norm, Haltbarkeit und Packungsgröße unbewiesen.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Norm, Stückzahl und Ablaufdatum prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|940078447119|0"
+          ],
+          "assessment": {
+            "scalp_score": 30,
+            "useability_score": 75,
+            "useability_reason": "Braucht einen SDS-Plus-Bohrhammer.",
+            "dependencies": [
+              "SDS-Plus-Bohrhammer"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "consumable",
+            "value_reason": "Ein Kilogramm gemischte SDS-Plus-Bohrer bietet nutzbaren Werkzeugbestand.",
+            "reasons": [
+              "Ein Kilogramm gemischte SDS-Plus-Bohrer bietet nutzbaren Werkzeugbestand."
+            ],
+            "risks": [
+              "Zufallsmischung ohne Durchmesser- und Zustandsnachweis.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Schäfte, Spitzen und Mengenaufteilung prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|327448350587|0"
+          ],
+          "assessment": {
+            "scalp_score": 16,
+            "useability_score": 87,
+            "useability_reason": "Mit Heißluftquelle zum Isolieren einsetzbar.",
+            "dependencies": [
+              "Heißluftgerät"
+            ],
+            "value_band": "around_5",
+            "assessment_confidence": "medium",
+            "product_kind": "consumable",
+            "value_reason": "63 Teile Schrumpfschlauch sind normaler kleiner Elektrobedarf.",
+            "reasons": [
+              "63 Teile Schrumpfschlauch sind normaler kleiner Elektrobedarf."
+            ],
+            "risks": [
+              "Durchmesser und Schrumpfverhältnis unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Größenmix und Materialdaten prüfen."
+            ]
+          }
+        },
+        {
+          "ids": [
+            "v1|940078447337|0"
+          ],
+          "assessment": {
+            "scalp_score": 28,
+            "useability_score": 76,
+            "useability_reason": "Benötigt eine passende Bohrmaschine.",
+            "dependencies": [
+              "Bohrmaschine"
+            ],
+            "value_band": "around_50",
+            "assessment_confidence": "low",
+            "product_kind": "consumable",
+            "value_reason": "Ein Kilogramm Bosch-Holzbohrer kann einen gemischten Werkzeugposten bilden.",
+            "reasons": [
+              "Ein Kilogramm Bosch-Holzbohrer kann einen gemischten Werkzeugposten bilden."
+            ],
+            "risks": [
+              "Zufallsmischung; genaue Bohrer und Schaftgrößen unbekannt.",
+              "Kein Verkäufer-Volltext verfügbar; Identität und Umfang sind nur anhand des Angebotstitels eingeordnet."
+            ],
+            "next_checks": [
+              "Stückzahl, Bohrertypen und Zustand prüfen."
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
