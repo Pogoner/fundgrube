@@ -13,11 +13,13 @@ from hunter.feed import write_feed
 from hunter.models import iso_time, normalize_item, parse_time
 from hunter.pipeline import ConfigurationError, new_state, run_pipeline
 from hunter.reviews import content_fingerprint
+from hunter.private_search import load_private_search
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 OBSERVED = NOW - timedelta(minutes=15)
-ENV = {"HUNTER_PUBLISH_LIVE_DATA": "true"}
-SETTINGS = {"postcode": "69121", "max_price_eur": 1, "pickup_radius_km": 50}
+ENV = {"HUNTER_PUBLISH_LIVE_DATA": "true",
+       "HUNTER_PRIVATE_SEARCH": json.dumps({"postcode": "99999", "profile_key": "11" * 32})}
+SETTINGS = {"max_price_eur": 1, "pickup_radius_km": 50}
 SOURCE = "https://auktionen-ohne-gebot.de/business-industrie/"
 
 
@@ -30,7 +32,7 @@ def item(**changes):
         "is_auction": True, "source_provider": "auktionen-ohne-gebot",
         "source_url": SOURCE, "source_observed_at": iso_time(OBSERVED),
         "verification_level": "aggregator", "pickup_available": True,
-        "pickup_search_confirmed": True, "pickup_search_postcode": "69121",
+        "pickup_search_confirmed": True, "pickup_search_postcode": "99999",
         "pickup_search_radius_km": 50,
     }
     result.update(changes)
@@ -154,7 +156,7 @@ class PublicSourcePipelineTests(unittest.TestCase):
         self.assertEqual(feed["last_successful_scan_at"], iso_time(NOW))
 
     def test_no_fabricated_location_description_reserve_or_exact_distance(self):
-        injected = item(description="stale former text", city="Heidelberg", postcode="69121",
+        injected = item(description="stale former text", city="Teststadt", postcode="99999",
                         reserve_status="none", distance_km=1, local_pickup_confirmed=True,
                         _details_fetched=True)
         feed, _ = run(response([injected]))
@@ -172,7 +174,8 @@ class PublicSourcePipelineTests(unittest.TestCase):
         feed, state = run()
         row = state["records"][0]
         self.assertTrue(row["pickup_search_confirmed"])
-        self.assertEqual(row["pickup_search_postcode"], "69121")
+        self.assertNotIn("pickup_search_postcode", row)
+        self.assertEqual(row["pickup_search_profile"], load_private_search(ENV).profile)
         self.assertEqual(row["pickup_search_radius_km"], 50)
         self.assertFalse(row["local_pickup_confirmed"])
         self.assertEqual(row, feed["deals"][0])

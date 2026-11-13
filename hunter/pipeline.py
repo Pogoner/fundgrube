@@ -19,6 +19,7 @@ from typing import Any, Callable, Mapping
 
 from .ebay import ApiError, BudgetExceeded, CredentialsMissing, EbayClient, RateLimitError
 from .models import iso_time, normalize_item, parse_time
+from .private_search import PrivateSearch, PrivateSearchError, bind_pickup_context, load_private_search
 from .ranking import apply_interest_profile, assess_item
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,7 +30,7 @@ MAX_INPUT_BYTES = 64 * 1024 * 1024
 MAX_RETAINED_RECORDS = 5000
 MODES = ("delivery", "pickup")
 DEFAULTS = {
-    "marketplace": "EBAY_DE", "root_category_id": "12576", "postcode": "69121",
+    "marketplace": "EBAY_DE", "root_category_id": "12576",
     "pickup_radius_km": 50, "max_price_eur": 10, "max_shipping_eur": 15,
     "max_bids": 0, "lookahead_hours": 72,
     "browse_daily_budget": 4500, "browse_calls_per_run": 85,
@@ -53,7 +54,7 @@ RECORD_FIELDS = frozenset({
     "score_version", "scalp_score", "useability_score", "useability_reason", "dependencies",
     "stale", "carried", "pickup_verified_at",
     "source_provider", "source_url", "source_observed_at", "verification_level", "pickup_available",
-    "pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km",
+    "pickup_search_confirmed", "pickup_search_profile", "pickup_search_radius_km",
     "pickup_search_observed_at", "personal_interest_excluded", "personal_interest_reason",
     "semantic_review_mode",
 })
@@ -82,6 +83,8 @@ def _finite(value: Any, name: str, low: float, high: float) -> float:
 def validate_settings(settings: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(settings, Mapping):
         raise ConfigurationError("Settings must be a JSON object.")
+    if any(key in settings for key in ("postcode", "city", "profile_key", "pickup_search_profile", "HUNTER_PRIVATE_SEARCH")):
+        raise ConfigurationError("Private search settings belong in HUNTER_PRIVATE_SEARCH, not public configuration.")
     result = {**DEFAULTS, **dict(settings)}
     # The old source-age limit now migrates only the separate text TTL. An
     # unchanged observation is never a reason to expire an ongoing auction.
@@ -96,9 +99,6 @@ def validate_settings(settings: Mapping[str, Any]) -> dict[str, Any]:
         raise ConfigurationError("Settings contain non-JSON or nonfinite values.") from None
     if result["marketplace"] != "EBAY_DE":
         raise ConfigurationError("Only EBAY_DE is supported.")
-    postcode = result["postcode"]
-    if not isinstance(postcode, str) or len(postcode) != 5 or not postcode.isascii() or not postcode.isdigit():
-        raise ConfigurationError("postcode must be a five-digit German postal code.")
     root_id = result["root_category_id"]
     if isinstance(root_id, bool) or not str(root_id).isascii() or not str(root_id).isdigit() or len(str(root_id)) > 20:
         raise ConfigurationError("root_category_id must be a numeric eBay category ID.")
@@ -130,7 +130,7 @@ def new_state(at: datetime) -> dict[str, Any]:
     }
 
 
-def prepare_state(state: dict[str, Any] | None, at: datetime) -> dict[str, Any]:
+def prepare_state(state: dict[str, Any] | None, at: datetime, *, private: PrivateSearch | None = None) -> dict[str, Any]:
     if state is None:
         return new_state(at)
     if not isinstance(state, dict) or state.get("schema_version") != STATE_VERSION:
@@ -164,6 +164,13 @@ def prepare_state(state: dict[str, Any] | None, at: datetime) -> dict[str, Any]:
         raise ConfigurationError("State taxonomy must be an object.")
     result.setdefault("taxonomy", {})
     result.setdefault("records", [])
+    # This runs before every checkpoint, including a later source/normalizer
+    # failure. Raw legacy query origins must never be republished unchanged.
+    result["records"] = [_public_record(bind_pickup_context(row, private, cached=True))
+                         for row in result["records"] if isinstance(row, dict)]
+    if "aog" in result:
+        from .aog import _source_state, PAGE_SIZE
+        result["aog"] = _source_state(result["aog"], at, PAGE_SIZE)
     result.setdefault("last_successful_scan_at", None)
     result["updated_at"] = iso_time(at)
     return result
@@ -316,6 +323,8 @@ def _upsert(records: dict, item: dict, at: datetime, settings: Mapping, assess: 
             item.update(local_pickup_confirmed=True, pickup_verified_at=iso_time(at), distance_km=old.get("distance_km"))
     if item.get("local_pickup_confirmed"):
         item.setdefault("pickup_verified_at", iso_time(at))
+        if settings.get("pickup_search_profile"):
+            item["pickup_search_profile"] = settings["pickup_search_profile"]
     seen = parse_time(item.get("last_seen_at"))
     item.update(carried=False, stale=not seen or at - seen >= timedelta(minutes=settings["refresh_after_minutes"]))
     _clear_stale_description(item, at, settings)
@@ -530,10 +539,17 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
     if not isinstance(at, datetime) or at.tzinfo is None or at.utcoffset() is None:
         raise ConfigurationError("at must be timezone-aware.")
     at = at.astimezone(timezone.utc).replace(microsecond=0)
-    state = prepare_state(state, at)
     env = os.environ if environ is None else environ
     if source not in {"auto", "disabled", "json", "ebay", "aog"}:
         raise ConfigurationError("Unsupported source.")
+    will_fetch = (env.get("HUNTER_PUBLISH_LIVE_DATA", "").lower() == "true"
+                  and (source == "aog" and settings.get("aog_pickup_enabled", True) is not False
+                       or source in {"auto", "ebay"} and bool(env.get("EBAY_CLIENT_ID", "").strip())
+                       and bool(env.get("EBAY_CLIENT_SECRET", "").strip())))
+    private = load_private_search(env, required=will_fetch)
+    if private is not None:
+        settings.update(postcode=private.postcode, pickup_search_profile=private.profile)
+    state = prepare_state(state, at, private=private)
     manual_text = env.get("EBAY_LEAF_CATEGORY_IDS", "").strip()
     manual_ids = [part.strip() for part in manual_text.split(",")] if manual_text else []
     if len(manual_ids) > 1000 or any(not value.isascii() or not value.isdigit() or len(value) > 20 for value in manual_ids):
@@ -599,7 +615,8 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                 _clear_stale_description(old, at, settings)
                 old.update(stale=at - parse_time(old["last_seen_at"]) >= timedelta(minutes=settings["refresh_after_minutes"]))
                 records[item_id] = _public_record(assess(old, settings, at))
-        state["aog"] = result["source_state"]
+        from .aog import _source_state, PAGE_SIZE
+        state["aog"] = _source_state(result["source_state"], at, PAGE_SIZE)
         if checkpoint is not None:
             # Persist the crawl cooldown even if a later processing step fails.
             checkpoint(state)
@@ -623,18 +640,20 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
                 continue
             item = normalize(raw, at, local_pickup_confirmed=False, pickup_radius_km=settings["pickup_radius_km"])
             if item is not None:
+                item = bind_pickup_context(item, private)
                 seen_ids.add(item["id"])
                 previous = records.get(item["id"], {})
                 old_pickup_at = parse_time(previous.get("pickup_search_observed_at") or previous.get("source_observed_at"))
                 if (not item.get("pickup_search_confirmed") and item.get("pickup_available") is not False
                         and previous.get("pickup_search_confirmed") is True and old_pickup_at and old_pickup_at <= at
-                        and previous.get("pickup_search_postcode") == settings["postcode"]
+                        and previous.get("pickup_search_profile") == settings.get("pickup_search_profile")
+                        and settings.get("pickup_search_profile") is not None
                         and previous.get("pickup_search_radius_km") == settings["pickup_radius_km"]):
                     # Missing from a mutable/sparse query is never refutation
                     # of an older radius-search observation, even if offsets
                     # were traversed. Keep its independent clock; explicit
                     # no-pickup evidence or changed search settings can clear it.
-                    for key in ("pickup_search_confirmed", "pickup_search_postcode", "pickup_search_radius_km"):
+                    for key in ("pickup_search_confirmed", "pickup_search_profile", "pickup_search_radius_km"):
                         item[key] = previous[key]
                     item["pickup_search_observed_at"] = iso_time(old_pickup_at)
                     item["pickup_available"] = True
@@ -664,6 +683,7 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         for raw in raw_items:
             item = normalize(raw, at, local_pickup_confirmed=False, pickup_radius_km=settings["pickup_radius_km"])
             if item is not None:
+                item = bind_pickup_context(item, private)
                 _upsert(records, item, at, settings, assess)
         status, state["last_successful_scan_at"] = "live", iso_time(at)
     else:
@@ -760,7 +780,9 @@ def run_pipeline(settings: Mapping[str, Any], *, source: str = "auto", state: di
         "schema_version": FEED_VERSION, "generated_at": iso_time(at), "last_successful_scan_at": state.get("last_successful_scan_at"),
         "source_status": status, "status_message": messages[status], "blockers": blockers, "source": provider, "provider": provider,
         "site_url": settings.get("site_url", "https://pogoner.github.io/fundgrube/"),
-        "location": {"postcode": settings["postcode"], "city": settings.get("city", "Heidelberg"), "country": "DE", "pickup_radius_km": settings["pickup_radius_km"]},
+        "location": {"country": "DE", "pickup_radius_km": settings["pickup_radius_km"],
+                     **({"pickup_search_profile": private.profile}
+                        if private is not None and settings.get("aog_pickup_enabled", True) is not False else {})},
         "criteria": {key: settings[key] for key in ("max_price_eur", "max_shipping_eur", "max_bids", "lookahead_hours", "description_max_age_hours", "refresh_after_minutes")},
         "stats": {**scan, "shortlisted": sum(row.get("eligibility") != "excluded" and not row.get("personal_interest_excluded") for row in rows),
                   "personal_interest_excluded": sum(row.get("personal_interest_excluded") is True for row in rows), "active": active,
@@ -848,6 +870,9 @@ def main(argv: list[str] | None = None) -> int:
         _atomic_json(state_path, next_state)
         from .feed import write_feed
         write_feed(args.site_dir, feed)
+    except PrivateSearchError:
+        print("Fundgrube build blocked: configure a valid HUNTER_PRIVATE_SEARCH secret before enabling live pickup. No source request was started.", file=sys.stderr)
+        return 1
     except (ConfigurationError, OSError, ValueError, TypeError, KeyError):
         print("Fundgrube build failed: invalid configuration, state, input, or output. No success was claimed.", file=sys.stderr)
         return 1

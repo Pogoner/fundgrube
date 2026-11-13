@@ -29,7 +29,7 @@ konkrete Anwendung als ruhigen, bildgeführten Auktions-Arbeitsbereich.
   Mindestpreisstatus liefert diese Quelle nicht; solche Angaben bleiben unbekannt.
 - Ergänzt Treffer aus der öffentlichen AOG-Abholsuche mit PLZ und Radius als
   Suchbeleg. Die Oberfläche nennt dies **Abholsuche 50 km**, nicht bestätigte
-  Nähe zu Heidelberg; Abholort und Bedingungen sind im Original zu prüfen.
+  Nähe zum privaten Suchort; Abholort und Bedingungen sind im Original zu prüfen.
 - Bietet optional einen direkten eBay-Browse-Adapter mit Production-Zugang:
   rotierende Unterkategorien, getrennte Versand-/Abholsuchen und begrenzte
   Detailabfragen. Dieser Adapter ist für den AOG-Standardbetrieb nicht nötig.
@@ -45,14 +45,16 @@ konkrete Anwendung als ruhigen, bildgeführten Auktions-Arbeitsbereich.
 
 ## Suchprofil und Grenzen
 
-Die Vorgaben stehen in [config/settings.json](config/settings.json):
+Die öffentlichen Vorgaben stehen in [config/settings.json](config/settings.json).
+Der Suchort wird ausschließlich über das private Actions-Secret
+`HUNTER_PRIVATE_SEARCH` konfiguriert:
 
 | Kriterium | Standard |
 | --- | --- |
 | Markt und Kategorie | eBay Deutschland, Business & Industrie (`12576`) |
 | Aktueller Auktionspreis | höchstens 1 €; über `max_price_eur` konfigurierbar |
 | Gebote | 0 zum letzten Abrufzeitpunkt |
-| Transport | Versand höchstens 15 € **oder** bestätigte Abholung innerhalb 50 km um 69121 Heidelberg |
+| Transport | Versand höchstens 15 € **oder** bestätigte Abholung innerhalb 50 km um den privat konfigurierten Suchort |
 | Aktives Auktionsfenster | strikt weniger als 72 Stunden Restlaufzeit; bereits abgelaufene Angebote ausgeschlossen |
 | Speicherfrist im aktuellen Export | höchstens bis zum bekannten Auktionsende; nicht mehr gefundene Angebote werden nach erfolgreichem vollständigem AOG-Crawl früher entfernt; höchstens 5.000 Datensätze |
 
@@ -96,12 +98,12 @@ Ein bestätigter Abholradius liefert keine kilometerexakte Entfernung.
 Unvollständig belegte Kandidaten bleiben als **prüfen** markiert; klar unpassende
 als **ausgeschlossen**. Auch frische Daten können sich bis zum Gebot ändern.
 
-**AOG bestätigt keinen Standort.** Die PLZ 69121 ist dein Suchprofil, nicht der
-Standort eines gefundenen Artikels. Die Quelle bietet aber eine eigene Abholsuche
-mit `abholung=1&plz=69121&km=50`. Ein Treffer daraus mit expliziter Abholoption
+**AOG bestätigt keinen Standort.** Die privat konfigurierte PLZ ist dein Suchprofil,
+nicht der Standort eines gefundenen Artikels. Die Quelle bietet eine eigene
+Abholsuche mit PLZ und Radius. Ein Treffer daraus mit expliziter Abholoption
 liefert einen **Suchbeleg**, keine unabhängige Bestätigung eines tatsächlichen
-Abholorts oder einer Entfernung. `pickup_search_confirmed` sowie zugehörige
-Such-PLZ und Radius dokumentieren diese Herkunft. Solche Kandidaten bleiben
+Abholorts oder einer Entfernung. `pickup_search_confirmed`, der zugehörige
+Profilvergleich und der Radius dokumentieren diese Herkunft. Solche Kandidaten bleiben
 prüfbedürftig; genaue Nähe, Abholbedingungen und Mindestpreis sind im Original
 zu klären. Auch Versandangaben müssen dort nochmals bestätigt werden.
 
@@ -230,12 +232,17 @@ KI an den Anbieter übertragen. Ohne Freigabe erfolgen keine solchen API-Aufrufe
 1. Unter [Settings → Pages](https://github.com/Pogoner/fundgrube/settings/pages)
    **Build and deployment → Source: GitHub Actions** auswählen. Die erstmalige
    Aktivierung kann der normale Workflow-Token nicht übernehmen.
-2. Der AOG-Betrieb ist ohne Secrets voreingestellt. Bei Bedarf unter
+2. Das private Suchprofil als Repository-Secret `HUNTER_PRIVATE_SEARCH` einrichten.
+   Mit angemeldeter GitHub CLI: `python scripts/configure_private_search.py`.
+   Der Helfer fragt die PLZ verdeckt ab, erzeugt einen zufälligen Profilschlüssel
+   und übergibt beides über Standardeingabe an `gh secret set`; er speichert
+   keine lokale Datei und startet keinen Quellenlauf. Unter
    [Actions-Secrets und -Variablen](https://github.com/Pogoner/fundgrube/settings/secrets/actions)
-   überschreiben; Datenverwendung und öffentliche Historie unten beachten:
+   liegen außerdem die optionalen Schalter:
 
    | Typ | Name | Bedeutung |
    | --- | --- | --- |
+   | Secret, erforderlich für Live-Suchen | `HUNTER_PRIVATE_SEARCH` | JSON mit `postcode` und `profile_key` (64 zufällige Hex-Zeichen); kein öffentlicher Fallback |
    | Variable | `HUNTER_SOURCE` | `aog` als Workflow-Standard; `disabled` schaltet die Quelle ab; `ebay` wählt den optionalen direkten Adapter |
    | Variable | `HUNTER_PUBLISH_LIVE_DATA` | `true` als Workflow-Standard für Kurzmetadaten; ausdrücklich `false` stoppt neue Live-Exporte |
    | Secret, nur eBay-Adapter | `EBAY_CLIENT_ID` | Production-Client-ID |
@@ -280,9 +287,17 @@ Projekt: Auch grobe Wertklassen bleiben wertbezogen; die konkrete Datenquelle,
 Nutzung und gegebenenfalls nötige Zustimmung müssen geklärt sein.
 
 **Die Schalter erteilen keine Lizenz.** Der öffentliche Zweig `data` enthält
-Kurzmetadaten, generierte Einschätzungen und die Such-PLZ 69121. Beim Wechsel auf
-eine andere Quelle können zusätzliche Daten hinzukommen. Alte Commits bleiben
-erhalten; das kann mit Lösch- oder Aufbewahrungspflichten kollidieren.
+Kurzmetadaten und generierte Einschätzungen. Der neue Betriebszustand speichert
+für das private Suchprofil nur einen schlüsselgebundenen HMAC; Website und API
+geben lediglich den booleschen Profilvergleich aus. Die Klartext-PLZ wird nur
+im Arbeitsspeicher für die berechtigte Quellenanfrage verwendet.
+Der HMAC ist ein stabiler Profilbezug, keine Garantie vollständiger Anonymität;
+insbesondere können Abholtreffer regionale Hinweise geben. Die private
+Abfrage-URL wird nicht gespeichert oder protokolliert.
+Frühere Commits können trotzdem private Suchdaten enthalten. Die Codekorrektur
+bereinigt diese Historie nicht; das Verfahren dafür steht in
+[docs/privacy-removal.md](docs/privacy-removal.md). Beim Wechsel auf eine andere
+Quelle können zusätzliche Daten hinzukommen.
 Das Entfernen abgelaufener Angebote bereinigt nur den aktuellen
 Export, **nicht die Git-Historie**. Auch das spätere Ausschalten des Exports
 löscht frühere Veröffentlichungen nicht. Ohne passende Rechte zur öffentlichen

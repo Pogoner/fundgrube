@@ -308,11 +308,16 @@ class SnapshotTests(unittest.TestCase):
 
     def test_credential_fields_are_rejected_before_network_writes(self):
         self.prepared()
-        self.write(self.site / "api" / "pages" / "001.json", {"nested": [{"client_secret": "never-print-this"}]})
-        with self.assertRaises(snapshot.SnapshotError) as caught:
-            snapshot.publish(self.api, self.state, self.site)
-        self.assertNotIn("never-print-this", str(caught.exception))
-        self.assertEqual(self.api.calls, [])
+        for path in (self.site / "api" / "pages" / "001.json", self.state / "state.json"):
+            original = path.read_text(encoding="utf-8")
+            for key in ("client_secret", "profile_key", "HUNTER_PRIVATE_SEARCH"):
+                with self.subTest(path=path.name, key=key):
+                    self.write(path, {"nested": [{key: "never-print-this"}]})
+                    with self.assertRaises(snapshot.SnapshotError) as caught:
+                        snapshot.publish(self.api, self.state, self.site)
+                    self.assertNotIn("never-print-this", str(caught.exception))
+                    self.assertEqual(self.api.calls, [])
+                path.write_text(original, encoding="utf-8")
 
     def test_current_github_token_is_rejected_even_in_text(self):
         self.prepared()

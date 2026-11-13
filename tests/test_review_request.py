@@ -394,7 +394,8 @@ class ReviewRequestTests(unittest.TestCase):
                                                         "api_requests_this_run": 0 if queued else 1}}
             return run_pipeline({}, source="aog", state=copy.deepcopy(state),
                                 at=NOW + timedelta(minutes=30) if queued else NOW,
-                                environ={"HUNTER_PUBLISH_LIVE_DATA": "true"}, review_doc=store,
+                                environ={"HUNTER_PUBLISH_LIVE_DATA": "true", "HUNTER_PRIVATE_SEARCH":
+                                         json.dumps({"postcode": "99999", "profile_key": "11" * 32})}, review_doc=store,
                                 aog_collect=lambda *args: result,
                                 enrich=lambda rows, *args, **kwargs: (rows, {"ai_enabled": False}))
 

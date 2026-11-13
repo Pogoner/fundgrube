@@ -16,7 +16,8 @@ from hunter.ranking import apply_semantic, assess_item
 from hunter.reviews import seal_reviews
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
-ENV = {"HUNTER_PUBLISH_LIVE_DATA": "true", "EBAY_CLIENT_ID": "fake-id", "EBAY_CLIENT_SECRET": "fake-secret"}
+ENV = {"HUNTER_PUBLISH_LIVE_DATA": "true", "EBAY_CLIENT_ID": "fake-id", "EBAY_CLIENT_SECRET": "fake-secret",
+       "HUNTER_PRIVATE_SEARCH": json.dumps({"postcode": "99999", "profile_key": "11" * 32})}
 SETTINGS = {"categories_per_run": 1, "browse_calls_per_run": 20, "detail_limit_per_run": 2}
 ID = "v1|123456789012|0"
 LEAVES = [{"id": "100", "name": "Labor"}, {"id": "200", "name": "Werkzeug"}]
@@ -27,7 +28,7 @@ def raw_item(item_id=ID, **overrides):
         "itemId": item_id, "title": "Labor Oszilloskop", "description": "Gebrauchtes Gerät",
         "currentBidPrice": {"value": "1.00", "currency": "EUR"}, "bidCount": 0,
         "buyingOptions": ["AUCTION"], "itemEndDate": iso_time(NOW + timedelta(hours=12)),
-        "itemLocation": {"city": "Heidelberg", "postalCode": "69121", "country": "DE"},
+        "itemLocation": {"city": "Teststadt", "postalCode": "99999", "country": "DE"},
         "shippingOptions": [{"shippingCost": {"value": "7.99", "currency": "EUR"}}],
         "itemWebUrl": "https://www.ebay.de/itm/123456789012",
     }
@@ -139,7 +140,7 @@ class TestConfiguration(unittest.TestCase):
     def test_invalid_configuration_is_not_a_successful_empty_feed(self):
         for settings in ({"browse_daily_budget": 5001}, {"max_records": 0}, {"max_records": 5001}, {"max_bids": True},
                          {"max_freshness_hours": 24.01}, {"max_price_eur": float("nan")},
-                         {"postcode": "69121,x:y"}, {"marketplace": "EBAY_US"}):
+                         {"postcode": "99999,x:y"}, {"marketplace": "EBAY_US"}):
             with self.subTest(settings=settings), self.assertRaises(ConfigurationError):
                 run(settings)
 

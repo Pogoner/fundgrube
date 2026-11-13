@@ -28,7 +28,7 @@ def deal(number: int = 1, **changes):
         "description": "Fiktiver Testtext, kein echtes Angebot.", "url": "", "image": "",
         "price_eur": 1, "shipping_eur": None, "bid_count": 0,
         "ends_at": iso(NOW + timedelta(hours=2)), "last_seen_at": iso(NOW), "content_updated_at": iso(NOW),
-        "city": "Heidelberg", "postcode": "69121", "distance_km": None,
+        "city": "Teststadt", "postcode": "99999", "distance_km": None,
         "condition": "Laut Anzeige gebraucht", "eligibility": "review", "reserve_status": "unknown",
         "local_pickup_confirmed": True, "pickup_radius_km": 50,
         "interest_score": 75, "score": 75, "value_band": "unknown",
@@ -53,7 +53,7 @@ def sample(items=None, **changes):
     result = {
         "schema_version": 3, "generated_at": iso(NOW), "last_successful_scan_at": iso(NOW),
         "source_status": "live", "status_message": "Nur eine Test-Fixture.", "blockers": [],
-        "location": {"postcode": "69121", "pickup_radius_km": 50}, "criteria": {"lookahead_hours": 72, "description_max_age_hours": 24},
+        "location": {"postcode": "99999", "pickup_radius_km": 50}, "criteria": {"lookahead_hours": 72, "description_max_age_hours": 24},
         "stats": {"received": len(items or [])}, "coverage": {"categories_scanned": 1},
         "ai_enabled": False, "deals": items or [],
     }
@@ -1045,7 +1045,7 @@ class FeedTests(unittest.TestCase):
 
     def test_aggregator_radius_match_is_only_a_provisional_search_claim(self):
         publisher.write_feed(self.site, sample([aggregator_deal(
-            pickup_search_confirmed=True, pickup_search_postcode="69121", pickup_search_radius_km=50,
+            pickup_search_confirmed=True, pickup_search_postcode="99999", pickup_search_radius_km=50,
             local_pickup_confirmed=True,
         )]))
         dashboard = self.read("data/deals.json")
@@ -1105,16 +1105,16 @@ class FeedTests(unittest.TestCase):
         self.assertIn("Such-PLZ und Suchort werden nicht veröffentlicht", guide)
         for text in (guide, (self.site / "api/feed.schema.json").read_text(encoding="utf-8"),
                      (self.site / "api/openapi.json").read_text(encoding="utf-8")):
-            self.assertNotIn("69121", text)
-            self.assertNotIn("Heidelberg", text)
+            self.assertNotIn("99999", text)
+            self.assertNotIn("Teststadt", text)
 
     def test_static_examples_do_not_expose_the_private_search_region(self):
         data_dir = Path(__file__).resolve().parents[1] / "site" / "data"
         for name in ("deals.json", "demo.json"):
             with self.subTest(file=name):
                 text = (data_dir / name).read_text(encoding="utf-8")
-                self.assertNotIn("69121", text)
-                self.assertNotIn("Heidelberg", text)
+                self.assertNotIn("99999", text)
+                self.assertNotIn("Teststadt", text)
                 document = json.loads(text)
                 self.assertLessEqual(set(document["location"]), {"country", "pickup_radius_km"})
                 self.assertTrue(all("pickup_search_postcode" not in row for row in document["deals"]))
@@ -1149,30 +1149,30 @@ class FeedTests(unittest.TestCase):
 
     def test_anonymous_pickup_schema_is_boolean_and_legacy_snapshots_remain_readable(self):
         publisher.write_feed(self.site, sample([aggregator_deal(
-            pickup_search_confirmed=True, pickup_search_postcode="69121", pickup_search_radius_km=50)]))
+            pickup_search_confirmed=True, pickup_search_postcode="99999", pickup_search_radius_km=50)]))
         current = self.read("data/deals.json")
         invalid = copy.deepcopy(current)
         invalid["deals"][0]["pickup_search_profile_match"] = "true"
         self.assertTrue(schema_errors(invalid, self.schema, self.schema))
         legacy = copy.deepcopy(current)
-        legacy["location"].update(postcode="69121", city="Legacy-Ort")
+        legacy["location"].update(postcode="99999", city="Legacy-Ort")
         legacy["deals"][0].pop("pickup_search_profile_match")
-        legacy["deals"][0]["pickup_search_postcode"] = "69121"
+        legacy["deals"][0]["pickup_search_postcode"] = "99999"
         self.assertSchema(legacy)
         api = self.read("api/openapi.json")
         self.assertIn("pickup_search_profile_match", api["components"]["schemas"]["item"]["properties"])
 
     def test_invalid_radius_or_postcode_drops_search_claim(self):
         changes = [
-            {"pickup_search_postcode": "6912"}, {"pickup_search_postcode": "69121x"},
-            {"pickup_search_postcode": 69121}, {"pickup_search_postcode": ""},
+            {"pickup_search_postcode": "9999"}, {"pickup_search_postcode": "99999x"},
+            {"pickup_search_postcode": 99999}, {"pickup_search_postcode": ""},
             {"pickup_search_radius_km": -1}, {"pickup_search_radius_km": 0},
             {"pickup_search_radius_km": "50"}, {"pickup_search_radius_km": True},
             {"pickup_search_radius_km": None},
         ]
         for invalid in changes:
             with self.subTest(invalid=invalid):
-                fields = {"pickup_search_confirmed": True, "pickup_search_postcode": "69121", "pickup_search_radius_km": 50, **invalid}
+                fields = {"pickup_search_confirmed": True, "pickup_search_postcode": "99999", "pickup_search_radius_km": 50, **invalid}
                 publisher.write_feed(self.site, sample([aggregator_deal(**fields)]))
                 item = self.read("data/deals.json")["deals"][0]
                 self.assertFalse(item["pickup_search_confirmed"])
@@ -1182,7 +1182,7 @@ class FeedTests(unittest.TestCase):
                 self.assertNotIn("pickup_search_radius_km", item)
 
     def test_radius_match_needs_real_boolean_and_aggregator_provenance(self):
-        fields = {"pickup_search_confirmed": "true", "pickup_search_postcode": "69121", "pickup_search_radius_km": 50}
+        fields = {"pickup_search_confirmed": "true", "pickup_search_postcode": "99999", "pickup_search_radius_km": 50}
         publisher.write_feed(self.site, sample([aggregator_deal(**fields)]))
         self.assertFalse(self.read("data/deals.json")["deals"][0]["pickup_search_confirmed"])
         fields["pickup_search_confirmed"] = True
@@ -1226,7 +1226,7 @@ class FeedTests(unittest.TestCase):
     def test_independent_old_pickup_clock_does_not_age_fresh_general_observation(self):
         old = iso(NOW - timedelta(hours=5))
         publisher.write_feed(self.site, sample([aggregator_deal(
-            pickup_search_confirmed=True, pickup_search_postcode="69121", pickup_search_radius_km=50,
+            pickup_search_confirmed=True, pickup_search_postcode="99999", pickup_search_radius_km=50,
             pickup_search_observed_at=old, pickup_available=True,
         )]))
         item = self.read("data/deals.json")["deals"][0]
@@ -1243,7 +1243,7 @@ class FeedTests(unittest.TestCase):
                         {"pickup_available": False}, {"pickup_search_radius_km": 201},
                         {"pickup_search_confirmed": False}):
             with self.subTest(changes=changes):
-                fields = {"pickup_search_confirmed": True, "pickup_search_postcode": "69121",
+                fields = {"pickup_search_confirmed": True, "pickup_search_postcode": "99999",
                           "pickup_search_radius_km": 50, "pickup_available": True, **changes}
                 publisher.write_feed(self.site, sample([aggregator_deal(**fields)]))
                 item = self.read("data/deals.json")["deals"][0]

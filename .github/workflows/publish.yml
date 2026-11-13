@@ -70,6 +70,8 @@ jobs:
           # Explicit 'false' still stops it; old Git snapshots remain public.
           HUNTER_PUBLISH_LIVE_DATA: ${{ vars.HUNTER_PUBLISH_LIVE_DATA || 'true' }}
           HUNTER_LLM_ENABLED: ${{ vars.HUNTER_LLM_ENABLED || 'false' }}
+          # Private query origin and HMAC key are never stored in public git data.
+          HUNTER_PRIVATE_SEARCH: ${{ secrets.HUNTER_PRIVATE_SEARCH }}
           EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
           EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
           EBAY_LEAF_CATEGORY_IDS: ${{ vars.EBAY_LEAF_CATEGORY_IDS }}

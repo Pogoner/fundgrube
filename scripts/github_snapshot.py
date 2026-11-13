@@ -43,7 +43,7 @@ PATH_PATTERN = re.compile(r"[A-Za-z0-9_-][A-Za-z0-9_./-]*")
 SECRET_KEYS = {
     "accesstoken", "refreshtoken", "clientsecret", "ebayclientsecret",
     "ebayclientid", "openaikey", "openaiapikey", "apikey", "githubtoken",
-    "authorization", "password", "privatekey",
+    "authorization", "password", "privatekey", "profilekey", "hunterprivatesearch",
 }
 
 

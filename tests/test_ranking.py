@@ -8,7 +8,7 @@ from hunter.ranking import apply_interest_profile, apply_semantic, assess_item
 
 NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 SETTINGS = {"max_price_eur": 10, "max_shipping_eur": 15, "max_bids": 0,
-            "postcode": "69121", "pickup_radius_km": 50,
+            "postcode": "99999", "pickup_radius_km": 50,
             "lookahead_hours": 72, "description_max_age_hours": 24}
 
 
@@ -340,7 +340,7 @@ class RankingTests(unittest.TestCase):
                 self.assertEqual(self.rank(data)["eligibility"], "excluded")
 
     def test_close_postcode_alone_does_not_confirm_pickup(self):
-        data = raw(itemLocation={"postalCode": "69121", "city": "Heidelberg"}, shippingOptions=[])
+        data = raw(itemLocation={"postalCode": "99999", "city": "Teststadt"}, shippingOptions=[])
         result = self.rank(data)
         self.assertFalse(result["local_pickup_confirmed"])
         self.assertEqual(result["eligibility"], "review")
@@ -527,7 +527,7 @@ class AggregatorPickupRankingTests(unittest.TestCase):
             "verification_level": "aggregator",
             "source_provider": "auktionen-ohne-gebot",
             "pickup_search_confirmed": True,
-            "pickup_search_postcode": "69121",
+            "pickup_search_postcode": "99999",
             "pickup_search_radius_km": 50,
             "pickup_available": True,
             "local_pickup_confirmed": False,
@@ -615,8 +615,8 @@ class AggregatorPickupRankingTests(unittest.TestCase):
             {"verification_level": "direct"}, {"verification_level": None},
             {"source_provider": "other"}, {"source_provider": None},
             {"pickup_search_confirmed": False}, {"pickup_search_confirmed": "true"},
-            {"pickup_search_confirmed": 1}, {"pickup_search_postcode": "68159"},
-            {"pickup_search_postcode": 69121}, {"pickup_search_postcode": None},
+            {"pickup_search_confirmed": 1}, {"pickup_search_postcode": "88888"},
+            {"pickup_search_postcode": 99999}, {"pickup_search_postcode": None},
             {"pickup_search_radius_km": 51}, {"pickup_search_radius_km": 0},
             {"pickup_search_radius_km": -1}, {"pickup_search_radius_km": None},
             {"pickup_search_radius_km": True}, {"pickup_search_radius_km": "invalid"},
@@ -630,7 +630,7 @@ class AggregatorPickupRankingTests(unittest.TestCase):
                 self.assertNotIn("Nähe laut Umkreissuche der Quelle", result["fact_reasons"])
 
     def test_missing_or_changed_user_postcode_cannot_validate_old_search(self):
-        for postcode in (None, "", "6912", "691210", "68159", 69121):
+        for postcode in (None, "", "9999", "999990", "88888", 99999):
             with self.subTest(postcode=postcode):
                 result = self.rank(settings={**SETTINGS, "postcode": postcode})
                 self.assertEqual(result["fact_score"], 17)
