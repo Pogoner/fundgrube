@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T17:02:01Z",
+    "evaluated_at": "2026-11-13T19:31:17Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,7 +13,7 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T17:02:01Z",
+  "generated_at": "2026-11-13T19:31:17Z",
   "item": {
     "assessment_basis": "heuristic",
     "assessment_confidence": "low",
@@ -22,7 +22,7 @@
     "carried": false,
     "city": "",
     "condition": "Neu",
-    "content_updated_at": "2026-11-13T16:38:34Z",
+    "content_updated_at": "2026-11-13T19:07:21Z",
     "country": "",
     "dependencies": [
       "Benötigtes Umfeld und Lieferumfang noch unbekannt"
@@ -33,12 +33,10 @@
     "detail_path": "api/items/e5e5983556631cdf2bb26c49c64412da8c06492b65250ada6b7875c95c03affc.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-16T19:04:01Z",
@@ -46,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/-yIAAOSwyoVieriw/s-l400.jpg",
     "interest_score": 18,
     "is_auction": true,
-    "last_seen_at": "2026-11-13T16:38:34Z",
+    "last_seen_at": "2026-11-13T19:07:21Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -70,7 +68,6 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
@@ -82,11 +79,11 @@
     "semantic_assessed": true,
     "semantic_interest": 35,
     "shipping_eur": 6.9,
-    "source_observed_at": "2026-11-13T16:38:34Z",
+    "source_observed_at": "2026-11-13T19:07:21Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
     "stale": false,
-    "time_window_eligible": false,
+    "time_window_eligible": true,
     "title": "Restposten 1 kg Schleifpapier Schleifzubehör Schleifscheiben Polierzubehör 1",
     "total_eur": null,
     "total_known_eur": 7.9,
@@ -152,7 +149,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:248522da95d21cea10c79259deff783d63bd4b568c92c7c3214e614ae305d500",
+  "snapshot_id": "sha256:a62ce8cd630524ddf54045c329a94b6639d207ce88126df090bdfbe9dbe56e7c",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
