@@ -3,7 +3,7 @@
     "active_window_hours": 72,
     "description_maximum_age_hours": 24,
     "direct_ebay_verification": false,
-    "evaluated_at": "2026-11-13T13:35:22Z",
+    "evaluated_at": "2026-11-13T14:05:46Z",
     "maximum_source_age_hours": null,
     "observation_is_not_condition_verification": true,
     "recheck_at_read_time": true,
@@ -13,16 +13,16 @@
     "source_warning_after_hours": 2,
     "upstream_cache_age_is_provider_claim": true
   },
-  "generated_at": "2026-11-13T13:35:22Z",
+  "generated_at": "2026-11-13T14:05:46Z",
   "item": {
     "assessment_basis": "llm",
     "assessment_confidence": "medium",
     "bid_count": 0,
     "buying_options": [],
-    "carried": true,
+    "carried": false,
     "city": "",
     "condition": "Neu ohne Etikett",
-    "content_updated_at": "2026-11-13T08:15:55Z",
+    "content_updated_at": "2026-11-13T13:42:01Z",
     "country": "",
     "dependencies": [
       "Passende Körpermaße"
@@ -33,13 +33,10 @@
     "detail_path": "api/items/ce2659222c5f26dad15b1393ad44869e9fd4e37831341482ac7729017fa6eba3.json",
     "details_fetched": false,
     "distance_km": null,
-    "eligibility": "excluded",
+    "eligibility": "review",
     "eligibility_reasons": [
-      "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
-      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Auktionsende noch außerhalb des aktiven Zeitfensters; Bestand bleibt bis zum Ende erhalten."
+      "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen"
     ],
     "eligibility_without_time_window": "review",
     "ends_at": "2026-11-16T13:43:33Z",
@@ -47,7 +44,7 @@
     "image": "https://i.ebayimg.com/images/g/KeAAAeSwkJtqw5rw/s-l400.jpg",
     "interest_score": 15,
     "is_auction": true,
-    "last_seen_at": "2026-11-13T08:15:55Z",
+    "last_seen_at": "2026-11-13T13:42:01Z",
     "local_pickup_confirmed": false,
     "minimum_bid_eur": null,
     "next_checks": [
@@ -70,15 +67,11 @@
     ],
     "reserve_status": "unknown",
     "risks": [
-      "Ablauf außerhalb des Suchfensters",
-      "Älterer Quellenstand; Preis, Gebote und Verfügbarkeit erneut prüfen",
       "Mindestpreisstatus unbekannt; keine Reservefreiheit unterstellen",
       "Auktionspreis nur aus allgemeinem Preisfeld; Gebotsdetails prüfen",
-      "Quellenstand älter als zwei Stunden; Angaben können inzwischen abweichen",
       "Angaben aus zwischengespeicherter Fremdübersicht; Preis, Gebote und Versand im Originalangebot erneut prüfen",
       "Neu ohne Etikett; Stoff und Gebrauchsspuren nicht verifiziert.",
       "Nur Kurzmetadaten ohne Verkäuferbeschreibung; Funktions- und Lieferumfangsangaben sind nicht verifiziert.",
-      "Quellenstand älter als 2 Stunden; Preis, Gebote und Verfügbarkeit vor einer Entscheidung im Original prüfen.",
       "Angaben aus einem Drittanbieter-Cache; Preis, Gebote und Verfügbarkeit nicht direkt bei eBay überprüft."
     ],
     "scalp_score": 15,
@@ -89,11 +82,11 @@
     "semantic_interest": 15,
     "semantic_review_mode": "interactive",
     "shipping_eur": 2.7,
-    "source_observed_at": "2026-11-13T08:15:55Z",
+    "source_observed_at": "2026-11-13T13:42:01Z",
     "source_provider": "auktionen-ohne-gebot",
     "source_url": "https://auktionen-ohne-gebot.de/business-industrie/",
-    "stale": true,
-    "time_window_eligible": false,
+    "stale": false,
+    "time_window_eligible": true,
     "title": "ARBEITSHOSE NEU Grösse 52",
     "total_eur": null,
     "total_known_eur": 3.7,
@@ -159,7 +152,7 @@
     "score_version": 2,
     "useability_is_condition_probability": false
   },
-  "snapshot_id": "sha256:7c0a85d33f80a2c2be803f7de5d55fdd58521bfae38edf61706b79ad042e5501",
+  "snapshot_id": "sha256:961834b03d4b0799a5f79d2e2d381aec3aa3b99622c811dfa9fe8d4564b88bad",
   "source": "auktionen-ohne-gebot",
   "source_provider": "auktionen-ohne-gebot",
   "source_status": "live",
