@@ -2868,24 +2868,6 @@
         "summary": "Kandidatenseite 73 lesen"
       }
     },
-    "/api/candidates/page-074.json": {
-      "get": {
-        "operationId": "readFundgrubeCandidates74",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/candidatePage"
-                }
-              }
-            },
-            "description": "Statischer JSON-Snapshot V3; Zeitstempel und snapshot_id prüfen. Metadaten bleiben höchstens bis Auktionsende erhalten; ein erfolgreicher vollständiger AOG-Abgleich entfernt fehlende Angebote früher. Das ist keine Zusage aktueller Preise oder Gebote. Das aktive Fenster ist strikt kleiner als die konfigurierte Restlaufzeit. Interest wird aus Scalp und Useability abgeleitet, nicht aus der Funktionswahrscheinlichkeit."
-          }
-        },
-        "summary": "Kandidatenseite 74 lesen"
-      }
-    },
     "/api/items/{item_file}": {
       "get": {
         "description": "Nur bereits im Snapshot referenzierte Dateien existieren. Kein dynamischer Suchendpunkt.",
